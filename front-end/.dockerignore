@@ -1,0 +1,16 @@
+.git
+.github
+.idea
+.vscode
+coverage
+dist
+build
+node_modules
+.dockerignore
+.env*
+**/public-env.js
+.gitignore
+.travis.yml
+*.log
+Dockerfile*
+**/.DS_Store
