@@ -8,11 +8,11 @@ import {
   Body,
   ParseIntPipe,
 } from '@nestjs/common';
-import { BeltRequirementsService } from '../service/beltRequirements.service';
 import {
   belt_requirements,
   belt_requirementsCreationAttributes,
 } from '../models/belt_requirements';
+import {BeltRequirementsService} from 'src/service/beltRequirements.service.ts';
 
 @Controller('belt-requirements')
 export class BeltRequirementsController {
