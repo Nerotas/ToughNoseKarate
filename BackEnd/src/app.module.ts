@@ -43,6 +43,7 @@ import { ParentsService } from './service/parents.service';
 import { StancesService } from './service/stances.service';
 import { StudentsService } from './service/students.service';
 import { DatabaseService } from './service/database.service';
+import { LoggerService } from './service/logger.service';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { DatabaseService } from './service/database.service';
     AppService,
     JwtService,
     DatabaseService,
+    LoggerService,
     BeltRequirementsService,
     CombinationsService,
     FallingService,

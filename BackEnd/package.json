@@ -32,6 +32,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/sequelize": "^11.0.0",
+    "@nestjs/swagger": "^11.2.0",
     "@nestjs/terminus": "^11.0.0",
     "@willsoto/nestjs-prometheus": "^6.0.2",
     "google-auth-library": "^10.2.0",
