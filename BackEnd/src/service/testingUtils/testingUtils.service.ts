@@ -13,7 +13,7 @@ export class TestingUtilsService {
 
   constructor(private readonly logger: LoggerService) {}
 
-  async verifyTokenAndGetRole(request: Request): Promise<any> {
+  verifyTokenAndGetRole(request: { headers?: Record<string, unknown> }): any {
     const fn = `${this.ns}[verifyTokenAndGetRole]:`;
     try {
       if (!request) {
@@ -23,9 +23,10 @@ export class TestingUtilsService {
         );
       }
 
-      const testToken = (request?.headers || {})['e2eauthorization']?.split(
-        ' ',
-      )[1];
+      const headerValue = request.headers?.['e2eauthorization'];
+      const tokenString = typeof headerValue === 'string' ? headerValue : '';
+      const testToken = tokenString.split(' ')[1];
+
       const { role }: any = jwt.verify(testToken, this.testSecret, {
         algorithms: ['HS256'],
       });
@@ -62,14 +63,19 @@ export class TestingUtilsService {
     }
   }
 
-  async verifyTestUserAndToken(
-    userEmail: string,
-    request: Request,
-  ): Promise<any> {
+  verifyTestUserAndToken(userEmail: string, request: Request): any {
     const isTestUser = this.verifyTestUser(userEmail);
 
     if (!isTestUser) return null;
 
-    return this.verifyTokenAndGetRole(request);
+    // Convert Headers to a plain object
+    const headers: Record<string, unknown> = {};
+    if (request && request.headers) {
+      for (const [key, value] of Object.entries(request.headers as any)) {
+        headers[key.toLowerCase()] = value;
+      }
+    }
+
+    return this.verifyTokenAndGetRole({ headers });
   }
 }

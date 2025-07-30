@@ -8,6 +8,22 @@
     "vs-code-prettier-eslint.prettierLast": false, // set as "true" to run 'prettier' last not first
     "eslint.format.enable": true,
     "eslint.lintTask.enable": true,
+    "eslint.workingDirectories": [
+        "BackEnd",
+        "FrontEnd"
+    ],
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "files.associations": {
+        "*.mjs": "javascript"
+    },
     "jest.jestCommandLine": "npm run test --",
     "[json]": {
         "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
@@ -51,20 +67,20 @@
         "template"
     ],
     "jestrunner.jestCommand": "npm run test --",
-"jestrunner.debugOptions": {
-    "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
-    "runtimeArgs": [
-      "test",
-      "${fileBasename}",
-      "--runInBand",
-      "--no-cache",
-      "--watchAll=false",
-      "--color"
-    ],
-    "codeLens": "debug"
-},
-"[xml]": {
-    "editor.defaultFormatter": "DotJoshJohnson.xml"
-},
-"jest.rootPath": "FrontEnd",
+    "jestrunner.debugOptions": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
+        "runtimeArgs": [
+            "test",
+            "${fileBasename}",
+            "--runInBand",
+            "--no-cache",
+            "--watchAll=false",
+            "--color"
+        ],
+        "codeLens": "debug"
+    },
+    "[xml]": {
+        "editor.defaultFormatter": "DotJoshJohnson.xml"
+    },
+    "jest.rootPath": "FrontEnd"
 }

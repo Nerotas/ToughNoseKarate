@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { belt_requirements } from './belt_requirements.model'; // Adjust path as needed
+import {
+  belt_requirements,
+  belt_requirementsCreationAttributes,
+} from 'src/models/belt_requirements';
 
 @Injectable()
 export class BeltRequirementsService {
@@ -23,7 +26,9 @@ export class BeltRequirementsService {
     return record;
   }
 
-  async create(data: Partial<belt_requirements>): Promise<belt_requirements> {
+  async create(
+    data: belt_requirementsCreationAttributes,
+  ): Promise<belt_requirements> {
     return this.beltRequirementsModel.create(data);
   }
 
