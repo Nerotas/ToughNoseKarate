@@ -1,11 +1,13 @@
 {
-  "printWidth": 150,
+  "printWidth": 80,
   "singleQuote": true,
-  "trailingComma": "es5",
-  "arrowParens": "always",
+  "trailingComma": "all",
+  "arrowParens": "avoid",
   "bracketSpacing": true,
   "semi": true,
-  "tabWidth": 4,
+  "tabWidth": 2,
   "useTabs": false,
-  "react/jsx-max-props-per-line": [1, { "when": "always" }]
+  "endOfLine": "lf",
+  "jsxSingleQuote": true,
+  "bracketSameLine": false
 }
