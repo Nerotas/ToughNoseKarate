@@ -8,7 +8,7 @@ import {
   Body,
   ParseIntPipe,
 } from '@nestjs/common';
-import { BeltRequirementsService } from '../service/beltRequirements.service.ts';
+import { BeltRequirementsService } from '../service/beltRequirements.service';
 import {
   belt_requirements,
   belt_requirementsCreationAttributes,
