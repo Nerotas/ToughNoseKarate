@@ -8,8 +8,11 @@ import {
   Body,
   ParseIntPipe,
 } from '@nestjs/common';
-import { BeltRequirementsService } from './belt-requirements.service';
-import { belt_requirements } from './belt_requirements.model'; // Adjust path as needed
+import { BeltRequirementsService } from '../service/beltRequirements.service';
+import {
+  belt_requirements,
+  belt_requirementsCreationAttributes,
+} from '../models/belt_requirements';
 
 @Controller('belt-requirements')
 export class BeltRequirementsController {
@@ -19,21 +22,21 @@ export class BeltRequirementsController {
 
   @Get()
   async findAll(): Promise<belt_requirements[]> {
-    return this.beltRequirementsService.findAll();
+    return await this.beltRequirementsService.findAll();
   }
 
   @Get(':belt_order')
   async findOne(
     @Param('belt_order', ParseIntPipe) belt_order: number,
   ): Promise<belt_requirements> {
-    return this.beltRequirementsService.findOne(belt_order);
+    return await this.beltRequirementsService.findOne(belt_order);
   }
 
   @Post()
   async create(
-    @Body() data: Partial<belt_requirements>,
+    @Body() data: belt_requirementsCreationAttributes,
   ): Promise<belt_requirements> {
-    return this.beltRequirementsService.create(data);
+    return await this.beltRequirementsService.create(data);
   }
 
   @Put(':belt_order')
@@ -41,7 +44,7 @@ export class BeltRequirementsController {
     @Param('belt_order', ParseIntPipe) belt_order: number,
     @Body() data: Partial<belt_requirements>,
   ): Promise<belt_requirements> {
-    return this.beltRequirementsService.update(belt_order, data);
+    return await this.beltRequirementsService.update(belt_order, data);
   }
 
   @Delete(':belt_order')

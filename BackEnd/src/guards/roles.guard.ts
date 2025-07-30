@@ -2,7 +2,6 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 import { Roles } from '../decorators/roles.decorator';
-import { TestingUtilsService } from '../services/testingUtils/testingUtils.service';
 
 const mockRole = ['user', 'admin'];
 

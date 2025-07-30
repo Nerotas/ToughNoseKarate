@@ -3,6 +3,8 @@
         "orta.vscode-jest",
         "dbaeumer.vscode-eslint",
         "rvest.vs-code-prettier-eslint",
+        "ms-vscode.vscode-typescript-next",
+        "aaron-bond.better-comments",
         "irongeek.vscode-env",
         "dsznajder.es7-react-js-snippets",
         "vscodeshift.material-ui-snippets",

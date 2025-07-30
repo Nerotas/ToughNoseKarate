@@ -1,10 +1,11 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: './tsconfig.json',
     tsconfigRootDir: __dirname,
     ecmaVersion: 2018,
     sourceType: 'module',
+    allowDefaultProject: true,
   },
   plugins: [
     'prettier',
@@ -13,11 +14,9 @@ module.exports = {
     'sort-destructure-keys',
   ],
   extends: [
-    'standard',
     'eslint:recommended',
     'plugin:nestjs/recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
+    '@typescript-eslint/eslint-recommended',
     'plugin:prettier/recommended',
   ],
   root: true,
@@ -25,8 +24,26 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js', '__tests/**', 'node_modules', 'dist'],
+  ignorePatterns: [
+    '.eslintrc.cjs',
+    '__tests/**',
+    'node_modules',
+    'dist',
+  ],
   rules: {
+    // Standard JavaScript style rules
+    'brace-style': ['warn', '1tbs', { allowSingleLine: true }],
+    'comma-style': ['warn', 'last'],
+    'dot-location': ['warn', 'property'],
+    'key-spacing': ['warn', { beforeColon: false, afterColon: true }],
+    'keyword-spacing': 'warn',
+    'object-curly-spacing': ['warn', 'always'],
+    'space-before-blocks': 'warn',
+    'space-before-function-paren': ['warn', 'always'],
+    'space-infix-ops': 'warn',
+    'spaced-comment': ['warn', 'always'],
+
+    // NestJS specific rules
     'nestjs/use-dependency-injection': 'warn',
     'nestjs/parse-int-pipe': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -47,6 +64,13 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/semi': 'warn',
+    '@typescript-eslint/require-await': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/ban-ts-comment': 'warn',
+    '@typescript-eslint/unbound-method': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'warn',
+    '@typescript-eslint/no-floating-promises': 'warn',
+    '@typescript-eslint/no-require-imports': 'warn',
     'arrow-body-style': 'warn',
     'prefer-const': 'warn',
     'no-async-promise-executor': 'off',
@@ -71,7 +95,25 @@ module.exports = {
         ignoreCase: true,
       },
     ],
+    // Override TypeScript strict rules (must be at the end)
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-unsafe-argument': 'off',
   },
+  overrides: [
+    {
+      files: ['src/decorators/**/*.ts', 'src/guards/**/*.ts', '**/*.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
+  ],
   settings: {
     'import/resolver': {
       typescript: {

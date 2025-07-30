@@ -36,8 +36,7 @@ describe('getGoogleSheet', () => {
 
   it('should fetch rows from the first sheet', async () => {
     const mockRows = [{ row: 1 }, { row: 2 }];
-    // @ts-ignore
-    GoogleSpreadsheet.mockImplementation(() => ({
+    (GoogleSpreadsheet as unknown as jest.Mock).mockImplementation(() => ({
       loadInfo: jest.fn(),
       sheetsByIndex: [{ getRows: jest.fn().mockResolvedValue(mockRows) }],
     }));

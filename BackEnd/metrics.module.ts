@@ -4,7 +4,7 @@ import {
   makeCounterProvider,
   makeHistogramProvider,
 } from '@willsoto/nestjs-prometheus';
-import { MetricsService } from 'src/service/metrics.service';
+import { MetricsService } from './src/service/metrics.service';
 
 @Module({
   imports: [

@@ -21,6 +21,30 @@ import { rewritePathToRoot } from './lib/rewrite-path-to-root';
 import { RequestLoggerMiddleware } from './middlewares/RequestLoggerMiddleware';
 import { RouteRewriteMiddleware } from './middlewares/RouteRewriteMiddleware';
 
+// Controllers
+import { BeltRequirementsController } from './controller/belt-requirements.controller';
+import { CombinationsController } from './controller/combinations.controller';
+import { FallingController } from './controller/falling.controller';
+import { FormsController } from './controller/forms.controller';
+import { OneStepsController } from './controller/oneSteps.controller';
+import { ParentMappingController } from './controller/parentMapping.controller';
+import { ParentsController } from './controller/parents.controller';
+import { StancesController } from './controller/stances.controller';
+import { StudentsController } from './controller/students.controller';
+
+// Services
+import { BeltRequirementsService } from './service/beltRequirements.service';
+import { CombinationsService } from './service/combinations.service';
+import { FallingService } from './service/falling.service';
+import { FormsService } from './service/forms.service';
+import { OneStepsService } from './service/oneSteps.service';
+import { ParentMappingService } from './service/parentMapping.service';
+import { ParentsService } from './service/parents.service';
+import { StancesService } from './service/stances.service';
+import { StudentsService } from './service/students.service';
+import { DatabaseService } from './service/database.service';
+import { LoggerService } from './service/logger.service';
+
 @Module({
   imports: [
     MetricsModule,
@@ -51,8 +75,33 @@ import { RouteRewriteMiddleware } from './middlewares/RouteRewriteMiddleware';
 
     SequelizeModule.forFeature([], 'MainDB'),
   ],
-  controllers: [AppController],
-  providers: [AppService, JwtService],
+  controllers: [
+    AppController,
+    BeltRequirementsController,
+    CombinationsController,
+    FallingController,
+    FormsController,
+    OneStepsController,
+    ParentMappingController,
+    ParentsController,
+    StancesController,
+    StudentsController,
+  ],
+  providers: [
+    AppService,
+    JwtService,
+    DatabaseService,
+    LoggerService,
+    BeltRequirementsService,
+    CombinationsService,
+    FallingService,
+    FormsService,
+    OneStepsService,
+    ParentMappingService,
+    ParentsService,
+    StancesService,
+    StudentsService,
+  ],
 })
 export class AppModule implements NestModule {
   private logger = new Logger(AppModule.name);
