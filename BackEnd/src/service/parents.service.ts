@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+﻿import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   parents,
   parentsCreationAttributes,
@@ -7,25 +6,20 @@ import {
 
 @Injectable()
 export class ParentsService {
-  constructor(
-    @InjectModel(parents)
-    private readonly parentsModel: typeof parents,
-  ) {}
-
   async findAll(): Promise<parents[]> {
-    return this.parentsModel.findAll();
+    return await parents.findAll();
   }
 
   async findOne(parentid: number): Promise<parents> {
-    const record = await this.parentsModel.findByPk(parentid);
+    const record = await parents.findByPk(parentid);
     if (!record) {
-      throw new NotFoundException(`Parent with id ${parentid} not found`);
+      throw new NotFoundException(`Parent with parentid ${parentid} not found`);
     }
     return record;
   }
 
   async create(data: parentsCreationAttributes): Promise<parents> {
-    return this.parentsModel.create(data);
+    return await parents.create(data);
   }
 
   async update(
@@ -33,7 +27,7 @@ export class ParentsService {
     data: Partial<parents>,
   ): Promise<parents> {
     const record = await this.findOne(parentid);
-    return record.update(data);
+    return await record.update(data);
   }
 
   async remove(parentid: number): Promise<void> {

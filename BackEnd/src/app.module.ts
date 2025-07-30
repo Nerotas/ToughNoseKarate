@@ -42,6 +42,7 @@ import { ParentMappingService } from './service/parentMapping.service';
 import { ParentsService } from './service/parents.service';
 import { StancesService } from './service/stances.service';
 import { StudentsService } from './service/students.service';
+import { DatabaseService } from './service/database.service';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { StudentsService } from './service/students.service';
   providers: [
     AppService,
     JwtService,
+    DatabaseService,
     BeltRequirementsService,
     CombinationsService,
     FallingService,

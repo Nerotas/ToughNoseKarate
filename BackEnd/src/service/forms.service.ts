@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+﻿import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   forms,
   formsCreationAttributes,
@@ -7,25 +6,20 @@ import {
 
 @Injectable()
 export class FormsService {
-  constructor(
-    @InjectModel(forms)
-    private readonly formsModel: typeof forms,
-  ) {}
-
   async findAll(): Promise<forms[]> {
-    return this.formsModel.findAll();
+    return await forms.findAll();
   }
 
   async findOne(studentid: number): Promise<forms> {
-    const record = await this.formsModel.findByPk(studentid);
+    const record = await forms.findByPk(studentid);
     if (!record) {
-      throw new NotFoundException(`Forms for student ${studentid} not found`);
+      throw new NotFoundException(`Form with studentid ${studentid} not found`);
     }
     return record;
   }
 
   async create(data: formsCreationAttributes): Promise<forms> {
-    return this.formsModel.create(data);
+    return await forms.create(data);
   }
 
   async update(
@@ -33,7 +27,7 @@ export class FormsService {
     data: Partial<forms>,
   ): Promise<forms> {
     const record = await this.findOne(studentid);
-    return record.update(data);
+    return await record.update(data);
   }
 
   async remove(studentid: number): Promise<void> {

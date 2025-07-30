@@ -1,43 +1,43 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+﻿import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   combinations,
   combinationsCreationAttributes,
 } from '../models/combinations';
+import { DatabaseService } from './database.service';
 
 @Injectable()
 export class CombinationsService {
-  constructor(
-    @InjectModel(combinations)
-    private readonly combinationsModel: typeof combinations,
-  ) {}
+  constructor(private readonly databaseService: DatabaseService) {}
 
   async findAll(): Promise<combinations[]> {
-    return this.combinationsModel.findAll();
+    const models = this.databaseService.getModels();
+    return await models.combinations.findAll();
   }
 
-  async findOne(id: number): Promise<combinations> {
-    const record = await this.combinationsModel.findByPk(id);
+  async findOne(studentid: number): Promise<combinations> {
+    const models = this.databaseService.getModels();
+    const record = await models.combinations.findByPk(studentid);
     if (!record) {
-      throw new NotFoundException(`Combination with id ${id} not found`);
+      throw new NotFoundException(`Combination with studentid ${studentid} not found`);
     }
     return record;
   }
 
   async create(data: combinationsCreationAttributes): Promise<combinations> {
-    return this.combinationsModel.create(data);
+    const models = this.databaseService.getModels();
+    return await models.combinations.create(data);
   }
 
   async update(
-    id: number,
+    studentid: number,
     data: Partial<combinations>,
   ): Promise<combinations> {
-    const record = await this.findOne(id);
-    return record.update(data);
+    const record = await this.findOne(studentid);
+    return await record.update(data);
   }
 
-  async remove(id: number): Promise<void> {
-    const record = await this.findOne(id);
+  async remove(studentid: number): Promise<void> {
+    const record = await this.findOne(studentid);
     await record.destroy();
   }
 }

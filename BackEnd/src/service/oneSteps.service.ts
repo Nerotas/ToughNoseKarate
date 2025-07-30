@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+﻿import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   one_steps,
   one_stepsCreationAttributes,
@@ -7,25 +6,20 @@ import {
 
 @Injectable()
 export class OneStepsService {
-  constructor(
-    @InjectModel(one_steps)
-    private readonly oneStepsModel: typeof one_steps,
-  ) {}
-
   async findAll(): Promise<one_steps[]> {
-    return this.oneStepsModel.findAll();
+    return await one_steps.findAll();
   }
 
   async findOne(studentid: number): Promise<one_steps> {
-    const record = await this.oneStepsModel.findByPk(studentid);
+    const record = await one_steps.findByPk(studentid);
     if (!record) {
-      throw new NotFoundException(`One steps for student ${studentid} not found`);
+      throw new NotFoundException(`One step with studentid ${studentid} not found`);
     }
     return record;
   }
 
   async create(data: one_stepsCreationAttributes): Promise<one_steps> {
-    return this.oneStepsModel.create(data);
+    return await one_steps.create(data);
   }
 
   async update(
@@ -33,7 +27,7 @@ export class OneStepsService {
     data: Partial<one_steps>,
   ): Promise<one_steps> {
     const record = await this.findOne(studentid);
-    return record.update(data);
+    return await record.update(data);
   }
 
   async remove(studentid: number): Promise<void> {

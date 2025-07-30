@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+﻿import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   parent_mapping,
   parent_mappingCreationAttributes,
@@ -16,9 +16,7 @@ export class ParentMappingService {
     });
 
     if (!record) {
-      throw new NotFoundException(
-        `Parent mapping with studentid ${studentid} and parentid ${parentid} not found`,
-      );
+      throw new NotFoundException(`Parent mapping with studentid ${studentid} and parentid ${parentid} not found`);
     }
 
     return record;
