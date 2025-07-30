@@ -6,6 +6,7 @@ module.exports = {
     node: true,
   },
   extends: [
+    'next/core-web-vitals',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
@@ -72,5 +73,5 @@ module.exports = {
     // Prettier integration
     'prettier/prettier': 'warn',
   },
-  ignorePatterns: ['node_modules/', 'build/', 'dist/', 'public/', 'coverage/'],
+  ignorePatterns: ['node_modules/', '.next/', 'out/', 'public/', 'coverage/'],
 };
