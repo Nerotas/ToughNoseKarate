@@ -19,7 +19,7 @@ async function bootstrap() {
     .setDescription('Martial Arts Management System REST API')
     .setVersion('1.0')
 
-//to be implemented if live
+// TODO: Implement authentication (e.g., addBearerAuth) when the application goes live.
     // .addBearerAuth(
     //   { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
     //   'JWT',
