@@ -1,17 +1,17 @@
 ﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  parents,
-  parentsCreationAttributes,
-} from '../models/parents';
+import { DatabaseService } from '../database/database.service';
+import { parents, parentsCreationAttributes } from '../models/parents';
 
 @Injectable()
 export class ParentsService {
+  constructor(private readonly databaseService: DatabaseService) {}
+
   async findAll(): Promise<parents[]> {
-    return await parents.findAll();
+    return await this.databaseService.getModel('parents').findAll();
   }
 
   async findOne(parentid: number): Promise<parents> {
-    const record = await parents.findByPk(parentid);
+    const record = await this.databaseService.getModel('parents').findByPk(parentid);
     if (!record) {
       throw new NotFoundException(`Parent with parentid ${parentid} not found`);
     }
