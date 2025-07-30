@@ -1,17 +1,17 @@
 ﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  stances,
-  stancesCreationAttributes,
-} from '../models/stances';
+import { DatabaseService } from '../database/database.service';
+import { stances, stancesCreationAttributes } from '../models/stances';
 
 @Injectable()
 export class StancesService {
+  constructor(private readonly databaseService: DatabaseService) {}
+
   async findAll(): Promise<stances[]> {
-    return await stances.findAll();
+    return await this.databaseService.stances.findAll();
   }
 
   async findOne(studentid: number): Promise<stances> {
-    const record = await stances.findByPk(studentid);
+    const record = await this.databaseService.stances.findByPk(studentid);
     if (!record) {
       throw new NotFoundException(`Stance with studentid ${studentid} not found`);
     }
