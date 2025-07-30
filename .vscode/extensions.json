@@ -1,0 +1,19 @@
+{
+    "recommendations": [
+        "orta.vscode-jest",
+        "dbaeumer.vscode-eslint",
+        "rvest.vs-code-prettier-eslint",
+        "irongeek.vscode-env",
+        "dsznajder.es7-react-js-snippets",
+        "vscodeshift.material-ui-snippets",
+        "christian-kohler.path-intellisense",
+        "jawandarajbir.react-vscode-extension-pack",
+        "fitzsimonsdevin.rtl-quick-debug",
+        "natqe.reload",
+        "discountry.react-redux-react-router-snippets",
+        "xabikos.reactsnippets",
+        "cssho.vscode-svgviewer",
+        "infeng.vscode-react-typescript",
+        "redhat.vscode-yaml"
+    ]
+}

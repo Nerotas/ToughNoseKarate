@@ -1,0 +1,90 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "node",
+            "name": "vscode-jest-tests.v2",
+            "request": "launch",
+            "args": [
+                "test",
+                "--",
+                "test",
+                "--detectOpenHandles",
+                "--env=jsdom",
+                "--watchAll",
+                "--runInBand",
+                "--watchAll=false",
+                "--testNamePattern",
+                "${jest.testNamePattern}",
+                "--runTestsByPath",
+                "${jest.testFile}"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "runtimeExecutable": "npm"
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "port": 9229,
+            "name": "erotas-console-api debugger",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/BackEnd/dist/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "name": "vscode-jest-tests.v2.erotas-console-1730751862104",
+            "request": "launch",
+            "args": [
+                "run",
+                "test",
+                "--",
+                "--runInBand",
+                "--watchAll=false",
+                "--testNamePattern",
+                "${jest.testNamePattern}",
+                "--runTestsByPath",
+                "${jest.testFile}"
+            ],
+            "cwd": "${workspaceFolder}/FrontEnd/src/__tests__",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "runtimeExecutable": "npm"
+        },
+        {
+            "type": "node",
+            "name": "vscode-jest-tests.v2.erotas-console",
+            "request": "launch",
+            "args": [
+                "run",
+                "test",
+                "--",
+                "--runInBand",
+                "--watchAll=false",
+                "--testNamePattern",
+                "${jest.testNamePattern}",
+                "--runTestsByPath",
+                "${jest.testFile}"
+            ],
+            "cwd": "/Users/nicholas.erotas/GitHub/erotas-console/FrontEnd/src/__tests__",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "runtimeExecutable": "npm"
+        }
+    ]
+}
