@@ -121,7 +121,13 @@ const YearlyBreakup = () => {
             sm: 5,
           }}
         >
-          <Chart options={optionscolumnchart} series={seriescolumnchart} type='donut' height={150} width={'100%'} />
+          <Chart
+            options={optionscolumnchart}
+            series={seriescolumnchart}
+            type='donut'
+            height={150}
+            width={'100%'}
+          />
         </Grid>
       </Grid>
     </DashboardCard>

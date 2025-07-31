@@ -1,13 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as arrayOfObjectsHandlers from '../arrayOfObjectsHandlers';
 import * as arrayToStringListHandler from '../arrayToStringListHandler';
 import * as EncryptLocalStorage from '../EncryptLocalStorage';
 import * as replaceCommaInString from '../replaceCommaInString';
 import * as DataGridHelpers from '../DataGrid';
-import * as loginHelpers from '../loginHelpers';
 import * as permissionChecker from '../permissionChecker';
 import axiosInstance from '../AxiosInstance';
 import { cleanup } from '@testing-library/react';
-import { CreateProduct } from 'models/Products/Products';
 
 interface defaultTestObj {
   name: string;
@@ -21,7 +20,13 @@ const defaultArrayObj: defaultTestObj[] = [
 afterEach(cleanup);
 
 it('addToArray add new object to array', () => {
-  const alteredObj = arrayOfObjectsHandlers.addToArray<defaultTestObj>(defaultArrayObj, { name: 'Jotaro', chapter: 3 });
+  const alteredObj = arrayOfObjectsHandlers.addToArray<defaultTestObj>(
+    defaultArrayObj,
+    {
+      name: 'Jotaro',
+      chapter: 3,
+    },
+  );
 
   expect(alteredObj).toStrictEqual([
     { name: 'Jonathan', chapter: 1 },
@@ -31,7 +36,13 @@ it('addToArray add new object to array', () => {
 });
 
 it("addToArray don't add old object to array", () => {
-  const alteredObj = arrayOfObjectsHandlers.addToArray<defaultTestObj>(defaultArrayObj, { name: 'Joesph', chapter: 2 });
+  const alteredObj = arrayOfObjectsHandlers.addToArray<defaultTestObj>(
+    defaultArrayObj,
+    {
+      name: 'Joesph',
+      chapter: 2,
+    },
+  );
 
   expect(alteredObj).toStrictEqual([
     { name: 'Jonathan', chapter: 1 },
@@ -40,7 +51,11 @@ it("addToArray don't add old object to array", () => {
 });
 
 it('handleAddOrRemoveFromArray add new object to array', () => {
-  const alteredObj = arrayOfObjectsHandlers.handleAddOrRemoveFromArray<defaultTestObj>(defaultArrayObj, { name: 'Jotaro', chapter: 3 });
+  const alteredObj =
+    arrayOfObjectsHandlers.handleAddOrRemoveFromArray<defaultTestObj>(
+      defaultArrayObj,
+      { name: 'Jotaro', chapter: 3 },
+    );
 
   expect(alteredObj).toStrictEqual([
     { name: 'Jonathan', chapter: 1 },
@@ -50,19 +65,35 @@ it('handleAddOrRemoveFromArray add new object to array', () => {
 });
 
 it('handleAddOrRemoveFromArray remove object from array', () => {
-  const alteredObj = arrayOfObjectsHandlers.handleAddOrRemoveFromArray<defaultTestObj>(defaultArrayObj, { name: 'Joesph', chapter: 2 });
+  const alteredObj =
+    arrayOfObjectsHandlers.handleAddOrRemoveFromArray<defaultTestObj>(
+      defaultArrayObj,
+      { name: 'Joesph', chapter: 2 },
+    );
 
   expect(alteredObj).toStrictEqual([{ name: 'Jonathan', chapter: 1 }]);
 });
 
 it('removeFromArray remove object from array', () => {
-  const alteredObj = arrayOfObjectsHandlers.removeFromArray<defaultTestObj>(defaultArrayObj, { name: 'Joesph', chapter: 2 });
+  const alteredObj = arrayOfObjectsHandlers.removeFromArray<defaultTestObj>(
+    defaultArrayObj,
+    {
+      name: 'Joesph',
+      chapter: 2,
+    },
+  );
 
   expect(alteredObj).toStrictEqual([{ name: 'Jonathan', chapter: 1 }]);
 });
 
 it("removeFromArray don't add object to array", () => {
-  const alteredObj = arrayOfObjectsHandlers.removeFromArray<defaultTestObj>(defaultArrayObj, { name: 'Jotaro', chapter: 3 });
+  const alteredObj = arrayOfObjectsHandlers.removeFromArray<defaultTestObj>(
+    defaultArrayObj,
+    {
+      name: 'Jotaro',
+      chapter: 3,
+    },
+  );
 
   expect(alteredObj).toStrictEqual([
     { name: 'Jonathan', chapter: 1 },
@@ -71,13 +102,20 @@ it("removeFromArray don't add object to array", () => {
 });
 
 it('arrayToStringListHandler', () => {
-  const string = arrayToStringListHandler.arrayToStringListHandler(['This', 'is', 'a', 'sentence.']);
+  const string = arrayToStringListHandler.arrayToStringListHandler([
+    'This',
+    'is',
+    'a',
+    'sentence.',
+  ]);
 
   expect(string).toStrictEqual('This is a sentence.');
 });
 
 it('stringToArrayHandler', () => {
-  const string = arrayToStringListHandler.stringToArrayHandler('This, is, a, sentence.');
+  const string = arrayToStringListHandler.stringToArrayHandler(
+    'This, is, a, sentence.',
+  );
 
   expect(string).toStrictEqual(['This', 'is', 'a', 'sentence.']);
 });
@@ -123,20 +161,26 @@ it('axiosInstance', () => {
 });
 
 it('replaceCommaInStringWithSpace', () => {
-  const string = replaceCommaInString.replaceCommaInStringWithSpace('This,that,and the other');
+  const string = replaceCommaInString.replaceCommaInStringWithSpace(
+    'This,that,and the other',
+  );
 
   expect(string).toStrictEqual('This, that, and the other');
 });
 
 it('replaceCommaInStringWithLine', () => {
-  const string = replaceCommaInString.replaceCommaInStringWithLine('This,that,and the other');
+  const string = replaceCommaInString.replaceCommaInStringWithLine(
+    'This,that,and the other',
+  );
 
   expect(string).toStrictEqual(`This,\nthat,\nand the other`);
 });
 
 describe('DataGridHelpers', () => {
   it('getPaginationOptions returns array', () => {
-    expect(Array.isArray(DataGridHelpers.getPaginationOptions([1, 2, 3]))).toBe(true);
+    expect(Array.isArray(DataGridHelpers.getPaginationOptions([1, 2, 3]))).toBe(
+      true,
+    );
   });
 
   it('getCreated returns formatted string', () => {
@@ -144,7 +188,7 @@ describe('DataGridHelpers', () => {
       typeof DataGridHelpers.getCreated('', {
         createdOnUtc: '2022-01-01',
         createdByEmail: 'test@test.com',
-      })
+      }),
     ).toBe('string');
   });
 });

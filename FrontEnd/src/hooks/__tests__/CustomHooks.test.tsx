@@ -25,7 +25,9 @@ const createWrapper = () => {
       },
     },
   });
-  return ({ children }: { children: React.ReactNode }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 };
 
 it('useGet should return mocked Data', async () => {
@@ -124,7 +126,9 @@ it('usePrefetch should prefetch data', async () => {
   });
 
   renderHook(() => usePrefetch({ apiLabel: 'test', url: '/test' }), {
-    wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>,
+    wrapper: ({ children }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    ),
   });
 
   await waitFor(() => {
@@ -146,7 +150,9 @@ it('MutationData should return cached data', async () => {
   queryClient.setQueryData(['test', '0'], mockData);
 
   const { result } = renderHook(() => useMutationData<typeof mockData>(['test', '0']), {
-    wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>,
+    wrapper: ({ children }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    ),
   });
 
   expect(result.current);

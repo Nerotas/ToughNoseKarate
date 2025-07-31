@@ -14,7 +14,13 @@ const Icons = () => {
         </Typography>
         <Typography variant='body1' gutterBottom>
           Browse and search for icons directly on the{' '}
-          <Link href='https://tabler-icons.io/' target='_blank' rel='noopener noreferrer' underline='hover' color='primary'>
+          <Link
+            href='https://tabler-icons.io/'
+            target='_blank'
+            rel='noopener noreferrer'
+            underline='hover'
+            color='primary'
+          >
             Tabler Icons website
           </Link>
           .

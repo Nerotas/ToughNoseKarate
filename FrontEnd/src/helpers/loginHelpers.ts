@@ -1,6 +1,3 @@
-import Cookies from 'js-cookie';
-import { size } from 'lodash';
-
 export enum JWT_TOKEN_STATUS {
   EXPIRED = 'EXPIRED',
   INVALID = 'INVALID',

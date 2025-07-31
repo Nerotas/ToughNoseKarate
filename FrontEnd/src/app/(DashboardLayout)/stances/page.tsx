@@ -1,5 +1,17 @@
 'use client';
-import { Grid, Box, Card, CardContent, Typography, Chip, List, ListItem, ListItemText, Alert, Divider } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  List,
+  ListItem,
+  ListItemText,
+  Alert,
+  Divider,
+} from '@mui/material';
 import { IconBrandTorchain, IconCheckbox, IconX } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
@@ -14,7 +26,13 @@ const stances = [
     description: 'The formal attention stance used at the beginning and end of class.',
     position: 'Feet together, heels touching, toes pointed outward at 45 degrees',
     bodyPosition: 'Stand straight, shoulders back, arms at sides, hands in fists',
-    keyPoints: ['Heels together, toes apart', 'Weight evenly distributed', 'Straight posture', 'Eyes forward', 'Relaxed but alert'],
+    keyPoints: [
+      'Heels together, toes apart',
+      'Weight evenly distributed',
+      'Straight posture',
+      'Eyes forward',
+      'Relaxed but alert',
+    ],
     commonMistakes: ['Feet too far apart', 'Slouching shoulders', 'Looking down', 'Tense muscles'],
     applications: ['Formal greeting', 'Beginning/end of forms', 'Showing respect'],
   },
@@ -34,8 +52,17 @@ const stances = [
       'Elbows close to body',
       'Balanced weight distribution',
     ],
-    commonMistakes: ['Feet too wide or narrow', 'Hands too high or low', 'Locking knees', 'Leaning forward or back'],
-    applications: ['Starting position for techniques', 'Forms preparation', 'Sparring ready position'],
+    commonMistakes: [
+      'Feet too wide or narrow',
+      'Hands too high or low',
+      'Locking knees',
+      'Leaning forward or back',
+    ],
+    applications: [
+      'Starting position for techniques',
+      'Forms preparation',
+      'Sparring ready position',
+    ],
   },
   {
     id: 3,
@@ -46,8 +73,19 @@ const stances = [
     description: 'A strong, stable stance that builds leg strength and balance.',
     position: 'Feet wide apart (2-3 shoulder widths), toes pointing forward',
     bodyPosition: 'Squat down with thighs parallel to ground, back straight',
-    keyPoints: ['Wide stance for stability', 'Thighs parallel to floor', 'Knees over toes', 'Straight back', 'Even weight distribution'],
-    commonMistakes: ['Knees caving inward', 'Leaning forward', 'Not squatting low enough', 'Toes pointing outward'],
+    keyPoints: [
+      'Wide stance for stability',
+      'Thighs parallel to floor',
+      'Knees over toes',
+      'Straight back',
+      'Even weight distribution',
+    ],
+    commonMistakes: [
+      'Knees caving inward',
+      'Leaning forward',
+      'Not squatting low enough',
+      'Toes pointing outward',
+    ],
     applications: ['Strength training', 'Blocking techniques', 'Stable striking platform'],
   },
   {
@@ -66,7 +104,12 @@ const stances = [
       'Weight mostly on front leg',
       'Hip square to front',
     ],
-    commonMistakes: ['Stance too short or long', 'Back foot turned out', 'Weight evenly distributed', 'Hip turned sideways'],
+    commonMistakes: [
+      'Stance too short or long',
+      'Back foot turned out',
+      'Weight evenly distributed',
+      'Hip turned sideways',
+    ],
     applications: ['Punching techniques', 'Forward attacks', 'Advancing movements'],
   },
   {
@@ -78,8 +121,19 @@ const stances = [
     description: 'A defensive stance that allows quick retreating and counter-attacks.',
     position: 'One leg forward, one leg back at 90-degree angle',
     bodyPosition: '30% weight on front leg, 70% on back leg',
-    keyPoints: ['L-shaped foot position', 'Weight mostly on back leg', 'Front leg light and mobile', 'Both knees bent', 'Side-facing body position'],
-    commonMistakes: ['Too much weight on front leg', 'Feet not at 90 degrees', 'Standing too upright', 'Back leg too straight'],
+    keyPoints: [
+      'L-shaped foot position',
+      'Weight mostly on back leg',
+      'Front leg light and mobile',
+      'Both knees bent',
+      'Side-facing body position',
+    ],
+    commonMistakes: [
+      'Too much weight on front leg',
+      'Feet not at 90 degrees',
+      'Standing too upright',
+      'Back leg too straight',
+    ],
     applications: ['Blocking techniques', 'Defensive movements', 'Quick counter-attacks'],
   },
   {
@@ -88,7 +142,8 @@ const stances = [
     korean: 'Beom Sogi',
     belt: 'Orange Belt',
     beltColor: '#FFA500',
-    description: 'A mobile stance with most weight on the back leg, allowing quick front leg techniques.',
+    description:
+      'A mobile stance with most weight on the back leg, allowing quick front leg techniques.',
     position: 'Front foot barely touching ground, all weight on back leg',
     bodyPosition: 'Back leg deeply bent, front foot on ball of foot only',
     keyPoints: [
@@ -98,7 +153,12 @@ const stances = [
       'Ready to kick with front leg',
       'Balanced and mobile',
     ],
-    commonMistakes: ['Too much weight on front foot', 'Not low enough', 'Front foot flat on ground', 'Back leg not bent enough'],
+    commonMistakes: [
+      'Too much weight on front foot',
+      'Not low enough',
+      'Front foot flat on ground',
+      'Back leg not bent enough',
+    ],
     applications: ['Quick front kicks', 'Evasive movements', 'Defensive positioning'],
   },
 ];
@@ -116,14 +176,14 @@ const Stances = () => {
         </Typography>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
-          Proper stances form the foundation of all Tang Soo Do techniques. They provide stability, power generation, and mobility for effective
-          martial arts practice.
+          Proper stances form the foundation of all Tang Soo Do techniques. They provide stability,
+          power generation, and mobility for effective martial arts practice.
         </Typography>
 
         <Alert severity='info' sx={{ mb: 4 }}>
           <Typography variant='body2'>
-            <strong>Training Tip:</strong> Practice holding each stance for 30-60 seconds to build leg strength and muscle memory. Focus on proper
-            form over duration.
+            <strong>Training Tip:</strong> Practice holding each stance for 30-60 seconds to build
+            leg strength and muscle memory. Focus on proper form over duration.
           </Typography>
         </Alert>
 
@@ -185,21 +245,32 @@ const Stances = () => {
                   <Divider sx={{ my: 2 }} />
 
                   <Box sx={{ mb: 3 }}>
-                    <Typography variant='subtitle2' gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography
+                      variant='subtitle2'
+                      gutterBottom
+                      sx={{ display: 'flex', alignItems: 'center' }}
+                    >
                       <IconCheckbox size={16} color='green' style={{ marginRight: 8 }} />
                       Key Points:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
                       {stance.keyPoints.map((point, index) => (
                         <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
-                          <ListItemText primary={`• ${point}`} primaryTypographyProps={{ variant: 'body2' }} />
+                          <ListItemText
+                            primary={`• ${point}`}
+                            primaryTypographyProps={{ variant: 'body2' }}
+                          />
                         </ListItem>
                       ))}
                     </List>
                   </Box>
 
                   <Box sx={{ mb: 3 }}>
-                    <Typography variant='subtitle2' gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography
+                      variant='subtitle2'
+                      gutterBottom
+                      sx={{ display: 'flex', alignItems: 'center' }}
+                    >
                       <IconX size={16} color='red' style={{ marginRight: 8 }} />
                       Common Mistakes:
                     </Typography>
@@ -224,7 +295,13 @@ const Stances = () => {
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                       {stance.applications.map((app, index) => (
-                        <Chip key={index} label={app} size='small' variant='outlined' color='primary' />
+                        <Chip
+                          key={index}
+                          label={app}
+                          size='small'
+                          variant='outlined'
+                          color='primary'
+                        />
                       ))}
                     </Box>
                   </Box>

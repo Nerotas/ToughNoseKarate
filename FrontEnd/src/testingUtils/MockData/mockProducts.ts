@@ -5,6 +5,7 @@ export const mockProducts = [
     description: 'Test description 1',
     price: 99.99,
     category: 'Test Category',
+    createdOnUtc: '2023-10-01T00:00:00Z',
   },
   {
     id: 2,
@@ -12,5 +13,6 @@ export const mockProducts = [
     description: 'Test description 2',
     price: 149.99,
     category: 'Test Category 2',
+    createdOnUtc: '2023-10-02T00:00:00Z',
   },
 ];

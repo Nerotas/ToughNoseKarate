@@ -98,7 +98,13 @@ const SalesOverview = () => {
         </Select>
       }
     >
-      <Chart options={optionscolumnchart} series={seriescolumnchart} type='bar' height={370} width={'100%'} />
+      <Chart
+        options={optionscolumnchart}
+        series={seriescolumnchart}
+        type='bar'
+        height={370}
+        width={'100%'}
+      />
     </DashboardCard>
   );
 };

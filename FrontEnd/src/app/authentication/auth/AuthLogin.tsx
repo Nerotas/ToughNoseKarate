@@ -1,5 +1,13 @@
 import React from 'react';
-import { Box, Typography, FormGroup, FormControlLabel, Button, Stack, Checkbox } from '@mui/material';
+import {
+  Box,
+  Typography,
+  FormGroup,
+  FormControlLabel,
+  Button,
+  Stack,
+  Checkbox,
+} from '@mui/material';
 import Link from 'next/link';
 
 import CustomTextField from '../../(DashboardLayout)/components/forms/theme-elements/CustomTextField';
@@ -22,13 +30,25 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => (
 
     <Stack>
       <Box>
-        <Typography variant='subtitle1' fontWeight={600} component='label' htmlFor='username' mb='5px'>
+        <Typography
+          variant='subtitle1'
+          fontWeight={600}
+          component='label'
+          htmlFor='username'
+          mb='5px'
+        >
           Username
         </Typography>
         <CustomTextField variant='outlined' fullWidth />
       </Box>
       <Box mt='25px'>
-        <Typography variant='subtitle1' fontWeight={600} component='label' htmlFor='password' mb='5px'>
+        <Typography
+          variant='subtitle1'
+          fontWeight={600}
+          component='label'
+          htmlFor='password'
+          mb='5px'
+        >
           Password
         </Typography>
         <CustomTextField type='password' variant='outlined' fullWidth />
@@ -51,7 +71,15 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => (
       </Stack>
     </Stack>
     <Box>
-      <Button color='primary' variant='contained' size='large' fullWidth component={Link} href='/' type='submit'>
+      <Button
+        color='primary'
+        variant='contained'
+        size='large'
+        fullWidth
+        component={Link}
+        href='/'
+        type='submit'
+      >
         Sign In
       </Button>
     </Box>

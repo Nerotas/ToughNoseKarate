@@ -1,4 +1,13 @@
-import { Typography, Box, Table, TableBody, TableCell, TableHead, TableRow, Chip } from '@mui/material';
+import {
+  Typography,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Chip,
+} from '@mui/material';
 import DashboardCard from '../shared/DashboardCard';
 
 const products = [

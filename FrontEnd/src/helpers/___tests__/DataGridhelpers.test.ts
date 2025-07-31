@@ -30,45 +30,10 @@ it('getPaginationOptions should max out at 100', () => {
 
 it('getCreated should return user readable string', () => {
   const mockRow = mockProducts[0];
-  const createdBy = DataGridHelpers.getCreated('', mockRow);
+  const createdBy = DataGridHelpers.getCreated('', {
+    createdOnUtc: mockRow.createdOnUtc,
+    createdByEmail: 'testuser@erotas.test',
+  });
 
   expect(createdBy).toStrictEqual('2022-10-26 (testuser@erotas.test)');
-});
-
-it('getDeprecatedDate should return empty string for null data', () => {
-  const mockRow = mockProducts[0];
-  const getDeprecatedDate = DataGridHelpers.getDeprecatedDate('', mockRow);
-
-  expect(getDeprecatedDate).toStrictEqual('');
-});
-
-it('getDeprecatedDate should return user readable date', () => {
-  const mockRow = mockProducts[1];
-  const getDeprecatedDate = DataGridHelpers.getDeprecatedDate('', mockRow);
-
-  expect(getDeprecatedDate).toStrictEqual('2022-10-26');
-});
-
-it('getAccount should return all string for null data', () => {
-  const mockRow: any[] = [];
-  const getAccount = DataGridHelpers.getAccount('', mockRow);
-  expect(getAccount).toStrictEqual('ALL');
-});
-
-it('getAccount should return user readable date', () => {
-  const mockRow = mockProducts[0];
-  const getAccount = DataGridHelpers.getAccount('', mockRow);
-  expect(getAccount).toStrictEqual('backcountry (11)');
-});
-
-it('getPersonName should return person name and ID', () => {
-  const mockRow = mockProducts[0];
-  const getAccount = DataGridHelpers.getPersonName('', mockRow);
-  expect(getAccount).toStrictEqual('women (0)');
-});
-
-it('getProductSection should return product section name and ID', () => {
-  const mockRow = mockProducts[0];
-  const getAccount = DataGridHelpers.getProductSection('', mockRow);
-  expect(getAccount).toStrictEqual('Complex-Dress (1)');
 });

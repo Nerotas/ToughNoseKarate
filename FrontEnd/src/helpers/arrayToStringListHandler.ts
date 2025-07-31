@@ -1,6 +1,8 @@
-export const arrayToStringListHandler = (incomingArray: string[]): string => incomingArray.join(' ').replace(/,\s*$/g, '');
+export const arrayToStringListHandler = (incomingArray: string[]): string =>
+  incomingArray.join(' ').replace(/,\s*$/g, '');
 
-export const arrayToStringCommaHandler = (incomingArray: string[]): string => (incomingArray.length > 0 ? incomingArray.join(', ') : '');
+export const arrayToStringCommaHandler = (incomingArray: string[]): string =>
+  incomingArray.length > 0 ? incomingArray.join(', ') : '';
 
 export const stringToArrayHandler = (incomingString = ''): string[] =>
   incomingString.trim() === '' ? [] : incomingString.replace(/ /g, '').split(',');

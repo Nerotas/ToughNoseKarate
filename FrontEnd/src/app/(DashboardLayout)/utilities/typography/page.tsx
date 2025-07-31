@@ -111,7 +111,8 @@ const TypographyPage = () => {
                 <BlankCard>
                   <CardContent>
                     <Typography variant='subtitle1'>
-                      subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                      subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                      blanditiis tenetur
                     </Typography>
 
                     <Typography variant='body1' color='textSecondary'>
@@ -128,7 +129,8 @@ const TypographyPage = () => {
                 <BlankCard>
                   <CardContent>
                     <Typography variant='subtitle2'>
-                      subtitle2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                      subtitle2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                      blanditiis tenetur
                     </Typography>
 
                     <Typography variant='body1' color='textSecondary'>
@@ -144,7 +146,10 @@ const TypographyPage = () => {
               >
                 <BlankCard>
                   <CardContent>
-                    <Typography variant='body1'>body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur</Typography>
+                    <Typography variant='body1'>
+                      body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                      blanditiis tenetur
+                    </Typography>
 
                     <Typography variant='body1' color='textSecondary'>
                       font size: 16 | line-height: 24 | font weight: 400
@@ -159,7 +164,10 @@ const TypographyPage = () => {
               >
                 <BlankCard>
                   <CardContent>
-                    <Typography variant='body2'>body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur</Typography>
+                    <Typography variant='body2'>
+                      body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                      blanditiis tenetur
+                    </Typography>
 
                     <Typography variant='body1' color='textSecondary'>
                       font size: 14 | line-height: 20 | font weight: 400
@@ -175,7 +183,8 @@ const TypographyPage = () => {
                 <BlankCard>
                   <CardContent>
                     <Typography variant='caption'>
-                      caption. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                      caption. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                      blanditiis tenetur
                     </Typography>
 
                     <Typography variant='body1' color='textSecondary'>
@@ -192,7 +201,8 @@ const TypographyPage = () => {
                 <BlankCard>
                   <CardContent>
                     <Typography variant='overline'>
-                      overline. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                      overline. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                      blanditiis tenetur
                     </Typography>
 
                     <Typography variant='body1' color='textSecondary'>
@@ -223,7 +233,8 @@ const TypographyPage = () => {
                     </Typography>
 
                     <Typography variant='body1' color='textprimary'>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                      tenetur
                     </Typography>
                   </CardContent>
                 </BlankCard>
@@ -240,7 +251,8 @@ const TypographyPage = () => {
                     </Typography>
 
                     <Typography variant='body1' color='textSecondary'>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                      tenetur
                     </Typography>
                   </CardContent>
                 </BlankCard>
@@ -257,7 +269,8 @@ const TypographyPage = () => {
                     </Typography>
 
                     <Typography variant='body1' sx={{ color: (theme) => theme.palette.info.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                      tenetur
                     </Typography>
                   </CardContent>
                 </BlankCard>
@@ -273,8 +286,12 @@ const TypographyPage = () => {
                       Text Primary
                     </Typography>
 
-                    <Typography variant='body1' sx={{ color: (theme) => theme.palette.primary.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                    <Typography
+                      variant='body1'
+                      sx={{ color: (theme) => theme.palette.primary.main }}
+                    >
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                      tenetur
                     </Typography>
                   </CardContent>
                 </BlankCard>
@@ -290,8 +307,12 @@ const TypographyPage = () => {
                       Text Warning
                     </Typography>
 
-                    <Typography variant='body1' sx={{ color: (theme) => theme.palette.warning.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                    <Typography
+                      variant='body1'
+                      sx={{ color: (theme) => theme.palette.warning.main }}
+                    >
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                      tenetur
                     </Typography>
                   </CardContent>
                 </BlankCard>
@@ -308,7 +329,8 @@ const TypographyPage = () => {
                     </Typography>
 
                     <Typography variant='body1' sx={{ color: (theme) => theme.palette.error.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                      tenetur
                     </Typography>
                   </CardContent>
                 </BlankCard>
@@ -324,8 +346,12 @@ const TypographyPage = () => {
                       Text Success
                     </Typography>
 
-                    <Typography variant='body1' sx={{ color: (theme) => theme.palette.success.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                    <Typography
+                      variant='body1'
+                      sx={{ color: (theme) => theme.palette.success.main }}
+                    >
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                      tenetur
                     </Typography>
                   </CardContent>
                 </BlankCard>

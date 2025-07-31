@@ -63,8 +63,7 @@ module.exports = {
     'jsx-a11y/anchor-is-valid': 'warn',
     'jsx-a11y/click-events-have-key-events': 'warn',
     'jsx-a11y/no-static-element-interactions': 'warn',
-    'react/jsx-max-props-per-line': [3, { when: 'always' }],
-
+    'react/jsx-max-props-per-line': [1, { maximum: 1, when: 'multiline' }],
     // Prettier integration
     'prettier/prettier': 'warn',
 

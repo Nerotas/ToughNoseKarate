@@ -265,7 +265,11 @@ const Students = () => {
                             {student.nextBelt}
                           </Typography>
                         </Box>
-                        <LinearProgress variant='determinate' value={student.progress} sx={{ height: 6, borderRadius: 3 }} />
+                        <LinearProgress
+                          variant='determinate'
+                          value={student.progress}
+                          sx={{ height: 6, borderRadius: 3 }}
+                        />
                       </Box>
                     </TableCell>
 
@@ -279,11 +283,19 @@ const Students = () => {
                     </TableCell>
 
                     <TableCell>
-                      <Typography variant='body2'>{new Date(student.nextTestEligible).toLocaleDateString()}</Typography>
+                      <Typography variant='body2'>
+                        {new Date(student.nextTestEligible).toLocaleDateString()}
+                      </Typography>
                       <Chip
-                        label={new Date(student.nextTestEligible) <= new Date() ? 'Eligible Now' : 'Not Ready'}
+                        label={
+                          new Date(student.nextTestEligible) <= new Date()
+                            ? 'Eligible Now'
+                            : 'Not Ready'
+                        }
                         size='small'
-                        color={new Date(student.nextTestEligible) <= new Date() ? 'success' : 'default'}
+                        color={
+                          new Date(student.nextTestEligible) <= new Date() ? 'success' : 'default'
+                        }
                         sx={{ mt: 0.5 }}
                       />
                     </TableCell>

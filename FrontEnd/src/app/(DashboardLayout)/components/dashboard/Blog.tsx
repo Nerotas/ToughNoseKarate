@@ -67,7 +67,11 @@ const Blog = () => {
               />
             </Typography>
             <Tooltip title='Add To Cart'>
-              <Fab size='small' color='primary' sx={{ bottom: '75px', right: '15px', position: 'absolute' }}>
+              <Fab
+                size='small'
+                color='primary'
+                sx={{ bottom: '75px', right: '15px', position: 'absolute' }}
+              >
                 <IconBasket size='16' />
               </Fab>
             </Tooltip>

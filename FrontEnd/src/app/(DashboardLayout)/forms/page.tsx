@@ -27,7 +27,8 @@ const forms = [
     beltColor: '#FFFFFF',
     difficulty: 1,
     moves: 18,
-    description: 'The first form taught in Tang Soo Do, focusing on basic stances, blocks, and punches.',
+    description:
+      'The first form taught in Tang Soo Do, focusing on basic stances, blocks, and punches.',
     techniques: [
       'Ready stance',
       'Left front stance with high block',
@@ -71,7 +72,12 @@ const forms = [
       'Turn left 180° with right front stance and low block',
       'Left front kick, land in left front stance with middle punch',
     ],
-    keyPoints: ['Proper knife hand technique', 'Balance during kicks', 'Fluid transitions', 'Power generation from hips'],
+    keyPoints: [
+      'Proper knife hand technique',
+      'Balance during kicks',
+      'Fluid transitions',
+      'Power generation from hips',
+    ],
   },
   {
     id: 3,
@@ -94,7 +100,12 @@ const forms = [
       'Turn left 180° with right front stance and knife hand block',
       'Left side kick, land with left ridge hand strike',
     ],
-    keyPoints: ['Kick-punch combinations', 'Proper chamber and execution', 'Balance and control', 'Speed and power coordination'],
+    keyPoints: [
+      'Kick-punch combinations',
+      'Proper chamber and execution',
+      'Balance and control',
+      'Speed and power coordination',
+    ],
   },
   {
     id: 4,
@@ -117,7 +128,12 @@ const forms = [
       'Step forward with left front stance and high block',
       'Right reverse punch',
     ],
-    keyPoints: ['Double hand techniques', 'Horse stance stability', 'Advanced footwork', 'Precise timing'],
+    keyPoints: [
+      'Double hand techniques',
+      'Horse stance stability',
+      'Advanced footwork',
+      'Precise timing',
+    ],
   },
 ];
 
@@ -134,8 +150,9 @@ const Forms = () => {
         </Typography>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
-          Forms are choreographed sequences of martial arts techniques. They help develop proper technique, balance, timing, and mental discipline
-          while preserving traditional martial arts knowledge.
+          Forms are choreographed sequences of martial arts techniques. They help develop proper
+          technique, balance, timing, and mental discipline while preserving traditional martial
+          arts knowledge.
         </Typography>
 
         <Grid container spacing={3}>
@@ -176,7 +193,12 @@ const Forms = () => {
 
                   <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                     <Chip label={`${form.moves} moves`} size='small' variant='outlined' />
-                    <Chip label={`Level ${form.difficulty}`} size='small' variant='outlined' color='primary' />
+                    <Chip
+                      label={`Level ${form.difficulty}`}
+                      size='small'
+                      variant='outlined'
+                      color='primary'
+                    />
                   </Box>
 
                   <Typography variant='body2' paragraph>
@@ -184,7 +206,12 @@ const Forms = () => {
                   </Typography>
 
                   <Box sx={{ mb: 2 }}>
-                    <Button variant='outlined' startIcon={<IconPlayerPlay />} size='small' sx={{ mr: 1 }}>
+                    <Button
+                      variant='outlined'
+                      startIcon={<IconPlayerPlay />}
+                      size='small'
+                      sx={{ mr: 1 }}
+                    >
                       Watch Video
                     </Button>
                     <Button variant='outlined' startIcon={<IconBook />} size='small'>
@@ -200,7 +227,10 @@ const Forms = () => {
                       <List dense>
                         {form.techniques.map((technique, index) => (
                           <ListItem key={index} sx={{ pl: 0 }}>
-                            <ListItemText primary={`${index + 1}. ${technique}`} primaryTypographyProps={{ variant: 'body2' }} />
+                            <ListItemText
+                              primary={`${index + 1}. ${technique}`}
+                              primaryTypographyProps={{ variant: 'body2' }}
+                            />
                           </ListItem>
                         ))}
                       </List>
@@ -215,7 +245,10 @@ const Forms = () => {
                       <List dense>
                         {form.keyPoints.map((point, index) => (
                           <ListItem key={index} sx={{ pl: 0 }}>
-                            <ListItemText primary={`• ${point}`} primaryTypographyProps={{ variant: 'body2' }} />
+                            <ListItemText
+                              primary={`• ${point}`}
+                              primaryTypographyProps={{ variant: 'body2' }}
+                            />
                           </ListItem>
                         ))}
                       </List>
