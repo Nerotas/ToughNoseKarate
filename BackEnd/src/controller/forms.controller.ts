@@ -9,16 +9,11 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { FormsService } from '../service/forms.service';
-import {
-  forms,
-  formsCreationAttributes,
-} from '../models/forms';
+import { forms, formsCreationAttributes } from '../models/forms';
 
 @Controller('forms')
 export class FormsController {
-  constructor(
-    private readonly formsService: FormsService,
-  ) {}
+  constructor(private readonly formsService: FormsService) {}
 
   @Get()
   async findAll(): Promise<forms[]> {
@@ -33,9 +28,7 @@ export class FormsController {
   }
 
   @Post()
-  async create(
-    @Body() data: formsCreationAttributes,
-  ): Promise<forms> {
+  async create(@Body() data: formsCreationAttributes): Promise<forms> {
     return await this.formsService.create(data);
   }
 

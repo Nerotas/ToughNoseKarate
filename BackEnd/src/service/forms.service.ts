@@ -1,8 +1,5 @@
 ﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  forms,
-  formsCreationAttributes,
-} from '../models/forms';
+import { forms, formsCreationAttributes } from '../models/forms';
 
 @Injectable()
 export class FormsService {
@@ -22,10 +19,7 @@ export class FormsService {
     return await forms.create(data);
   }
 
-  async update(
-    studentid: number,
-    data: Partial<forms>,
-  ): Promise<forms> {
+  async update(studentid: number, data: Partial<forms>): Promise<forms> {
     const record = await this.findOne(studentid);
     return await record.update(data);
   }

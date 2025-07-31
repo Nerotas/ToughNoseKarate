@@ -9,16 +9,11 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { StancesService } from '../service/stances.service';
-import {
-  stances,
-  stancesCreationAttributes,
-} from '../models/stances';
+import { stances, stancesCreationAttributes } from '../models/stances';
 
 @Controller('stances')
 export class StancesController {
-  constructor(
-    private readonly stancesService: StancesService,
-  ) {}
+  constructor(private readonly stancesService: StancesService) {}
 
   @Get()
   async findAll(): Promise<stances[]> {
@@ -33,9 +28,7 @@ export class StancesController {
   }
 
   @Post()
-  async create(
-    @Body() data: stancesCreationAttributes,
-  ): Promise<stances> {
+  async create(@Body() data: stancesCreationAttributes): Promise<stances> {
     return await this.stancesService.create(data);
   }
 

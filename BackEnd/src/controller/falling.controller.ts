@@ -9,16 +9,11 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { FallingService } from '../service/falling.service';
-import {
-  falling,
-  fallingCreationAttributes,
-} from '../models/falling';
+import { falling, fallingCreationAttributes } from '../models/falling';
 
 @Controller('falling')
 export class FallingController {
-  constructor(
-    private readonly fallingService: FallingService,
-  ) {}
+  constructor(private readonly fallingService: FallingService) {}
 
   @Get()
   async findAll(): Promise<falling[]> {
@@ -33,9 +28,7 @@ export class FallingController {
   }
 
   @Post()
-  async create(
-    @Body() data: fallingCreationAttributes,
-  ): Promise<falling> {
+  async create(@Body() data: fallingCreationAttributes): Promise<falling> {
     return await this.fallingService.create(data);
   }
 

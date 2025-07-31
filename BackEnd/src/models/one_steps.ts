@@ -3,6 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { students, studentsId } from './students';
 
 export interface one_stepsAttributes {
+  id: number;
   studentid: number;
   step_1_left?: string;
   step_1_right?: string;
@@ -18,9 +19,10 @@ export interface one_stepsAttributes {
   step_4_followup?: string;
 }
 
-export type one_stepsPk = 'studentid';
+export type one_stepsPk = 'id';
 export type one_stepsId = one_steps[one_stepsPk];
 export type one_stepsOptionalAttributes =
+  | 'id'
   | 'step_1_left'
   | 'step_1_right'
   | 'step_1_followup'
@@ -42,6 +44,7 @@ export class one_steps
   extends Model<one_stepsAttributes, one_stepsCreationAttributes>
   implements one_stepsAttributes
 {
+  id!: number;
   studentid!: number;
   step_1_left?: string;
   step_1_right?: string;
@@ -65,10 +68,15 @@ export class one_steps
   static initModel(sequelize: Sequelize.Sequelize): typeof one_steps {
     return one_steps.init(
       {
-        studentid: {
+        id: {
+          autoIncrement: true,
           type: DataTypes.INTEGER,
           allowNull: false,
           primaryKey: true,
+        },
+        studentid: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
           references: {
             model: 'students',
             key: 'studentid',
@@ -131,6 +139,11 @@ export class one_steps
           {
             name: 'PRIMARY',
             unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'id' }],
+          },
+          {
+            name: 'one_steps_ibfk_1',
             using: 'BTREE',
             fields: [{ name: 'studentid' }],
           },

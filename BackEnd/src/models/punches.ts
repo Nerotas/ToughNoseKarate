@@ -2,47 +2,59 @@ import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 import type { students, studentsId } from './students';
 
-export interface combinationsAttributes {
+export interface punchesAttributes {
   id: number;
   studentid: number;
-  kicking?: string;
-  hands?: string;
-  fighting?: string;
-  basics?: string;
+  center?: string;
+  reverse?: string;
+  jab?: string;
+  side?: string;
+  charging?: string;
+  slide_up_jab?: string;
+  slide_up_punch?: string;
+  spin_bottom_fist?: string;
 }
 
-export type combinationsPk = 'id';
-export type combinationsId = combinations[combinationsPk];
-export type combinationsOptionalAttributes =
+export type punchesPk = 'id';
+export type punchesId = punches[punchesPk];
+export type punchesOptionalAttributes =
   | 'id'
-  | 'kicking'
-  | 'hands'
-  | 'fighting'
-  | 'basics';
-export type combinationsCreationAttributes = Optional<
-  combinationsAttributes,
-  combinationsOptionalAttributes
+  | 'center'
+  | 'reverse'
+  | 'jab'
+  | 'side'
+  | 'charging'
+  | 'slide_up_jab'
+  | 'slide_up_punch'
+  | 'spin_bottom_fist';
+export type punchesCreationAttributes = Optional<
+  punchesAttributes,
+  punchesOptionalAttributes
 >;
 
-export class combinations
-  extends Model<combinationsAttributes, combinationsCreationAttributes>
-  implements combinationsAttributes
+export class punches
+  extends Model<punchesAttributes, punchesCreationAttributes>
+  implements punchesAttributes
 {
   id!: number;
   studentid!: number;
-  kicking?: string;
-  hands?: string;
-  fighting?: string;
-  basics?: string;
+  center?: string;
+  reverse?: string;
+  jab?: string;
+  side?: string;
+  charging?: string;
+  slide_up_jab?: string;
+  slide_up_punch?: string;
+  spin_bottom_fist?: string;
 
-  // combinations belongsTo students via studentid
+  // punches belongsTo students via studentid
   student!: students;
   getStudent!: Sequelize.BelongsToGetAssociationMixin<students>;
   setStudent!: Sequelize.BelongsToSetAssociationMixin<students, studentsId>;
   createStudent!: Sequelize.BelongsToCreateAssociationMixin<students>;
 
-  static initModel(sequelize: Sequelize.Sequelize): typeof combinations {
-    return combinations.init(
+  static initModel(sequelize: Sequelize.Sequelize): typeof punches {
+    return punches.init(
       {
         id: {
           autoIncrement: true,
@@ -58,26 +70,42 @@ export class combinations
             key: 'studentid',
           },
         },
-        kicking: {
+        center: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        hands: {
+        reverse: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        fighting: {
+        jab: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        basics: {
+        side: {
+          type: DataTypes.STRING(45),
+          allowNull: true,
+        },
+        charging: {
+          type: DataTypes.STRING(45),
+          allowNull: true,
+        },
+        slide_up_jab: {
+          type: DataTypes.STRING(45),
+          allowNull: true,
+        },
+        slide_up_punch: {
+          type: DataTypes.STRING(45),
+          allowNull: true,
+        },
+        spin_bottom_fist: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
       },
       {
         sequelize,
-        tableName: 'combinations',
+        tableName: 'punches',
         timestamps: false,
         indexes: [
           {

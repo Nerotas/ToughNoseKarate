@@ -2,59 +2,62 @@ import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 import type { students, studentsId } from './students';
 
-export interface stancesAttributes {
+export interface blocksAttributes {
   id: number;
   studentid: number;
-  front?: string;
-  back?: string;
-  straddle?: string;
-  fighting?: string;
-  jun_bi?: string;
-  bowing?: string;
-  shifting?: string;
-  comments?: string;
+  low?: string;
+  knife_hand?: string;
+  high?: string;
+  inside?: string;
+  outside?: string;
+  low_chop?: string;
+  high_chop?: string;
+  double_block_punch?: string;
+  double_block?: string;
 }
 
-export type stancesPk = 'id';
-export type stancesId = stances[stancesPk];
-export type stancesOptionalAttributes =
+export type blocksPk = 'id';
+export type blocksId = blocks[blocksPk];
+export type blocksOptionalAttributes =
   | 'id'
-  | 'front'
-  | 'back'
-  | 'straddle'
-  | 'fighting'
-  | 'jun_bi'
-  | 'bowing'
-  | 'shifting'
-  | 'comments';
-export type stancesCreationAttributes = Optional<
-  stancesAttributes,
-  stancesOptionalAttributes
+  | 'low'
+  | 'knife_hand'
+  | 'high'
+  | 'inside'
+  | 'outside'
+  | 'low_chop'
+  | 'high_chop'
+  | 'double_block_punch'
+  | 'double_block';
+export type blocksCreationAttributes = Optional<
+  blocksAttributes,
+  blocksOptionalAttributes
 >;
 
-export class stances
-  extends Model<stancesAttributes, stancesCreationAttributes>
-  implements stancesAttributes
+export class blocks
+  extends Model<blocksAttributes, blocksCreationAttributes>
+  implements blocksAttributes
 {
   id!: number;
   studentid!: number;
-  front?: string;
-  back?: string;
-  straddle?: string;
-  fighting?: string;
-  jun_bi?: string;
-  bowing?: string;
-  shifting?: string;
-  comments?: string;
+  low?: string;
+  knife_hand?: string;
+  high?: string;
+  inside?: string;
+  outside?: string;
+  low_chop?: string;
+  high_chop?: string;
+  double_block_punch?: string;
+  double_block?: string;
 
-  // stances belongsTo students via studentid
+  // blocks belongsTo students via studentid
   student!: students;
   getStudent!: Sequelize.BelongsToGetAssociationMixin<students>;
   setStudent!: Sequelize.BelongsToSetAssociationMixin<students, studentsId>;
   createStudent!: Sequelize.BelongsToCreateAssociationMixin<students>;
 
-  static initModel(sequelize: Sequelize.Sequelize): typeof stances {
-    return stances.init(
+  static initModel(sequelize: Sequelize.Sequelize): typeof blocks {
+    return blocks.init(
       {
         id: {
           autoIncrement: true,
@@ -70,42 +73,46 @@ export class stances
             key: 'studentid',
           },
         },
-        front: {
+        low: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        back: {
+        knife_hand: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        straddle: {
+        high: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        fighting: {
+        inside: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        jun_bi: {
+        outside: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        bowing: {
+        low_chop: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        shifting: {
+        high_chop: {
           type: DataTypes.STRING(45),
           allowNull: true,
         },
-        comments: {
-          type: DataTypes.TEXT,
+        double_block_punch: {
+          type: DataTypes.STRING(45),
+          allowNull: true,
+        },
+        double_block: {
+          type: DataTypes.STRING(45),
           allowNull: true,
         },
       },
       {
         sequelize,
-        tableName: 'stances',
+        tableName: 'blocks',
         timestamps: false,
         indexes: [
           {
@@ -115,7 +122,7 @@ export class stances
             fields: [{ name: 'id' }],
           },
           {
-            name: 'stances_ibfk_1',
+            name: 'studentid',
             using: 'BTREE',
             fields: [{ name: 'studentid' }],
           },

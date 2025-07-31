@@ -25,7 +25,9 @@ export class StudentsService {
     const models = this.databaseService.getModels();
     const record = await models.students.findByPk(studentid);
     if (!record) {
-      throw new NotFoundException(`Student with studentid ${studentid} not found`);
+      throw new NotFoundException(
+        `Student with studentid ${studentid} not found`,
+      );
     }
     return record;
   }

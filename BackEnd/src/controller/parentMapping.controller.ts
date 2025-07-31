@@ -16,9 +16,7 @@ import {
 
 @Controller('parent-mapping')
 export class ParentMappingController {
-  constructor(
-    private readonly parentMappingService: ParentMappingService,
-  ) {}
+  constructor(private readonly parentMappingService: ParentMappingService) {}
 
   @Get()
   async findAll(): Promise<parent_mapping[]> {
@@ -56,7 +54,7 @@ export class ParentMappingController {
   ): Promise<{ message: string }> {
     await this.parentMappingService.remove(studentid, parentid);
     return {
-      message: `Deleted parent mapping for student ${studentid} and parent ${parentid}`
+      message: `Deleted parent mapping for student ${studentid} and parent ${parentid}`,
     };
   }
 }

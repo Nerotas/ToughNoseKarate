@@ -709,13 +709,7 @@
         "rank": "white"
       },
       "dataPropertyOrder": {
-        "&": [
-          "baseUrl",
-          "studentId",
-          "parentId",
-          "beltOrder",
-          "rank"
-        ]
+        "&": ["baseUrl", "studentId", "parentId", "beltOrder", "rank"]
       },
       "color": null,
       "isPrivate": false,

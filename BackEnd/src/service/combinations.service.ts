@@ -18,7 +18,9 @@ export class CombinationsService {
     const models = this.databaseService.getModels();
     const record = await models.combinations.findByPk(studentid);
     if (!record) {
-      throw new NotFoundException(`Combination with studentid ${studentid} not found`);
+      throw new NotFoundException(
+        `Combination with studentid ${studentid} not found`,
+      );
     }
     return record;
   }
