@@ -1,6 +1,6 @@
 'use client';
-import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
-import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import PageContainer from '../components/container/PageContainer';
+import DashboardCard from '../components/shared/DashboardCard';
 import { Typography, Link, Box, Divider } from '@mui/material';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';

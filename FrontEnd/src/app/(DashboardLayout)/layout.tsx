@@ -1,8 +1,8 @@
 'use client';
 import { styled, Container, Box } from '@mui/material';
 import React, { useState } from 'react';
-import Header from '@/app/(DashboardLayout)/layout/header/Header';
-import Sidebar from '@/app/(DashboardLayout)/layout/sidebar/Sidebar';
+import MSidebar from './layout/sidebar/Sidebar';
+import Header from './layout/header/Header';
 
 const MainWrapper = styled('div')(() => ({
   display: 'flex',
@@ -35,7 +35,7 @@ export default function RootLayout({
       {/* ------------------------------------------- */}
       {/* Sidebar */}
       {/* ------------------------------------------- */}
-      <Sidebar
+      <MSidebar
         isSidebarOpen={isSidebarOpen}
         isMobileSidebarOpen={isMobileSidebarOpen}
         onSidebarClose={() => setMobileSidebarOpen(false)}

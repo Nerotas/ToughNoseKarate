@@ -1,84 +1,88 @@
 import React from 'react';
 import Menuitems from './MenuItems';
-import { Box, Typography } from '@mui/material';
 import {
-  Logo,
-  Sidebar as MUI_Sidebar,
-  Menu,
-  MenuItem,
-  Submenu,
-} from 'react-mui-sidebar';
-import { IconPoint } from '@tabler/icons-react';
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Divider,
+} from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Upgrade } from './Updrade';
-
-const renderMenuItems = (items: any, pathDirect: any) => {
-  return items.map((item: any) => {
-    const Icon = item.icon ? item.icon : IconPoint;
-
-    const itemIcon = <Icon stroke={1.5} size='1.3rem' />;
-
-    if (item.subheader) {
-      // Display Subheader
-      return <Menu subHeading={item.subheader} key={item.subheader} />;
-    }
-
-    //If the item has children (submenu)
-    if (item.children) {
-      return (
-        <Submenu
-          key={item.id}
-          title={item.title}
-          icon={itemIcon}
-          borderRadius='7px'
-        >
-          {renderMenuItems(item.children, pathDirect)}
-        </Submenu>
-      );
-    }
-
-    // If the item has no children, render a MenuItem
-
-    return (
-      <Box px={3} key={item.id}>
-        <MenuItem
-          key={item.id}
-          isSelected={pathDirect === item?.href}
-          borderRadius='8px'
-          icon={itemIcon}
-          link={item.href}
-          component={Link}
-        >
-          {item.title}
-        </MenuItem>
-      </Box>
-    );
-  });
-};
+import Logo from '../shared/logo/Logo';
 
 const SidebarItems = () => {
   const pathname = usePathname();
-  const pathDirect = pathname;
 
   return (
-    <>
-      <MUI_Sidebar
-        width={'100%'}
-        showProfile={false}
-        themeColor={'#5D87FF'}
-        themeSecondaryColor={'#49beff'}
-      >
-        <Logo img='/images/logos/dark-logo.svg' component={Link} to='/'>
-          Modernize
-        </Logo>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ p: 2 }}>
+        <Logo />
+      </Box>
+      <Divider />
+      <List sx={{ flexGrow: 1, pt: 1 }}>
+        {Menuitems.map(item => {
+          if (item.subheader) {
+            return (
+              <React.Fragment key={item.subheader}>
+                <Divider sx={{ my: 1 }} />
+                <Typography
+                  variant='caption'
+                  sx={{
+                    px: 3,
+                    py: 1,
+                    color: 'text.secondary',
+                    fontWeight: 'bold',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  {item.subheader}
+                </Typography>
+              </React.Fragment>
+            );
+          }
 
-        {renderMenuItems(Menuitems, pathDirect)}
-        <Box px={2}>
-          <Upgrade />
-        </Box>
-      </MUI_Sidebar>
-    </>
+          if (!item.icon || !item.href || !item.title) {
+            return null;
+          }
+
+          const Icon = item.icon;
+          const isSelected = pathname === item.href;
+
+          return (
+            <ListItem key={item.id} disablePadding sx={{ px: 2 }}>
+              <ListItemButton
+                component={Link}
+                href={item.href}
+                selected={isSelected}
+                sx={{
+                  borderRadius: 2,
+                  '&.Mui-selected': {
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                    },
+                    '& .MuiListItemIcon-root': {
+                      color: 'primary.contrastText',
+                    },
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  <Icon stroke={1.5} size='1.3rem' />
+                </ListItemIcon>
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
+          );
+        }).filter(Boolean)}
+      </List>
+    </Box>
   );
 };
+
 export default SidebarItems;

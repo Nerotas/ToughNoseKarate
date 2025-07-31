@@ -1,5 +1,4 @@
 // import { Helmet } from 'react-helmet';
-import react from 'react';
 
 type Props = {
   description?: string;

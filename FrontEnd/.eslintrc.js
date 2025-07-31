@@ -55,7 +55,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/ban-ts-comment': 'warn',
-
+    '@typescript-eslint/no-unused-vars': 'warn',
     // General JavaScript Rules
     'no-console': 'off', // Allow console in development
     'no-debugger': 'warn',
@@ -72,6 +72,20 @@ module.exports = {
 
     // Prettier integration
     'prettier/prettier': 'warn',
+
+    // Custom Rules
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['@/*'],
+            message:
+              'Path alias imports are not allowed. Use relative imports instead.',
+          },
+        ],
+      },
+    ],
   },
   ignorePatterns: ['node_modules/', '.next/', 'out/', 'public/', 'coverage/'],
 };
