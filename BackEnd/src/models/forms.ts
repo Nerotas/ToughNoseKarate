@@ -3,6 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { students, studentsId } from './students';
 
 export interface formsAttributes {
+  id: number;
   studentid: number;
   geicho_hyung_il_bu?: string;
   geicho_hyung_il_bu_sahm_gup?: string;
@@ -17,9 +18,10 @@ export interface formsAttributes {
   bassai?: string;
 }
 
-export type formsPk = 'studentid';
+export type formsPk = 'id';
 export type formsId = forms[formsPk];
 export type formsOptionalAttributes =
+  | 'id'
   | 'geicho_hyung_il_bu'
   | 'geicho_hyung_il_bu_sahm_gup'
   | 'geicho_hyung_yi_bu'
@@ -40,6 +42,7 @@ export class forms
   extends Model<formsAttributes, formsCreationAttributes>
   implements formsAttributes
 {
+  id!: number;
   studentid!: number;
   geicho_hyung_il_bu?: string;
   geicho_hyung_il_bu_sahm_gup?: string;
@@ -62,10 +65,15 @@ export class forms
   static initModel(sequelize: Sequelize.Sequelize): typeof forms {
     return forms.init(
       {
-        studentid: {
+        id: {
+          autoIncrement: true,
           type: DataTypes.INTEGER,
           allowNull: false,
           primaryKey: true,
+        },
+        studentid: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
           references: {
             model: 'students',
             key: 'studentid',
@@ -124,6 +132,11 @@ export class forms
           {
             name: 'PRIMARY',
             unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'id' }],
+          },
+          {
+            name: 'forms_ibfk_1',
             using: 'BTREE',
             fields: [{ name: 'studentid' }],
           },

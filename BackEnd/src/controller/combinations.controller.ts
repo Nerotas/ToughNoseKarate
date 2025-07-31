@@ -16,9 +16,7 @@ import {
 
 @Controller('combinations')
 export class CombinationsController {
-  constructor(
-    private readonly combinationsService: CombinationsService,
-  ) {}
+  constructor(private readonly combinationsService: CombinationsService) {}
 
   @Get()
   async findAll(): Promise<combinations[]> {
@@ -26,9 +24,7 @@ export class CombinationsController {
   }
 
   @Get(':id')
-  async findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<combinations> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<combinations> {
     return await this.combinationsService.findOne(id);
   }
 

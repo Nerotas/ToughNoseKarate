@@ -35,10 +35,10 @@ export default [
       'no-debugger': 'warn',
       'prefer-const': 'warn',
       'no-var': 'error',
-      'eqeqeq': 'warn',
+      eqeqeq: 'warn',
     },
   },
   {
     ignores: ['node_modules/', 'dist/', '.eslintrc.cjs'],
-  }
+  },
 ];

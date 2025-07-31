@@ -9,16 +9,11 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ParentsService } from '../service/parents.service';
-import {
-  parents,
-  parentsCreationAttributes,
-} from '../models/parents';
+import { parents, parentsCreationAttributes } from '../models/parents';
 
 @Controller('parents')
 export class ParentsController {
-  constructor(
-    private readonly parentsService: ParentsService,
-  ) {}
+  constructor(private readonly parentsService: ParentsService) {}
 
   @Get()
   async findAll(): Promise<parents[]> {
@@ -33,9 +28,7 @@ export class ParentsController {
   }
 
   @Post()
-  async create(
-    @Body() data: parentsCreationAttributes,
-  ): Promise<parents> {
+  async create(@Body() data: parentsCreationAttributes): Promise<parents> {
     return await this.parentsService.create(data);
   }
 

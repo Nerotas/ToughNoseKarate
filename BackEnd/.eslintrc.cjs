@@ -24,12 +24,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: [
-    '.eslintrc.cjs',
-    '__tests/**',
-    'node_modules',
-    'dist',
-  ],
+  ignorePatterns: ['.eslintrc.cjs', '__tests/**', 'node_modules', 'dist'],
   rules: {
     // Standard JavaScript style rules
     'brace-style': ['warn', '1tbs', { allowSingleLine: true }],

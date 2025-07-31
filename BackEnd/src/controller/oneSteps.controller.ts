@@ -9,16 +9,11 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { OneStepsService } from '../service/oneSteps.service';
-import {
-  one_steps,
-  one_stepsCreationAttributes,
-} from '../models/one_steps';
+import { one_steps, one_stepsCreationAttributes } from '../models/one_steps';
 
 @Controller('one-steps')
 export class OneStepsController {
-  constructor(
-    private readonly oneStepsService: OneStepsService,
-  ) {}
+  constructor(private readonly oneStepsService: OneStepsService) {}
 
   @Get()
   async findAll(): Promise<one_steps[]> {
@@ -33,9 +28,7 @@ export class OneStepsController {
   }
 
   @Post()
-  async create(
-    @Body() data: one_stepsCreationAttributes,
-  ): Promise<one_steps> {
+  async create(@Body() data: one_stepsCreationAttributes): Promise<one_steps> {
     return await this.oneStepsService.create(data);
   }
 

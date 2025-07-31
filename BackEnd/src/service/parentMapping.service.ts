@@ -16,7 +16,9 @@ export class ParentMappingService {
     });
 
     if (!record) {
-      throw new NotFoundException(`Parent mapping with studentid ${studentid} and parentid ${parentid} not found`);
+      throw new NotFoundException(
+        `Parent mapping with studentid ${studentid} and parentid ${parentid} not found`,
+      );
     }
 
     return record;

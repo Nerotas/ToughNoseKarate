@@ -1,13 +1,10 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-        "strict": false,
-        "noImplicitAny": false,
-        "strictNullChecks": false,
-        "strictBindCallApply": false
-    },
-    "include": [
-        "src/**/*.ts",
-        ".eslintrc.cjs"
-    ]
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictBindCallApply": false
+  },
+  "include": ["src/**/*.ts", ".eslintrc.cjs"]
 }

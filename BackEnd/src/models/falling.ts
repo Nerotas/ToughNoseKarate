@@ -3,6 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { students, studentsId } from './students';
 
 export interface fallingAttributes {
+  id: number;
   studentid: number;
   back?: string;
   front?: string;
@@ -10,9 +11,10 @@ export interface fallingAttributes {
   forward_roll?: string;
 }
 
-export type fallingPk = 'studentid';
+export type fallingPk = 'id';
 export type fallingId = falling[fallingPk];
 export type fallingOptionalAttributes =
+  | 'id'
   | 'back'
   | 'front'
   | 'roll'
@@ -26,6 +28,7 @@ export class falling
   extends Model<fallingAttributes, fallingCreationAttributes>
   implements fallingAttributes
 {
+  id!: number;
   studentid!: number;
   back?: string;
   front?: string;
@@ -41,10 +44,15 @@ export class falling
   static initModel(sequelize: Sequelize.Sequelize): typeof falling {
     return falling.init(
       {
-        studentid: {
+        id: {
+          autoIncrement: true,
           type: DataTypes.INTEGER,
           allowNull: false,
           primaryKey: true,
+        },
+        studentid: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
           references: {
             model: 'students',
             key: 'studentid',
@@ -75,6 +83,11 @@ export class falling
           {
             name: 'PRIMARY',
             unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'id' }],
+          },
+          {
+            name: 'falling_ibfk_1',
             using: 'BTREE',
             fields: [{ name: 'studentid' }],
           },

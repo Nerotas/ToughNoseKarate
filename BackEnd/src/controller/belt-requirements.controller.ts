@@ -12,7 +12,7 @@ import {
   belt_requirements,
   belt_requirementsCreationAttributes,
 } from '../models/belt_requirements';
-import {BeltRequirementsService} from 'src/service/beltRequirements.service.ts';
+import { BeltRequirementsService } from 'src/service/beltRequirements.service.ts';
 
 @Controller('belt-requirements')
 export class BeltRequirementsController {

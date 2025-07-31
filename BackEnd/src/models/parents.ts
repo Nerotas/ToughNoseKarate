@@ -1,5 +1,6 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
+import type { parent_mapping, parent_mappingId } from './parent_mapping';
 
 export interface parentsAttributes {
   parentid: number;
@@ -22,6 +23,40 @@ export class parents
   parentid!: number;
   firstName?: string;
   lastName?: string;
+
+  // parents hasMany parent_mapping via parentid
+  parent_mappings!: parent_mapping[];
+  getParent_mappings!: Sequelize.HasManyGetAssociationsMixin<parent_mapping>;
+  setParent_mappings!: Sequelize.HasManySetAssociationsMixin<
+    parent_mapping,
+    parent_mappingId
+  >;
+  addParent_mapping!: Sequelize.HasManyAddAssociationMixin<
+    parent_mapping,
+    parent_mappingId
+  >;
+  addParent_mappings!: Sequelize.HasManyAddAssociationsMixin<
+    parent_mapping,
+    parent_mappingId
+  >;
+  createParent_mapping!: Sequelize.HasManyCreateAssociationMixin<parent_mapping>;
+  removeParent_mapping!: Sequelize.HasManyRemoveAssociationMixin<
+    parent_mapping,
+    parent_mappingId
+  >;
+  removeParent_mappings!: Sequelize.HasManyRemoveAssociationsMixin<
+    parent_mapping,
+    parent_mappingId
+  >;
+  hasParent_mapping!: Sequelize.HasManyHasAssociationMixin<
+    parent_mapping,
+    parent_mappingId
+  >;
+  hasParent_mappings!: Sequelize.HasManyHasAssociationsMixin<
+    parent_mapping,
+    parent_mappingId
+  >;
+  countParent_mappings!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof parents {
     return parents.init(
