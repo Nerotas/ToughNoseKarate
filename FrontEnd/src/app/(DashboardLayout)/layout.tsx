@@ -23,7 +23,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const RootLayout = ({ children }: Props) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   return (
@@ -64,4 +64,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </PageWrapper>
     </MainWrapper>
   );
-}
+};
+
+export default RootLayout;
