@@ -1,13 +1,4 @@
-import {
-  Typography,
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Chip,
-} from '@mui/material';
+import { Typography, Box, Table, TableBody, TableCell, TableHead, TableRow, Chip } from '@mui/material';
 import DashboardCard from '../shared/DashboardCard';
 
 const products = [
@@ -90,7 +81,7 @@ const ProductPerformance = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map(product => (
+            {products.map((product) => (
               <TableRow key={product.name}>
                 <TableCell>
                   <Typography
@@ -125,11 +116,7 @@ const ProductPerformance = () => {
                   </Box>
                 </TableCell>
                 <TableCell>
-                  <Typography
-                    color='textSecondary'
-                    variant='subtitle2'
-                    fontWeight={400}
-                  >
+                  <Typography color='textSecondary' variant='subtitle2' fontWeight={400}>
                     {product.pname}
                   </Typography>
                 </TableCell>

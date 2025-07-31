@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import {
   Grid,
   Box,
@@ -18,13 +18,7 @@ import {
   Button,
   IconButton,
 } from '@mui/material';
-import {
-  IconUser,
-  IconAward,
-  IconEdit,
-  IconEye,
-  IconPlus,
-} from '@tabler/icons-react';
+import { IconUser, IconAward, IconEdit, IconEye, IconPlus } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 
@@ -117,17 +111,12 @@ const students = [
 ];
 
 const getBeltTextColor = (beltColor: string) => {
-  return beltColor === '#FFFFFF' || beltColor === '#FFD700'
-    ? '#000000'
-    : '#FFFFFF';
+  return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
 };
 
 const Students = () => {
   return (
-    <PageContainer
-      title='Students'
-      description='Student Management and Progress Tracking'
-    >
+    <PageContainer title='Students' description='Student Management and Progress Tracking'>
       <Box>
         <Box
           sx={{
@@ -138,11 +127,7 @@ const Students = () => {
           }}
         >
           <Typography variant='h2'>Student Management</Typography>
-          <Button
-            variant='contained'
-            startIcon={<IconPlus />}
-            sx={{ height: 'fit-content' }}
-          >
+          <Button variant='contained' startIcon={<IconPlus />} sx={{ height: 'fit-content' }}>
             Add New Student
           </Button>
         </Box>
@@ -179,7 +164,7 @@ const Students = () => {
                   </Typography>
                 </Box>
                 <Typography variant='h3' color='success.main'>
-                  {students.filter(student => student.progress >= 80).length}
+                  {students.filter((student) => student.progress >= 80).length}
                 </Typography>
               </CardContent>
             </Card>
@@ -195,10 +180,7 @@ const Students = () => {
                   </Typography>
                 </Box>
                 <Typography variant='h3' color='info.main'>
-                  {
-                    students.filter(student => student.classesAttended > 0)
-                      .length
-                  }
+                  {students.filter((student) => student.classesAttended > 0).length}
                 </Typography>
               </CardContent>
             </Card>
@@ -236,14 +218,14 @@ const Students = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {students.map(student => (
+                {students.map((student) => (
                   <TableRow key={student.id} hover>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
                           {student.name
                             .split(' ')
-                            .map(n => n[0])
+                            .map((n) => n[0])
                             .join('')}
                         </Avatar>
                         <Box>
@@ -264,10 +246,7 @@ const Students = () => {
                           backgroundColor: student.beltColor,
                           color: getBeltTextColor(student.beltColor),
                           fontWeight: 'bold',
-                          border:
-                            student.beltColor === '#FFFFFF'
-                              ? '1px solid #ccc'
-                              : 'none',
+                          border: student.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
                         }}
                       />
                     </TableCell>
@@ -281,18 +260,12 @@ const Students = () => {
                             mb: 1,
                           }}
                         >
-                          <Typography variant='caption'>
-                            {student.progress}%
-                          </Typography>
+                          <Typography variant='caption'>{student.progress}%</Typography>
                           <Typography variant='caption' color='text.secondary'>
                             {student.nextBelt}
                           </Typography>
                         </Box>
-                        <LinearProgress
-                          variant='determinate'
-                          value={student.progress}
-                          sx={{ height: 6, borderRadius: 3 }}
-                        />
+                        <LinearProgress variant='determinate' value={student.progress} sx={{ height: 6, borderRadius: 3 }} />
                       </Box>
                     </TableCell>
 
@@ -306,23 +279,11 @@ const Students = () => {
                     </TableCell>
 
                     <TableCell>
-                      <Typography variant='body2'>
-                        {new Date(
-                          student.nextTestEligible,
-                        ).toLocaleDateString()}
-                      </Typography>
+                      <Typography variant='body2'>{new Date(student.nextTestEligible).toLocaleDateString()}</Typography>
                       <Chip
-                        label={
-                          new Date(student.nextTestEligible) <= new Date()
-                            ? 'Eligible Now'
-                            : 'Not Ready'
-                        }
+                        label={new Date(student.nextTestEligible) <= new Date() ? 'Eligible Now' : 'Not Ready'}
                         size='small'
-                        color={
-                          new Date(student.nextTestEligible) <= new Date()
-                            ? 'success'
-                            : 'default'
-                        }
+                        color={new Date(student.nextTestEligible) <= new Date() ? 'success' : 'default'}
                         sx={{ mt: 0.5 }}
                       />
                     </TableCell>

@@ -1,16 +1,5 @@
 'use client';
-import {
-  Grid,
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-} from '@mui/material';
+import { Grid, Box, Card, CardContent, Typography, Chip, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import { IconAward, IconCheck } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
@@ -111,23 +100,19 @@ const beltLevels = [
 
 const BeltRequirements = () => {
   return (
-    <PageContainer
-      title='Belt Requirements'
-      description='Tang Soo Do Belt Progression Requirements'
-    >
+    <PageContainer title='Belt Requirements' description='Tang Soo Do Belt Progression Requirements'>
       <Box>
         <Typography variant='h2' gutterBottom sx={{ mb: 3 }}>
           Tang Soo Do Belt Requirements
         </Typography>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
-          Progress through the traditional Tang Soo Do belt system. Each belt
-          level builds upon the previous, requiring mastery of techniques,
-          forms, and philosophy.
+          Progress through the traditional Tang Soo Do belt system. Each belt level builds upon the previous, requiring mastery of techniques, forms,
+          and philosophy.
         </Typography>
 
         <Grid container spacing={3}>
-          {beltLevels.map(belt => (
+          {beltLevels.map((belt) => (
             <Grid size={{ xs: 12, md: 6, lg: 4 }} key={belt.belt}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
@@ -139,8 +124,7 @@ const BeltRequirements = () => {
                         backgroundColor: belt.color,
                         color: belt.textColor,
                         fontWeight: 'bold',
-                        border:
-                          belt.color === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                        border: belt.color === '#FFFFFF' ? '1px solid #ccc' : 'none',
                       }}
                     />
                   </Box>
@@ -155,10 +139,7 @@ const BeltRequirements = () => {
                         <ListItemIcon sx={{ minWidth: 32 }}>
                           <IconCheck size={16} color='green' />
                         </ListItemIcon>
-                        <ListItemText
-                          primary={requirement}
-                          primaryTypographyProps={{ variant: 'body2' }}
-                        />
+                        <ListItemText primary={requirement} primaryTypographyProps={{ variant: 'body2' }} />
                       </ListItem>
                     ))}
                   </List>
@@ -171,12 +152,10 @@ const BeltRequirements = () => {
         <Box sx={{ mt: 4 }}>
           <DashboardCard title='Testing Information'>
             <Typography variant='body1' paragraph>
-              <strong>Testing Schedule:</strong> Belt tests are held every 3-4
-              months, typically on the last Saturday of the testing month.
+              <strong>Testing Schedule:</strong> Belt tests are held every 3-4 months, typically on the last Saturday of the testing month.
             </Typography>
             <Typography variant='body1' paragraph>
-              <strong>Minimum Training Time:</strong> Students must train for a
-              minimum number of classes between belt levels:
+              <strong>Minimum Training Time:</strong> Students must train for a minimum number of classes between belt levels:
             </Typography>
             <List>
               <ListItem>

@@ -66,16 +66,7 @@ const SalesOverview = () => {
       tickAmount: 4,
     },
     xaxis: {
-      categories: [
-        '16/08',
-        '17/08',
-        '18/08',
-        '19/08',
-        '20/08',
-        '21/08',
-        '22/08',
-        '23/08',
-      ],
+      categories: ['16/08', '17/08', '18/08', '19/08', '20/08', '21/08', '22/08', '23/08'],
       axisBorder: {
         show: false,
       },
@@ -100,26 +91,14 @@ const SalesOverview = () => {
     <DashboardCard
       title='Sales Overview'
       action={
-        <Select
-          labelId='month-dd'
-          id='month-dd'
-          value={month}
-          size='small'
-          onChange={handleChange}
-        >
+        <Select labelId='month-dd' id='month-dd' value={month} size='small' onChange={handleChange}>
           <MenuItem value={1}>March 2025</MenuItem>
           <MenuItem value={2}>April 2025</MenuItem>
           <MenuItem value={3}>May 2025</MenuItem>
         </Select>
       }
     >
-      <Chart
-        options={optionscolumnchart}
-        series={seriescolumnchart}
-        type='bar'
-        height={370}
-        width={'100%'}
-      />
+      <Chart options={optionscolumnchart} series={seriescolumnchart} type='bar' height={370} width={'100%'} />
     </DashboardCard>
   );
 };

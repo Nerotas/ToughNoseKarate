@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  Divider,
-} from '@mui/material';
+import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Divider } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Menuitems from './MenuItems';
@@ -30,11 +20,7 @@ interface SimpleSidebarProps {
   onSidebarClose: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-const SimpleSidebar = ({
-  isSidebarOpen,
-  isMobileSidebarOpen,
-  onSidebarClose,
-}: SimpleSidebarProps) => {
+const SimpleSidebar = ({ isSidebarOpen, isMobileSidebarOpen, onSidebarClose }: SimpleSidebarProps) => {
   const pathname = usePathname();
   const sidebarWidth = '270px';
 

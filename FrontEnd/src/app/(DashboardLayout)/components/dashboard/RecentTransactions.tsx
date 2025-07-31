@@ -39,9 +39,7 @@ const RecentTransactions = () => {
               <TimelineDot color='primary' variant='outlined' />
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>
-              Payment received from John Doe of $385.90
-            </TimelineContent>
+            <TimelineContent>Payment received from John Doe of $385.90</TimelineContent>
           </TimelineItem>
           <TimelineItem>
             <TimelineOppositeContent>10:00 am</TimelineOppositeContent>
@@ -62,9 +60,7 @@ const RecentTransactions = () => {
               <TimelineDot color='success' variant='outlined' />
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>
-              Payment was made of $64.95 to Michael
-            </TimelineContent>
+            <TimelineContent>Payment was made of $64.95 to Michael</TimelineContent>
           </TimelineItem>
           <TimelineItem>
             <TimelineOppositeContent>09:30 am</TimelineOppositeContent>

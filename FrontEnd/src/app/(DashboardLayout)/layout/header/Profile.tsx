@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import {
-  Avatar,
-  Box,
-  Menu,
-  Button,
-  IconButton,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+import { Avatar, Box, Menu, Button, IconButton, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 
 import { IconListCheck, IconMail, IconUser } from '@tabler/icons-react';
 
@@ -82,13 +73,7 @@ const Profile = () => {
           <ListItemText>My Tasks</ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
-          <Button
-            href='/authentication/login'
-            variant='outlined'
-            color='primary'
-            component={Link}
-            fullWidth
-          >
+          <Button href='/authentication/login' variant='outlined' color='primary' component={Link} fullWidth>
             Logout
           </Button>
         </Box>

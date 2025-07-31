@@ -7,11 +7,7 @@ interface ItemType {
   isSidebarOpen: boolean;
 }
 
-const MSidebar = ({
-  isMobileSidebarOpen,
-  onSidebarClose,
-  isSidebarOpen,
-}: ItemType) => {
+const MSidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }: ItemType) => {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 
   const sidebarWidth = '270px';
@@ -81,7 +77,7 @@ const MSidebar = ({
       slotProps={{
         paper: {
           sx: {
-            boxShadow: theme => theme.shadows[8],
+            boxShadow: (theme) => theme.shadows[8],
             ...scrollbarStyles,
           },
         },

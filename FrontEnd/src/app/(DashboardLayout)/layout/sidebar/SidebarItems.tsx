@@ -1,15 +1,6 @@
 import React from 'react';
 import Menuitems from './MenuItems';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  Divider,
-} from '@mui/material';
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Divider } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Logo from '../shared/logo/Logo';
@@ -24,7 +15,7 @@ const SidebarItems = () => {
       </Box>
       <Divider />
       <List sx={{ flexGrow: 1, pt: 1 }}>
-        {Menuitems.map(item => {
+        {Menuitems.map((item) => {
           if (item.subheader) {
             return (
               <React.Fragment key={item.subheader}>

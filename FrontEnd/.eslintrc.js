@@ -22,13 +22,7 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: [
-    '@typescript-eslint',
-    'react',
-    'react-hooks',
-    'jsx-a11y',
-    'prettier',
-  ],
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'jsx-a11y', 'prettier'],
   settings: {
     react: {
       version: 'detect',
@@ -69,6 +63,7 @@ module.exports = {
     'jsx-a11y/anchor-is-valid': 'warn',
     'jsx-a11y/click-events-have-key-events': 'warn',
     'jsx-a11y/no-static-element-interactions': 'warn',
+    'react/jsx-max-props-per-line': [3, { when: 'always' }],
 
     // Prettier integration
     'prettier/prettier': 'warn',
@@ -80,8 +75,7 @@ module.exports = {
         patterns: [
           {
             group: ['@/*'],
-            message:
-              'Path alias imports are not allowed. Use relative imports instead.',
+            message: 'Path alias imports are not allowed. Use relative imports instead.',
           },
         ],
       },
