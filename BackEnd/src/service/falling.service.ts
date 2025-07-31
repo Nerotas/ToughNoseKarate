@@ -1,33 +1,39 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import { falling, fallingCreationAttributes } from '../models/falling';
+﻿import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { falling } from '../models/falling';
 
 @Injectable()
 export class FallingService {
+  constructor(
+    @InjectModel(falling)
+    private fallingModel: typeof falling,
+  ) {}
+
   async findAll(): Promise<falling[]> {
-    return await falling.findAll();
+    return this.fallingModel.findAll();
   }
 
-  async findOne(studentid: number): Promise<falling> {
-    const record = await falling.findByPk(studentid);
-    if (!record) {
-      throw new NotFoundException(
-        `Falling with studentid ${studentid} not found`,
-      );
-    }
-    return record;
+  async findOne(id: number): Promise<falling> {
+    return this.fallingModel.findByPk(id);
   }
 
-  async create(data: fallingCreationAttributes): Promise<falling> {
-    return await falling.create(data);
+  async create(createFallingDto: Partial<falling>): Promise<falling> {
+    return this.fallingModel.create(createFallingDto);
   }
 
-  async update(studentid: number, data: Partial<falling>): Promise<falling> {
-    const record = await this.findOne(studentid);
-    return await record.update(data);
+  async update(
+    id: number,
+    updateFallingDto: Partial<falling>,
+  ): Promise<[number, falling[]]> {
+    return this.fallingModel.update(updateFallingDto, {
+      where: { id },
+      returning: true,
+    });
   }
 
-  async remove(studentid: number): Promise<void> {
-    const record = await this.findOne(studentid);
-    await record.destroy();
+  async remove(id: number): Promise<number> {
+    return this.fallingModel.destroy({
+      where: { id },
+    });
   }
 }

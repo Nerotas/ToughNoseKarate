@@ -1,49 +1,39 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import { students, studentsCreationAttributes } from '../models/students';
-import { DatabaseService } from './database.service';
+﻿import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { students } from '../models/students';
 
 @Injectable()
 export class StudentsService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    @InjectModel(students)
+    private studentsModel: typeof students,
+  ) {}
 
   async findAll(): Promise<students[]> {
-    const models = this.databaseService.getModels();
-    return await models.students.findAll();
+    return this.studentsModel.findAll();
   }
 
-  async findActiveStudents(): Promise<students[]> {
-    const models = this.databaseService.getModels();
-    return await models.students.findAll({ where: { active: true } });
+  async findOne(studentid: number): Promise<students | null> {
+    return this.studentsModel.findOne({ where: { studentid } });
   }
 
-  async findStudentsByRank(rank: string): Promise<students[]> {
-    const models = this.databaseService.getModels();
-    return await models.students.findAll({ where: { rank } });
+  async create(createStudentsDto: any): Promise<students> {
+    return this.studentsModel.create(createStudentsDto);
   }
 
-  async findOne(studentid: number): Promise<students> {
-    const models = this.databaseService.getModels();
-    const record = await models.students.findByPk(studentid);
-    if (!record) {
-      throw new NotFoundException(
-        `Student with studentid ${studentid} not found`,
-      );
-    }
-    return record;
+  async update(
+    studentid: number,
+    updateStudentsDto: any,
+  ): Promise<[number, students[]]> {
+    return this.studentsModel.update(updateStudentsDto, {
+      where: { studentid },
+      returning: true,
+    });
   }
 
-  async create(data: studentsCreationAttributes): Promise<students> {
-    const models = this.databaseService.getModels();
-    return await models.students.create(data);
-  }
-
-  async update(studentid: number, data: Partial<students>): Promise<students> {
-    const record = await this.findOne(studentid);
-    return await record.update(data);
-  }
-
-  async remove(studentid: number): Promise<void> {
-    const record = await this.findOne(studentid);
-    await record.destroy();
+  async remove(studentid: number): Promise<number> {
+    return this.studentsModel.destroy({
+      where: { studentid },
+    });
   }
 }

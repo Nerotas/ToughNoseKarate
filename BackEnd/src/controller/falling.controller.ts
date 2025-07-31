@@ -1,50 +1,40 @@
-import {
+﻿import {
   Controller,
   Get,
   Post,
-  Put,
-  Delete,
-  Param,
   Body,
-  ParseIntPipe,
+  Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { FallingService } from '../service/falling.service';
-import { falling, fallingCreationAttributes } from '../models/falling';
 
 @Controller('falling')
 export class FallingController {
   constructor(private readonly fallingService: FallingService) {}
 
-  @Get()
-  async findAll(): Promise<falling[]> {
-    return await this.fallingService.findAll();
-  }
-
-  @Get(':studentid')
-  async findOne(
-    @Param('studentid', ParseIntPipe) studentid: number,
-  ): Promise<falling> {
-    return await this.fallingService.findOne(studentid);
-  }
-
   @Post()
-  async create(@Body() data: fallingCreationAttributes): Promise<falling> {
-    return await this.fallingService.create(data);
+  create(@Body() createFallingDto: any) {
+    return this.fallingService.create(createFallingDto);
   }
 
-  @Put(':studentid')
-  async update(
-    @Param('studentid', ParseIntPipe) studentid: number,
-    @Body() data: Partial<falling>,
-  ): Promise<falling> {
-    return await this.fallingService.update(studentid, data);
+  @Get()
+  findAll() {
+    return this.fallingService.findAll();
   }
 
-  @Delete(':studentid')
-  async remove(
-    @Param('studentid', ParseIntPipe) studentid: number,
-  ): Promise<{ message: string }> {
-    await this.fallingService.remove(studentid);
-    return { message: `Deleted falling data for student ${studentid}` };
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.fallingService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateFallingDto: any) {
+    return this.fallingService.update(+id, updateFallingDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.fallingService.remove(+id);
   }
 }

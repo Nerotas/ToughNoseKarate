@@ -1,203 +1,102 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { students, studentsId } from './students';
+import {
+  Model,
+  Table,
+  Column,
+  DataType,
+  Index,
+  Sequelize,
+  ForeignKey,
+} from 'sequelize-typescript';
 
 export interface kicksAttributes {
-  id: number;
+  id?: number;
   studentid: number;
   front?: string;
   round?: string;
   side?: string;
-  stepping_kick?: string;
-  slide_up_kick?: string;
-  double_round?: string;
-  inside_crescent?: string;
-  outside_crescent?: string;
-  spin_back?: string;
-  step_back?: string;
-  spin_outside_crescent?: string;
+  steppingKick?: string;
+  slideUpKick?: string;
+  doubleRound?: string;
+  insideCrescent?: string;
+  outsideCrescent?: string;
+  spinBack?: string;
+  stepBack?: string;
+  spinOutsideCrescent?: string;
   hook?: string;
   heel?: string;
-  jump_phase_1?: string;
-  jump_phase_2?: string;
-  jump_phase_3?: string;
-  jump_phase_4?: string;
-  jump_phase_5?: string;
-  jump_phase_6?: string;
+  jumpPhase_1?: string;
+  jumpPhase_2?: string;
+  jumpPhase_3?: string;
+  jumpPhase_4?: string;
+  jumpPhase_5?: string;
+  jumpPhase_6?: string;
 }
 
-export type kicksPk = 'id';
-export type kicksId = kicks[kicksPk];
-export type kicksOptionalAttributes =
-  | 'id'
-  | 'front'
-  | 'round'
-  | 'side'
-  | 'stepping_kick'
-  | 'slide_up_kick'
-  | 'double_round'
-  | 'inside_crescent'
-  | 'outside_crescent'
-  | 'spin_back'
-  | 'step_back'
-  | 'spin_outside_crescent'
-  | 'hook'
-  | 'heel'
-  | 'jump_phase_1'
-  | 'jump_phase_2'
-  | 'jump_phase_3'
-  | 'jump_phase_4'
-  | 'jump_phase_5'
-  | 'jump_phase_6';
-export type kicksCreationAttributes = Optional<
-  kicksAttributes,
-  kicksOptionalAttributes
->;
-
+@Table({ tableName: 'kicks', timestamps: false })
 export class kicks
-  extends Model<kicksAttributes, kicksCreationAttributes>
+  extends Model<kicksAttributes, kicksAttributes>
   implements kicksAttributes
 {
-  id!: number;
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
+  declare id?: number;
+  @Column({ type: DataType.INTEGER })
   studentid!: number;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   front?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   round?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   side?: string;
-  stepping_kick?: string;
-  slide_up_kick?: string;
-  double_round?: string;
-  inside_crescent?: string;
-  outside_crescent?: string;
-  spin_back?: string;
-  step_back?: string;
-  spin_outside_crescent?: string;
+  @Column({
+    field: 'stepping_kick',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  steppingKick?: string;
+  @Column({
+    field: 'slide_up_kick',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  slideUpKick?: string;
+  @Column({ field: 'double_round', allowNull: true, type: DataType.STRING(45) })
+  doubleRound?: string;
+  @Column({
+    field: 'inside_crescent',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  insideCrescent?: string;
+  @Column({
+    field: 'outside_crescent',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  outsideCrescent?: string;
+  @Column({ field: 'spin_back', allowNull: true, type: DataType.STRING(45) })
+  spinBack?: string;
+  @Column({ field: 'step_back', allowNull: true, type: DataType.STRING(45) })
+  stepBack?: string;
+  @Column({
+    field: 'spin_outside_crescent',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  spinOutsideCrescent?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   hook?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   heel?: string;
-  jump_phase_1?: string;
-  jump_phase_2?: string;
-  jump_phase_3?: string;
-  jump_phase_4?: string;
-  jump_phase_5?: string;
-  jump_phase_6?: string;
-
-  // kicks belongsTo students via studentid
-  student!: students;
-  getStudent!: Sequelize.BelongsToGetAssociationMixin<students>;
-  setStudent!: Sequelize.BelongsToSetAssociationMixin<students, studentsId>;
-  createStudent!: Sequelize.BelongsToCreateAssociationMixin<students>;
-
-  static initModel(sequelize: Sequelize.Sequelize): typeof kicks {
-    return kicks.init(
-      {
-        id: {
-          autoIncrement: true,
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          primaryKey: true,
-        },
-        studentid: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'students',
-            key: 'studentid',
-          },
-        },
-        front: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        round: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        side: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        stepping_kick: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        slide_up_kick: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        double_round: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        inside_crescent: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        outside_crescent: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        spin_back: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        step_back: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        spin_outside_crescent: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        hook: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        heel: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        jump_phase_1: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        jump_phase_2: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        jump_phase_3: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        jump_phase_4: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        jump_phase_5: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        jump_phase_6: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-      },
-      {
-        sequelize,
-        tableName: 'kicks',
-        timestamps: false,
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [{ name: 'id' }],
-          },
-          {
-            name: 'studentid',
-            using: 'BTREE',
-            fields: [{ name: 'studentid' }],
-          },
-        ],
-      },
-    );
-  }
+  @Column({ field: 'jump_phase_1', allowNull: true, type: DataType.STRING(45) })
+  jumpPhase_1?: string;
+  @Column({ field: 'jump_phase_2', allowNull: true, type: DataType.STRING(45) })
+  jumpPhase_2?: string;
+  @Column({ field: 'jump_phase_3', allowNull: true, type: DataType.STRING(45) })
+  jumpPhase_3?: string;
+  @Column({ field: 'jump_phase_4', allowNull: true, type: DataType.STRING(45) })
+  jumpPhase_4?: string;
+  @Column({ field: 'jump_phase_5', allowNull: true, type: DataType.STRING(45) })
+  jumpPhase_5?: string;
+  @Column({ field: 'jump_phase_6', allowNull: true, type: DataType.STRING(45) })
+  jumpPhase_6?: string;
 }

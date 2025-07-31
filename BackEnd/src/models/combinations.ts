@@ -1,9 +1,15 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { students, studentsId } from './students';
+import {
+  Model,
+  Table,
+  Column,
+  DataType,
+  Index,
+  Sequelize,
+  ForeignKey,
+} from 'sequelize-typescript';
 
 export interface combinationsAttributes {
-  id: number;
+  id?: number;
   studentid: number;
   kicking?: string;
   hands?: string;
@@ -11,88 +17,21 @@ export interface combinationsAttributes {
   basics?: string;
 }
 
-export type combinationsPk = 'id';
-export type combinationsId = combinations[combinationsPk];
-export type combinationsOptionalAttributes =
-  | 'id'
-  | 'kicking'
-  | 'hands'
-  | 'fighting'
-  | 'basics';
-export type combinationsCreationAttributes = Optional<
-  combinationsAttributes,
-  combinationsOptionalAttributes
->;
-
+@Table({ tableName: 'combinations', timestamps: false })
 export class combinations
-  extends Model<combinationsAttributes, combinationsCreationAttributes>
+  extends Model<combinationsAttributes, combinationsAttributes>
   implements combinationsAttributes
 {
-  id!: number;
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
+  declare id?: number;
+  @Column({ type: DataType.INTEGER })
   studentid!: number;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   kicking?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   hands?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   fighting?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   basics?: string;
-
-  // combinations belongsTo students via studentid
-  student!: students;
-  getStudent!: Sequelize.BelongsToGetAssociationMixin<students>;
-  setStudent!: Sequelize.BelongsToSetAssociationMixin<students, studentsId>;
-  createStudent!: Sequelize.BelongsToCreateAssociationMixin<students>;
-
-  static initModel(sequelize: Sequelize.Sequelize): typeof combinations {
-    return combinations.init(
-      {
-        id: {
-          autoIncrement: true,
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          primaryKey: true,
-        },
-        studentid: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'students',
-            key: 'studentid',
-          },
-        },
-        kicking: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        hands: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        fighting: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        basics: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-      },
-      {
-        sequelize,
-        tableName: 'combinations',
-        timestamps: false,
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [{ name: 'id' }],
-          },
-          {
-            name: 'studentid',
-            using: 'BTREE',
-            fields: [{ name: 'studentid' }],
-          },
-        ],
-      },
-    );
-  }
 }

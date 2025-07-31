@@ -1,36 +1,39 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import { one_steps, one_stepsCreationAttributes } from '../models/one_steps';
+﻿import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { oneSteps } from '../models/oneSteps';
 
 @Injectable()
 export class OneStepsService {
-  async findAll(): Promise<one_steps[]> {
-    return await one_steps.findAll();
+  constructor(
+    @InjectModel(oneSteps)
+    private oneStepsModel: typeof oneSteps,
+  ) {}
+
+  async findAll(): Promise<oneSteps[]> {
+    return this.oneStepsModel.findAll();
   }
 
-  async findOne(studentid: number): Promise<one_steps> {
-    const record = await one_steps.findByPk(studentid);
-    if (!record) {
-      throw new NotFoundException(
-        `One step with studentid ${studentid} not found`,
-      );
-    }
-    return record;
+  async findOne(id: number): Promise<oneSteps | null> {
+    return this.oneStepsModel.findByPk(id);
   }
 
-  async create(data: one_stepsCreationAttributes): Promise<one_steps> {
-    return await one_steps.create(data);
+  async create(createOneStepsDto: any): Promise<oneSteps> {
+    return this.oneStepsModel.create(createOneStepsDto);
   }
 
   async update(
-    studentid: number,
-    data: Partial<one_steps>,
-  ): Promise<one_steps> {
-    const record = await this.findOne(studentid);
-    return await record.update(data);
+    id: number,
+    updateOneStepsDto: any,
+  ): Promise<[number, oneSteps[]]> {
+    return this.oneStepsModel.update(updateOneStepsDto, {
+      where: { id },
+      returning: true,
+    });
   }
 
-  async remove(studentid: number): Promise<void> {
-    const record = await this.findOne(studentid);
-    await record.destroy();
+  async remove(id: number): Promise<number> {
+    return this.oneStepsModel.destroy({
+      where: { id },
+    });
   }
 }

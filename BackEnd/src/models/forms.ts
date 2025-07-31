@@ -1,147 +1,98 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { students, studentsId } from './students';
+import {
+  Model,
+  Table,
+  Column,
+  DataType,
+  Index,
+  Sequelize,
+  ForeignKey,
+} from 'sequelize-typescript';
 
 export interface formsAttributes {
-  id: number;
+  id?: number;
   studentid: number;
-  geicho_hyung_il_bu?: string;
-  geicho_hyung_il_bu_sahm_gup?: string;
-  geicho_hyung_yi_bu?: string;
-  geicho_hyung_yi_bu_sahm_gup?: string;
-  geicho_hyung_sahm_bu?: string;
-  pyong_an_cho_dan?: string;
-  pyong_an_yi_dan?: string;
-  pyong_an_sahm_dan?: string;
-  pyong_an_sa_dan?: string;
-  pyong_an_oh_dan?: string;
+  geichoHyungIlBu?: string;
+  geichoHyungIlBuSahmGup?: string;
+  geichoHyungYiBu?: string;
+  geichoHyungYiBuSahmGup?: string;
+  geichoHyungSahmBu?: string;
+  pyongAnChoDan?: string;
+  pyongAnYiDan?: string;
+  pyongAnSahmDan?: string;
+  pyongAnSaDan?: string;
+  pyongAnOhDan?: string;
   bassai?: string;
 }
 
-export type formsPk = 'id';
-export type formsId = forms[formsPk];
-export type formsOptionalAttributes =
-  | 'id'
-  | 'geicho_hyung_il_bu'
-  | 'geicho_hyung_il_bu_sahm_gup'
-  | 'geicho_hyung_yi_bu'
-  | 'geicho_hyung_yi_bu_sahm_gup'
-  | 'geicho_hyung_sahm_bu'
-  | 'pyong_an_cho_dan'
-  | 'pyong_an_yi_dan'
-  | 'pyong_an_sahm_dan'
-  | 'pyong_an_sa_dan'
-  | 'pyong_an_oh_dan'
-  | 'bassai';
-export type formsCreationAttributes = Optional<
-  formsAttributes,
-  formsOptionalAttributes
->;
-
+@Table({ tableName: 'forms', timestamps: false })
 export class forms
-  extends Model<formsAttributes, formsCreationAttributes>
+  extends Model<formsAttributes, formsAttributes>
   implements formsAttributes
 {
-  id!: number;
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
+  declare id?: number;
+  @Column({ type: DataType.INTEGER })
   studentid!: number;
-  geicho_hyung_il_bu?: string;
-  geicho_hyung_il_bu_sahm_gup?: string;
-  geicho_hyung_yi_bu?: string;
-  geicho_hyung_yi_bu_sahm_gup?: string;
-  geicho_hyung_sahm_bu?: string;
-  pyong_an_cho_dan?: string;
-  pyong_an_yi_dan?: string;
-  pyong_an_sahm_dan?: string;
-  pyong_an_sa_dan?: string;
-  pyong_an_oh_dan?: string;
+  @Column({
+    field: 'geicho_hyung_il_bu',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  geichoHyungIlBu?: string;
+  @Column({
+    field: 'geicho_hyung_il_bu_sahm_gup',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  geichoHyungIlBuSahmGup?: string;
+  @Column({
+    field: 'geicho_hyung_yi_bu',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  geichoHyungYiBu?: string;
+  @Column({
+    field: 'geicho_hyung_yi_bu_sahm_gup',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  geichoHyungYiBuSahmGup?: string;
+  @Column({
+    field: 'geicho_hyung_sahm_bu',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  geichoHyungSahmBu?: string;
+  @Column({
+    field: 'pyong_an_cho_dan',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  pyongAnChoDan?: string;
+  @Column({
+    field: 'pyong_an_yi_dan',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  pyongAnYiDan?: string;
+  @Column({
+    field: 'pyong_an_sahm_dan',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  pyongAnSahmDan?: string;
+  @Column({
+    field: 'pyong_an_sa_dan',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  pyongAnSaDan?: string;
+  @Column({
+    field: 'pyong_an_oh_dan',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
+  pyongAnOhDan?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   bassai?: string;
-
-  // forms belongsTo students via studentid
-  student!: students;
-  getStudent!: Sequelize.BelongsToGetAssociationMixin<students>;
-  setStudent!: Sequelize.BelongsToSetAssociationMixin<students, studentsId>;
-  createStudent!: Sequelize.BelongsToCreateAssociationMixin<students>;
-
-  static initModel(sequelize: Sequelize.Sequelize): typeof forms {
-    return forms.init(
-      {
-        id: {
-          autoIncrement: true,
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          primaryKey: true,
-        },
-        studentid: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'students',
-            key: 'studentid',
-          },
-        },
-        geicho_hyung_il_bu: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        geicho_hyung_il_bu_sahm_gup: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        geicho_hyung_yi_bu: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        geicho_hyung_yi_bu_sahm_gup: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        geicho_hyung_sahm_bu: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        pyong_an_cho_dan: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        pyong_an_yi_dan: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        pyong_an_sahm_dan: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        pyong_an_sa_dan: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        pyong_an_oh_dan: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        bassai: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-      },
-      {
-        sequelize,
-        tableName: 'forms',
-        timestamps: false,
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [{ name: 'id' }],
-          },
-          {
-            name: 'forms_ibfk_1',
-            using: 'BTREE',
-            fields: [{ name: 'studentid' }],
-          },
-        ],
-      },
-    );
-  }
 }

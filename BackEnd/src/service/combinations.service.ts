@@ -1,45 +1,41 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  combinations,
-  combinationsCreationAttributes,
-} from '../models/combinations';
-import { DatabaseService } from './database.service';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { combinations } from '../models/combinations';
 
 @Injectable()
 export class CombinationsService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    @InjectModel(combinations)
+    private combinationsModel: typeof combinations,
+  ) {}
 
   async findAll(): Promise<combinations[]> {
-    const models = this.databaseService.getModels();
-    return await models.combinations.findAll();
+    return this.combinationsModel.findAll();
   }
 
-  async findOne(studentid: number): Promise<combinations> {
-    const models = this.databaseService.getModels();
-    const record = await models.combinations.findByPk(studentid);
-    if (!record) {
-      throw new NotFoundException(
-        `Combination with studentid ${studentid} not found`,
-      );
-    }
-    return record;
+  async findOne(id: number): Promise<combinations> {
+    return this.combinationsModel.findByPk(id);
   }
 
-  async create(data: combinationsCreationAttributes): Promise<combinations> {
-    const models = this.databaseService.getModels();
-    return await models.combinations.create(data);
+  async create(
+    createCombinationsDto: Partial<combinations>,
+  ): Promise<combinations> {
+    return this.combinationsModel.create(createCombinationsDto);
   }
 
   async update(
-    studentid: number,
-    data: Partial<combinations>,
-  ): Promise<combinations> {
-    const record = await this.findOne(studentid);
-    return await record.update(data);
+    id: number,
+    updateCombinationsDto: Partial<combinations>,
+  ): Promise<[number, combinations[]]> {
+    return this.combinationsModel.update(updateCombinationsDto, {
+      where: { id },
+      returning: true,
+    });
   }
 
-  async remove(studentid: number): Promise<void> {
-    const record = await this.findOne(studentid);
-    await record.destroy();
+  async remove(id: number): Promise<number> {
+    return this.combinationsModel.destroy({
+      where: { id },
+    });
   }
 }

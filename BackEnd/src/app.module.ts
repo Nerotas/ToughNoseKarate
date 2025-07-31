@@ -5,8 +5,6 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './service/app.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -22,108 +20,164 @@ import { RequestLoggerMiddleware } from './middlewares/RequestLoggerMiddleware';
 import { RouteRewriteMiddleware } from './middlewares/RouteRewriteMiddleware';
 
 // Controllers
-import { BeltRequirementsController } from './controller/belt-requirements.controller';
+import { AboutController } from './controller/about.controller';
+import { BeltRequirementsController } from './controller/beltRequirements.controller';
+import { BlocksController } from './controller/blocks.controller';
 import { CombinationsController } from './controller/combinations.controller';
 import { FallingController } from './controller/falling.controller';
+import { FamiliesController } from './controller/families.controller';
 import { FormsController } from './controller/forms.controller';
+import { KicksController } from './controller/kicks.controller';
 import { OneStepsController } from './controller/oneSteps.controller';
 import { ParentMappingController } from './controller/parentMapping.controller';
 import { ParentsController } from './controller/parents.controller';
+import { PunchesController } from './controller/punches.controller';
+import { StanceDefinitionsController } from './controller/stanceDefinitions.controller';
 import { StancesController } from './controller/stances.controller';
 import { StudentsController } from './controller/students.controller';
 
 // Services
-import { BeltRequirementsService } from './service/beltRequirements.service.ts';
+import { AppService } from './service/app.service';
+
 import { CombinationsService } from './service/combinations.service';
 import { FallingService } from './service/falling.service';
 import { FormsService } from './service/forms.service';
+import { KicksService } from './service/kicks.service';
 import { OneStepsService } from './service/oneSteps.service';
 import { ParentMappingService } from './service/parentMapping.service';
 import { ParentsService } from './service/parents.service';
+import { PunchesService } from './service/punches.service';
+import { StanceDefinitionsService } from './service/stanceDefinitions.service';
 import { StancesService } from './service/stances.service';
 import { StudentsService } from './service/students.service';
-import { DatabaseService } from './service/database.service';
 import { LoggerService } from './service/logger.service';
+
+// Health
+import { HealthController } from './health/health.controller';
+import { LocalHealthCheckService } from './health/health.service';
+
+// Models
+import { beltRequirements } from './models/beltRequirements';
+import { blocks } from './models/blocks';
+import { combinations } from './models/combinations';
+import { falling } from './models/falling';
+import { families } from './models/families';
+import { forms } from './models/forms';
+import { kicks } from './models/kicks';
+import { oneSteps } from './models/oneSteps';
+import { parentMapping } from './models/parentMapping';
+import { parents } from './models/parents';
+import { punches } from './models/punches';
+import { stanceDefinitions } from './models/stanceDefinitions';
+import { stances } from './models/stances';
+import { students } from './models/students';
+import { FamiliesService } from './service/families.service';
+import { BeltRequirementsService } from './service/beltRequirements.service';
+import { BlocksService } from './service/blocks.service';
 
 @Module({
   imports: [
-    MetricsModule,
-    TerminusModule,
+    HttpModule,
     ConfigModule.forRoot({
-      envFilePath: ['.env.local', '.env'],
-    }),
-    CacheModule.register({
-      ttl: 1000 * 60 * 60 * 24,
-      max: 10_000, // maximum number of items in cache
+      envFilePath: '../.env',
     }),
     PassportModule,
-    HttpModule.register({
-      timeout: 60000, // 60 seconds
-    }),
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      name: 'TNK',
-      host: process.env.MYSQL_HOST,
-      port: 3306,
-      username: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DBNAME,
-      autoLoadModels: false,
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT, 10) || 3306,
+      username: process.env.DB_USERNAME || 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_NAME || 'tnk',
+      models: [
+        beltRequirements,
+        blocks,
+        combinations,
+        falling,
+        families,
+        forms,
+        kicks,
+        oneSteps,
+        parentMapping,
+        parents,
+        punches,
+        stanceDefinitions,
+        stances,
+        students,
+      ],
+      autoLoadModels: true,
       synchronize: false,
-      models: [],
     }),
-
-    SequelizeModule.forFeature([], 'MainDB'),
+    SequelizeModule.forFeature([
+      beltRequirements,
+      blocks,
+      combinations,
+      falling,
+      families,
+      forms,
+      kicks,
+      oneSteps,
+      parentMapping,
+      parents,
+      punches,
+      stanceDefinitions,
+      stances,
+      students,
+    ]),
+    CacheModule.register(),
+    TerminusModule,
+    MetricsModule,
   ],
   controllers: [
-    AppController,
+    AboutController,
     BeltRequirementsController,
+    BlocksController,
     CombinationsController,
     FallingController,
+    FamiliesController,
     FormsController,
+    HealthController,
+    KicksController,
     OneStepsController,
     ParentMappingController,
     ParentsController,
+    PunchesController,
+    StanceDefinitionsController,
     StancesController,
     StudentsController,
   ],
   providers: [
     AppService,
-    JwtService,
-    DatabaseService,
-    LoggerService,
     BeltRequirementsService,
+    BlocksService,
     CombinationsService,
     FallingService,
+    FamiliesService,
     FormsService,
+    LocalHealthCheckService,
+    JwtService,
+    KicksService,
+    Logger,
+    LoggerService,
     OneStepsService,
     ParentMappingService,
     ParentsService,
+    PunchesService,
+    StanceDefinitionsService,
     StancesService,
     StudentsService,
   ],
 })
 export class AppModule implements NestModule {
-  private logger = new Logger(AppModule.name);
   configure(consumer: MiddlewareConsumer) {
-    const rewriteBase = rewritePathToRoot();
-    if (rewriteBase) {
-      this.logger.log(
-        `REWRITE_PATH_TO_ROOT env var was provided, rewriting all routes from '/${rewriteBase}*' to '/'.`,
-      );
-      this.logger.log(
-        `App listening on port ${
-          process.env.PORT || 6137
-        } press Ctrl+C to stop'`,
-      );
-      consumer
-        .apply(RouteRewriteMiddleware)
-        .forRoutes({ path: `${rewriteBase}*`, method: RequestMethod.ALL });
-    } else {
-      this.logger.log(
-        `REWRITE_PATH_TO_ROOT env var NOT provided, will not rewrite routes.`,
-      );
-    }
-    consumer.apply(RequestLoggerMiddleware, MetricsMiddleware).forRoutes('*');
+    consumer
+      .apply(RequestLoggerMiddleware)
+      .forRoutes('*')
+      .apply(RouteRewriteMiddleware)
+      .forRoutes('*')
+      .apply(rewritePathToRoot)
+      .forRoutes('*')
+      .apply(MetricsMiddleware)
+      .forRoutes('*');
   }
 }

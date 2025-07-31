@@ -1,31 +1,36 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import { forms, formsCreationAttributes } from '../models/forms';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { forms } from '../models/forms';
 
 @Injectable()
 export class FormsService {
+  constructor(
+    @InjectModel(forms)
+    private formsModel: typeof forms,
+  ) {}
+
   async findAll(): Promise<forms[]> {
-    return await forms.findAll();
+    return this.formsModel.findAll();
   }
 
-  async findOne(studentid: number): Promise<forms> {
-    const record = await forms.findByPk(studentid);
-    if (!record) {
-      throw new NotFoundException(`Form with studentid ${studentid} not found`);
-    }
-    return record;
+  async findOne(id: number): Promise<forms | null> {
+    return this.formsModel.findByPk(id);
   }
 
-  async create(data: formsCreationAttributes): Promise<forms> {
-    return await forms.create(data);
+  async create(createFormsDto: any): Promise<forms> {
+    return this.formsModel.create(createFormsDto);
   }
 
-  async update(studentid: number, data: Partial<forms>): Promise<forms> {
-    const record = await this.findOne(studentid);
-    return await record.update(data);
+  async update(id: number, updateFormsDto: any): Promise<[number, forms[]]> {
+    return this.formsModel.update(updateFormsDto, {
+      where: { id },
+      returning: true,
+    });
   }
 
-  async remove(studentid: number): Promise<void> {
-    const record = await this.findOne(studentid);
-    await record.destroy();
+  async remove(id: number): Promise<number> {
+    return this.formsModel.destroy({
+      where: { id },
+    });
   }
 }

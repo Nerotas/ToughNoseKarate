@@ -1,126 +1,49 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { students, studentsId } from './students';
+import {
+  Model,
+  Table,
+  Column,
+  DataType,
+  Index,
+  Sequelize,
+  ForeignKey,
+} from 'sequelize-typescript';
 
 export interface stancesAttributes {
-  id: number;
+  id?: number;
   studentid: number;
   front?: string;
   back?: string;
   straddle?: string;
   fighting?: string;
-  jun_bi?: string;
+  junBi?: string;
   bowing?: string;
   shifting?: string;
   comments?: string;
 }
 
-export type stancesPk = 'id';
-export type stancesId = stances[stancesPk];
-export type stancesOptionalAttributes =
-  | 'id'
-  | 'front'
-  | 'back'
-  | 'straddle'
-  | 'fighting'
-  | 'jun_bi'
-  | 'bowing'
-  | 'shifting'
-  | 'comments';
-export type stancesCreationAttributes = Optional<
-  stancesAttributes,
-  stancesOptionalAttributes
->;
-
+@Table({ tableName: 'stances', timestamps: false })
 export class stances
-  extends Model<stancesAttributes, stancesCreationAttributes>
+  extends Model<stancesAttributes, stancesAttributes>
   implements stancesAttributes
 {
-  id!: number;
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
+  declare id?: number;
+  @Column({ type: DataType.INTEGER })
   studentid!: number;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   front?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   back?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   straddle?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   fighting?: string;
-  jun_bi?: string;
+  @Column({ field: 'jun_bi', allowNull: true, type: DataType.STRING(45) })
+  junBi?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   bowing?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   shifting?: string;
+  @Column({ allowNull: true, type: DataType.STRING })
   comments?: string;
-
-  // stances belongsTo students via studentid
-  student!: students;
-  getStudent!: Sequelize.BelongsToGetAssociationMixin<students>;
-  setStudent!: Sequelize.BelongsToSetAssociationMixin<students, studentsId>;
-  createStudent!: Sequelize.BelongsToCreateAssociationMixin<students>;
-
-  static initModel(sequelize: Sequelize.Sequelize): typeof stances {
-    return stances.init(
-      {
-        id: {
-          autoIncrement: true,
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          primaryKey: true,
-        },
-        studentid: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'students',
-            key: 'studentid',
-          },
-        },
-        front: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        back: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        straddle: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        fighting: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        jun_bi: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        bowing: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        shifting: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        comments: {
-          type: DataTypes.TEXT,
-          allowNull: true,
-        },
-      },
-      {
-        sequelize,
-        tableName: 'stances',
-        timestamps: false,
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [{ name: 'id' }],
-          },
-          {
-            name: 'stances_ibfk_1',
-            using: 'BTREE',
-            fields: [{ name: 'studentid' }],
-          },
-        ],
-      },
-    );
-  }
 }
