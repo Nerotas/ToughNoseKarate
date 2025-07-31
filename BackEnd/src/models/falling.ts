@@ -1,98 +1,37 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { students, studentsId } from './students';
+import {
+  Model,
+  Table,
+  Column,
+  DataType,
+  Index,
+  Sequelize,
+  ForeignKey,
+} from 'sequelize-typescript';
 
 export interface fallingAttributes {
-  id: number;
+  id?: number;
   studentid: number;
   back?: string;
   front?: string;
   roll?: string;
-  forward_roll?: string;
+  forwardRoll?: string;
 }
 
-export type fallingPk = 'id';
-export type fallingId = falling[fallingPk];
-export type fallingOptionalAttributes =
-  | 'id'
-  | 'back'
-  | 'front'
-  | 'roll'
-  | 'forward_roll';
-export type fallingCreationAttributes = Optional<
-  fallingAttributes,
-  fallingOptionalAttributes
->;
-
+@Table({ tableName: 'falling', timestamps: false })
 export class falling
-  extends Model<fallingAttributes, fallingCreationAttributes>
+  extends Model<fallingAttributes, fallingAttributes>
   implements fallingAttributes
 {
-  id!: number;
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
+  declare id?: number;
+  @Column({ type: DataType.INTEGER })
   studentid!: number;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   back?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   front?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   roll?: string;
-  forward_roll?: string;
-
-  // falling belongsTo students via studentid
-  student!: students;
-  getStudent!: Sequelize.BelongsToGetAssociationMixin<students>;
-  setStudent!: Sequelize.BelongsToSetAssociationMixin<students, studentsId>;
-  createStudent!: Sequelize.BelongsToCreateAssociationMixin<students>;
-
-  static initModel(sequelize: Sequelize.Sequelize): typeof falling {
-    return falling.init(
-      {
-        id: {
-          autoIncrement: true,
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          primaryKey: true,
-        },
-        studentid: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'students',
-            key: 'studentid',
-          },
-        },
-        back: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        front: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        roll: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        forward_roll: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-      },
-      {
-        sequelize,
-        tableName: 'falling',
-        timestamps: false,
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [{ name: 'id' }],
-          },
-          {
-            name: 'falling_ibfk_1',
-            using: 'BTREE',
-            fields: [{ name: 'studentid' }],
-          },
-        ],
-      },
-    );
-  }
+  @Column({ field: 'forward_roll', allowNull: true, type: DataType.STRING(45) })
+  forwardRoll?: string;
 }

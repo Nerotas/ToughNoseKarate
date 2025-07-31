@@ -1,60 +1,40 @@
-import {
+﻿import {
   Controller,
   Get,
   Post,
-  Put,
-  Delete,
-  Param,
   Body,
-  ParseIntPipe,
+  Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { ParentMappingService } from '../service/parentMapping.service';
-import {
-  parent_mapping,
-  parent_mappingCreationAttributes,
-} from '../models/parent_mapping';
 
-@Controller('parent-mapping')
+@Controller('parent-Mapping')
 export class ParentMappingController {
   constructor(private readonly parentMappingService: ParentMappingService) {}
 
-  @Get()
-  async findAll(): Promise<parent_mapping[]> {
-    return await this.parentMappingService.findAll();
-  }
-
-  @Get(':studentid/:parentid')
-  async findOne(
-    @Param('studentid', ParseIntPipe) studentid: number,
-    @Param('parentid', ParseIntPipe) parentid: number,
-  ): Promise<parent_mapping> {
-    return await this.parentMappingService.findOne(studentid, parentid);
-  }
-
   @Post()
-  async create(
-    @Body() data: parent_mappingCreationAttributes,
-  ): Promise<parent_mapping> {
-    return await this.parentMappingService.create(data);
+  create(@Body() createParentMappingDto: any) {
+    return this.parentMappingService.create(createParentMappingDto);
   }
 
-  @Put(':studentid/:parentid')
-  async update(
-    @Param('studentid', ParseIntPipe) studentid: number,
-    @Param('parentid', ParseIntPipe) parentid: number,
-    @Body() data: Partial<parent_mapping>,
-  ): Promise<parent_mapping> {
-    return await this.parentMappingService.update(studentid, parentid, data);
+  @Get()
+  findAll() {
+    return this.parentMappingService.findAll();
   }
 
-  @Delete(':studentid/:parentid')
-  async remove(
-    @Param('studentid', ParseIntPipe) studentid: number,
-    @Param('parentid', ParseIntPipe) parentid: number,
-  ): Promise<{ message: string }> {
-    await this.parentMappingService.remove(studentid, parentid);
-    return {
-      message: `Deleted parent mapping for student ${studentid} and parent ${parentid}`,
-    };
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.parentMappingService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateParentMappingDto: any) {
+    return this.parentMappingService.update(+id, updateParentMappingDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.parentMappingService.remove(+id);
   }
 }

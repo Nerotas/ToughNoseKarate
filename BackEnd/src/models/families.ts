@@ -1,133 +1,64 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
+import {
+  Model,
+  Table,
+  Column,
+  DataType,
+  Index,
+  Sequelize,
+  ForeignKey,
+} from 'sequelize-typescript';
 
 export interface familiesAttributes {
   parentid?: number;
-  studentid: number;
+  studentid?: number;
   firstName: string;
   lastName: string;
   preferedName?: string;
   parentFirstName?: string;
   parentLastName?: string;
   age?: number;
-  rank: string;
-  startDateUTC: string;
-  endDateUTC?: string;
+  rank?: string;
+  startDateUtc: string;
+  endDateUtc?: string;
   email: string;
   phone?: string;
   notes?: string;
-  active: number;
+  active?: number;
 }
 
-export type familiesOptionalAttributes =
-  | 'parentid'
-  | 'studentid'
-  | 'preferedName'
-  | 'parentFirstName'
-  | 'parentLastName'
-  | 'age'
-  | 'rank'
-  | 'endDateUTC'
-  | 'phone'
-  | 'notes'
-  | 'active';
-export type familiesCreationAttributes = Optional<
-  familiesAttributes,
-  familiesOptionalAttributes
->;
-
+@Table({ tableName: 'families', timestamps: false, comment: 'VIEW' })
 export class families
-  extends Model<familiesAttributes, familiesCreationAttributes>
+  extends Model<familiesAttributes, familiesAttributes>
   implements familiesAttributes
 {
+  @Column({ allowNull: true, type: DataType.INTEGER })
   parentid?: number;
-  studentid!: number;
+  @Column({ type: DataType.INTEGER, defaultValue: '0' })
+  studentid?: number;
+  @Column({ type: DataType.STRING(45) })
   firstName!: string;
+  @Column({ type: DataType.STRING(45) })
   lastName!: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   preferedName?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   parentFirstName?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   parentLastName?: string;
+  @Column({ allowNull: true, type: DataType.INTEGER })
   age?: number;
-  rank!: string;
-  startDateUTC!: string;
-  endDateUTC?: string;
+  @Column({ type: DataType.STRING(45), defaultValue: 'white' })
+  rank?: string;
+  @Column({ field: 'startDateUTC', type: DataType.STRING(45) })
+  startDateUtc!: string;
+  @Column({ field: 'endDateUTC', allowNull: true, type: DataType.STRING(45) })
+  endDateUtc?: string;
+  @Column({ type: DataType.STRING(45) })
   email!: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
   phone?: string;
+  @Column({ allowNull: true, type: DataType.STRING })
   notes?: string;
-  active!: number;
-
-  static initModel(sequelize: Sequelize.Sequelize): typeof families {
-    return families.init(
-      {
-        parentid: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-        },
-        studentid: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          defaultValue: 0,
-        },
-        firstName: {
-          type: DataTypes.STRING(45),
-          allowNull: false,
-        },
-        lastName: {
-          type: DataTypes.STRING(45),
-          allowNull: false,
-        },
-        preferedName: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        parentFirstName: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        parentLastName: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        age: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-        },
-        rank: {
-          type: DataTypes.STRING(45),
-          allowNull: false,
-          defaultValue: 'white',
-        },
-        startDateUTC: {
-          type: DataTypes.STRING(45),
-          allowNull: false,
-        },
-        endDateUTC: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        email: {
-          type: DataTypes.STRING(45),
-          allowNull: false,
-        },
-        phone: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        notes: {
-          type: DataTypes.TEXT,
-          allowNull: true,
-        },
-        active: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-          defaultValue: 1,
-        },
-      },
-      {
-        sequelize,
-        tableName: 'families',
-        timestamps: false,
-      },
-    );
-  }
+  @Column({ type: DataType.TINYINT, defaultValue: '1' })
+  active?: number;
 }

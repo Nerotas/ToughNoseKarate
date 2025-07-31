@@ -1,46 +1,39 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  parent_mapping,
-  parent_mappingCreationAttributes,
-} from '../models/parent_mapping';
+﻿import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { parentMapping } from '../models/parentMapping';
 
 @Injectable()
 export class ParentMappingService {
-  async findAll(): Promise<parent_mapping[]> {
-    return await parent_mapping.findAll();
+  constructor(
+    @InjectModel(parentMapping)
+    private parentMappingModel: typeof parentMapping,
+  ) {}
+
+  async findAll(): Promise<parentMapping[]> {
+    return this.parentMappingModel.findAll();
   }
 
-  async findOne(studentid: number, parentid: number): Promise<parent_mapping> {
-    const record = await parent_mapping.findOne({
-      where: { studentid, parentid },
-    });
-
-    if (!record) {
-      throw new NotFoundException(
-        `Parent mapping with studentid ${studentid} and parentid ${parentid} not found`,
-      );
-    }
-
-    return record;
+  async findOne(idparentMapping: number): Promise<parentMapping | null> {
+    return this.parentMappingModel.findOne({ where: { idparentMapping } });
   }
 
-  async create(
-    data: parent_mappingCreationAttributes,
-  ): Promise<parent_mapping> {
-    return await parent_mapping.create(data);
+  async create(createParentMappingDto: any): Promise<parentMapping> {
+    return this.parentMappingModel.create(createParentMappingDto);
   }
 
   async update(
-    studentid: number,
-    parentid: number,
-    data: Partial<parent_mapping>,
-  ): Promise<parent_mapping> {
-    const record = await this.findOne(studentid, parentid);
-    return await record.update(data);
+    idparentMapping: number,
+    updateParentMappingDto: any,
+  ): Promise<[number, parentMapping[]]> {
+    return this.parentMappingModel.update(updateParentMappingDto, {
+      where: { idparentMapping },
+      returning: true,
+    });
   }
 
-  async remove(studentid: number, parentid: number): Promise<void> {
-    const record = await this.findOne(studentid, parentid);
-    await record.destroy();
+  async remove(idparentMapping: number): Promise<number> {
+    return this.parentMappingModel.destroy({
+      where: { idparentMapping },
+    });
   }
 }

@@ -1,36 +1,39 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import { parents, parentsCreationAttributes } from '../models/parents';
-import { DatabaseService } from './database.service';
+﻿import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { parents } from '../models/parents';
 
 @Injectable()
 export class ParentsService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    @InjectModel(parents)
+    private parentsModel: typeof parents,
+  ) {}
 
   async findAll(): Promise<parents[]> {
-    return await this.databaseService.getModels().parents.findAll();
+    return this.parentsModel.findAll();
   }
 
-  async findOne(parentid: number): Promise<parents> {
-    const record = await this.databaseService
-      .getModels()
-      .parents.findByPk(parentid);
-    if (!record) {
-      throw new NotFoundException(`Parent with parentid ${parentid} not found`);
-    }
-    return record;
+  async findOne(parentid: number): Promise<parents | null> {
+    return this.parentsModel.findOne({ where: { parentid } });
   }
 
-  async create(data: parentsCreationAttributes): Promise<parents> {
-    return await parents.create(data);
+  async create(createParentsDto: any): Promise<parents> {
+    return this.parentsModel.create(createParentsDto);
   }
 
-  async update(parentid: number, data: Partial<parents>): Promise<parents> {
-    const record = await this.findOne(parentid);
-    return await record.update(data);
+  async update(
+    parentid: number,
+    updateParentsDto: any,
+  ): Promise<[number, parents[]]> {
+    return this.parentsModel.update(updateParentsDto, {
+      where: { parentid },
+      returning: true,
+    });
   }
 
-  async remove(parentid: number): Promise<void> {
-    const record = await this.findOne(parentid);
-    await record.destroy();
+  async remove(parentid: number): Promise<number> {
+    return this.parentsModel.destroy({
+      where: { parentid },
+    });
   }
 }

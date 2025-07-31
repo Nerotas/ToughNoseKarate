@@ -1,39 +1,39 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
-import { stances, stancesCreationAttributes } from '../models/stances';
-import { DatabaseService } from './database.service';
+﻿import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { stances } from '../models/stances';
 
 @Injectable()
 export class StancesService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    @InjectModel(stances)
+    private stancesModel: typeof stances,
+  ) {}
 
   async findAll(): Promise<stances[]> {
-    return await this.databaseService.getModels().stances.findAll();
+    return this.stancesModel.findAll();
   }
 
-  async findOne(studentid: number): Promise<stances> {
-    const record = await this.databaseService.stances.findByPk(studentid);
-    const record = await this.databaseService
-      .getModels()
-      .stances.findByPk(studentid);
-    if (!record) {
-      throw new NotFoundException(
-        `Stance with studentid ${studentid} not found`,
-      );
-    }
-    return record;
+  async findOne(id: number): Promise<stances | null> {
+    return this.stancesModel.findByPk(id);
   }
 
-  async create(data: stancesCreationAttributes): Promise<stances> {
-    return await stances.create(data);
+  async create(createStancesDto: any): Promise<stances> {
+    return this.stancesModel.create(createStancesDto);
   }
 
-  async update(studentid: number, data: Partial<stances>): Promise<stances> {
-    const record = await this.findOne(studentid);
-    return await record.update(data);
+  async update(
+    id: number,
+    updateStancesDto: any,
+  ): Promise<[number, stances[]]> {
+    return this.stancesModel.update(updateStancesDto, {
+      where: { id },
+      returning: true,
+    });
   }
 
-  async remove(studentid: number): Promise<void> {
-    const record = await this.findOne(studentid);
-    await record.destroy();
+  async remove(id: number): Promise<number> {
+    return this.stancesModel.destroy({
+      where: { id },
+    });
   }
 }

@@ -1,50 +1,40 @@
-import {
+﻿import {
   Controller,
   Get,
   Post,
-  Put,
-  Delete,
-  Param,
   Body,
-  ParseIntPipe,
+  Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { ParentsService } from '../service/parents.service';
-import { parents, parentsCreationAttributes } from '../models/parents';
 
 @Controller('parents')
 export class ParentsController {
   constructor(private readonly parentsService: ParentsService) {}
 
-  @Get()
-  async findAll(): Promise<parents[]> {
-    return await this.parentsService.findAll();
-  }
-
-  @Get(':parentid')
-  async findOne(
-    @Param('parentid', ParseIntPipe) parentid: number,
-  ): Promise<parents> {
-    return await this.parentsService.findOne(parentid);
-  }
-
   @Post()
-  async create(@Body() data: parentsCreationAttributes): Promise<parents> {
-    return await this.parentsService.create(data);
+  create(@Body() createParentsDto: any) {
+    return this.parentsService.create(createParentsDto);
   }
 
-  @Put(':parentid')
-  async update(
-    @Param('parentid', ParseIntPipe) parentid: number,
-    @Body() data: Partial<parents>,
-  ): Promise<parents> {
-    return await this.parentsService.update(parentid, data);
+  @Get()
+  findAll() {
+    return this.parentsService.findAll();
   }
 
-  @Delete(':parentid')
-  async remove(
-    @Param('parentid', ParseIntPipe) parentid: number,
-  ): Promise<{ message: string }> {
-    await this.parentsService.remove(parentid);
-    return { message: `Deleted parent with id ${parentid}` };
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.parentsService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateParentsDto: any) {
+    return this.parentsService.update(+id, updateParentsDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.parentsService.remove(+id);
   }
 }
