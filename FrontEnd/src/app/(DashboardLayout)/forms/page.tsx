@@ -152,7 +152,10 @@ const Forms = () => {
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
           Forms are choreographed sequences of martial arts techniques. They help develop proper
           technique, balance, timing, and mental discipline while preserving traditional martial
-          arts knowledge.
+          arts knowledge. Every form is a simulation of real combat situations, allowing
+          practitioners to refine their skills in a controlled environment. A master of forms can
+          put their own personality into the movements, making each performance unique and telling
+          an individual story.
         </Typography>
 
         <Grid container spacing={3}>
