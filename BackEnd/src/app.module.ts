@@ -33,7 +33,7 @@ import { StancesController } from './controller/stances.controller';
 import { StudentsController } from './controller/students.controller';
 
 // Services
-import { BeltRequirementsService } from './service/beltRequirements.service';
+import { BeltRequirementsService } from './service/beltRequirements.service.ts';
 import { CombinationsService } from './service/combinations.service';
 import { FallingService } from './service/falling.service';
 import { FormsService } from './service/forms.service';

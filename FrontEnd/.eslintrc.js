@@ -1,122 +1,84 @@
-// https://www.robertcooper.me/using-eslint-and-prettier-in-a-typescript-project
-// https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin/docs/rules
-
 module.exports = {
-    parser: '@typescript-eslint/parser',
-    parserOptions: {
-        ecmaVersion: 2018,
-        sourceType: 'module',
+  root: true,
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+  },
+  extends: [
+    'next/core-web-vitals',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:jsx-a11y/recommended',
+    'prettier',
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
     },
-    plugins: [
-        'prettier',
-        'react-hooks', // Uses eslint-plugin-react-hooks
-        'react',
-        'sort-destructure-keys',
-        '@tanstack/query',
+  },
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'jsx-a11y', 'prettier'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  rules: {
+    // React Rules
+    'react/react-in-jsx-scope': 'off', // Not needed in React 17+
+    'react/prop-types': 'off', // Using TypeScript for prop validation
+    'react/jsx-uses-react': 'off', // Not needed in React 17+
+    'react/jsx-uses-vars': 'error',
+    'react/jsx-key': 'warn',
+    'react/no-unescaped-entities': 'warn',
+
+    // React Hooks Rules
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+
+    // TypeScript Rules
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-empty-interface': 'off',
+    '@typescript-eslint/ban-ts-comment': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    // General JavaScript Rules
+    'no-console': 'off', // Allow console in development
+    'no-debugger': 'warn',
+    'prefer-const': 'warn',
+    'no-var': 'error',
+    eqeqeq: 'warn',
+    'no-unused-vars': 'off', // Using TypeScript version instead
+
+    // Accessibility Rules (basic)
+    'jsx-a11y/alt-text': 'warn',
+    'jsx-a11y/anchor-is-valid': 'warn',
+    'jsx-a11y/click-events-have-key-events': 'warn',
+    'jsx-a11y/no-static-element-interactions': 'warn',
+    'react/jsx-max-props-per-line': [1, { maximum: 1, when: 'multiline' }],
+    // Prettier integration
+    'prettier/prettier': 'warn',
+
+    // Custom Rules
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['@/*'],
+            message: 'Path alias imports are not allowed. Use relative imports instead.',
+          },
+        ],
+      },
     ],
-    extends: ['standard', 'eslint:recommended', 'plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended'],
-    rules: {
-        // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
-        // 0 = off, 1 = warn, 2 = error
-        '@typescript-eslint/ban-types': 'off',
-        '@typescript-eslint/comma-dangle': 'off',
-        '@typescript-eslint/comma-spacing': 'warn',
-        '@typescript-eslint/explicit-function-return-type': 0,
-        '@typescript-eslint/explicit-module-boundary-types': ['off'],
-        '@typescript-eslint/indent': 'off',
-        '@typescript-eslint/no-empty-function': 0,
-        '@typescript-eslint/no-empty-interface': 0,
-        '@typescript-eslint/no-explicit-any': 0,
-        '@typescript-eslint/no-implied-eval': 'off',
-        '@typescript-eslint/no-inferrable-types': 0,
-        '@typescript-eslint/no-non-null-assertion': 0,
-        '@typescript-eslint/no-shadow': 'off',
-        '@typescript-eslint/no-unused-expressions': ['off'],
-        '@typescript-eslint/no-unused-vars': 0,
-        '@typescript-eslint/no-use-before-define': 0,
-        '@typescript-eslint/no-var-requires': ['off'],
-        '@typescript-eslint/object-curly-spacing': 'off',
-        '@typescript-eslint/semi': 'warn',
-        'array-bracket-spacing': 'warn',
-        'arrow-body-style': 'warn',
-        'comma-dangle': 'off',
-        'eol-last': 'warn',
-        'import/no-duplicates': 'warn',
-        'import/prefer-default-export': 'off',
-        'jsx-a11y/anchor-is-valid': 'off',
-        'key-spacing': 'warn',
-        'linebreak-style': 0,
-        'lines-between-class-members': 'off',
-        'max-len': 'off',
-        'multiline-ternary': 'off',
-        'no-async-promise-executor': ['off'],
-        'no-console': 'off',
-        'no-debugger': 'warn',
-        'no-empty-pattern': ['off'],
-        'no-multi-spaces': 'warn',
-        'no-multiple-empty-lines': 'off',
-        'no-param-reassign': 'off',
-        'no-plusplus': 'off',
-        'no-prototype-builtins': ['off'],
-        'no-return-assign': 'off',
-        'no-tabs': 0,
-        'no-trailing-spaces': 'off',
-        'no-undef': ['off'],
-        'no-unneeded-ternary': 1,
-        'no-unused-vars': 0,
-        'no-use-before-define': 'off',
-        'no-var': ['error'],
-        'node/handle-callback-err': 'off',
-        'object-curly-newline': 'off',
-        'padded-blocks': 'warn',
-        'prefer-const': 'warn',
-        'react-hooks/exhaustive-deps': 0,
-        'react-hooks/rules-of-hooks': 2,
-        'react/destructuring-assignment': [0, 'always'],
-        'react/forbid-prop-types': 'off',
-        'react/jsx-child-element-spacing': 0,
-        'react/jsx-closing-bracket-location': 'off',
-        'react/jsx-closing-tag-location': 'off',
-        'react/jsx-curly-brace-presence': 'warn',
-        'react/jsx-filename-extension': 'off',
-        'react/jsx-first-prop-new-line': 'warn',
-        'react/jsx-fragments': 'warn',
-        'react/jsx-indent-props': 'off',
-        'react/jsx-indent': 'off',
-        'react/jsx-key': 'error',
-        'react/jsx-max-props-per-line': [0, { when: 'always' }],
-        'react/jsx-one-expression-per-line': 'off',
-        'react/jsx-props-no-spreading': 'off',
-        'react/jsx-tag-spacing': 0,
-        'react/react-in-jsx-scope': 'off',
-        'react/require-default-props': 'off',
-        'sort-destructure-keys/sort-destructure-keys': [2, { caseSensitive: false }],
-        'sort-keys': ['off'],
-        'space-before-function-paren': ['off'],
-        'spaced-comment': ['off'],
-        camelcase: 0,
-        curly: 'warn',
-        eqeqeq: 1,
-        indent: ['off'],
-        quotes: ['off'],
-        semi: ['off'],
-        'sort-imports': [
-            0,
-            {
-                ignoreDeclarationSort: true,
-                ignoreCase: true,
-            },
-        ],
-        'react/jsx-sort-props': [
-            'warn',
-            {
-                ignoreCase: true,
-            },
-        ],
-    },
-    settings: {
-        react: {
-            version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
-        },
-    },
+  },
+  ignorePatterns: ['node_modules/', '.next/', 'out/', 'public/', 'coverage/'],
 };
