@@ -1,5 +1,5 @@
-import axiosInstance from 'helpers/AxiosInstance';
 import { useMutation } from '@tanstack/react-query';
+import axiosInstance from 'utils/helpers/AxiosInstance';
 
 const usePut = <Type>(url: string) => {
   const configPut = useMutation({
