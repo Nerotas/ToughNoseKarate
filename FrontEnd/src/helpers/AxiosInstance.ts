@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:8000',
+  baseURL: process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:3001',
   timeout: 600000,
   withCredentials: true,
   headers: {

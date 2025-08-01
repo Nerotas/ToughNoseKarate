@@ -14,7 +14,7 @@
     "fix-line-endings": "powershell -Command \"Get-ChildItem -Recurse -Include '*.ts','*.tsx','*.js','*.jsx' | ForEach-Object { (Get-Content $_.FullName -Raw) -replace '`r`n', '`n' -replace '`r', '`n' | Set-Content $_.FullName -NoNewline }\""
   },
   "dependencies": {
-    "@emotion/cache": "^11.11.0",
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.14.0",

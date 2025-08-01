@@ -168,8 +168,6 @@ import { BlocksService } from './service/blocks.service';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(MetricsMiddleware)
-      .forRoutes('*');
+    consumer.apply(MetricsMiddleware).forRoutes('*');
   }
 }
