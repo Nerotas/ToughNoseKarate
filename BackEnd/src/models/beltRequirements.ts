@@ -2,10 +2,7 @@ import {
   Model,
   Table,
   Column,
-  DataType,
-  Index,
-  Sequelize,
-  ForeignKey,
+  DataType
 } from 'sequelize-typescript';
 
 export interface beltRequirementsAttributes {
@@ -21,6 +18,8 @@ export interface beltRequirementsAttributes {
   oneSteps: object;
   selfDefense: object;
   comments?: string;
+  color?: string;
+  textColor?: string;
 }
 
 @Table({ tableName: 'belt_requirements', timestamps: false })
@@ -52,4 +51,18 @@ export class beltRequirements
   selfDefense!: object;
   @Column({ allowNull: true, type: DataType.STRING })
   comments?: string;
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(7),
+    comment: 'Hex color code for belt display (e.g. #FFFFFF)',
+  })
+  color?: string;
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(7),
+    field: 'text_color',
+    defaultValue: '#000000',
+    comment: 'Hex color code for text on belt (e.g. #000000)',
+  })
+  textColor?: string;
 }
