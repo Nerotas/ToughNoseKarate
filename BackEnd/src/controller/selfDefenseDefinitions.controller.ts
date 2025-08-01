@@ -5,33 +5,31 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  Delete
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SelfDefenseDefinitionsService } from '../service/selfDefenseDefinitions.service';
 
+@ApiTags('Techniques')
 @Controller('self-defense-definitions')
 export class SelfDefenseDefinitionsController {
   constructor(
     private readonly selfDefenseDefinitionsService: SelfDefenseDefinitionsService,
   ) {}
-
   @Post()
   create(@Body() createSelfDefenseDefinitionsDto: any) {
     return this.selfDefenseDefinitionsService.create(
       createSelfDefenseDefinitionsDto,
     );
   }
-
   @Get()
   findAll() {
     return this.selfDefenseDefinitionsService.findAll();
   }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.selfDefenseDefinitionsService.findOne(+id);
   }
-
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -42,7 +40,6 @@ export class SelfDefenseDefinitionsController {
       updateSelfDefenseDefinitionsDto,
     );
   }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.selfDefenseDefinitionsService.remove(+id);

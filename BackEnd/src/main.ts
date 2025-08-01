@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { LoggerService } from './service/logger.service';
 import { AppConfigService } from './config/app-config.service';
@@ -23,6 +23,13 @@ async function bootstrap() {
     console.error('❌ Environment validation failed:', error.message);
     process.exit(1);
   }
+
+  // Enable API versioning
+  app.enableVersioning({
+    type: VersioningType.URI,
+    prefix: 'v',
+    defaultVersion: '1',
+  });
 
   // Add global validation pipe for input validation
   app.useGlobalPipes(
@@ -48,6 +55,12 @@ async function bootstrap() {
     .setTitle('Tough Nose Karate API')
     .setDescription('Martial Arts Management System REST API')
     .setVersion('1.0')
+    .addServer('/v1', 'Version 1')
+    .addTag('Authentication', 'User authentication endpoints')
+    .addTag('Students', 'Student management endpoints')
+    .addTag('Techniques', 'Technique definition endpoints')
+    .addTag('Belt Requirements', 'Belt requirement endpoints')
+    .addTag('Health', 'System health endpoints')
 
     // TODO: Implement authentication (e.g., addBearerAuth) when the application goes live.
     // .addBearerAuth(
@@ -56,9 +69,12 @@ async function bootstrap() {
     // )
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(`/${configService.apiPrefix}`, app, document, {
+  SwaggerModule.setup('api-docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
+      displayRequestDuration: true,
+      defaultModelsExpandDepth: 2,
+      defaultModelExpandDepth: 2,
     },
   });
 

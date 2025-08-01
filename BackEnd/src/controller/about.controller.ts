@@ -1,5 +1,11 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode
+} from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('System')
 @Controller('about')
 export class AboutController {
   @Get('')
