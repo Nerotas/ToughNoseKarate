@@ -1,18 +1,17 @@
+import { Metadata } from 'next';
 import Providers from './providers';
 import ClientThemeProvider from './theme-provider';
 import './global.css';
-import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Tough Nose Karate',
-  description: 'Karate training and belt requirements management system',
+  description: 'Tang Soo Do martial arts training and belt requirements',
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: '16x16', type: 'image/x-icon' },
-      { url: '/icon-192.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
     ],
-    apple: [{ url: '/icon-192.png', sizes: '180x180', type: 'image/png' }],
+    apple: '/favicon.png',
   },
 };
 

@@ -1,4 +1,4 @@
-import axiosInstance from 'helpers/AxiosInstance';
+import axiosInstance from 'utils/helpers/AxiosInstance';
 import { useMutation } from '@tanstack/react-query';
 
 const useDelete = (url: string, data?: any) => {

@@ -1,22 +1,17 @@
 import {
-  IconAperture,
-  IconCopy,
   IconLayoutDashboard,
   IconLogin,
-  IconMoodHappy,
-  IconTypography,
   IconUserPlus,
   IconAward,
   IconUsers,
-  IconSwords,
   IconMan,
-  IconTarget,
   IconBrandTorchain,
+  IconClipboardCheck,
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
 
-const Menuitems = [
+export const Menuitems = [
   {
     id: uniqueId(),
     title: 'Home',
@@ -46,18 +41,9 @@ const Menuitems = [
     icon: IconBrandTorchain,
     href: '/stances',
   },
-  {
-    id: uniqueId(),
-    title: 'One Steps',
-    icon: IconTarget,
-    href: '/one-steps',
-  },
-  {
-    id: uniqueId(),
-    title: 'Combinations',
-    icon: IconSwords,
-    href: '/combinations',
-  },
+];
+
+export const AuthMenuItems = [
   {
     navlabel: true,
     subheader: 'AUTH',
@@ -70,16 +56,8 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Login',
-    icon: IconLogin,
-    href: '/authentication/login',
-  },
-  {
-    id: uniqueId(),
-    title: 'Register',
-    icon: IconUserPlus,
-    href: '/authentication/register',
+    title: 'Assessments',
+    icon: IconClipboardCheck,
+    href: '/authentication/assessments', //TODO: create assessments page
   },
 ];
-
-export default Menuitems;
