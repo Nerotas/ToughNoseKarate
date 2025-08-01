@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosInstance from 'helpers/AxiosInstance';
+import axiosInstance from 'utils/helpers/AxiosInstance';
 
 const fetchData = async (url: string, apiLabel: string[], id = '0', payload: any): Promise<any> => {
   //adding anayltics to all fetches to cover all cases. Maybe be reduced later.

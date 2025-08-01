@@ -14,8 +14,8 @@ import {
 import { IconAward, IconCheck } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
-import { beltLevels } from 'constants/data/beltRequirements';
-
+import { mockBeltRequirementsData } from 'constants/data/mockBeltRequirements';
+import RequirementsList from '../components/belt-requirements/RequirementsList';
 const BeltRequirements = () => {
   return (
     <PageContainer
@@ -33,14 +33,14 @@ const BeltRequirements = () => {
         </Typography>
 
         <Grid container spacing={3}>
-          {beltLevels.map((belt) => (
-            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={belt.belt}>
+          {mockBeltRequirementsData.map((belt) => (
+            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={`${belt.order}_${belt.beltRank}`}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                     <Chip
                       icon={<IconAward />}
-                      label={belt.belt}
+                      label={belt.beltRank}
                       sx={{
                         backgroundColor: belt.color,
                         color: belt.textColor,
@@ -50,23 +50,38 @@ const BeltRequirements = () => {
                     />
                   </Box>
 
-                  <Typography variant='h6' gutterBottom>
-                    Requirements:
-                  </Typography>
-
-                  <List dense>
-                    {belt.requirements.map((requirement, reqIndex) => (
-                      <ListItem key={reqIndex} sx={{ pl: 0 }}>
-                        <ListItemIcon sx={{ minWidth: 32 }}>
-                          <IconCheck size={16} color='green' />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={requirement}
-                          primaryTypographyProps={{ variant: 'body2' }}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
+                  {belt.forms.length > 0 && (
+                    <RequirementsList requirements={belt.forms} requirementName='Forms' />
+                  )}
+                  {belt.blocks.length > 0 && (
+                    <RequirementsList requirements={belt.blocks} requirementName='Blocks' />
+                  )}
+                  {belt.punches.length > 0 && (
+                    <RequirementsList requirements={belt.punches} requirementName='Punches' />
+                  )}
+                  {belt.kicks.length > 0 && (
+                    <RequirementsList requirements={belt.kicks} requirementName='Kicks' />
+                  )}
+                  {belt.jumps.length > 0 && (
+                    <RequirementsList requirements={belt.jumps} requirementName='Jumps' />
+                  )}
+                  {belt.falling.length > 0 && (
+                    <RequirementsList requirements={belt.falling} requirementName='Falling' />
+                  )}
+                  {belt.oneSteps.length > 0 && (
+                    <RequirementsList requirements={belt.oneSteps} requirementName='One Steps' />
+                  )}
+                  {belt.selfDefense.length > 0 && (
+                    <RequirementsList
+                      requirements={belt.selfDefense}
+                      requirementName='Self Defense'
+                    />
+                  )}
+                  {belt.comments && (
+                    <Typography variant='body2' sx={{ mt: 2, color: 'text.secondary' }}>
+                      Comments: {belt.comments}
+                    </Typography>
+                  )}
                 </CardContent>
               </Card>
             </Grid>

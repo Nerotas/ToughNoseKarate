@@ -22,9 +22,7 @@
   "include": [
     "src/**/*.ts",
     ".eslintrc.cjs",
-    "types/**/*.ts",
-    "output-models/belt_requirements.ts",
-    "../FrontEnd/src/constants/data/mockBeltRequirements.ts"
+    "types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

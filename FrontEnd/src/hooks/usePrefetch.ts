@@ -1,4 +1,4 @@
-import axiosInstance from 'helpers/AxiosInstance';
+import axiosInstance from 'utils/helpers/AxiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface IPrefetch {

@@ -1,5 +1,5 @@
 import SSRWrapper from '../../../wrappers/SSRWrapper';
-import BeltsClient from './beltsClient';
+import BeltsClient from './BeltsClient';
 
 /**
  * Server-side rendered Stances page with pre-fetched data

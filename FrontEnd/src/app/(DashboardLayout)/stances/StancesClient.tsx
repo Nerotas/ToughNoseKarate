@@ -15,9 +15,9 @@ import {
 import { IconBrandTorchain, IconCheckbox, IconX } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
+import { stances } from 'constants/data/stances';
 import { StanceDefinition } from 'models/Stances/Stances';
 import useGet from '../../../hooks/useGet';
-import Loader from '../components/shared/loader';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -28,7 +28,7 @@ export default function StancesClient() {
   const {
     data: stancesDefinitions,
     isLoading,
-    isFetching,
+    error,
     isError,
   } = useGet<StanceDefinition[]>({
     apiLabel: 'stances-definitions',
@@ -42,9 +42,20 @@ export default function StancesClient() {
     },
   });
 
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+          <Typography>Loading stances...</Typography>
+        </Box>
+      </PageContainer>
+    );
+  }
+
   // Use API data if available, otherwise use static data
   const displayStances =
-    stancesDefinitions && stancesDefinitions.length > 0 ? stancesDefinitions : [];
+    stancesDefinitions && stancesDefinitions.length > 0 ? stancesDefinitions : stances;
 
   return (
     <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
@@ -82,8 +93,6 @@ export default function StancesClient() {
             </Typography>
           </Alert>
         )}
-
-        {(isLoading || isFetching) && <Loader />}
 
         <Grid container spacing={3}>
           {displayStances.map((stance) => (
