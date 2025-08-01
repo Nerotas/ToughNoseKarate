@@ -6,8 +6,8 @@ export default async function PunchesPage() {
     <SSRWrapper
       queries={[
         {
-          queryKey: ['punch-definitions'],
-          url: '/punch-definitions',
+          queryKey: ['punches-definitions'],
+          url: '/punches-definitions',
         },
       ]}
       fallbackOnError={true}

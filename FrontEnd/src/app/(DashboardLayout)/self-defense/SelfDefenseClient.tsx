@@ -29,6 +29,8 @@ import PsychologyIcon from '@mui/icons-material/Psychology';
 import WarningIcon from '@mui/icons-material/Warning';
 import { selfDefense } from '../../../constants/data/selfDefense';
 import { SelfDefenseDefinition } from '../../../models/SelfDefense/SelfDefense';
+import useGet from '../../../hooks/useGet';
+import Loading from '../../../app/loading';
 
 const SelfDefenseClient: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -36,19 +38,46 @@ const SelfDefenseClient: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('All');
 
+  const {
+    data: selfDefenseDefinitions,
+    isLoading,
+    isFetching,
+    error,
+    isError,
+  } = useGet<SelfDefenseDefinition[]>({
+    apiLabel: 'self-defense-definitions',
+    url: '/self-defense-definitions',
+    fallbackData: [],
+    options: {
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  });
+
+  // Use API data if available, otherwise use static data
+  const displaySelfDefense =
+    selfDefenseDefinitions && selfDefenseDefinitions.length > 0
+      ? selfDefenseDefinitions
+      : selfDefense;
+
   // Get unique values for filters
   const categories = [
     'All',
-    ...Array.from(new Set(selfDefense.map((technique) => technique.category))),
+    ...Array.from(new Set(displaySelfDefense.map((technique) => technique.category))),
   ];
-  const belts = ['All', ...Array.from(new Set(selfDefense.map((technique) => technique.belt)))];
+  const belts = [
+    'All',
+    ...Array.from(new Set(displaySelfDefense.map((technique) => technique.belt))),
+  ];
   const difficulties = [
     'All',
-    ...Array.from(new Set(selfDefense.map((technique) => technique.difficulty))),
+    ...Array.from(new Set(displaySelfDefense.map((technique) => technique.difficulty))),
   ];
 
   // Filter techniques based on selected criteria
-  const filteredTechniques = selfDefense.filter((technique) => {
+  const filteredTechniques = displaySelfDefense.filter((technique) => {
     const matchesCategory = selectedCategory === 'All' || technique.category === selectedCategory;
     const matchesBelt = selectedBelt === 'All' || technique.belt === selectedBelt;
     const matchesDifficulty =
@@ -272,6 +301,8 @@ const SelfDefenseClient: React.FC = () => {
 
   return (
     <Box>
+      {isLoading || (isFetching && <Loading />)}
+
       <Typography variant='h4' component='h1' gutterBottom>
         Self-Defense & Ground Work
       </Typography>

@@ -22,7 +22,6 @@ import {
 } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
-import { oneSteps } from '../../../constants/data/oneSteps';
 import { OneStepDefinition } from '../../../models/OneSteps/OneSteps';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
@@ -52,8 +51,8 @@ export default function OneStepsClient() {
     error,
     isError,
   } = useGet<OneStepDefinition[]>({
-    apiLabel: 'onestep-definitions',
-    url: '/onestep-definitions',
+    apiLabel: 'one-steps-definitions',
+    url: '/one-steps-definitions',
     fallbackData: [],
     options: {
       staleTime: 60 * 1000,
@@ -63,8 +62,8 @@ export default function OneStepsClient() {
     },
   });
 
-  const displayOneSteps =
-    oneStepDefinitions && oneStepDefinitions.length > 0 ? oneStepDefinitions : oneSteps;
+  // Use API data only
+  const displayOneSteps = oneStepDefinitions || [];
 
   return (
     <PageContainer title='One-Step Sparring' description='Tang Soo Do One-Step Sparring Techniques'>

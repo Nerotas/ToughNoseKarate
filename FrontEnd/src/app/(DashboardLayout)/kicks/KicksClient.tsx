@@ -15,7 +15,6 @@ import {
 import { IconRun, IconCheckbox, IconX, IconTarget, IconFlag } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
-import { kicks } from '../../../constants/data/kicks';
 import { KickDefinition } from '../../../models/Kicks/Kicks';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
@@ -45,8 +44,8 @@ export default function KicksClient() {
     error,
     isError,
   } = useGet<KickDefinition[]>({
-    apiLabel: 'kick-definitions',
-    url: '/kick-definitions',
+    apiLabel: 'kicks-definitions',
+    url: '/kicks-definitions',
     fallbackData: [],
     options: {
       staleTime: 60 * 1000,
@@ -56,7 +55,8 @@ export default function KicksClient() {
     },
   });
 
-  const displayKicks = kickDefinitions && kickDefinitions.length > 0 ? kickDefinitions : kicks;
+  // Use API data only
+  const displayKicks = kickDefinitions || [];
 
   return (
     <PageContainer title='Kicks' description='Tang Soo Do Kicking Techniques'>

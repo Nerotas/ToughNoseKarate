@@ -15,7 +15,6 @@ import {
 import { IconBrandTorchain, IconCheckbox, IconX } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
-import { stances } from 'constants/data/stances';
 import { StanceDefinition } from 'models/Stances/Stances';
 import useGet from '../../../hooks/useGet';
 import Loading from 'app/loading';
@@ -33,7 +32,7 @@ export default function StancesClient() {
     error,
     isError,
   } = useGet<StanceDefinition[]>({
-    apiLabel: 'stances-definitions',
+    apiLabel: 'stance-definitions',
     url: '/stance-Definitions',
     fallbackData: [], // Empty array as fallback, will use static data instead
     options: {
@@ -44,9 +43,8 @@ export default function StancesClient() {
     },
   });
 
-  // Use API data if available, otherwise use static data
-  const displayStances =
-    stancesDefinitions && stancesDefinitions.length > 0 ? stancesDefinitions : stances;
+  // Use API data only
+  const displayStances = stancesDefinitions || [];
 
   return (
     <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
