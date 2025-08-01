@@ -14,9 +14,35 @@ import {
 import { IconAward, IconCheck } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
-import { mockBeltRequirementsData } from 'constants/data/mockBeltRequirements';
 import RequirementsList from '../components/belt-requirements/RequirementsList';
+import useGet from 'hooks/useGet';
+import { BeltRequirements as BeltRequirementsType } from 'models/BeltRequirements/BeltRequirements';
+import Loading from 'app/loading';
+
 const BeltRequirements = () => {
+  // Use the custom useGet hook - will use SSR data if available, fallback if not
+  const {
+    data: beltRequirements,
+    isLoading,
+    isFetching,
+    error,
+    isError,
+  } = useGet<BeltRequirementsType[]>({
+    apiLabel: 'belt-requirements',
+    url: '/belt-requirements',
+    fallbackData: [], // Empty array as fallback, will use static data instead
+    options: {
+      staleTime: 60 * 1000, // 60 seconds
+      gcTime: 5 * 60 * 1000, // 5 minutes
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  });
+
+  // Use API data if available, otherwise use static data
+  const displayBeltRequirements =
+    beltRequirements && beltRequirements.length > 0 ? beltRequirements : [];
+
   return (
     <PageContainer
       title='Belt Requirements'
@@ -33,8 +59,10 @@ const BeltRequirements = () => {
         </Typography>
 
         <Grid container spacing={3}>
-          {mockBeltRequirementsData.map((belt) => (
-            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={`${belt.order}_${belt.beltRank}`}>
+          {isLoading || (isFetching && <Loading />)}
+
+          {displayBeltRequirements.map((belt) => (
+            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={`${belt.beltOrder}_${belt.beltRank}`}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -78,8 +106,8 @@ const BeltRequirements = () => {
                     />
                   )}
                   {belt.comments && (
-                    <Typography variant='body2' sx={{ mt: 2, color: 'text.secondary' }}>
-                      Comments: {belt.comments}
+                    <Typography variant='body2' sx={{ mt: 2 }}>
+                      {belt.comments}
                     </Typography>
                   )}
                 </CardContent>
@@ -91,33 +119,12 @@ const BeltRequirements = () => {
         <Box sx={{ mt: 4 }}>
           <DashboardCard title='Testing Information'>
             <Typography variant='body1' paragraph>
-              <strong>Testing Schedule:</strong> Belt tests are held every 3-4 months, typically on
-              the last Saturday of the testing month.
+              Students only test <strong>when they are ready.</strong> The instructor will determine
+              readiness based on mastery of required techniques, forms, and overall performance.
             </Typography>
             <Typography variant='body1' paragraph>
-              <strong>Minimum Training Time:</strong> Students must train for a minimum number of
-              classes between belt levels:
+              <strong>Testing Schedule:</strong> Belt tests are held every 2-3 months.
             </Typography>
-            <List>
-              <ListItem>
-                <ListItemText primary='White to Yellow: 20 classes (2-3 months)' />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary='Yellow to Orange: 25 classes (3 months)' />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary='Orange to Green: 30 classes (4 months)' />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary='Green to Blue: 35 classes (5 months)' />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary='Blue to Brown: 40 classes (6 months)' />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary='Brown to Black: 50+ classes (8-12 months)' />
-              </ListItem>
-            </List>
           </DashboardCard>
         </Box>
       </Box>

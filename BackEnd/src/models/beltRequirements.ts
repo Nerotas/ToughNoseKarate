@@ -21,6 +21,8 @@ export interface beltRequirementsAttributes {
   oneSteps: object;
   selfDefense: object;
   comments?: string;
+  color?: string;
+  textColor?: string;
 }
 
 @Table({ tableName: 'belt_requirements', timestamps: false })
@@ -52,4 +54,17 @@ export class beltRequirements
   selfDefense!: object;
   @Column({ allowNull: true, type: DataType.STRING })
   comments?: string;
+  @Column({
+    allowNull: true,
+    type: DataType.STRING(7),
+    comment: 'Hex color code for belt background',
+  })
+  color?: string;
+  @Column({
+    field: 'text_color',
+    allowNull: true,
+    type: DataType.STRING(7),
+    comment: 'Hex color code for belt text',
+  })
+  textColor?: string;
 }

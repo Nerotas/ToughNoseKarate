@@ -18,6 +18,7 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { stances } from 'constants/data/stances';
 import { StanceDefinition } from 'models/Stances/Stances';
 import useGet from '../../../hooks/useGet';
+import Loading from 'app/loading';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -28,6 +29,7 @@ export default function StancesClient() {
   const {
     data: stancesDefinitions,
     isLoading,
+    isFetching,
     error,
     isError,
   } = useGet<StanceDefinition[]>({
@@ -42,23 +44,14 @@ export default function StancesClient() {
     },
   });
 
-  // Handle loading state
-  if (isLoading) {
-    return (
-      <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <Typography>Loading stances...</Typography>
-        </Box>
-      </PageContainer>
-    );
-  }
-
   // Use API data if available, otherwise use static data
   const displayStances =
     stancesDefinitions && stancesDefinitions.length > 0 ? stancesDefinitions : stances;
 
   return (
     <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
+      {isLoading || (isFetching && <Loading />)}
+
       <Box>
         <Typography
           variant='h2'

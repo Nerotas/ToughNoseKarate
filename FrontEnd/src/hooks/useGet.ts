@@ -1,6 +1,6 @@
 import { QueryKey, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosRequestHeaders } from 'axios';
-import axiosInstance from 'helpers/AxiosInstance';
+import axiosInstance from 'utils/helpers/AxiosInstance';
 
 // Fetch function that works both client and server side
 const getFetch = async (url: string, headers?: AxiosRequestHeaders): Promise<any> => {
