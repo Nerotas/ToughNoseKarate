@@ -13,7 +13,13 @@ import {
   alpha,
   Stack,
 } from '@mui/material';
-import { IconUsers, IconHeart, IconChevronRight, IconCalendar } from '@tabler/icons-react';
+import {
+  IconUsers,
+  IconHeart,
+  IconChevronRight,
+  IconCalendar,
+  IconMenorah,
+} from '@tabler/icons-react';
 import { keyframes } from '@emotion/react';
 import Image from 'next/image';
 import PageContainer from './components/container/PageContainer';
@@ -72,6 +78,10 @@ const floatAnimation = keyframes`
 
 const Dashboard = () => {
   const theme = useTheme();
+
+  const handleEmailClick = () => {
+    window.open('mailto:toughnosekarate@gmail.com?subject=NewStudentInquiry');
+  };
 
   return (
     <PageContainer
@@ -144,7 +154,7 @@ const Dashboard = () => {
                       fontStyle: 'italic',
                     }}
                   >
-                    "Where Legends Are Born"
+                    "Tough nose for the people with a stiff neck"
                   </Typography>
                   <Typography
                     variant='h5'
@@ -154,7 +164,8 @@ const Dashboard = () => {
                       animation: `${fadeInUp} 1s ease-out 0.2s both`,
                     }}
                   >
-                    Learn Self-Defense, Discipline, and Confidence with Master Erotas
+                    Learn Self-Defense, Discipline, and Confidence in a Frum environment with Raffi
+                    Erotas
                   </Typography>
                   <Box
                     sx={{
@@ -189,6 +200,7 @@ const Dashboard = () => {
                       variant='outlined'
                       size='large'
                       startIcon={<IconCalendar />}
+                      onClick={handleEmailClick}
                       sx={{
                         borderColor: 'white',
                         color: 'white',
@@ -236,7 +248,7 @@ const Dashboard = () => {
                     >
                       <Image
                         src='/images/profile/Raffi_Kick.jpg'
-                        alt='Erotas performing the legendary Erotas Kick'
+                        alt='Erotas performing a legendary Kick'
                         width={400}
                         height={500}
                         style={{
@@ -254,7 +266,7 @@ const Dashboard = () => {
         </Box>
 
         {/* Training Programs */}
-        <Grid container spacing={3} sx={{ mb: 6 }}>
+        <Grid container spacing={3} sx={{ mb: 6 }} justifyContent='center' alignItems='stretch'>
           <Grid size={{ xs: 12, md: 4 }}>
             <Card
               sx={{
@@ -294,6 +306,45 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Card
+              sx={{
+                height: '100%',
+                borderRadius: '15px',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-5px)',
+                  boxShadow: theme.shadows[12],
+                },
+              }}
+            >
+              <CardContent sx={{ textAlign: 'center', p: 4 }}>
+                <Box
+                  sx={{
+                    backgroundColor: alpha(theme.palette.info.main, 0.1),
+                    borderRadius: '50%',
+                    width: 80,
+                    height: 80,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mx: 'auto',
+                    mb: 3,
+                    animation: `${floatAnimation} 2s ease-in-out infinite 1s`,
+                  }}
+                >
+                  <IconMenorah size={40} color={theme.palette.info.main} />
+                </Box>
+                <Typography variant='h5' fontWeight='bold' sx={{ mb: 2 }}>
+                  Adult Classes
+                </Typography>
+                <Typography color='text.secondary' sx={{ mb: 2 }}>
+                  Engaging and challenging classes for adults to improve fitness and skills
+                </Typography>
+                <Chip label='Men and boys above Bar Mitzvah' color='info' size='small' />
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
 
         {/* Call to Action */}
@@ -326,8 +377,8 @@ const Dashboard = () => {
             Traditional Karate with a Modern Perspective
           </Typography>
           <Typography variant='h6' sx={{ mb: 4, opacity: 0.9 }}>
-            Join Master Erotas's dojo and unlock your potential with the world's most innovative
-            karate techniques
+            Join our dojo and unlock your potential with the world's most innovative karate
+            techniques
           </Typography>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
@@ -339,6 +390,7 @@ const Dashboard = () => {
               variant='contained'
               size='large'
               startIcon={<IconCalendar />}
+              onClick={handleEmailClick}
               sx={{
                 backgroundColor: theme.palette.warning.main,
                 color: 'black',
@@ -359,6 +411,8 @@ const Dashboard = () => {
               variant='outlined'
               size='large'
               startIcon={<IconUsers />}
+              href='/instructors'
+              component='a'
               sx={{
                 borderColor: 'white',
                 color: 'white',
@@ -373,7 +427,7 @@ const Dashboard = () => {
                 transition: 'all 0.3s ease',
               }}
             >
-              Meet Master Erotas
+              Meet Our Instructors
             </Button>
           </Stack>
         </Paper>
