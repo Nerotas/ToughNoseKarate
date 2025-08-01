@@ -9,7 +9,7 @@
 } from '@nestjs/common';
 import { StanceDefinitionsService } from '../service/stanceDefinitions.service';
 
-@Controller('stance-Definitions')
+@Controller('stance-definitions')
 export class StanceDefinitionsController {
   constructor(
     private readonly stanceDefinitionsService: StanceDefinitionsService,

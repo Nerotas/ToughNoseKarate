@@ -12,42 +12,54 @@ import {
   Alert,
   Divider,
 } from '@mui/material';
-import { IconBrandTorchain, IconCheckbox, IconX } from '@tabler/icons-react';
+import { IconRun, IconCheckbox, IconX, IconTarget, IconFlag } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
-import { StanceDefinition } from 'models/Stances/Stances';
+import { KickDefinition } from '../../../models/Kicks/Kicks';
 import useGet from '../../../hooks/useGet';
-import Loading from 'app/loading';
+import Loading from '../../../app/loading';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
 };
 
-export default function StancesClient() {
-  // Use the custom useGet hook - will use SSR data if available, fallback if not
+const getDifficultyColor = (difficulty: string) => {
+  switch (difficulty) {
+    case 'Beginner':
+      return 'success';
+    case 'Intermediate':
+      return 'warning';
+    case 'Advanced':
+      return 'error';
+    default:
+      return 'default';
+  }
+};
+
+export default function KicksClient() {
   const {
-    data: stancesDefinitions,
+    data: kickDefinitions,
     isLoading,
     isFetching,
     error,
     isError,
-  } = useGet<StanceDefinition[]>({
-    apiLabel: 'stance-definitions',
-    url: '/stance-Definitions',
-    fallbackData: [], // Empty array as fallback, will use static data instead
+  } = useGet<KickDefinition[]>({
+    apiLabel: 'kicks-definitions',
+    url: '/kicks-definitions',
+    fallbackData: [],
     options: {
-      staleTime: 60 * 1000, // 60 seconds
-      gcTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
       retry: 2,
       refetchOnWindowFocus: false,
     },
   });
 
   // Use API data only
-  const displayStances = stancesDefinitions || [];
+  const displayKicks = kickDefinitions || [];
 
   return (
-    <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
+    <PageContainer title='Kicks' description='Tang Soo Do Kicking Techniques'>
       {isLoading || (isFetching && <Loading />)}
 
       <Box>
@@ -61,18 +73,18 @@ export default function StancesClient() {
             lineHeight: 1.2,
           }}
         >
-          Tang Soo Do Stances
+          Tang Soo Do Kicking Techniques
         </Typography>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
-          Proper stances form the foundation of all Tang Soo Do techniques. They provide stability,
-          power generation, and mobility for effective martial arts practice.
+          Master the powerful kicking techniques of Tang Soo Do. Kicks are the signature techniques
+          of Korean martial arts, requiring flexibility, balance, and precise timing.
         </Typography>
 
         <Alert severity='info' sx={{ mb: 4 }}>
           <Typography variant='body2'>
-            <strong>Training Tip:</strong> Practice holding each stance for 30-60 seconds to build
-            leg strength and muscle memory. Focus on proper form over duration.
+            <strong>Training Tip:</strong> Start with low kicks and gradually increase height.
+            Always warm up thoroughly and stretch before practicing kicks to prevent injury.
           </Typography>
         </Alert>
 
@@ -80,14 +92,14 @@ export default function StancesClient() {
           <Alert severity='info' sx={{ mb: 4 }}>
             <Typography variant='body2'>
               <strong>Demo Mode:</strong> Unable to connect to the backend server. Displaying static
-              stance data for demonstration.
+              kick data for demonstration.
             </Typography>
           </Alert>
         )}
 
         <Grid container spacing={3}>
-          {displayStances.map((stance) => (
-            <Grid size={{ xs: 12, md: 6 }} key={stance.id}>
+          {displayKicks.map((kick) => (
+            <Grid size={{ xs: 12, md: 6 }} key={kick.id}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Box
@@ -100,43 +112,51 @@ export default function StancesClient() {
                   >
                     <Box>
                       <Typography variant='h5' gutterBottom>
-                        {stance.name}
+                        {kick.name}
                       </Typography>
                       <Typography variant='h6' color='text.secondary' gutterBottom>
-                        {`(${stance.korean})`}{' '}
+                        {`(${kick.korean})`}
                       </Typography>
                     </Box>
-                    <Chip
-                      icon={<IconBrandTorchain />}
-                      label={stance.belt}
-                      sx={{
-                        backgroundColor: stance.beltColor,
-                        color: getBeltTextColor(stance.beltColor),
-                        fontWeight: 'bold',
-                        border: stance.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
-                      }}
-                    />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Chip
+                        icon={<IconRun />}
+                        label={kick.belt}
+                        sx={{
+                          backgroundColor: kick.beltColor,
+                          color: getBeltTextColor(kick.beltColor),
+                          fontWeight: 'bold',
+                          border: kick.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                        }}
+                      />
+                      <Chip
+                        icon={<IconFlag />}
+                        label={kick.difficulty}
+                        color={getDifficultyColor(kick.difficulty)}
+                        size='small'
+                      />
+                    </Box>
                   </Box>
 
                   <Typography variant='body2' paragraph>
-                    {stance.description}
+                    {kick.description}
                   </Typography>
 
                   <Box sx={{ mb: 3 }}>
                     <Typography variant='subtitle2' gutterBottom>
-                      Foot Position:
+                      Technique:
                     </Typography>
                     <Typography variant='body2' color='text.secondary'>
-                      {stance.position}
+                      {kick.technique}
                     </Typography>
                   </Box>
 
                   <Box sx={{ mb: 3 }}>
                     <Typography variant='subtitle2' gutterBottom>
-                      Body Position:
+                      Body Mechanics:
                     </Typography>
                     <Typography variant='body2' color='text.secondary'>
-                      {stance.bodyPosition}
+                      {kick.bodyMechanics}
                     </Typography>
                   </Box>
 
@@ -152,7 +172,7 @@ export default function StancesClient() {
                       Key Points:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
-                      {stance.keyPoints.map((point, index) => (
+                      {kick.keyPoints.map((point, index) => (
                         <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                           <ListItemText
                             primary={`• ${point}`}
@@ -173,7 +193,7 @@ export default function StancesClient() {
                       Common Mistakes:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
-                      {stance.commonMistakes.map((mistake, index) => (
+                      {kick.commonMistakes.map((mistake, index) => (
                         <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                           <ListItemText
                             primary={`• ${mistake}`}
@@ -187,12 +207,34 @@ export default function StancesClient() {
                     </List>
                   </Box>
 
+                  <Box sx={{ mb: 3 }}>
+                    <Typography
+                      variant='subtitle2'
+                      gutterBottom
+                      sx={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      <IconTarget size={16} color='orange' style={{ marginRight: 8 }} />
+                      Target Areas:
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {kick.targetAreas.map((target, index) => (
+                        <Chip
+                          key={index}
+                          label={target}
+                          size='small'
+                          variant='outlined'
+                          sx={{ color: 'orange' }}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+
                   <Box>
                     <Typography variant='subtitle2' gutterBottom>
                       Applications:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {stance.applications.map((app, index) => (
+                      {kick.applications.map((app, index) => (
                         <Chip
                           key={index}
                           label={app}
@@ -210,64 +252,64 @@ export default function StancesClient() {
         </Grid>
 
         <Box sx={{ mt: 4 }}>
-          <DashboardCard title='Stance Training Guidelines'>
+          <DashboardCard title='Kicking Training Guidelines'>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant='subtitle2' gutterBottom>
-                  Daily Practice:
+                  Flexibility Training:
                 </Typography>
                 <List dense>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Hold each stance for 30-60 seconds' />
+                    <ListItemText primary='Dynamic warm-up before kicking' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Practice transitions between stances' />
+                    <ListItemText primary='Daily leg stretching routine' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Focus on one stance per week for mastery' />
+                    <ListItemText primary='Practice high kicks gradually' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Use a mirror to check form' />
+                    <ListItemText primary='Cool down with static stretches' />
                   </ListItem>
                 </List>
               </Grid>
 
               <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant='subtitle2' gutterBottom>
-                  Strength Building:
+                  Technique Development:
                 </Typography>
                 <List dense>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Horse stance: 1-3 minutes daily' />
+                    <ListItemText primary='Practice against heavy bag' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Front stance lunges: 10-20 reps each leg' />
+                    <ListItemText primary='Work on balance and timing' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Back stance holds: 30-45 seconds' />
+                    <ListItemText primary='Start with low, controlled kicks' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Cat stance balance: 15-30 seconds' />
+                    <ListItemText primary='Focus on proper chamber position' />
                   </ListItem>
                 </List>
               </Grid>
 
               <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant='subtitle2' gutterBottom>
-                  Testing Criteria:
+                  Safety Guidelines:
                 </Typography>
                 <List dense>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Proper foot positioning' />
+                    <ListItemText primary='Never kick without warming up' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Correct weight distribution' />
+                    <ListItemText primary='Use proper protective gear' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Stable and balanced posture' />
+                    <ListItemText primary='Progress gradually in height' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Ability to hold stance for required time' />
+                    <ListItemText primary='Stop if you feel pain' />
                   </ListItem>
                 </List>
               </Grid>

@@ -7,6 +7,10 @@ import {
   IconMan,
   IconBrandTorchain,
   IconClipboardCheck,
+  IconHandStop,
+  IconRun,
+  IconSwords,
+  IconShield,
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
@@ -40,6 +44,30 @@ export const Menuitems = [
     title: 'Stances',
     icon: IconBrandTorchain,
     href: '/stances',
+  },
+  {
+    id: uniqueId(),
+    title: 'Punches',
+    icon: IconHandStop,
+    href: '/punches',
+  },
+  {
+    id: uniqueId(),
+    title: 'Kicks',
+    icon: IconRun,
+    href: '/kicks',
+  },
+  {
+    id: uniqueId(),
+    title: 'One-Step Sparring',
+    icon: IconSwords,
+    href: '/one-steps',
+  },
+  {
+    id: uniqueId(),
+    title: 'Self-Defense',
+    icon: IconShield,
+    href: '/self-defense',
   },
 ];
 

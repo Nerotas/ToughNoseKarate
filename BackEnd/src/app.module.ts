@@ -25,10 +25,14 @@ import { FallingController } from './controller/falling.controller';
 import { FamiliesController } from './controller/families.controller';
 import { FormsController } from './controller/forms.controller';
 import { KicksController } from './controller/kicks.controller';
+import { KicksDefinitionsController } from './controller/kicksDefinitions.controller';
 import { OneStepsController } from './controller/oneSteps.controller';
+import { OneStepsDefinitionsController } from './controller/oneStepsDefinitions.controller';
 import { ParentMappingController } from './controller/parentMapping.controller';
 import { ParentsController } from './controller/parents.controller';
 import { PunchesController } from './controller/punches.controller';
+import { PunchesDefinitionsController } from './controller/punchesDefinitions.controller';
+import { SelfDefenseDefinitionsController } from './controller/selfDefenseDefinitions.controller';
 import { StanceDefinitionsController } from './controller/stanceDefinitions.controller';
 import { StancesController } from './controller/stances.controller';
 import { StudentsController } from './controller/students.controller';
@@ -40,10 +44,14 @@ import { CombinationsService } from './service/combinations.service';
 import { FallingService } from './service/falling.service';
 import { FormsService } from './service/forms.service';
 import { KicksService } from './service/kicks.service';
+import { KicksDefinitionsService } from './service/kicksDefinitions.service';
 import { OneStepsService } from './service/oneSteps.service';
+import { OneStepsDefinitionsService } from './service/oneStepsDefinitions.service';
 import { ParentMappingService } from './service/parentMapping.service';
 import { ParentsService } from './service/parents.service';
 import { PunchesService } from './service/punches.service';
+import { PunchesDefinitionsService } from './service/punchesDefinitions.service';
+import { SelfDefenseDefinitionsService } from './service/selfDefenseDefinitions.service';
 import { StanceDefinitionsService } from './service/stanceDefinitions.service';
 import { StancesService } from './service/stances.service';
 import { StudentsService } from './service/students.service';
@@ -61,10 +69,14 @@ import { falling } from './models/falling';
 import { families } from './models/families';
 import { forms } from './models/forms';
 import { kicks } from './models/kicks';
+import { kicksDefinitions } from './models/kicksDefinitions';
 import { oneSteps } from './models/oneSteps';
+import { oneStepsDefinitions } from './models/oneStepsDefinitions';
 import { parentMapping } from './models/parentMapping';
 import { parents } from './models/parents';
 import { punches } from './models/punches';
+import { punchesDefinitions } from './models/punchesDefinitions';
+import { selfDefenseDefinitions } from './models/selfDefenseDefinitions';
 import { stanceDefinitions } from './models/stanceDefinitions';
 import { stances } from './models/stances';
 import { students } from './models/students';
@@ -95,10 +107,14 @@ import { BlocksService } from './service/blocks.service';
         families,
         forms,
         kicks,
+        kicksDefinitions,
         oneSteps,
+        oneStepsDefinitions,
         parentMapping,
         parents,
         punches,
+        punchesDefinitions,
+        selfDefenseDefinitions,
         stanceDefinitions,
         stances,
         students,
@@ -114,10 +130,14 @@ import { BlocksService } from './service/blocks.service';
       families,
       forms,
       kicks,
+      kicksDefinitions,
       oneSteps,
+      oneStepsDefinitions,
       parentMapping,
       parents,
       punches,
+      punchesDefinitions,
+      selfDefenseDefinitions,
       stanceDefinitions,
       stances,
       students,
@@ -136,10 +156,14 @@ import { BlocksService } from './service/blocks.service';
     FormsController,
     HealthController,
     KicksController,
+    KicksDefinitionsController,
     OneStepsController,
+    OneStepsDefinitionsController,
     ParentMappingController,
     ParentsController,
     PunchesController,
+    PunchesDefinitionsController,
+    SelfDefenseDefinitionsController,
     StanceDefinitionsController,
     StancesController,
     StudentsController,
@@ -155,12 +179,16 @@ import { BlocksService } from './service/blocks.service';
     LocalHealthCheckService,
     JwtService,
     KicksService,
+    KicksDefinitionsService,
     Logger,
     LoggerService,
     OneStepsService,
+    OneStepsDefinitionsService,
     ParentMappingService,
     ParentsService,
     PunchesService,
+    PunchesDefinitionsService,
+    SelfDefenseDefinitionsService,
     StanceDefinitionsService,
     StancesService,
     StudentsService,

@@ -12,42 +12,61 @@ import {
   Alert,
   Divider,
 } from '@mui/material';
-import { IconBrandTorchain, IconCheckbox, IconX } from '@tabler/icons-react';
+import {
+  IconSwords,
+  IconCheckbox,
+  IconX,
+  IconTarget,
+  IconFlag,
+  IconShield,
+} from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
-import { StanceDefinition } from 'models/Stances/Stances';
+import { OneStepDefinition } from '../../../models/OneSteps/OneSteps';
 import useGet from '../../../hooks/useGet';
-import Loading from 'app/loading';
+import Loading from '../../../app/loading';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
 };
 
-export default function StancesClient() {
-  // Use the custom useGet hook - will use SSR data if available, fallback if not
+const getDifficultyColor = (difficulty: string) => {
+  switch (difficulty) {
+    case 'Beginner':
+      return 'success';
+    case 'Intermediate':
+      return 'warning';
+    case 'Advanced':
+      return 'error';
+    default:
+      return 'default';
+  }
+};
+
+export default function OneStepsClient() {
   const {
-    data: stancesDefinitions,
+    data: oneStepDefinitions,
     isLoading,
     isFetching,
     error,
     isError,
-  } = useGet<StanceDefinition[]>({
-    apiLabel: 'stance-definitions',
-    url: '/stance-Definitions',
-    fallbackData: [], // Empty array as fallback, will use static data instead
+  } = useGet<OneStepDefinition[]>({
+    apiLabel: 'one-steps-definitions',
+    url: '/one-steps-definitions',
+    fallbackData: [],
     options: {
-      staleTime: 60 * 1000, // 60 seconds
-      gcTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
       retry: 2,
       refetchOnWindowFocus: false,
     },
   });
 
   // Use API data only
-  const displayStances = stancesDefinitions || [];
+  const displayOneSteps = oneStepDefinitions || [];
 
   return (
-    <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
+    <PageContainer title='One-Step Sparring' description='Tang Soo Do One-Step Sparring Techniques'>
       {isLoading || (isFetching && <Loading />)}
 
       <Box>
@@ -61,18 +80,19 @@ export default function StancesClient() {
             lineHeight: 1.2,
           }}
         >
-          Tang Soo Do Stances
+          Tang Soo Do One-Step Sparring
         </Typography>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
-          Proper stances form the foundation of all Tang Soo Do techniques. They provide stability,
-          power generation, and mobility for effective martial arts practice.
+          One-step sparring (Il Su Sik) teaches timing, distance, and the application of basic
+          techniques in controlled combat scenarios. These sequences bridge the gap between basic
+          techniques and free sparring.
         </Typography>
 
         <Alert severity='info' sx={{ mb: 4 }}>
           <Typography variant='body2'>
-            <strong>Training Tip:</strong> Practice holding each stance for 30-60 seconds to build
-            leg strength and muscle memory. Focus on proper form over duration.
+            <strong>Training Tip:</strong> Practice one-steps slowly first to master timing and
+            distance. Always maintain control and safety when practicing with a partner.
           </Typography>
         </Alert>
 
@@ -80,14 +100,14 @@ export default function StancesClient() {
           <Alert severity='info' sx={{ mb: 4 }}>
             <Typography variant='body2'>
               <strong>Demo Mode:</strong> Unable to connect to the backend server. Displaying static
-              stance data for demonstration.
+              one-step sparring data for demonstration.
             </Typography>
           </Alert>
         )}
 
         <Grid container spacing={3}>
-          {displayStances.map((stance) => (
-            <Grid size={{ xs: 12, md: 6 }} key={stance.id}>
+          {displayOneSteps.map((oneStep) => (
+            <Grid size={{ xs: 12, lg: 6 }} key={oneStep.id}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Box
@@ -100,43 +120,51 @@ export default function StancesClient() {
                   >
                     <Box>
                       <Typography variant='h5' gutterBottom>
-                        {stance.name}
+                        {oneStep.name}
                       </Typography>
                       <Typography variant='h6' color='text.secondary' gutterBottom>
-                        {`(${stance.korean})`}{' '}
+                        {`(${oneStep.korean})`}
                       </Typography>
                     </Box>
-                    <Chip
-                      icon={<IconBrandTorchain />}
-                      label={stance.belt}
-                      sx={{
-                        backgroundColor: stance.beltColor,
-                        color: getBeltTextColor(stance.beltColor),
-                        fontWeight: 'bold',
-                        border: stance.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
-                      }}
-                    />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Chip
+                        icon={<IconSwords />}
+                        label={oneStep.belt}
+                        sx={{
+                          backgroundColor: oneStep.beltColor,
+                          color: getBeltTextColor(oneStep.beltColor),
+                          fontWeight: 'bold',
+                          border: oneStep.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                        }}
+                      />
+                      <Chip
+                        icon={<IconFlag />}
+                        label={oneStep.difficulty}
+                        color={getDifficultyColor(oneStep.difficulty)}
+                        size='small'
+                      />
+                    </Box>
                   </Box>
 
                   <Typography variant='body2' paragraph>
-                    {stance.description}
+                    {oneStep.description}
                   </Typography>
 
                   <Box sx={{ mb: 3 }}>
                     <Typography variant='subtitle2' gutterBottom>
-                      Foot Position:
+                      Attack:
                     </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                      {stance.position}
+                    <Typography variant='body2' color='error.main'>
+                      {oneStep.attack}
                     </Typography>
                   </Box>
 
                   <Box sx={{ mb: 3 }}>
                     <Typography variant='subtitle2' gutterBottom>
-                      Body Position:
+                      Defense:
                     </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                      {stance.bodyPosition}
+                    <Typography variant='body2' color='primary.main'>
+                      {oneStep.defense}
                     </Typography>
                   </Box>
 
@@ -148,11 +176,32 @@ export default function StancesClient() {
                       gutterBottom
                       sx={{ display: 'flex', alignItems: 'center' }}
                     >
+                      <IconShield size={16} color='blue' style={{ marginRight: 8 }} />
+                      Sequence:
+                    </Typography>
+                    <List dense sx={{ pl: 2 }}>
+                      {oneStep.sequence.map((step, index) => (
+                        <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
+                          <ListItemText
+                            primary={`${index + 1}. ${step}`}
+                            primaryTypographyProps={{ variant: 'body2' }}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+
+                  <Box sx={{ mb: 3 }}>
+                    <Typography
+                      variant='subtitle2'
+                      gutterBottom
+                      sx={{ display: 'flex', alignItems: 'center' }}
+                    >
                       <IconCheckbox size={16} color='green' style={{ marginRight: 8 }} />
                       Key Points:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
-                      {stance.keyPoints.map((point, index) => (
+                      {oneStep.keyPoints.map((point, index) => (
                         <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                           <ListItemText
                             primary={`• ${point}`}
@@ -173,7 +222,7 @@ export default function StancesClient() {
                       Common Mistakes:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
-                      {stance.commonMistakes.map((mistake, index) => (
+                      {oneStep.commonMistakes.map((mistake, index) => (
                         <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                           <ListItemText
                             primary={`• ${mistake}`}
@@ -192,7 +241,7 @@ export default function StancesClient() {
                       Applications:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {stance.applications.map((app, index) => (
+                      {oneStep.applications.map((app, index) => (
                         <Chip
                           key={index}
                           label={app}
@@ -210,64 +259,64 @@ export default function StancesClient() {
         </Grid>
 
         <Box sx={{ mt: 4 }}>
-          <DashboardCard title='Stance Training Guidelines'>
+          <DashboardCard title='One-Step Sparring Training Guidelines'>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant='subtitle2' gutterBottom>
-                  Daily Practice:
+                  Partner Practice:
                 </Typography>
                 <List dense>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Hold each stance for 30-60 seconds' />
+                    <ListItemText primary='Start with slow, controlled movements' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Practice transitions between stances' />
+                    <ListItemText primary='Focus on proper distance and timing' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Focus on one stance per week for mastery' />
+                    <ListItemText primary='Switch roles between attacker/defender' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Use a mirror to check form' />
+                    <ListItemText primary='Practice both left and right sides' />
                   </ListItem>
                 </List>
               </Grid>
 
               <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant='subtitle2' gutterBottom>
-                  Strength Building:
+                  Progression Training:
                 </Typography>
                 <List dense>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Horse stance: 1-3 minutes daily' />
+                    <ListItemText primary='Master basic sequences first' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Front stance lunges: 10-20 reps each leg' />
+                    <ListItemText primary='Add speed gradually' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Back stance holds: 30-45 seconds' />
+                    <ListItemText primary='Incorporate into free sparring' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Cat stance balance: 15-30 seconds' />
+                    <ListItemText primary='Practice counter-counters' />
                   </ListItem>
                 </List>
               </Grid>
 
               <Grid size={{ xs: 12, md: 4 }}>
                 <Typography variant='subtitle2' gutterBottom>
-                  Testing Criteria:
+                  Safety Guidelines:
                 </Typography>
                 <List dense>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Proper foot positioning' />
+                    <ListItemText primary='Always wear appropriate protective gear' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Correct weight distribution' />
+                    <ListItemText primary='Maintain control at all times' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Stable and balanced posture' />
+                    <ListItemText primary='Communicate with your partner' />
                   </ListItem>
                   <ListItem sx={{ pl: 0 }}>
-                    <ListItemText primary='Ability to hold stance for required time' />
+                    <ListItemText primary='Stop immediately if injury occurs' />
                   </ListItem>
                 </List>
               </Grid>
