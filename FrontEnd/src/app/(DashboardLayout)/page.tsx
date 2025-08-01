@@ -11,19 +11,9 @@ import {
   Chip,
   useTheme,
   alpha,
-  Avatar,
   Stack,
 } from '@mui/material';
-import {
-  IconTrophy,
-  IconUsers,
-  IconStar,
-  IconBolt,
-  IconHeart,
-  IconMedal,
-  IconChevronRight,
-  IconCalendar,
-} from '@tabler/icons-react';
+import { IconUsers, IconHeart, IconChevronRight, IconCalendar } from '@tabler/icons-react';
 import { keyframes } from '@emotion/react';
 import Image from 'next/image';
 import PageContainer from './components/container/PageContainer';
@@ -117,7 +107,7 @@ const Dashboard = () => {
 
           <Container sx={{ position: 'relative', py: 6 }}>
             <Grid container spacing={4} alignItems='center'>
-              <Grid xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box
                   sx={{
                     animation: `${slideInLeft} 1s ease-out`,
@@ -220,7 +210,7 @@ const Dashboard = () => {
                 </Box>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box
                   sx={{
                     display: 'flex',
@@ -265,7 +255,7 @@ const Dashboard = () => {
 
         {/* Training Programs */}
         <Grid container spacing={3} sx={{ mb: 6 }}>
-          <Grid xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Card
               sx={{
                 height: '100%',

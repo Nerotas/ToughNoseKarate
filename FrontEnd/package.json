@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix",
@@ -44,6 +44,7 @@
     "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.84.0",
     "@testing-library/react": "^16.3.0",
     "@types/crypto-js": "^4.2.2",
     "@types/eslint": "~9.6.1",

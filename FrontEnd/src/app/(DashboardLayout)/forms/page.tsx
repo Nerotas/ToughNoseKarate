@@ -16,6 +16,20 @@ import {
 } from '@mui/material';
 import { IconMan, IconChevronDown, IconPlayerPlay, IconBook } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
+import useGet from '../../../hooks/useGet';
+
+// API interface for forms
+interface FormAPI {
+  id: number;
+  form_name: string;
+  form_description: string;
+  sequence_number: number;
+  belt_requirement: string;
+  active_indicator: number;
+  video_link: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const forms = [
   {

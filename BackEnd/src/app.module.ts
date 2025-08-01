@@ -15,9 +15,6 @@ import { TerminusModule } from '@nestjs/terminus';
 
 import { MetricsMiddleware } from './middlewares/metrics.middleware';
 import { MetricsModule } from 'metrics.module';
-import { rewritePathToRoot } from './lib/rewrite-path-to-root';
-import { RequestLoggerMiddleware } from './middlewares/RequestLoggerMiddleware';
-import { RouteRewriteMiddleware } from './middlewares/RouteRewriteMiddleware';
 
 // Controllers
 import { AboutController } from './controller/about.controller';
@@ -79,7 +76,8 @@ import { BlocksService } from './service/blocks.service';
   imports: [
     HttpModule,
     ConfigModule.forRoot({
-      envFilePath: '../.env',
+      envFilePath: ['.env.local', '.env'],
+      isGlobal: true,
     }),
     PassportModule,
     SequelizeModule.forRoot({
@@ -88,7 +86,7 @@ import { BlocksService } from './service/blocks.service';
       port: parseInt(process.env.DB_PORT, 10) || 3306,
       username: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'tnk',
+      database: process.env.DB_NAME || 'toughnosekarate',
       models: [
         beltRequirements,
         blocks,
@@ -171,12 +169,6 @@ import { BlocksService } from './service/blocks.service';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(RequestLoggerMiddleware)
-      .forRoutes('*')
-      .apply(RouteRewriteMiddleware)
-      .forRoutes('*')
-      .apply(rewritePathToRoot)
-      .forRoutes('*')
       .apply(MetricsMiddleware)
       .forRoutes('*');
   }

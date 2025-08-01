@@ -2,15 +2,23 @@ import { QueryKey, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosRequestHeaders } from 'axios';
 import axiosInstance from 'helpers/AxiosInstance';
 
-const getFetch = async (
-  url: string,
-  apiLabel: string,
-  id?: string | number,
-  headers?: AxiosRequestHeaders
-): Promise<any> => {
-  //adding anayltics to all fetches to cover all cases. Maybe be reduced later.
-  // try catch block is not needed when used in useQuery, to show errors it needs a rejected promise
+// Fetch function that works both client and server side
+const getFetch = async (url: string, headers?: AxiosRequestHeaders): Promise<any> => {
   const { data } = await axiosInstance.get(url, { headers });
+  return data;
+};
+
+// Server-side fetch function for pre-fetching
+export const serverFetch = async (url: string, headers?: Record<string, string>): Promise<any> => {
+  const { data } = await axiosInstance.get(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers,
+    },
+    // Add timeout for server-side requests
+    timeout: 10000, // 10 seconds
+  });
+
   return data;
 };
 
@@ -18,8 +26,10 @@ interface TUseGet<Type> {
   apiLabel: string;
   headers?: AxiosRequestHeaders;
   id?: string | number;
-  options?: UseQueryOptions<Type, AxiosError, any, QueryKey>;
+  options?: Omit<UseQueryOptions<Type, AxiosError, Type, QueryKey>, 'queryKey' | 'queryFn'>;
   url: string;
+  // New option for SSR compatibility
+  fallbackData?: Type;
 }
 
 const useGet = <ResponseDataType>({
@@ -28,29 +38,25 @@ const useGet = <ResponseDataType>({
   id = '0',
   options,
   url,
-}: TUseGet<ResponseDataType>) =>
-  useQuery<ResponseDataType, AxiosError>({
+  fallbackData,
+}: TUseGet<ResponseDataType>) => {
+  const queryOptions: UseQueryOptions<ResponseDataType, AxiosError, ResponseDataType, QueryKey> = {
     queryKey: [apiLabel, id],
-    queryFn: () => getFetch(url, apiLabel, id, headers),
+    queryFn: () => getFetch(url, headers),
+    // Default options optimized for SSR
+    staleTime: 60 * 1000, // 60 seconds
+    retry: 2,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
     ...options,
-  });
+  };
+
+  // Add placeholder data conditionally to avoid type issues
+  if (fallbackData) {
+    queryOptions.placeholderData = fallbackData as any;
+  }
+
+  return useQuery<ResponseDataType, AxiosError>(queryOptions);
+};
 
 export default useGet;
-/*
-Example use
-
-
-    const { refetch: getCharacters, data: characters } = useGet<Characters[]>({
-        apiLabel: 'characters',
-        url: baseURL,
-        options: {
-            enabled: true,
-        },
-    });
-
-    getCharacters will fetch the data
-    characters will be the state returned by ReactQuery
-
-    options must be passed in as json
-
-*/
