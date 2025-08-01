@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Providers from './providers';
 import ClientThemeProvider from './theme-provider';
 import './global.css';
+import ConfigValidator from './config-validator';
 
 export const metadata: Metadata = {
   title: 'Tough Nose Karate',
@@ -22,9 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name='emotion-insertion-point' content='' />
       </head>
       <body>
-        <Providers>
-          <ClientThemeProvider>{children}</ClientThemeProvider>
-        </Providers>
+        <ConfigValidator>
+          <Providers>
+            <ClientThemeProvider>{children}</ClientThemeProvider>
+          </Providers>
+        </ConfigValidator>
       </body>
     </html>
   );

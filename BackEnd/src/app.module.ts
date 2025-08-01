@@ -1,12 +1,6 @@
-import {
-  Logger,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -83,6 +77,8 @@ import { students } from './models/students';
 import { FamiliesService } from './service/families.service';
 import { BeltRequirementsService } from './service/beltRequirements.service';
 import { BlocksService } from './service/blocks.service';
+import { configValidationSchema } from './config/environment.config';
+import { AppConfigService } from './config/app-config.service';
 
 @Module({
   imports: [
@@ -90,37 +86,51 @@ import { BlocksService } from './service/blocks.service';
     ConfigModule.forRoot({
       envFilePath: ['.env.local', '.env'],
       isGlobal: true,
+      validationSchema: configValidationSchema,
+      validationOptions: {
+        allowUnknown: true,
+        abortEarly: false,
+      },
     }),
     PassportModule,
-    SequelizeModule.forRoot({
-      dialect: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT, 10) || 3306,
-      username: process.env.DB_USERNAME || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'toughnosekarate',
-      models: [
-        beltRequirements,
-        blocks,
-        combinations,
-        falling,
-        families,
-        forms,
-        kicks,
-        kicksDefinitions,
-        oneSteps,
-        oneStepsDefinitions,
-        parentMapping,
-        parents,
-        punches,
-        punchesDefinitions,
-        selfDefenseDefinitions,
-        stanceDefinitions,
-        stances,
-        students,
-      ],
-      autoLoadModels: true,
-      synchronize: false,
+    SequelizeModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        dialect: 'mysql',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        ssl: configService.get<boolean>('DB_SSL'),
+        models: [
+          beltRequirements,
+          blocks,
+          combinations,
+          falling,
+          families,
+          forms,
+          kicks,
+          kicksDefinitions,
+          oneSteps,
+          oneStepsDefinitions,
+          parentMapping,
+          parents,
+          punches,
+          punchesDefinitions,
+          selfDefenseDefinitions,
+          stanceDefinitions,
+          stances,
+          students,
+        ],
+        autoLoadModels: true,
+        synchronize: false,
+        logging:
+          configService.get<string>('NODE_ENV') === 'development'
+            ? console.log
+            : false,
+      }),
+      inject: [ConfigService],
     }),
     SequelizeModule.forFeature([
       beltRequirements,
@@ -169,6 +179,7 @@ import { BlocksService } from './service/blocks.service';
     StudentsController,
   ],
   providers: [
+    AppConfigService,
     AppService,
     BeltRequirementsService,
     BlocksService,
