@@ -1,24 +1,24 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:3001',
   timeout: 600000,
-  withCredentials: false,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 axiosInstance.interceptors.request.use(
-  async request => {
-    request.headers['x-waf-whitelist'] = 'erotas-whitelist';
+  async (request) => {
     return request;
   },
-  error => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
-  response => response,
-  async error => Promise.reject(error),
+  (response) => response,
+  async (error) => Promise.reject(error)
 );
 
 export default axiosInstance;

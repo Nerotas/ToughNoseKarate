@@ -1,4 +1,6 @@
-export const stances = [
+import { StanceDefinition } from 'models/Stances/Stances';
+
+export const stances: StanceDefinition[] = [
   {
     id: 1,
     name: 'Ready Stance',

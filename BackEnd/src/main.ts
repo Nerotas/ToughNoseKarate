@@ -6,13 +6,14 @@ import { LoggerService } from './service/logger.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
-    cors: true,
   });
+
+  // Configure CORS explicitly
   app.enableCors({
-    origin: process.env.CORS ? [...process.env.CORS.split(',')] : '*',
-    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'OPTIONS'],
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
-    preflightContinue: true,
   });
   const config = new DocumentBuilder()
     .setTitle('Tough Nose Karate API')
