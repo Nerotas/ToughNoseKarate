@@ -21,6 +21,7 @@ import { BeltRequirements } from '../../../models/BeltRequirements/BeltRequireme
 import { useState } from 'react';
 import Loading from 'app/loading';
 import AddStudentModule from '../components/students/AddStudentModule';
+import EditStudentModule from '../components/students/EditStudentModule';
 
 // Student interface for API data
 interface Student {
@@ -93,6 +94,10 @@ const StudentsClient = () => {
   // State for Add Student dialog
   const [addStudentOpen, setAddStudentOpen] = useState(false);
 
+  // State for Edit Student dialog
+  const [editStudentOpen, setEditStudentOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+
   // Fetch belt requirements for colors and progression
   const {
     data: beltRequirements,
@@ -117,7 +122,7 @@ const StudentsClient = () => {
     isFetching,
     error,
     isError,
-    refetch: refetchStudents
+    refetch: refetchStudents,
   } = useGet<Student[]>({
     apiLabel: 'students',
     url: '/students',
@@ -157,12 +162,29 @@ const StudentsClient = () => {
 
   // Handler for when a new student is added
   const handleStudentAdded = () => {
-refetchStudents(); // Refetch students to include the newly added student
+    refetchStudents(); // Refetch students to include the newly added student
+  };
+
+  // Handler for when a student is updated
+  const handleStudentUpdated = () => {
+    refetchStudents(); // Refetch students to include the updated student data
   };
 
   // Handler to open add student dialog
   const handleAddStudentClick = () => {
     setAddStudentOpen(true);
+  };
+
+  // Handler to open edit student dialog
+  const handleEditStudentClick = (student: Student) => {
+    setSelectedStudent(student);
+    setEditStudentOpen(true);
+  };
+
+  // Handler to close edit student dialog
+  const handleEditStudentClose = () => {
+    setEditStudentOpen(false);
+    setSelectedStudent(null);
   };
 
   // DataGrid column definitions
@@ -260,7 +282,11 @@ refetchStudents(); // Refetch students to include the newly added student
           <IconButton size='small' color='primary'>
             <IconEye size={16} />
           </IconButton>
-          <IconButton size='small' color='secondary'>
+          <IconButton
+            size='small'
+            color='secondary'
+            onClick={() => handleEditStudentClick(params.row)}
+          >
             <IconEdit size={16} />
           </IconButton>
         </Box>
@@ -436,6 +462,15 @@ refetchStudents(); // Refetch students to include the newly added student
           onClose={() => setAddStudentOpen(false)}
           beltRequirements={beltRequirements || []}
           onStudentAdded={handleStudentAdded}
+        />
+
+        {/* Edit Student Dialog */}
+        <EditStudentModule
+          open={editStudentOpen}
+          onClose={handleEditStudentClose}
+          student={selectedStudent}
+          beltRequirements={beltRequirements || []}
+          onStudentUpdated={handleStudentUpdated}
         />
       </Box>
     </PageContainer>
