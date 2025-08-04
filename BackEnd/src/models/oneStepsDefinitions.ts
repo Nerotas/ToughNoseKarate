@@ -68,3 +68,5 @@ export class oneStepsDefinitions
   @Column({ field: 'updated_at', type: DataType.DATE, allowNull: true })
   declare updatedAt?: Date;
 }
+
+export default oneStepsDefinitions;

@@ -204,6 +204,7 @@ const Students = () => {
   } = useGet<Student[]>({
     apiLabel: 'students',
     url: '/students',
+    id: 'getAll',
     fallbackData: [
       {
         id: 1,

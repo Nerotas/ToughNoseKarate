@@ -15,7 +15,7 @@ export default async function BeltsPage() {
     <SSRWrapper
       queries={[
         {
-          queryKey: ['belt-requirements'],
+          queryKey: ['belt-requirements', 'getAll'],
           url: '/belt-requirements',
         },
       ]}

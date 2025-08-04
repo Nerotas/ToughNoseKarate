@@ -25,6 +25,7 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { OneStepDefinition } from '../../../models/OneSteps/OneSteps';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
+import { useEffect } from 'react';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -51,8 +52,9 @@ export default function OneStepsClient() {
     error,
     isError,
   } = useGet<OneStepDefinition[]>({
-    apiLabel: 'one-steps-definitions',
-    url: '/one-steps-definitions',
+    apiLabel: 'onestep-definitions',
+    url: '/onestep-definitions',
+    id: 'getAll',
     fallbackData: [],
     options: {
       staleTime: 60 * 1000,
@@ -84,9 +86,9 @@ export default function OneStepsClient() {
         </Typography>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
-          One-step sparring (Il Su Sik) teaches timing, distance, and the application of basic
-          techniques in controlled combat scenarios. These sequences bridge the gap between basic
-          techniques and free sparring.
+          One-steps teaches timing, distance, and the application of basic techniques in controlled
+          combat scenarios. These sequences bridge the gap between basic techniques and free
+          sparring.
         </Typography>
 
         <Alert severity='info' sx={{ mb: 4 }}>
@@ -106,7 +108,7 @@ export default function OneStepsClient() {
         )}
 
         <Grid container spacing={3}>
-          {displayOneSteps.map((oneStep) => (
+          {displayOneSteps?.map((oneStep) => (
             <Grid size={{ xs: 12, lg: 6 }} key={oneStep.id}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
@@ -180,7 +182,7 @@ export default function OneStepsClient() {
                       Sequence:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
-                      {oneStep.sequence.map((step, index) => (
+                      {oneStep.sequence?.map((step, index) => (
                         <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                           <ListItemText
                             primary={`${index + 1}. ${step}`}
@@ -201,7 +203,7 @@ export default function OneStepsClient() {
                       Key Points:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
-                      {oneStep.keyPoints.map((point, index) => (
+                      {oneStep.keyPoints?.map((point, index) => (
                         <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                           <ListItemText
                             primary={`• ${point}`}
@@ -222,7 +224,7 @@ export default function OneStepsClient() {
                       Common Mistakes:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
-                      {oneStep.commonMistakes.map((mistake, index) => (
+                      {oneStep.commonMistakes?.map((mistake, index) => (
                         <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                           <ListItemText
                             primary={`• ${mistake}`}
@@ -241,7 +243,7 @@ export default function OneStepsClient() {
                       Applications:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {oneStep.applications.map((app, index) => (
+                      {oneStep.applications?.map((app, index) => (
                         <Chip
                           key={index}
                           label={app}

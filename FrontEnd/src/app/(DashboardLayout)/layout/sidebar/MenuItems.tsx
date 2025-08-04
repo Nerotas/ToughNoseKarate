@@ -35,7 +35,7 @@ export const Menuitems = [
 
   {
     id: uniqueId(),
-    title: 'Forms (Kata)',
+    title: 'Forms (Kata/Hyung)',
     icon: IconMan,
     href: '/forms',
   },
