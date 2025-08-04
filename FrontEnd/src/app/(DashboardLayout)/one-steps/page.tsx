@@ -6,7 +6,7 @@ export default async function OneStepsPage() {
     <SSRWrapper
       queries={[
         {
-          queryKey: ['onestep-definitions'],
+          queryKey: ['onestep-definitions', 'getAll'],
           url: '/onestep-definitions',
         },
       ]}

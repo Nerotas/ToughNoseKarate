@@ -6,6 +6,7 @@ interface QueryConfig {
   queryKey: string[];
   url: string;
   enabled?: boolean;
+  id?: string | number;
 }
 
 interface SSRWrapperProps {
@@ -27,7 +28,7 @@ interface SSRWrapperProps {
  *   return (
  *     <SSRWrapper
  *       queries={[
- *         { queryKey: ['stances-definitions'], url: '/stance-Definitions' },
+ *         { queryKey: ['stances-definitions'], url: '/stance-definitions', id: 'getAll' },
  *         { queryKey: ['belt-requirements'], url: '/belt-requirements' }
  *       ]}
  *     >
@@ -56,8 +57,12 @@ export default async function SSRWrapper({
     .filter((query) => query.enabled !== false)
     .map(async (query) => {
       try {
+        // Use the same query key pattern as useGet: [apiLabel, id]
+        const queryKey =
+          query.queryKey.length === 1 ? [...query.queryKey, query.id ?? 'getAll'] : query.queryKey;
+
         await queryClient.prefetchQuery({
-          queryKey: query.queryKey,
+          queryKey,
           queryFn: () => serverFetch(query.url),
         });
       } catch (error) {

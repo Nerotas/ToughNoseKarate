@@ -8,6 +8,7 @@ export default async function KicksPage() {
         {
           queryKey: ['kicks-definitions'],
           url: '/kicks-definitions',
+          id: 'getAll',
         },
       ]}
       fallbackOnError={true}

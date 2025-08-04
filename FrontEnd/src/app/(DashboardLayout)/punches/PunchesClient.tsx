@@ -33,6 +33,7 @@ export default function PunchesClient() {
   } = useGet<PunchDefinition[]>({
     apiLabel: 'punches-definitions',
     url: '/punches-definitions',
+    id: 'getAll',
     fallbackData: [],
     options: {
       staleTime: 60 * 1000,

@@ -46,6 +46,7 @@ export default function KicksClient() {
   } = useGet<KickDefinition[]>({
     apiLabel: 'kicks-definitions',
     url: '/kicks-definitions',
+    id: 'getAll',
     fallbackData: [],
     options: {
       staleTime: 60 * 1000,

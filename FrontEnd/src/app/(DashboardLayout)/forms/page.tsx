@@ -8,6 +8,7 @@ export default async function FormsPage() {
         {
           queryKey: ['form-definitions'],
           url: '/form-definitions',
+          id: 'getAll',
         },
       ]}
       fallbackOnError={true}

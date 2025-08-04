@@ -31,6 +31,7 @@ const FormsClient = () => {
   } = useGet<FormDefinitions[]>({
     url: '/form-definitions',
     apiLabel: 'form-definitions',
+    id: 'getAll',
     fallbackData: [],
     options: {
       staleTime: 60 * 1000,

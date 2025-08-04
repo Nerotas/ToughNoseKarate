@@ -30,6 +30,7 @@ const BeltRequirements = () => {
   } = useGet<BeltRequirementsType[]>({
     apiLabel: 'belt-requirements',
     url: '/belt-requirements',
+    id: 'getAll',
     fallbackData: [], // Empty array as fallback, will use static data instead
     options: {
       staleTime: 60 * 1000, // 60 seconds

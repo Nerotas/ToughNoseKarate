@@ -15,7 +15,7 @@ export default async function StancesPage() {
     <SSRWrapper
       queries={[
         {
-          queryKey: ['stances-definitions'],
+          queryKey: ['stance-definitions', 'getAll'],
           url: '/stance-Definitions',
         },
       ]}

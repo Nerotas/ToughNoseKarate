@@ -46,6 +46,7 @@ const SelfDefenseClient: React.FC = () => {
   } = useGet<SelfDefenseDefinition[]>({
     apiLabel: 'self-defense-definitions',
     url: '/self-defense-definitions',
+    id: 'getAll',
     fallbackData: [],
     options: {
       staleTime: 60 * 1000,

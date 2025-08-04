@@ -54,6 +54,7 @@ export default function OneStepsClient() {
   } = useGet<OneStepDefinition[]>({
     apiLabel: 'onestep-definitions',
     url: '/onestep-definitions',
+    id: 'getAll',
     fallbackData: [],
     options: {
       staleTime: 60 * 1000,

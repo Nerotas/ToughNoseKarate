@@ -6,7 +6,7 @@ export default async function PunchesPage() {
     <SSRWrapper
       queries={[
         {
-          queryKey: ['punches-definitions'],
+          queryKey: ['punches-definitions', 'getAll'],
           url: '/punches-definitions',
         },
       ]}

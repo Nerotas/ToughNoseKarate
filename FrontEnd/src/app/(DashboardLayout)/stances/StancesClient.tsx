@@ -34,6 +34,7 @@ export default function StancesClient() {
   } = useGet<StanceDefinition[]>({
     apiLabel: 'stance-definitions',
     url: '/stance-Definitions',
+    id: 'getAll',
     fallbackData: [], // Empty array as fallback, will use static data instead
     options: {
       staleTime: 60 * 1000, // 60 seconds
