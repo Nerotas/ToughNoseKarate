@@ -11,6 +11,8 @@ import {
   Button,
   IconButton,
   Alert,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { IconUser, IconAward, IconEdit, IconEye, IconPlus } from '@tabler/icons-react';
@@ -18,6 +20,8 @@ import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import useGet from '../../../hooks/useGet';
 import { BeltRequirements } from '../../../models/BeltRequirements/BeltRequirements';
+import { useState } from 'react';
+import Loading from 'app/loading';
 
 // Student interface for API data
 interface Student {
@@ -47,6 +51,7 @@ interface StudentDisplay extends Student {
   joinDate: string;
   lastTest: string | null;
   isChild: boolean;
+  isActive: boolean;
   age: number;
 }
 
@@ -83,10 +88,14 @@ const getNextBelt = (currentBelt: string, beltRequirements: BeltRequirements[]):
   return currentIndex === -1 ? 'Black Belt' : sortedBelts[sortedBelts.length - 1].beltRank;
 };
 const StudentsClient = () => {
+  // State for toggling between active and inactive students
+  const [showActiveOnly, setShowActiveOnly] = useState(true);
+
   // Fetch belt requirements for colors and progression
   const {
     data: beltRequirements,
     isLoading: beltRequirementsLoading,
+    isFetching: beltRequirementsFetching,
     error: beltRequirementsError,
   } = useGet<BeltRequirements[]>({
     apiLabel: 'belt-requirements',
@@ -103,6 +112,7 @@ const StudentsClient = () => {
   const {
     data: apiStudents,
     isLoading,
+    isFetching,
     error,
     isError,
   } = useGet<Student[]>({
@@ -130,20 +140,24 @@ const StudentsClient = () => {
       joinDate: student.startDateUTC,
       lastTest: student.lastTestUTC || null,
       isChild: student.child === 1,
+      isActive: student.active === 1,
     };
   };
 
   // Transform API data to display format
-  const students = (apiStudents || []).map(transformStudent);
+  const allStudents = (apiStudents || []).map(transformStudent);
+
+  // Filter students based on active/inactive toggle
+  const students = showActiveOnly
+    ? allStudents.filter((student) => student.isActive)
+    : allStudents.filter((student) => !student.isActive);
 
   // DataGrid column definitions
   const columns: GridColDef[] = [
     {
       field: 'name',
       headerName: 'Student',
-      width: 350,
       flex: 1,
-      minWidth: 300,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: 'flex', alignItems: 'center', py: 1.5 }}>
           <Box>
@@ -160,8 +174,7 @@ const StudentsClient = () => {
     {
       field: 'currentBelt',
       headerName: 'Current Belt',
-      width: 200,
-      minWidth: 160,
+      flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.row.currentBelt}
@@ -196,13 +209,28 @@ const StudentsClient = () => {
     {
       field: 'isChild',
       headerName: 'Child Student?',
-      flex: 0.8,
+      width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ py: 0.5 }}>
           <Chip
             label={params.row.isChild ? 'Yes' : 'No'}
             size='small'
             color={params.row.isChild ? 'success' : 'default'}
+          />
+        </Box>
+      ),
+    },
+    {
+      field: 'isActive',
+      headerName: 'Status',
+      width: 120,
+      renderCell: (params: GridRenderCellParams) => (
+        <Box sx={{ py: 0.5 }}>
+          <Chip
+            label={params.row.isActive ? 'Active' : 'Inactive'}
+            size='small'
+            color={params.row.isActive ? 'success' : 'error'}
+            variant={params.row.isActive ? 'filled' : 'outlined'}
           />
         </Box>
       ),
@@ -227,11 +255,11 @@ const StudentsClient = () => {
     },
   ];
 
-  if (isLoading || beltRequirementsLoading) {
+  if (isLoading || beltRequirementsLoading || isFetching || beltRequirementsFetching) {
     return (
       <PageContainer title='Students' description='Student Management and Progress Tracking'>
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <Typography>Loading students...</Typography>
+          <Loading />
         </Box>
       </PageContainer>
     );
@@ -253,14 +281,28 @@ const StudentsClient = () => {
             mb: 3,
           }}
         >
-          <Typography variant='h2'>Student Management</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+            <Typography variant='h2'>Student Management</Typography>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showActiveOnly}
+                  onChange={(e) => setShowActiveOnly(e.target.checked)}
+                  color='primary'
+                />
+              }
+              label={showActiveOnly ? 'Active Students' : 'Inactive Students'}
+              sx={{ ml: 2 }}
+            />
+          </Box>
           <Button variant='contained' startIcon={<IconPlus />} sx={{ height: 'fit-content' }}>
             Add New Student
           </Button>
         </Box>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
-          Track student progress, belt advancement, and attendance records.
+          Track student progress, belt advancement, and attendance records. Use the toggle above to
+          switch between active and inactive students.
         </Typography>
 
         {/* Summary Cards */}
@@ -271,7 +313,7 @@ const StudentsClient = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <IconUser size={24} />
                   <Typography variant='h6' sx={{ ml: 1 }}>
-                    Total Students
+                    {showActiveOnly ? 'Active Students' : 'Inactive Students'}
                   </Typography>
                 </Box>
                 <Typography variant='h3' color='primary'>
@@ -303,11 +345,11 @@ const StudentsClient = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <IconUser size={24} />
                   <Typography variant='h6' sx={{ ml: 1 }}>
-                    Active Students
+                    Total Students
                   </Typography>
                 </Box>
                 <Typography variant='h3' color='info.main'>
-                  {students.filter((student) => student.active === 1).length}
+                  {allStudents.length}
                 </Typography>
               </CardContent>
             </Card>
@@ -331,7 +373,9 @@ const StudentsClient = () => {
         </Grid>
 
         {/* Student DataGrid */}
-        <DashboardCard title='Student Roster'>
+        <DashboardCard
+          title={`Student Roster - ${showActiveOnly ? 'Active' : 'Inactive'} Students`}
+        >
           <Box sx={{ height: 700, width: '100%' }}>
             <DataGrid
               rows={students}
