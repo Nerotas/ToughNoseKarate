@@ -98,7 +98,7 @@ export default function InstructorsClient() {
                 Traditional Values
               </Typography>
               <Typography variant='body2'>
-                The key to growth is to preserve the traditional values of the Torah \n into the
+                The key to growth is to preserve the traditional values of the Torah into the
                 practice of Tang Soo Do.
               </Typography>
             </Box>
