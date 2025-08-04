@@ -11,6 +11,7 @@ import {
   IconRun,
   IconSwords,
   IconShield,
+  IconSchool,
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
@@ -21,6 +22,12 @@ export const Menuitems = [
     title: 'Home',
     icon: IconLayoutDashboard,
     href: '/',
+  },
+  {
+    id: uniqueId(),
+    title: 'Instructors',
+    icon: IconSchool,
+    href: '/instructors',
   },
   {
     navlabel: true,
