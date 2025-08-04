@@ -17,6 +17,7 @@ import { BlocksController } from './controller/blocks.controller';
 import { CombinationsController } from './controller/combinations.controller';
 import { FallingController } from './controller/falling.controller';
 import { FamiliesController } from './controller/families.controller';
+import { FormDefinitionsController } from './controller/formDefinitions.controller';
 import { FormsController } from './controller/forms.controller';
 import { KicksController } from './controller/kicks.controller';
 import { KicksDefinitionsController } from './controller/kicksDefinitions.controller';
@@ -36,6 +37,7 @@ import { AppService } from './service/app.service';
 
 import { CombinationsService } from './service/combinations.service';
 import { FallingService } from './service/falling.service';
+import { FormDefinitionsService } from './service/formDefinitions.service';
 import { FormsService } from './service/forms.service';
 import { KicksService } from './service/kicks.service';
 import { KicksDefinitionsService } from './service/kicksDefinitions.service';
@@ -61,6 +63,7 @@ import { blocks } from './models/blocks';
 import { combinations } from './models/combinations';
 import { falling } from './models/falling';
 import { families } from './models/families';
+import { FormDefinitions } from './models/formDefinitions';
 import { forms } from './models/forms';
 import { kicks } from './models/kicks';
 import { kicksDefinitions } from './models/kicksDefinitions';
@@ -109,6 +112,7 @@ import { AppConfigService } from './config/app-config.service';
           combinations,
           falling,
           families,
+          FormDefinitions,
           forms,
           kicks,
           kicksDefinitions,
@@ -138,6 +142,7 @@ import { AppConfigService } from './config/app-config.service';
       combinations,
       falling,
       families,
+      FormDefinitions,
       forms,
       kicks,
       kicksDefinitions,
@@ -163,6 +168,7 @@ import { AppConfigService } from './config/app-config.service';
     CombinationsController,
     FallingController,
     FamiliesController,
+    FormDefinitionsController,
     FormsController,
     HealthController,
     KicksController,
@@ -186,6 +192,7 @@ import { AppConfigService } from './config/app-config.service';
     CombinationsService,
     FallingService,
     FamiliesService,
+    FormDefinitionsService,
     FormsService,
     LocalHealthCheckService,
     JwtService,
