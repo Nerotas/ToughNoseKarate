@@ -5,13 +5,13 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { KicksDefinitionsService } from '../service/kicksDefinitions.service';
 
-@ApiTags('Techniques')
-@Controller('kicks-definitions')
+@ApiTags('kicks-definitions')
+@Controller({ path: 'kicks-definitions', version: '1' })
 export class KicksDefinitionsController {
   constructor(
     private readonly kicksDefinitionsService: KicksDefinitionsService,

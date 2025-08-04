@@ -60,8 +60,6 @@ export default function KicksClient() {
 
   return (
     <PageContainer title='Kicks' description='Tang Soo Do Kicking Techniques'>
-      {isLoading || (isFetching && <Loading />)}
-
       <Box>
         <Typography
           variant='h2'
@@ -91,11 +89,12 @@ export default function KicksClient() {
         {isError && (
           <Alert severity='info' sx={{ mb: 4 }}>
             <Typography variant='body2'>
-              <strong>Demo Mode:</strong> Unable to connect to the backend server. Displaying static
-              kick data for demonstration.
+              <strong>Demo Mode:</strong> Unable to connect to the backend server.
             </Typography>
           </Alert>
         )}
+
+        {(isLoading || isFetching) && <Loading />}
 
         <Grid container spacing={3}>
           {displayKicks.map((kick) => (
@@ -217,7 +216,7 @@ export default function KicksClient() {
                       Target Areas:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {kick.targetAreas.map((target, index) => (
+                      {kick.targetAreas?.map((target, index) => (
                         <Chip
                           key={index}
                           label={target}

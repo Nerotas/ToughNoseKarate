@@ -27,7 +27,6 @@ import SecurityIcon from '@mui/icons-material/Security';
 import FitnessCenter from '@mui/icons-material/FitnessCenter';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import WarningIcon from '@mui/icons-material/Warning';
-import { selfDefense } from '../../../constants/data/selfDefense';
 import { SelfDefenseDefinition } from '../../../models/SelfDefense/SelfDefense';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
@@ -58,9 +57,7 @@ const SelfDefenseClient: React.FC = () => {
 
   // Use API data if available, otherwise use static data
   const displaySelfDefense =
-    selfDefenseDefinitions && selfDefenseDefinitions.length > 0
-      ? selfDefenseDefinitions
-      : selfDefense;
+    selfDefenseDefinitions && selfDefenseDefinitions?.length > 0 ? selfDefenseDefinitions : [];
 
   // Get unique values for filters
   const categories = [
@@ -236,7 +233,7 @@ const SelfDefenseClient: React.FC = () => {
             </AccordionDetails>
           </Accordion>
 
-          {technique.safetyNotes.length > 0 && (
+          {technique.safetyNotes?.length > 0 && (
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Box display='flex' alignItems='center' gap={1}>
@@ -278,7 +275,7 @@ const SelfDefenseClient: React.FC = () => {
             </AccordionDetails>
           </Accordion>
 
-          {technique.counters && technique.counters.length > 0 && (
+          {technique.counters && technique.counters?.length > 0 && (
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography variant='subtitle2'>Counters</Typography>
@@ -378,7 +375,7 @@ const SelfDefenseClient: React.FC = () => {
 
       {/* Results Summary */}
       <Typography variant='body2' color='text.secondary' mb={2}>
-        Showing {filteredTechniques.length} of {selfDefense.length} techniques
+        Showing {filteredTechniques?.length} of {displaySelfDefense?.length} techniques
       </Typography>
 
       {/* Techniques Grid */}
@@ -386,7 +383,7 @@ const SelfDefenseClient: React.FC = () => {
         {filteredTechniques.map(renderTechniqueCard)}
       </Grid>
 
-      {filteredTechniques.length === 0 && (
+      {filteredTechniques?.length === 0 && (
         <Box textAlign='center' py={4}>
           <Typography variant='h6' color='text.secondary'>
             No techniques found matching your criteria

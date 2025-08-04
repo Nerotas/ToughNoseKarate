@@ -6,8 +6,8 @@ export default async function KicksPage() {
     <SSRWrapper
       queries={[
         {
-          queryKey: ['kick-definitions'],
-          url: '/kick-definitions',
+          queryKey: ['kicks-definitions'],
+          url: '/kicks-definitions',
         },
       ]}
       fallbackOnError={true}
