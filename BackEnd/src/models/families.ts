@@ -17,23 +17,29 @@ export interface familiesAttributes {
   parentFirstName?: string;
   parentLastName?: string;
   age?: number;
-  rank?: string;
-  startDateUtc: string;
-  endDateUtc?: string;
+  beltRank?: string;
+  startDate: string;
+  endDate?: string;
+  lastTest?: string;
   email: string;
   phone?: string;
   notes?: string;
   active?: number;
+  eligibleForTesting?: number;
 }
 
-@Table({ tableName: 'families', timestamps: false, comment: 'VIEW' })
+@Table({
+  tableName: 'families',
+  timestamps: false,
+  comment: 'VIEW',
+})
 export class families
   extends Model<familiesAttributes, familiesAttributes>
   implements familiesAttributes
 {
   @Column({ allowNull: true, type: DataType.INTEGER })
   parentid?: number;
-  @Column({ type: DataType.INTEGER, defaultValue: '0' })
+  @Column({ type: DataType.INTEGER, defaultValue: '0', primaryKey: true })
   studentid?: number;
   @Column({ type: DataType.STRING(45) })
   firstName!: string;
@@ -47,12 +53,14 @@ export class families
   parentLastName?: string;
   @Column({ allowNull: true, type: DataType.INTEGER })
   age?: number;
-  @Column({ type: DataType.STRING(45), defaultValue: 'white' })
-  rank?: string;
-  @Column({ field: 'startDateUTC', type: DataType.STRING(45) })
-  startDateUtc!: string;
-  @Column({ field: 'endDateUTC', allowNull: true, type: DataType.STRING(45) })
-  endDateUtc?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
+  beltRank?: string;
+  @Column({ type: DataType.STRING(45) })
+  startDate!: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
+  endDate?: string;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
+  lastTest?: string;
   @Column({ type: DataType.STRING(45) })
   email!: string;
   @Column({ allowNull: true, type: DataType.STRING(45) })
@@ -61,4 +69,6 @@ export class families
   notes?: string;
   @Column({ type: DataType.TINYINT, defaultValue: '1' })
   active?: number;
+  @Column({ allowNull: true, type: DataType.TINYINT })
+  eligibleForTesting?: number;
 }

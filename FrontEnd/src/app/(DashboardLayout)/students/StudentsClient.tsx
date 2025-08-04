@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { IconUser, IconAward, IconEdit, IconEye, IconPlus, IconArrowUp } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import useGet from '../../../hooks/useGet';
@@ -76,6 +77,8 @@ const getBeltTextColor = (beltRank: string, beltRequirements: BeltRequirements[]
 // Helper function to get promoted student with next belt and today's test date
 
 const StudentsClient = () => {
+  const router = useRouter();
+
   // State for toggling between active and inactive students
   const [showActiveOnly, setShowActiveOnly] = useState(true);
 
@@ -192,6 +195,11 @@ const StudentsClient = () => {
   // Handler for when a student is updated
   const handleStudentUpdated = () => {
     refetchStudents(); // Refetch students to include the updated student data
+  };
+
+  // Handler to view student details
+  const handleViewStudent = (student: Student) => {
+    router.push(`/students/${student.studentid}`);
   };
 
   // Handler to promote a student to the next belt
@@ -315,7 +323,12 @@ const StudentsClient = () => {
       filterable: false,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton size='small' color='primary'>
+          <IconButton
+            size='small'
+            color='primary'
+            onClick={() => handleViewStudent(params.row)}
+            title='View student details'
+          >
             <IconEye size={16} />
           </IconButton>
           <IconButton
