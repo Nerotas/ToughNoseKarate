@@ -12,7 +12,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { StudentsService } from '../service/students.service';
 
 @ApiTags('Students')
-@Controller('students')
+@Controller({ path: 'students', version: '1' })
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
