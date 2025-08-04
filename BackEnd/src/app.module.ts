@@ -31,6 +31,7 @@ import { SelfDefenseDefinitionsController } from './controller/selfDefenseDefini
 import { StanceDefinitionsController } from './controller/stanceDefinitions.controller';
 import { StancesController } from './controller/stances.controller';
 import { StudentsController } from './controller/students.controller';
+import { StudentProgressController } from './controller/studentProgress.controller';
 
 // Services
 import { AppService } from './service/app.service';
@@ -51,6 +52,7 @@ import { SelfDefenseDefinitionsService } from './service/selfDefenseDefinitions.
 import { StanceDefinitionsService } from './service/stanceDefinitions.service';
 import { StancesService } from './service/stances.service';
 import { StudentsService } from './service/students.service';
+import { StudentProgressService } from './service/studentProgress.service';
 import { LoggerService } from './service/logger.service';
 
 // Health
@@ -183,6 +185,7 @@ import { AppConfigService } from './config/app-config.service';
     StanceDefinitionsController,
     StancesController,
     StudentsController,
+    StudentProgressController,
   ],
   providers: [
     AppConfigService,
@@ -210,6 +213,7 @@ import { AppConfigService } from './config/app-config.service';
     StanceDefinitionsService,
     StancesService,
     StudentsService,
+    StudentProgressService,
   ],
 })
 export class AppModule implements NestModule {
