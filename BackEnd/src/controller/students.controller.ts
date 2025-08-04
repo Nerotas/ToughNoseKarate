@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { StudentsService } from '../service/students.service';
+import { students } from 'src/models/students';
 
 @ApiTags('Students')
 @Controller({ path: 'students', version: '1' })
@@ -20,7 +21,7 @@ export class StudentsController {
   @ApiOperation({ summary: 'Create a new student' })
   @ApiResponse({ status: 201, description: 'Student created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
-  create(@Body() createStudentsDto: any) {
+  create(@Body() createStudentsDto: students) {
     return this.studentsService.create(createStudentsDto);
   }
 
@@ -39,9 +40,13 @@ export class StudentsController {
     description: 'Number of students to skip',
   })
   @ApiResponse({ status: 200, description: 'Students retrieved successfully' })
-  findAll(@Query('limit') limit?: number, @Query('offset') offset?: number) {
+  findAll(
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ): Promise<students[]> {
     return this.studentsService.findAll();
   }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a student by ID' })
   @ApiResponse({ status: 200, description: 'Student found' })
@@ -49,13 +54,15 @@ export class StudentsController {
   findOne(@Param('id') id: string) {
     return this.studentsService.findOne(+id);
   }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update a student' })
   @ApiResponse({ status: 200, description: 'Student updated successfully' })
   @ApiResponse({ status: 404, description: 'Student not found' })
-  update(@Param('id') id: string, @Body() updateStudentsDto: any) {
+  update(@Param('id') id: string, @Body() updateStudentsDto: students) {
     return this.studentsService.update(+id, updateStudentsDto);
   }
+
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a student' })
   @ApiResponse({ status: 200, description: 'Student deleted successfully' })

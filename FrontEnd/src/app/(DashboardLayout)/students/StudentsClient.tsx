@@ -6,8 +6,6 @@ import {
   CardContent,
   Typography,
   Chip,
-  Avatar,
-  LinearProgress,
   Button,
   IconButton,
   Alert,
@@ -22,6 +20,7 @@ import useGet from '../../../hooks/useGet';
 import { BeltRequirements } from '../../../models/BeltRequirements/BeltRequirements';
 import { useState } from 'react';
 import Loading from 'app/loading';
+import AddStudentModule from '../components/students/AddStudentModule';
 
 // Student interface for API data
 interface Student {
@@ -91,6 +90,9 @@ const StudentsClient = () => {
   // State for toggling between active and inactive students
   const [showActiveOnly, setShowActiveOnly] = useState(true);
 
+  // State for Add Student dialog
+  const [addStudentOpen, setAddStudentOpen] = useState(false);
+
   // Fetch belt requirements for colors and progression
   const {
     data: beltRequirements,
@@ -115,6 +117,7 @@ const StudentsClient = () => {
     isFetching,
     error,
     isError,
+    refetch: refetchStudents
   } = useGet<Student[]>({
     apiLabel: 'students',
     url: '/students',
@@ -151,6 +154,16 @@ const StudentsClient = () => {
   const students = showActiveOnly
     ? allStudents.filter((student) => student.isActive)
     : allStudents.filter((student) => !student.isActive);
+
+  // Handler for when a new student is added
+  const handleStudentAdded = () => {
+refetchStudents(); // Refetch students to include the newly added student
+  };
+
+  // Handler to open add student dialog
+  const handleAddStudentClick = () => {
+    setAddStudentOpen(true);
+  };
 
   // DataGrid column definitions
   const columns: GridColDef[] = [
@@ -295,7 +308,12 @@ const StudentsClient = () => {
               sx={{ ml: 2 }}
             />
           </Box>
-          <Button variant='contained' startIcon={<IconPlus />} sx={{ height: 'fit-content' }}>
+          <Button
+            variant='contained'
+            startIcon={<IconPlus />}
+            sx={{ height: 'fit-content' }}
+            onClick={handleAddStudentClick}
+          >
             Add New Student
           </Button>
         </Box>
@@ -411,6 +429,14 @@ const StudentsClient = () => {
             />
           </Box>
         </DashboardCard>
+
+        {/* Add Student Dialog */}
+        <AddStudentModule
+          open={addStudentOpen}
+          onClose={() => setAddStudentOpen(false)}
+          beltRequirements={beltRequirements || []}
+          onStudentAdded={handleStudentAdded}
+        />
       </Box>
     </PageContainer>
   );
