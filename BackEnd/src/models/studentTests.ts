@@ -24,7 +24,12 @@ export interface studentTestsAttributes {
   updated_at?: Date;
 }
 
-@Table({ tableName: 'student_tests', timestamps: true })
+@Table({
+  tableName: 'student_tests',
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
+})
 export class studentTests
   extends Model<studentTestsAttributes, studentTestsAttributes>
   implements studentTestsAttributes
@@ -56,20 +61,6 @@ export class studentTests
 
   @Column({ type: DataType.TEXT, allowNull: true })
   notes?: string;
-
-  @Column({
-    field: 'created_at',
-    type: DataType.DATE,
-    defaultValue: DataType.NOW,
-  })
-  created_at?: Date;
-
-  @Column({
-    field: 'updated_at',
-    type: DataType.DATE,
-    defaultValue: DataType.NOW,
-  })
-  updated_at?: Date;
 
   // Associations
   @BelongsTo(() => students)

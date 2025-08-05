@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Card,
@@ -44,7 +44,7 @@ import DashboardCard from '../../components/shared/DashboardCard';
 import useGet from '../../../../hooks/useGet';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import { TestHistory } from '../../../../models/StudentTests/StudentTests';
-import { BeltHistory, BeltProgression } from '../../../../models/BeltProgression/BeltProgression';
+import { BeltProgression } from '../../../../models/BeltProgression/BeltProgression';
 import { beltProgressionService } from '../../../../services/beltProgressionService';
 import EditCurrentBeltProgressForm, {
   BeltProgressionFormData,
@@ -179,59 +179,40 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     },
   });
 
-  // Fetch belt progression history
+  // Fetch belt progression data
   const {
-    data: beltHistory,
-    isLoading: beltHistoryLoading,
-    error: beltHistoryError,
-  } = useGet<BeltHistory>({
+    data: beltProgressions,
+    isLoading: beltProgressionLoading,
+    error: beltProgressionError,
+    refetch: refetchBeltProgressions,
+  } = useGet<BeltProgression[]>({
     apiLabel: 'belt-progression',
-    url: `/belt-progression/student/${studentId}/history`,
-    id: `belt-history-${studentId}`,
-    fallbackData: {
-      progression: [],
-      totalPromotions: 0,
-    },
+    url: `/belt-progression/student/${studentId}`,
+    id: `belt-progressions-${studentId}`,
+    fallbackData: [],
+  });
+
+  // Fetch current belt
+  const {
+    data: currentBelt,
+    isLoading: currentBeltLoading,
+    error: currentBeltError,
+    refetch: refetchCurrentBelt,
+  } = useGet<BeltProgression | null>({
+    apiLabel: 'current-belt',
+    url: `/belt-progression/student/${studentId}/current`,
+    id: `current-belt-${studentId}`,
+    fallbackData: null,
   });
 
   // Edit belt progression state
   const [editBeltProgressionOpen, setEditBeltProgressionOpen] = useState(false);
   const [savingBeltProgression, setSavingBeltProgression] = useState(false);
-  const [gradingDialogOpen, setGradingDialogOpen] = useState(false);
   const [isCreateMode, setIsCreateMode] = useState(false);
   const [editingProgression, setEditingProgression] = useState<BeltProgression | null>(null);
-  const [beltProgressionError, setBeltProgressionError] = useState<string | null>(null);
-  const [beltProgressionLoading, setBeltProgressionLoading] = useState(false);
-  const [beltProgressions, setBeltProgressions] = useState<BeltProgression[]>([]);
-  const [currentBelt, setCurrentBelt] = useState<BeltProgression | null>(null);
-
-  // Load belt progression data
-  const loadBeltProgressionData = async () => {
-    setBeltProgressionLoading(true);
-    setBeltProgressionError(null);
-    try {
-      const [progressions, current] = await Promise.all([
-        beltProgressionService.getProgressionsByStudent(parseInt(studentId)),
-        beltProgressionService.getCurrentBelt(parseInt(studentId)),
-      ]);
-      setBeltProgressions(progressions);
-      setCurrentBelt(current);
-    } catch (error) {
-      console.error('Error loading belt progression:', error);
-      setBeltProgressionError('Failed to load belt progression data');
-    } finally {
-      setBeltProgressionLoading(false);
-    }
-  };
-
-  // Load belt progression data on component mount
-  useEffect(() => {
-    loadBeltProgressionData();
-  }, [studentId]);
 
   const handleEditStudent = () => {
     // TODO: Open edit dialog or navigate to edit page
-    console.log('Edit student:', studentId);
   };
 
   const handleCloseBeltProgressionEdit = () => {
@@ -247,7 +228,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
 
   const handleEditBeltProgression = (progression?: BeltProgression) => {
     setIsCreateMode(false);
-    setEditingProgression(progression || currentBelt);
+    setEditingProgression(progression || currentBelt || null);
     setEditBeltProgressionOpen(true);
   };
 
@@ -280,13 +261,13 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
       }
 
       // Refresh data and close dialog
-      await loadBeltProgressionData();
+      await Promise.all([refetchBeltProgressions(), refetchCurrentBelt()]);
       setEditBeltProgressionOpen(false);
       setEditingProgression(null);
       setIsCreateMode(false);
     } catch (error) {
       console.error('Error saving belt progression:', error);
-      setBeltProgressionError('Failed to save belt progression');
+      // Show error in console for now - could add toast notification later
     } finally {
       setSavingBeltProgression(false);
     }
@@ -299,55 +280,10 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
 
     try {
       await beltProgressionService.deleteProgression(progressionId);
-      await loadBeltProgressionData();
+      await Promise.all([refetchBeltProgressions(), refetchCurrentBelt()]);
     } catch (error) {
       console.error('Error deleting belt progression:', error);
-      setBeltProgressionError('Failed to delete belt progression');
-    }
-  };
-
-  const handleSaveBeltProgression_OLD = async (formData: BeltProgressionFormData) => {
-    setSavingBeltProgression(true);
-    try {
-      // TODO: Implement API call to save belt progression
-      console.log('Saving belt progression:', formData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Close dialog and refresh data
-      setEditBeltProgressionOpen(false);
-      // TODO: Trigger data refresh
-    } catch (error) {
-      console.error('Error saving belt progression:', error);
-      // TODO: Show error message
-    } finally {
-      setSavingBeltProgression(false);
-    }
-  };
-
-  const handleOpenGradingDialog = () => {
-    setGradingDialogOpen(true);
-  };
-
-  const handleCloseGradingDialog = () => {
-    setGradingDialogOpen(false);
-  };
-
-  const handleSaveAssessment = async (assessmentData: any) => {
-    try {
-      // TODO: Implement API call to save assessment
-      console.log('Saving assessment:', assessmentData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Close dialog and refresh data
-      setGradingDialogOpen(false);
-      // TODO: Trigger data refresh
-    } catch (error) {
-      console.error('Error saving assessment:', error);
-      // TODO: Show error message
+      // Show error in console for now - could add toast notification later
     }
   };
 
@@ -359,6 +295,8 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     studentLoading ||
     beltRequirementsLoading ||
     studentFetching ||
+    beltProgressionLoading ||
+    currentBeltLoading ||
     (student?.child === 1 && (familyLoading || familyFetching))
   ) {
     return (
@@ -622,13 +560,15 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
                 </Box>
                 <Divider sx={{ mb: 2 }} />
 
-                {beltProgressionError && (
+                {(beltProgressionError || currentBeltError) && (
                   <Alert severity='error' sx={{ mb: 2 }}>
-                    {beltProgressionError}
+                    {beltProgressionError?.message ||
+                      currentBeltError?.message ||
+                      'Failed to load belt progression data'}
                   </Alert>
                 )}
 
-                {beltProgressionLoading ? (
+                {beltProgressionLoading || currentBeltLoading ? (
                   <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
                     <CircularProgress />
                   </Box>
@@ -746,7 +686,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
                     </Grid>
 
                     {/* Belt History */}
-                    {beltProgressions.length > 1 && (
+                    {beltProgressions && beltProgressions.length > 1 && (
                       <Box sx={{ mt: 3 }}>
                         <Typography variant='subtitle1' sx={{ mb: 2, fontWeight: 'bold' }}>
                           Belt History
@@ -763,7 +703,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {beltProgressions.map((progression) => (
+                              {beltProgressions?.map((progression) => (
                                 <TableRow key={progression.progression_id}>
                                   <TableCell>
                                     <Chip
@@ -842,152 +782,6 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
               </CardContent>
             </Card>
           </Grid>
-
-          {beltHistoryLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-              <CircularProgress />
-            </Box>
-          ) : beltHistoryError ? (
-            <Alert severity='error'>Failed to load belt progression history</Alert>
-          ) : beltHistory?.currentBelt ? (
-            <Box>
-              {/* Current Belt Information */}
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                  <Box sx={{ textAlign: 'center' }}>
-                    <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
-                      Current Belt
-                    </Typography>
-                    <Chip
-                      label={beltHistory.currentBelt.belt_rank}
-                      sx={{
-                        backgroundColor: getBeltColor(
-                          beltHistory.currentBelt.belt_rank,
-                          beltRequirements || []
-                        ),
-                        color: getBeltTextColor(
-                          beltHistory.currentBelt.belt_rank,
-                          beltRequirements || []
-                        ),
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
-                        p: 2,
-                      }}
-                    />
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                  <Box>
-                    <Typography variant='body2' color='text.secondary'>
-                      Promoted Date
-                    </Typography>
-                    <Typography variant='body1' sx={{ fontWeight: 'medium' }}>
-                      {new Date(beltHistory.currentBelt.promoted_date).toLocaleDateString()}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                  <Box>
-                    <Typography variant='body2' color='text.secondary'>
-                      Promoted By
-                    </Typography>
-                    <Typography variant='body1' sx={{ fontWeight: 'medium' }}>
-                      {beltHistory.currentBelt.promoted_by || 'Not specified'}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                  <Box>
-                    <Typography variant='body2' color='text.secondary'>
-                      Time in Current Belt
-                    </Typography>
-                    <Typography variant='body1' sx={{ fontWeight: 'medium' }}>
-                      {beltHistory.timeAsCurrentBelt
-                        ? `${beltHistory.timeAsCurrentBelt} days`
-                        : 'Not calculated'}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                {/* Additional Details */}
-                {(beltHistory.currentBelt.ceremony_date ||
-                  beltHistory.currentBelt.belt_certificate_number ||
-                  beltHistory.currentBelt.notes) && (
-                  <Grid size={{ xs: 12 }}>
-                    <Divider sx={{ my: 2 }} />
-                    <Typography variant='subtitle2' sx={{ mb: 1, fontWeight: 'bold' }}>
-                      Additional Information
-                    </Typography>
-                    <Grid container spacing={2}>
-                      {beltHistory.currentBelt.ceremony_date && (
-                        <Grid size={{ xs: 12, sm: 4 }}>
-                          <Typography variant='body2' color='text.secondary'>
-                            Ceremony Date
-                          </Typography>
-                          <Typography variant='body1'>
-                            {new Date(beltHistory.currentBelt.ceremony_date).toLocaleDateString()}
-                          </Typography>
-                        </Grid>
-                      )}
-                      {beltHistory.currentBelt.belt_certificate_number && (
-                        <Grid size={{ xs: 12, sm: 4 }}>
-                          <Typography variant='body2' color='text.secondary'>
-                            Certificate Number
-                          </Typography>
-                          <Typography variant='body1'>
-                            {beltHistory.currentBelt.belt_certificate_number}
-                          </Typography>
-                        </Grid>
-                      )}
-                      {beltHistory.currentBelt.notes && (
-                        <Grid size={{ xs: 12 }}>
-                          <Typography variant='body2' color='text.secondary'>
-                            Notes
-                          </Typography>
-                          <Typography variant='body1'>{beltHistory.currentBelt.notes}</Typography>
-                        </Grid>
-                      )}
-                    </Grid>
-                  </Grid>
-                )}
-
-                {/* Progression Summary */}
-                <Grid size={{ xs: 12 }}>
-                  <Divider sx={{ my: 2 }} />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>
-                      Progression Summary
-                    </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                      Total Promotions: {beltHistory.totalPromotions}
-                    </Typography>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Box>
-          ) : (
-            <Box sx={{ textAlign: 'center', py: 4 }}>
-              <Typography variant='body1' color='text.secondary' sx={{ mb: 2 }}>
-                No belt progression found for this student.
-              </Typography>
-              <Button
-                variant='contained'
-                startIcon={<IconPlus />}
-                onClick={handleCreateBeltProgression}
-              >
-                Add First Belt
-              </Button>
-            </Box>
-          )}
 
           {/* Test History */}
           <Grid size={{ xs: 12 }}>

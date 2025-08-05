@@ -1,6 +1,5 @@
 import { BeltProgression, BeltHistory } from '../models/BeltProgression/BeltProgression';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
+import axiosInstance from '../utils/helpers/AxiosInstance';
 
 export interface CreateBeltProgressionDto {
   studentid: number;
@@ -26,86 +25,52 @@ export interface UpdateBeltProgressionDto {
 }
 
 class BeltProgressionService {
-  private baseUrl = `${API_BASE_URL}/belt-progression`;
+  private baseUrl = '/belt-progression';
 
   async getAllProgressions(): Promise<BeltProgression[]> {
-    const response = await fetch(this.baseUrl);
-    if (!response.ok) {
-      throw new Error('Failed to fetch belt progressions');
-    }
-    return response.json();
+    const response = await axiosInstance.get(this.baseUrl);
+    return response.data;
   }
 
   async getProgressionsByStudent(studentId: number): Promise<BeltProgression[]> {
-    const response = await fetch(`${this.baseUrl}/student/${studentId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch student belt progressions');
-    }
-    return response.json();
+    const response = await axiosInstance.get(`${this.baseUrl}/student/${studentId}`);
+    return response.data;
   }
 
   async getCurrentBelt(studentId: number): Promise<BeltProgression | null> {
-    const response = await fetch(`${this.baseUrl}/student/${studentId}/current`);
-    if (!response.ok) {
-      if (response.status === 404) {
+    try {
+      const response = await axiosInstance.get(`${this.baseUrl}/student/${studentId}/current`);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) {
         return null;
       }
       throw new Error('Failed to fetch current belt');
     }
-    return response.json();
   }
 
   async getBeltHistory(studentId: number): Promise<BeltHistory> {
-    const response = await fetch(`${this.baseUrl}/student/${studentId}/history`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch belt history');
-    }
-    return response.json();
+    const response = await axiosInstance.get(`${this.baseUrl}/student/${studentId}/history`);
+    return response.data;
   }
 
   async getProgression(id: number): Promise<BeltProgression> {
-    const response = await fetch(`${this.baseUrl}/${id}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch belt progression');
-    }
-    return response.json();
+    const response = await axiosInstance.get(`${this.baseUrl}/${id}`);
+    return response.data;
   }
 
   async createProgression(data: CreateBeltProgressionDto): Promise<BeltProgression> {
-    const response = await fetch(this.baseUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      throw new Error('Failed to create belt progression');
-    }
-    return response.json();
+    const response = await axiosInstance.post(this.baseUrl, data);
+    return response.data;
   }
 
   async updateProgression(id: number, data: UpdateBeltProgressionDto): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      throw new Error('Failed to update belt progression');
-    }
-    return response.json();
+    const response = await axiosInstance.patch(`${this.baseUrl}/${id}`, data);
+    return response.data;
   }
 
   async deleteProgression(id: number): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) {
-      throw new Error('Failed to delete belt progression');
-    }
+    await axiosInstance.delete(`${this.baseUrl}/${id}`);
   }
 }
 
