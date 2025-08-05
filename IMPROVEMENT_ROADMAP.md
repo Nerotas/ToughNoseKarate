@@ -133,20 +133,38 @@ const nextConfig = {
 
 ## 📊 LONG-TERM STRATEGIC IMPROVEMENTS
 
-### 7. Authentication & Authorization
+### 7. Authentication & Authorization 🚀 **ROADMAP CREATED**
 
 ```typescript
-// Implement JWT authentication
-import { JwtModule } from "@nestjs/jwt";
-import { PassportModule } from "@nestjs/passport";
+// 📋 DETAILED ROADMAP: See JWT_AUTH_ROADMAP.md
+// Goal: Restrict student information to logged-in instructors only
 
-// Add role-based access control
+// Phase 1: Database & Models (Instructors table)
+// Phase 2: JWT Infrastructure (Strategy, Guards, Module)
+// Phase 3: Auth Service & Controller (Login, Register, Profile)
+// Phase 4: Protect Student Endpoints (JWT validation required)
+// Phase 5: Frontend Integration (AuthContext, Login page, API tokens)
+// Phase 6: Security Enhancements (Password rules, rate limiting)
+
+// Key Components to Implement:
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles("admin", "instructor")
+@Roles("instructor", "admin")
 @Controller("students")
 export class StudentsController {
-  // Protected endpoints
+  @Get()
+  @ApiBearerAuth("JWT")
+  @ApiOperation({ summary: "Get students (instructors only)" })
+  async findAll(@User() instructor: InstructorPayload) {
+    // Only authenticated instructors can access
+    return this.studentsService.findAll();
+  }
 }
+
+// Timeline: 4 weeks for complete implementation
+// Week 1: Database & JWT setup
+// Week 2: Backend authentication
+// Week 3: Frontend integration
+// Week 4: Security & testing
 ```
 
 ### 8. Testing Strategy
