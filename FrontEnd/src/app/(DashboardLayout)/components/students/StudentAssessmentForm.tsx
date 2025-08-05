@@ -353,6 +353,138 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
     };
   };
 
+  // Get relevant belt requirements for the target belt
+  const getTargetBeltRequirements = (targetBeltRank: string): BeltRequirements | null => {
+    return (
+      beltRequirements.find(
+        (belt) => belt.beltRank.toLowerCase() === targetBeltRank.toLowerCase()
+      ) || null
+    );
+  };
+
+  // Check if a field is relevant for the target belt
+  const isFieldRelevant = (fieldName: string, targetBelt: BeltRequirements | null): boolean => {
+    if (!targetBelt) return false;
+
+    // Form field mappings
+    const formMappings: { [key: string]: string[] } = {
+      geocho_hyung_il_bu: ['geocho hyung il bu', 'geocho 1'],
+      geocho_hyung_yi_bu: ['geocho hyung yi bu', 'geocho 2'],
+      geocho_hyung_sahm_bu: ['geocho hyung sahm bu', 'geocho 3'],
+      pyong_an_cho_dan: ['pyong an cho dan', 'pyong an 1'],
+      pyong_an_yi_dan: ['pyong an yi dan', 'pyong an 2'],
+      pyong_an_sahm_dan: ['pyong an sahm dan', 'pyong an 3'],
+      pyong_an_sa_dan: ['pyong an sa dan', 'pyong an 4'],
+      pyong_an_oh_dan: ['pyong an oh dan', 'pyong an 5'],
+      bassai: ['bassai'],
+    };
+
+    // Stance field mappings
+    const stanceMappings: { [key: string]: string[] } = {
+      stance_front: ['front stance', 'forward stance'],
+      stance_back: ['back stance', 'rear stance'],
+      stance_straddle: ['straddle stance', 'horse stance'],
+      stance_shifting: ['shifting stance', 'cat stance'],
+    };
+
+    // Block field mappings
+    const blockMappings: { [key: string]: string[] } = {
+      high_block: ['high block', 'upper block'],
+      middle_block: ['middle block', 'mid block'],
+      low_block: ['low block', 'lower block'],
+      knife_hand_block: ['knife hand block', 'knife-hand block'],
+      double_block: ['double block', 'twin block'],
+    };
+
+    // Punch field mappings
+    const punchMappings: { [key: string]: string[] } = {
+      high_punch: ['high punch', 'upper punch'],
+      middle_punch: ['middle punch', 'mid punch'],
+      low_punch: ['low punch', 'lower punch'],
+      reverse_punch: ['reverse punch'],
+      jab: ['jab', 'jab punch'],
+    };
+
+    // Kick field mappings
+    const kickMappings: { [key: string]: string[] } = {
+      front_kick: ['front kick'],
+      side_kick: ['side kick'],
+      roundhouse_kick: ['roundhouse kick', 'round kick'],
+      back_kick: ['back kick'],
+      hook_kick: ['hook kick'],
+    };
+
+    // Self Defense mappings (simplified for now)
+    const selfDefenseMappings: { [key: string]: string[] } = {
+      traditional_1: ['traditional', 'self defense'],
+      traditional_2: ['traditional', 'self defense'],
+      traditional_3: ['traditional', 'self defense'],
+      traditional_4: ['traditional', 'self defense'],
+      made_up_1: ['made up', 'free style'],
+      made_up_2: ['made up', 'free style'],
+      made_up_3: ['made up', 'free style'],
+      made_up_4: ['made up', 'free style'],
+      three_steps_1: ['three step', 'one step'],
+      three_steps_2: ['three step', 'one step'],
+      three_steps_3: ['three step', 'one step'],
+      three_steps_4: ['three step', 'one step'],
+    };
+
+    // Check each category
+    const checkInArray = (
+      mappings: { [key: string]: string[] },
+      categoryArray: string[]
+    ): boolean => {
+      const fieldMappings = mappings[fieldName];
+      if (!fieldMappings) return false;
+
+      return fieldMappings.some((mapping) =>
+        categoryArray.some(
+          (item) =>
+            item.toLowerCase().includes(mapping.toLowerCase()) ||
+            mapping.toLowerCase().includes(item.toLowerCase())
+        )
+      );
+    };
+
+    // Check forms
+    if (formMappings[fieldName] && targetBelt.forms.length > 0) {
+      return checkInArray(formMappings, targetBelt.forms);
+    }
+
+    // Check stances
+    if (stanceMappings[fieldName] && targetBelt.stances.length > 0) {
+      return checkInArray(stanceMappings, targetBelt.stances);
+    }
+
+    // Check blocks
+    if (blockMappings[fieldName] && targetBelt.blocks.length > 0) {
+      return checkInArray(blockMappings, targetBelt.blocks);
+    }
+
+    // Check punches
+    if (punchMappings[fieldName] && targetBelt.punches.length > 0) {
+      return checkInArray(punchMappings, targetBelt.punches);
+    }
+
+    // Check kicks
+    if (kickMappings[fieldName] && targetBelt.kicks.length > 0) {
+      return checkInArray(kickMappings, targetBelt.kicks);
+    }
+
+    // Check self defense (check both selfDefense and oneSteps arrays)
+    if (selfDefenseMappings[fieldName]) {
+      const hasInSelfDefense =
+        targetBelt.selfDefense.length > 0 &&
+        checkInArray(selfDefenseMappings, targetBelt.selfDefense);
+      const hasInOneSteps =
+        targetBelt.oneSteps.length > 0 && checkInArray(selfDefenseMappings, targetBelt.oneSteps);
+      return hasInSelfDefense || hasInOneSteps;
+    }
+
+    return false;
+  };
+
   return (
     <Grid size={{ xs: 12 }}>
       <Card>
@@ -805,250 +937,298 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
             isSubmitting,
             status,
             setFieldValue,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <DialogContent>
-                {status?.error && (
-                  <Alert severity='error' sx={{ mb: 2 }}>
-                    {status.error}
-                  </Alert>
-                )}
+          }) => {
+            // Get target belt requirements for filtering fields
+            const targetBelt = getTargetBeltRequirements(values.target_belt_rank);
 
-                <Grid container spacing={3}>
-                  {/* Basic Assessment Info */}
-                  <Grid size={12}>
-                    <Typography variant='h6' gutterBottom color='primary'>
-                      Assessment Information
-                    </Typography>
-                  </Grid>
+            return (
+              <form onSubmit={handleSubmit}>
+                <DialogContent>
+                  {status?.error && (
+                    <Alert severity='error' sx={{ mb: 2 }}>
+                      {status.error}
+                    </Alert>
+                  )}
 
-                  <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                      fullWidth
-                      label='Assessment Date'
-                      name='assessment_date'
-                      type='date'
-                      value={values.assessment_date}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.assessment_date && Boolean(errors.assessment_date)}
-                      helperText={touched.assessment_date && errors.assessment_date}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
+                  <Grid container spacing={3}>
+                    {/* Basic Assessment Info */}
+                    <Grid size={12}>
+                      <Typography variant='h6' gutterBottom color='primary'>
+                        Assessment Information
+                      </Typography>
+                    </Grid>
 
-                  <Grid size={{ xs: 12, sm: 6 }}>
-                    <FormControl
-                      fullWidth
-                      error={touched.target_belt_rank && Boolean(errors.target_belt_rank)}
-                    >
-                      <InputLabel>Target Belt Rank</InputLabel>
-                      <Select
-                        name='target_belt_rank'
-                        value={values.target_belt_rank}
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <TextField
+                        fullWidth
+                        label='Assessment Date'
+                        name='assessment_date'
+                        type='date'
+                        value={values.assessment_date}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        label='Target Belt Rank'
+                        error={touched.assessment_date && Boolean(errors.assessment_date)}
+                        helperText={touched.assessment_date && errors.assessment_date}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <FormControl
+                        fullWidth
+                        error={touched.target_belt_rank && Boolean(errors.target_belt_rank)}
                       >
-                        {beltRequirements
-                          .sort((a, b) => a.beltOrder - b.beltOrder)
-                          .map((belt) => (
-                            <MenuItem key={belt.beltRank} value={belt.beltRank}>
-                              {belt.beltRank} Belt
-                            </MenuItem>
+                        <InputLabel>Target Belt Rank</InputLabel>
+                        <Select
+                          name='target_belt_rank'
+                          value={values.target_belt_rank}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          label='Target Belt Rank'
+                        >
+                          {beltRequirements
+                            .sort((a, b) => a.beltOrder - b.beltOrder)
+                            .map((belt) => (
+                              <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                                {belt.beltRank} Belt
+                              </MenuItem>
+                            ))}
+                        </Select>
+                        {touched.target_belt_rank && errors.target_belt_rank && (
+                          <Typography variant='caption' color='error' sx={{ mt: 0.5, ml: 2 }}>
+                            {errors.target_belt_rank}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Grid>
+
+                    {/* Show belt requirements summary */}
+                    {targetBelt && (
+                      <Grid size={12}>
+                        <Alert severity='info' sx={{ mt: 2 }}>
+                          <Typography variant='subtitle2' sx={{ mb: 1 }}>
+                            Requirements for {targetBelt.beltRank} Belt:
+                          </Typography>
+                          <Typography variant='body2'>
+                            Forms: {targetBelt.forms.join(', ') || 'None'} • Stances:{' '}
+                            {targetBelt.stances.join(', ') || 'None'} • Blocks:{' '}
+                            {targetBelt.blocks.join(', ') || 'None'} • Punches:{' '}
+                            {targetBelt.punches.join(', ') || 'None'} • Kicks:{' '}
+                            {targetBelt.kicks.join(', ') || 'None'} • Self Defense:{' '}
+                            {[...targetBelt.selfDefense, ...targetBelt.oneSteps].join(', ') ||
+                              'None'}
+                          </Typography>
+                        </Alert>
+                      </Grid>
+                    )}
+
+                    {/* Forms Section - Only show if target belt has forms */}
+                    {targetBelt && targetBelt.forms.length > 0 && (
+                      <>
+                        <Grid size={12}>
+                          <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                            Forms (Hyungs) - Score 0-10
+                          </Typography>
+                        </Grid>
+
+                        {[
+                          { name: 'geocho_hyung_il_bu', label: 'Geocho Hyung Il Bu' },
+                          { name: 'geocho_hyung_yi_bu', label: 'Geocho Hyung Yi Bu' },
+                          { name: 'geocho_hyung_sahm_bu', label: 'Geocho Hyung Sahm Bu' },
+                          { name: 'pyong_an_cho_dan', label: 'Pyong An Cho Dan' },
+                          { name: 'pyong_an_yi_dan', label: 'Pyong An Yi Dan' },
+                          { name: 'pyong_an_sahm_dan', label: 'Pyong An Sahm Dan' },
+                          { name: 'pyong_an_sa_dan', label: 'Pyong An Sa Dan' },
+                          { name: 'pyong_an_oh_dan', label: 'Pyong An Oh Dan' },
+                          { name: 'bassai', label: 'Bassai' },
+                        ]
+                          .filter((field) => isFieldRelevant(field.name, targetBelt))
+                          .map((field) => (
+                            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                              <TextField
+                                fullWidth
+                                label={field.label}
+                                name={field.name}
+                                type='number'
+                                value={values[field.name as keyof typeof values] || ''}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={
+                                  touched[field.name as keyof typeof touched] &&
+                                  Boolean(errors[field.name as keyof typeof errors])
+                                }
+                                helperText={
+                                  touched[field.name as keyof typeof touched] &&
+                                  errors[field.name as keyof typeof errors]
+                                }
+                                inputProps={{ min: 0, max: 10, step: 0.1 }}
+                              />
+                            </Grid>
                           ))}
-                      </Select>
-                      {touched.target_belt_rank && errors.target_belt_rank && (
-                        <Typography variant='caption' color='error' sx={{ mt: 0.5, ml: 2 }}>
-                          {errors.target_belt_rank}
-                        </Typography>
+                      </>
+                    )}
+
+                    {/* Self Defense Section - Only show if target belt has self defense or one steps */}
+                    {targetBelt &&
+                      (targetBelt.selfDefense.length > 0 || targetBelt.oneSteps.length > 0) && (
+                        <>
+                          <Grid size={12}>
+                            <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                              Self Defense - Score 0-10
+                            </Typography>
+                          </Grid>
+
+                          {[
+                            { name: 'traditional_1', label: 'Traditional 1' },
+                            { name: 'traditional_2', label: 'Traditional 2' },
+                            { name: 'traditional_3', label: 'Traditional 3' },
+                            { name: 'traditional_4', label: 'Traditional 4' },
+                            { name: 'made_up_1', label: 'Made Up 1' },
+                            { name: 'made_up_2', label: 'Made Up 2' },
+                            { name: 'made_up_3', label: 'Made Up 3' },
+                            { name: 'made_up_4', label: 'Made Up 4' },
+                            { name: 'three_steps_1', label: 'Three Steps 1' },
+                            { name: 'three_steps_2', label: 'Three Steps 2' },
+                            { name: 'three_steps_3', label: 'Three Steps 3' },
+                            { name: 'three_steps_4', label: 'Three Steps 4' },
+                          ]
+                            .filter((field) => isFieldRelevant(field.name, targetBelt))
+                            .map((field) => (
+                              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                                <TextField
+                                  fullWidth
+                                  label={field.label}
+                                  name={field.name}
+                                  type='number'
+                                  value={values[field.name as keyof typeof values] || ''}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  error={
+                                    touched[field.name as keyof typeof touched] &&
+                                    Boolean(errors[field.name as keyof typeof errors])
+                                  }
+                                  helperText={
+                                    touched[field.name as keyof typeof touched] &&
+                                    errors[field.name as keyof typeof errors]
+                                  }
+                                  inputProps={{ min: 0, max: 10, step: 0.1 }}
+                                />
+                              </Grid>
+                            ))}
+                        </>
                       )}
-                    </FormControl>
-                  </Grid>
 
-                  {/* Forms Section */}
-                  <Grid size={12}>
-                    <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                      Forms (Hyungs) - Score 0-10
-                    </Typography>
-                  </Grid>
+                    {/* Techniques Section - Only show relevant techniques */}
+                    {targetBelt &&
+                      (targetBelt.kicks.length > 0 ||
+                        targetBelt.stances.length > 0 ||
+                        targetBelt.blocks.length > 0 ||
+                        targetBelt.punches.length > 0) && (
+                        <>
+                          <Grid size={12}>
+                            <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                              Techniques - Score 0-10
+                            </Typography>
+                          </Grid>
 
-                  {[
-                    { name: 'geocho_hyung_il_bu', label: 'Geocho Hyung Il Bu' },
-                    { name: 'geocho_hyung_yi_bu', label: 'Geocho Hyung Yi Bu' },
-                    { name: 'geocho_hyung_sahm_bu', label: 'Geocho Hyung Sahm Bu' },
-                    { name: 'pyong_an_cho_dan', label: 'Pyong An Cho Dan' },
-                    { name: 'pyong_an_yi_dan', label: 'Pyong An Yi Dan' },
-                    { name: 'pyong_an_sahm_dan', label: 'Pyong An Sahm Dan' },
-                    { name: 'pyong_an_sa_dan', label: 'Pyong An Sa Dan' },
-                    { name: 'pyong_an_oh_dan', label: 'Pyong An Oh Dan' },
-                    { name: 'bassai', label: 'Bassai' },
-                  ].map((field) => (
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                          {[
+                            { name: 'front_kick', label: 'Front Kick' },
+                            { name: 'side_kick', label: 'Side Kick' },
+                            { name: 'roundhouse_kick', label: 'Roundhouse Kick' },
+                            { name: 'back_kick', label: 'Back Kick' },
+                            { name: 'hook_kick', label: 'Hook Kick' },
+                            { name: 'stance_front', label: 'Front Stance' },
+                            { name: 'stance_back', label: 'Back Stance' },
+                            { name: 'stance_straddle', label: 'Straddle Stance' },
+                            { name: 'stance_shifting', label: 'Shifting Stance' },
+                            { name: 'high_block', label: 'High Block' },
+                            { name: 'middle_block', label: 'Middle Block' },
+                            { name: 'low_block', label: 'Low Block' },
+                            { name: 'knife_hand_block', label: 'Knife Hand Block' },
+                            { name: 'double_block', label: 'Double Block' },
+                            { name: 'high_punch', label: 'High Punch' },
+                            { name: 'middle_punch', label: 'Middle Punch' },
+                            { name: 'low_punch', label: 'Low Punch' },
+                            { name: 'reverse_punch', label: 'Reverse Punch' },
+                            { name: 'jab', label: 'Jab' },
+                          ]
+                            .filter((field) => isFieldRelevant(field.name, targetBelt))
+                            .map((field) => (
+                              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                                <TextField
+                                  fullWidth
+                                  label={field.label}
+                                  name={field.name}
+                                  type='number'
+                                  value={values[field.name as keyof typeof values] || ''}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  error={
+                                    touched[field.name as keyof typeof touched] &&
+                                    Boolean(errors[field.name as keyof typeof errors])
+                                  }
+                                  helperText={
+                                    touched[field.name as keyof typeof touched] &&
+                                    errors[field.name as keyof typeof errors]
+                                  }
+                                  inputProps={{ min: 0, max: 10, step: 0.1 }}
+                                />
+                              </Grid>
+                            ))}
+                        </>
+                      )}
+
+                    {/* Overall Assessment */}
+                    <Grid size={12}>
+                      <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                        Overall Assessment
+                      </Typography>
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <TextField
                         fullWidth
-                        label={field.label}
-                        name={field.name}
+                        label='Overall Score (0-100%)'
+                        name='overall_score'
                         type='number'
-                        value={values[field.name as keyof typeof values] || ''}
+                        value={values.overall_score || ''}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={
-                          touched[field.name as keyof typeof touched] &&
-                          Boolean(errors[field.name as keyof typeof errors])
-                        }
-                        helperText={
-                          touched[field.name as keyof typeof touched] &&
-                          errors[field.name as keyof typeof errors]
-                        }
-                        inputProps={{ min: 0, max: 10, step: 0.1 }}
+                        error={touched.overall_score && Boolean(errors.overall_score)}
+                        helperText={touched.overall_score && errors.overall_score}
+                        inputProps={{ min: 0, max: 100, step: 0.1 }}
                       />
                     </Grid>
-                  ))}
 
-                  {/* Self Defense Section */}
-                  <Grid size={12}>
-                    <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                      Self Defense - Score 0-10
-                    </Typography>
-                  </Grid>
-
-                  {[
-                    { name: 'traditional_1', label: 'Traditional 1' },
-                    { name: 'traditional_2', label: 'Traditional 2' },
-                    { name: 'traditional_3', label: 'Traditional 3' },
-                    { name: 'traditional_4', label: 'Traditional 4' },
-                    { name: 'made_up_1', label: 'Made Up 1' },
-                    { name: 'made_up_2', label: 'Made Up 2' },
-                    { name: 'made_up_3', label: 'Made Up 3' },
-                    { name: 'made_up_4', label: 'Made Up 4' },
-                    { name: 'three_steps_1', label: 'Three Steps 1' },
-                    { name: 'three_steps_2', label: 'Three Steps 2' },
-                    { name: 'three_steps_3', label: 'Three Steps 3' },
-                    { name: 'three_steps_4', label: 'Three Steps 4' },
-                  ].map((field) => (
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                    <Grid size={12}>
                       <TextField
                         fullWidth
-                        label={field.label}
-                        name={field.name}
-                        type='number'
-                        value={values[field.name as keyof typeof values] || ''}
+                        label='Examiner Notes'
+                        name='examiner_notes'
+                        multiline
+                        rows={3}
+                        value={values.examiner_notes}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={
-                          touched[field.name as keyof typeof touched] &&
-                          Boolean(errors[field.name as keyof typeof errors])
-                        }
-                        helperText={
-                          touched[field.name as keyof typeof touched] &&
-                          errors[field.name as keyof typeof errors]
-                        }
-                        inputProps={{ min: 0, max: 10, step: 0.1 }}
+                        error={touched.examiner_notes && Boolean(errors.examiner_notes)}
+                        helperText={touched.examiner_notes && errors.examiner_notes}
+                        placeholder='Additional notes about the assessment...'
                       />
                     </Grid>
-                  ))}
-
-                  {/* Techniques Section */}
-                  <Grid size={12}>
-                    <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                      Techniques - Score 0-10
-                    </Typography>
                   </Grid>
+                </DialogContent>
 
-                  {[
-                    { name: 'front_kick', label: 'Front Kick' },
-                    { name: 'side_kick', label: 'Side Kick' },
-                    { name: 'roundhouse_kick', label: 'Roundhouse Kick' },
-                    { name: 'back_kick', label: 'Back Kick' },
-                    { name: 'hook_kick', label: 'Hook Kick' },
-                    { name: 'stance_front', label: 'Front Stance' },
-                    { name: 'stance_back', label: 'Back Stance' },
-                    { name: 'stance_straddle', label: 'Straddle Stance' },
-                    { name: 'stance_shifting', label: 'Shifting Stance' },
-                    { name: 'high_block', label: 'High Block' },
-                    { name: 'middle_block', label: 'Middle Block' },
-                    { name: 'low_block', label: 'Low Block' },
-                    { name: 'knife_hand_block', label: 'Knife Hand Block' },
-                    { name: 'double_block', label: 'Double Block' },
-                    { name: 'high_punch', label: 'High Punch' },
-                    { name: 'middle_punch', label: 'Middle Punch' },
-                    { name: 'low_punch', label: 'Low Punch' },
-                    { name: 'reverse_punch', label: 'Reverse Punch' },
-                    { name: 'jab', label: 'Jab' },
-                  ].map((field) => (
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
-                      <TextField
-                        fullWidth
-                        label={field.label}
-                        name={field.name}
-                        type='number'
-                        value={values[field.name as keyof typeof values] || ''}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={
-                          touched[field.name as keyof typeof touched] &&
-                          Boolean(errors[field.name as keyof typeof errors])
-                        }
-                        helperText={
-                          touched[field.name as keyof typeof touched] &&
-                          errors[field.name as keyof typeof errors]
-                        }
-                        inputProps={{ min: 0, max: 10, step: 0.1 }}
-                      />
-                    </Grid>
-                  ))}
-
-                  {/* Overall Assessment */}
-                  <Grid size={12}>
-                    <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                      Overall Assessment
-                    </Typography>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                      fullWidth
-                      label='Overall Score (0-100%)'
-                      name='overall_score'
-                      type='number'
-                      value={values.overall_score || ''}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.overall_score && Boolean(errors.overall_score)}
-                      helperText={touched.overall_score && errors.overall_score}
-                      inputProps={{ min: 0, max: 100, step: 0.1 }}
-                    />
-                  </Grid>
-
-                  <Grid size={12}>
-                    <TextField
-                      fullWidth
-                      label='Examiner Notes'
-                      name='examiner_notes'
-                      multiline
-                      rows={3}
-                      value={values.examiner_notes}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.examiner_notes && Boolean(errors.examiner_notes)}
-                      helperText={touched.examiner_notes && errors.examiner_notes}
-                      placeholder='Additional notes about the assessment...'
-                    />
-                  </Grid>
-                </Grid>
-              </DialogContent>
-
-              <DialogActions>
-                <Button onClick={closeEditDialog} disabled={isSubmitting}>
-                  Cancel
-                </Button>
-                <Button type='submit' variant='contained' disabled={isSubmitting}>
-                  {isSubmitting ? 'Saving...' : 'Save Assessment'}
-                </Button>
-              </DialogActions>
-            </form>
-          )}
+                <DialogActions>
+                  <Button onClick={closeEditDialog} disabled={isSubmitting}>
+                    Cancel
+                  </Button>
+                  <Button type='submit' variant='contained' disabled={isSubmitting}>
+                    {isSubmitting ? 'Saving...' : 'Save Assessment'}
+                  </Button>
+                </DialogActions>
+              </form>
+            );
+          }}
         </Formik>
       </Dialog>
     </Grid>
