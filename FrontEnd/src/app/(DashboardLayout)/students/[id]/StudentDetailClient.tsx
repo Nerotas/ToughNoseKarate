@@ -8,28 +8,15 @@ import EditStudentDialog from '../../components/students/EditStudentDialog';
 import Loading from 'app/loading';
 import {
   Box,
-  Card,
-  CardContent,
-  Typography,
-  Chip,
   Button,
   Alert,
   Grid,
-  Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
   IconButton,
 } from '@mui/material';
-import { IconArrowLeft, IconEdit, IconUsers, IconClipboardData, IconX } from '@tabler/icons-react';
+import { IconArrowLeft, IconEdit, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '../../components/container/PageContainer';
 import useGet from '../../../../hooks/useGet';
@@ -324,38 +311,6 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
           )}
         </Grid>
       </Box>
-
-      {/* Assessment Dialog */}
-      <Dialog
-        open={assessmentDialogOpen}
-        onClose={() => setAssessmentDialogOpen(false)}
-        maxWidth='lg'
-        fullWidth
-      >
-        <DialogTitle>
-          {editingAssessment ? 'Edit Assessment' : 'Create Assessment'}
-          <IconButton
-            onClick={() => setAssessmentDialogOpen(false)}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <IconX />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          {assessmentDialogOpen && (
-            <StudentAssessmentForm
-              currentAssessment={editingAssessment}
-              beltRequirements={beltRequirements || []}
-              assessmentLoading={assessmentLoading}
-              assessmentError={assessmentError}
-              savingAssessment={savingAssessment}
-              handleCreateAssessment={handleCreateAssessment}
-              handleCompleteAssessment={handleCompleteAssessment}
-              handleCancelAssessment={handleCancelAssessment}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
 
       {/* Edit Student Dialog */}
       <EditStudentDialog
