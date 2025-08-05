@@ -15,15 +15,15 @@ import {
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { IconUser, IconAward, IconEdit, IconEye, IconPlus, IconArrowUp } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
-import PageContainer from '../components/container/PageContainer';
-import DashboardCard from '../components/shared/DashboardCard';
-import useGet from '../../../hooks/useGet';
-import { BeltRequirements } from '../../../models/BeltRequirements/BeltRequirements';
+import PageContainer from '../(DashboardLayout)/components/container/PageContainer';
+import DashboardCard from '../(DashboardLayout)/components/shared/DashboardCard';
+import useGet from '../../hooks/useGet';
+import { BeltRequirements } from '../../models/BeltRequirements/BeltRequirements';
 import { useState } from 'react';
 import Loading from 'app/loading';
-import AddStudentModule from '../components/students/AddStudentModule';
-import EditStudentModule from '../components/students/EditStudentModule';
-import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
+import AddStudentModule from '../(DashboardLayout)/components/students/AddStudentModule';
+import EditStudentModule from '../(DashboardLayout)/components/students/EditStudentModule';
+import PromoteStudentDialog from '../(DashboardLayout)/components/students/PromoteStudentDialog';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 
 // Student interface for API data

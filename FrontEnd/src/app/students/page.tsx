@@ -1,5 +1,6 @@
-import SSRWrapper from '../../../wrappers/SSRWrapper';
+import SSRWrapper from '../../wrappers/SSRWrapper';
 import StudentsClient from './StudentsClient';
+import ProtectedRoute from '../../components/ProtectedRoute';
 
 /**
  * Server-side rendered Students page with pre-fetched data
@@ -25,7 +26,9 @@ export default async function StudentsPage() {
       ]}
       fallbackOnError={true}
     >
-      <StudentsClient />
+      <ProtectedRoute requiredRole='instructor'>
+        <StudentsClient />
+      </ProtectedRoute>
     </SSRWrapper>
   );
 }
