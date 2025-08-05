@@ -23,9 +23,10 @@ import {
 import { IconClipboardData, IconPlus, IconEdit, IconCheck, IconX } from '@tabler/icons-react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { StudentAssessment } from '../../../../models/Assessments/Assessments';
-import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
-import { studentAssessmentsService } from '../../../../services/studentAssessmentsService';
+import { StudentAssessment } from '../../../../../models/Assessments/Assessments';
+import { BeltRequirements } from '../../../../../models/BeltRequirements/BeltRequirements';
+import { studentAssessmentsService } from '../../../../../services/studentAssessmentsService';
+import { getBeltColor, getBeltTextColor } from 'helpers/BeltColors';
 
 interface StudentAssessmentFormProps {
   currentAssessment: StudentAssessment | null;
@@ -35,10 +36,7 @@ interface StudentAssessmentFormProps {
   savingAssessment: boolean;
   handleCreateAssessment: () => Promise<void>;
   handleCompleteAssessment: (passed: boolean, overallScore?: number) => Promise<void>;
-  handleEditAssessment: (assessment: StudentAssessment) => void;
   handleCancelAssessment: () => Promise<void>;
-  getBeltColor: (beltRank: string, beltRequirements: BeltRequirements[]) => string;
-  getBeltTextColor: (beltRank: string, beltRequirements: BeltRequirements[]) => string;
   onAssessmentUpdate?: (assessment: StudentAssessment) => Promise<void>;
 }
 
@@ -319,10 +317,7 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
   savingAssessment,
   handleCreateAssessment,
   handleCompleteAssessment,
-  handleEditAssessment,
   handleCancelAssessment,
-  getBeltColor,
-  getBeltTextColor,
   onAssessmentUpdate,
 }) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -486,144 +481,6 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
         (belt) => belt.beltRank.toLowerCase() === targetBeltRank.toLowerCase()
       ) || null
     );
-  };
-
-  // Check if a field is relevant for the target belt
-  const isFieldRelevant = (fieldName: string, targetBelt: BeltRequirements | null): boolean => {
-    if (!targetBelt) return false;
-
-    // Form field mappings
-    const formMappings: { [key: string]: string[] } = {
-      geocho_hyung_il_bu: ['geocho hyung il bu', 'geocho 1'],
-      geocho_hyung_yi_bu: ['geocho hyung yi bu', 'geocho 2'],
-      geocho_hyung_sahm_bu: ['geocho hyung sahm bu', 'geocho 3'],
-      pyong_an_cho_dan: ['pyong an cho dan', 'pyong an 1'],
-      pyong_an_yi_dan: ['pyong an yi dan', 'pyong an 2'],
-      pyong_an_sahm_dan: ['pyong an sahm dan', 'pyong an 3'],
-      pyong_an_sa_dan: ['pyong an sa dan', 'pyong an 4'],
-      pyong_an_oh_dan: ['pyong an oh dan', 'pyong an 5'],
-      bassai: ['bassai'],
-    };
-
-    // Stance field mappings
-    const stanceMappings: { [key: string]: string[] } = {
-      stance_front: ['front stance', 'forward stance'],
-      stance_back: ['back stance', 'rear stance'],
-      stance_straddle: ['straddle stance', 'horse stance'],
-      stance_shifting: ['shifting stance', 'cat stance'],
-    };
-
-    // Block field mappings
-    const blockMappings: { [key: string]: string[] } = {
-      high_block: ['high block', 'upper block'],
-      middle_block: ['middle block', 'mid block'],
-      low_block: ['low block', 'lower block'],
-      knife_hand_block: ['knife hand block', 'knife-hand block'],
-      double_block: ['double block', 'twin block'],
-    };
-
-    // Punch field mappings
-    const punchMappings: { [key: string]: string[] } = {
-      center_punch: ['center punch', 'middle punch', 'mid punch'],
-      reverse_punch: ['reverse punch'],
-      jab: ['jab', 'jab punch'],
-    };
-
-    // Kick field mappings
-    const kickMappings: { [key: string]: string[] } = {
-      front_kick: ['front kick'],
-      side_kick: ['side kick'],
-      roundhouse_kick: ['roundhouse kick', 'round kick'],
-      back_kick: ['back kick'],
-      hook_kick: ['hook kick'],
-      upper_cut: ['upper cut', 'uppercut'],
-      hook_punch: ['hook punch'],
-      spin_bottom_fist: ['spin bottom fist'],
-      charging_punch: ['charging punch'],
-      slide_up_jab_punch: ['slide up jab'],
-      chop_low: ['chop low', 'low chop'],
-      chop_high: ['chop high', 'high chop'],
-      spearhand: ['spear hand'],
-      block_punch_combo: ['block punch combo'],
-      double_block_punch_combo: ['double block punch combo'],
-      stepping_kick: ['stepping kick'],
-      slide_up_kick: ['slide up kick'],
-      spin_back_kick: ['spin back kick'],
-      inside_crescent_kick: ['inside crescent kick'],
-      outside_crescent_kick: ['outside crescent kick'],
-      spin_outside_crescent_kick: ['spin outside crescent kick'],
-      jump_spin_outside_crescent: ['jump spin outside crescent'],
-      spin_heel_kick: ['spin heel kick'],
-      studder_step_kick: ['studder step kick'],
-      butterfly_kick: ['butterfly kick'],
-    }; // One Steps mappings (simplified for now)
-    const oneStepsMappings: { [key: string]: string[] } = {
-      traditional_1: ['traditional', 'one steps'],
-      traditional_2: ['traditional', 'one steps'],
-      traditional_3: ['traditional', 'one steps'],
-      traditional_4: ['traditional', 'one steps'],
-      made_up_1: ['made up', 'free style'],
-      made_up_2: ['made up', 'free style'],
-      made_up_3: ['made up', 'free style'],
-      made_up_4: ['made up', 'free style'],
-      three_steps_1: ['three step', 'one step'],
-      three_steps_2: ['three step', 'one step'],
-      three_steps_3: ['three step', 'one step'],
-      three_steps_4: ['three step', 'one step'],
-    };
-
-    // Check each category
-    const checkInArray = (
-      mappings: { [key: string]: string[] },
-      categoryArray: string[]
-    ): boolean => {
-      const fieldMappings = mappings[fieldName];
-      if (!fieldMappings) return false;
-
-      return fieldMappings.some((mapping) =>
-        categoryArray.some(
-          (item) =>
-            item.toLowerCase().includes(mapping.toLowerCase()) ||
-            mapping.toLowerCase().includes(item.toLowerCase())
-        )
-      );
-    };
-
-    // Check forms
-    if (formMappings[fieldName] && targetBelt.forms.length > 0) {
-      return checkInArray(formMappings, targetBelt.forms);
-    }
-
-    // Check stances
-    if (stanceMappings[fieldName] && targetBelt.stances.length > 0) {
-      return checkInArray(stanceMappings, targetBelt.stances);
-    }
-
-    // Check blocks
-    if (blockMappings[fieldName] && targetBelt.blocks.length > 0) {
-      return checkInArray(blockMappings, targetBelt.blocks);
-    }
-
-    // Check punches
-    if (punchMappings[fieldName] && targetBelt.punches.length > 0) {
-      return checkInArray(punchMappings, targetBelt.punches);
-    }
-
-    // Check kicks
-    if (kickMappings[fieldName] && targetBelt.kicks.length > 0) {
-      return checkInArray(kickMappings, targetBelt.kicks);
-    }
-
-    // Check one steps (check both selfDefense and oneSteps arrays)
-    if (oneStepsMappings[fieldName]) {
-      const hasInSelfDefense =
-        targetBelt.selfDefense.length > 0 && checkInArray(oneStepsMappings, targetBelt.selfDefense);
-      const hasInOneSteps =
-        targetBelt.oneSteps.length > 0 && checkInArray(oneStepsMappings, targetBelt.oneSteps);
-      return hasInSelfDefense || hasInOneSteps;
-    }
-
-    return false;
   };
 
   return (

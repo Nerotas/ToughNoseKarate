@@ -1,13 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { AssessmentSummary, StudentAssessment } from '../../../../models/Assessments/Assessments';
-import {
-  studentsService,
-  Student as StudentServiceType,
-  UpdateStudentRequest,
-} from '../../../../services/studentsService';
+import { StudentAssessment } from '../../../../models/Assessments/Assessments';
+import { studentsService } from '../../../../services/studentsService';
 import { studentAssessmentsService } from '../../../../services/studentAssessmentsService';
-import StudentAssessmentForm from '../../components/students/StudentAssessmentForm';
+import StudentAssessmentForm from '../../components/students/details/StudentAssessmentForm';
 import EditStudentDialog from '../../components/students/EditStudentDialog';
 import Loading from 'app/loading';
 import {
@@ -31,89 +27,26 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   IconButton,
-  Fab,
 } from '@mui/material';
-import {
-  IconArrowLeft,
-  IconEdit,
-  IconUser,
-  IconCalendar,
-  IconAward,
-  IconUsers,
-  IconClipboardData,
-  IconPlus,
-  IconX,
-  IconCheck,
-  IconAlertTriangle,
-} from '@tabler/icons-react';
+import { IconArrowLeft, IconEdit, IconUsers, IconClipboardData, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '../../components/container/PageContainer';
-import DashboardCard from '../../components/shared/DashboardCard';
 import useGet from '../../../../hooks/useGet';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import { TestHistory } from '../../../../models/StudentTests/StudentTests';
-
-// Student interface for API data
-interface Student {
-  studentid: number;
-  firstName: string;
-  lastName: string;
-  preferedName?: string;
-  age?: number;
-  beltRank: string;
-  startDateUTC: string;
-  endDateUTC?: string;
-  email: string;
-  phone?: string;
-  notes?: string;
-  active: number;
-  child: number;
-  lastTestUTC?: string;
-  eligibleForTesting: number;
-}
-
-// Family/Parent interface for API data (based on the updated families VIEW)
-interface Family {
-  parentid?: number;
-  studentid?: number;
-  firstName: string; // Student first name
-  lastName: string; // Student last name
-  preferedName?: string; // Student preferred name
-  parentFirstName?: string;
-  parentLastName?: string;
-  age?: number; // Student age
-  beltRank?: string; // Student belt rank (updated field name)
-  startDate: string; // Updated field name
-  endDate?: string; // Updated field name
-  lastTest?: string; // Updated field name
-  email: string; // Student email
-  phone?: string; // Student phone
-  notes?: string; // Student notes
-  active?: number; // Student active status
-  eligibleForTesting?: number; // Student eligibility for testing
-}
-
-interface StudentDetailClientProps {
-  studentId: string;
-}
-
-// Helper function to get belt color from belt requirements data
-const getBeltColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.color || '#757575'; // Default grey if not found
-};
-
-// Helper function to get belt text color from belt requirements data
-const getBeltTextColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.textColor || '#FFFFFF'; // Default white if not found
-};
+import {
+  StudentDetailClientProps,
+  Family,
+  Student,
+  UpdateStudentRequest,
+} from 'models/Students/Students';
+import StudentInformation from 'app/(DashboardLayout)/components/students/details/StudentInformation';
+import { getBeltColor, getBeltTextColor } from 'helpers/BeltColors';
+import PersonalInformation from 'app/(DashboardLayout)/components/students/details/PersonalInformation';
+import TrainingInformation from 'app/(DashboardLayout)/components/students/details/TrainingInformation';
+import ParentGuardianInformation from 'app/(DashboardLayout)/components/students/details/ParentGuardianInformation';
+import TestingHistory from 'app/(DashboardLayout)/components/students/details/TestingHistory';
 
 const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) => {
   const router = useRouter();
@@ -226,7 +159,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
   const handleCreateAssessment = async () => {
     try {
       setSavingAssessment(true);
-      const newAssessment = await studentAssessmentsService.createAssessment({
+      await studentAssessmentsService.createAssessment({
         student_id: parseInt(studentId),
         assessment_date: new Date().toISOString(),
         assessment_status: 'in_progress',
@@ -238,11 +171,6 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     } finally {
       setSavingAssessment(false);
     }
-  };
-
-  const handleEditAssessment = (assessment: StudentAssessment) => {
-    setEditingAssessment(assessment);
-    setAssessmentDialogOpen(true);
   };
 
   const handleCompleteAssessment = async (passed: boolean, overallScore?: number) => {
@@ -324,7 +252,6 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     );
   }
 
-  const studentName = student.preferedName || student.firstName;
   const beltColor = getBeltColor(student.beltRank, beltRequirements || []);
   const beltTextColor = getBeltTextColor(student.beltRank, beltRequirements || []);
 
@@ -355,241 +282,24 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
         </Box>
 
         {/* Student Header Card */}
-        <DashboardCard title='Student Information'>
-          <Box sx={{ p: 3 }}>
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12, md: 8 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <IconUser size={32} />
-                  <Box sx={{ ml: 2 }}>
-                    <Typography variant='h4'>
-                      {studentName} {student.lastName}
-                    </Typography>
-                    <Typography variant='body1' color='text.secondary'>
-                      Student ID: {student.studentid}
-                    </Typography>
-                  </Box>
-                </Box>
-
-                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                  <Chip
-                    label={student.active ? 'Active' : 'Inactive'}
-                    color={student.active ? 'success' : 'error'}
-                    variant={student.active ? 'filled' : 'outlined'}
-                  />
-                  <Chip
-                    label={student.child ? 'Child Student' : 'Adult Student'}
-                    color={student.child ? 'info' : 'default'}
-                    icon={student.child ? <IconUsers size={16} /> : undefined}
-                  />
-                  <Chip
-                    label={student.eligibleForTesting ? 'Ready for Testing' : 'Not Ready'}
-                    color={student.eligibleForTesting ? 'success' : 'default'}
-                  />
-                </Box>
-              </Grid>
-
-              <Grid size={{ xs: 12, md: 4 }}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant='h6' sx={{ mb: 1 }}>
-                    Current Belt
-                  </Typography>
-                  <Chip
-                    label={`${student.beltRank} Belt`}
-                    sx={{
-                      backgroundColor: beltColor,
-                      color: beltTextColor,
-                      fontWeight: 'bold',
-                      fontSize: '1rem',
-                      p: 2,
-                      border: beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
-                    }}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        </DashboardCard>
+        <StudentInformation student={student} beltColor={beltColor} beltTextColor={beltTextColor} />
 
         {/* Student Details Grid */}
         <Grid container spacing={3} sx={{ mt: 3 }}>
           {/* Personal Information */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Card>
-              <CardContent>
-                <Typography variant='h6' sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                  <IconUser size={20} />
-                  <Box sx={{ ml: 1 }}>Personal Information</Box>
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Box>
-                    <Typography variant='subtitle2' color='text.secondary'>
-                      Full Name
-                    </Typography>
-                    <Typography variant='body1'>
-                      {student.firstName} {student.lastName}
-                    </Typography>
-                  </Box>
-
-                  {student.preferedName && (
-                    <Box>
-                      <Typography variant='subtitle2' color='text.secondary'>
-                        Preferred Name
-                      </Typography>
-                      <Typography variant='body1'>{student.preferedName}</Typography>
-                    </Box>
-                  )}
-
-                  <Box>
-                    <Typography variant='subtitle2' color='text.secondary'>
-                      Age
-                    </Typography>
-                    <Typography variant='body1'>{student.age || 'Not specified'}</Typography>
-                  </Box>
-
-                  <Box>
-                    <Typography variant='subtitle2' color='text.secondary'>
-                      Email
-                    </Typography>
-                    <Typography variant='body1'>{student.email}</Typography>
-                  </Box>
-
-                  {student.phone && (
-                    <Box>
-                      <Typography variant='subtitle2' color='text.secondary'>
-                        Phone
-                      </Typography>
-                      <Typography variant='body1'>{student.phone}</Typography>
-                    </Box>
-                  )}
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-
+          <PersonalInformation student={student} />
           {/* Training Information */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Card>
-              <CardContent>
-                <Typography variant='h6' sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                  <IconAward size={20} />
-                  <Box sx={{ ml: 1 }}>Training Information</Box>
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Box>
-                    <Typography variant='subtitle2' color='text.secondary'>
-                      Start Date
-                    </Typography>
-                    <Typography variant='body1'>
-                      {new Date(student.startDateUTC).toLocaleDateString()}
-                    </Typography>
-                  </Box>
-
-                  {student.endDateUTC && (
-                    <Box>
-                      <Typography variant='subtitle2' color='text.secondary'>
-                        End Date
-                      </Typography>
-                      <Typography variant='body1'>
-                        {new Date(student.endDateUTC).toLocaleDateString()}
-                      </Typography>
-                    </Box>
-                  )}
-
-                  <Box>
-                    <Typography variant='subtitle2' color='text.secondary'>
-                      Last Test Date
-                    </Typography>
-                    <Typography variant='body1'>
-                      {student.lastTestUTC
-                        ? new Date(student.lastTestUTC).toLocaleDateString()
-                        : 'No test recorded'}
-                    </Typography>
-                  </Box>
-
-                  <Box>
-                    <Typography variant='subtitle2' color='text.secondary'>
-                      Current Belt Rank
-                    </Typography>
-                    <Typography variant='body1'>{student.beltRank}</Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
+          <TrainingInformation student={student} />
           {/* Parent/Guardian Information - Only show for child students */}
-          {student.child === 1 && (
-            <Grid size={{ xs: 12 }}>
-              <Card>
-                <CardContent>
-                  <Typography variant='h6' sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                    <IconUsers size={20} />
-                    <Box sx={{ ml: 1 }}>Parent/Guardian Information</Box>
-                  </Typography>
-                  <Divider sx={{ mb: 2 }} />
-
-                  {familyError && (
-                    <Alert severity='warning' sx={{ mb: 2 }}>
-                      Unable to load parent/guardian information. Error:{' '}
-                      {familyError.message || 'Server error'}
-                    </Alert>
-                  )}
-
-                  {(familyLoading || familyFetching) && (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
-                      <Loading />
-                    </Box>
-                  )}
-
-                  {!familyLoading && !familyFetching && family && family.length > 0 ? (
-                    <Grid container spacing={2}>
-                      {family
-                        .filter((f: Family) => f.studentid === parseInt(studentId)) // Filter by current student ID
-                        .filter((f: Family) => f.parentFirstName && f.parentLastName) // Only show entries with parent data
-                        .map((f: Family, index: number) => (
-                          <Grid size={{ xs: 12, md: 6 }} key={f.parentid || index}>
-                            <Box
-                              sx={{
-                                p: 2,
-                                border: '1px solid',
-                                borderColor: 'divider',
-                                borderRadius: 1,
-                                bgcolor: 'background.paper',
-                              }}
-                            >
-                              <Typography variant='subtitle1' fontWeight='bold' sx={{ mb: 1 }}>
-                                {f.parentFirstName} {f.parentLastName}
-                              </Typography>
-
-                              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                <Typography variant='body2' color='text.secondary'>
-                                  <strong>Parent ID:</strong> {f.parentid || 'Not specified'}
-                                </Typography>
-                                {/* Note: The families view doesn't contain parent contact info, only student contact info */}
-                                <Typography
-                                  variant='body2'
-                                  color='text.secondary'
-                                  sx={{ fontStyle: 'italic' }}
-                                >
-                                  Contact information is managed separately from parent records.
-                                </Typography>
-                              </Box>
-                            </Box>
-                          </Grid>
-                        ))}
-                    </Grid>
-                  ) : student.child === 1 && !familyLoading && !familyFetching ? (
-                    <Alert severity='info'>
-                      No parent/guardian information found for this student.
-                    </Alert>
-                  ) : null}
-                </CardContent>
-              </Card>
-            </Grid>
+          {student.child === 1 && family && (
+            <ParentGuardianInformation
+              student={student}
+              studentId={studentId}
+              family={family}
+              familyLoading={familyLoading}
+              familyFetching={familyFetching}
+              familyError={familyError}
+            />
           )}
 
           <StudentAssessmentForm
@@ -600,149 +310,18 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
             savingAssessment={savingAssessment}
             handleCreateAssessment={handleCreateAssessment}
             handleCompleteAssessment={handleCompleteAssessment}
-            handleEditAssessment={handleEditAssessment}
             handleCancelAssessment={handleCancelAssessment}
-            getBeltColor={getBeltColor}
-            getBeltTextColor={getBeltTextColor}
             onAssessmentUpdate={handleAssessmentUpdate}
           />
           {/* Test History */}
-          <Grid size={{ xs: 12 }}>
-            <Card>
-              <CardContent>
-                <Typography variant='h6' sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                  <IconClipboardData size={20} />
-                  <Box sx={{ ml: 1 }}>Test History</Box>
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-
-                {testHistoryLoading ? (
-                  <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-                    <CircularProgress />
-                  </Box>
-                ) : testHistoryError ? (
-                  <Alert severity='error'>Failed to load test history</Alert>
-                ) : testHistory && testHistory.tests.length > 0 ? (
-                  <Box>
-                    {/* Test Summary */}
-                    <Box sx={{ mb: 3, p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
-                      <Typography variant='subtitle1' sx={{ fontWeight: 'bold', mb: 1 }}>
-                        Test Summary
-                      </Typography>
-                      <Grid container spacing={2}>
-                        <Grid size={{ xs: 6, sm: 3 }}>
-                          <Typography variant='h4' color='primary'>
-                            {testHistory.totalTests}
-                          </Typography>
-                          <Typography variant='body2' color='text.secondary'>
-                            Total Tests
-                          </Typography>
-                        </Grid>
-                        <Grid size={{ xs: 6, sm: 3 }}>
-                          <Typography variant='h4' color='success.main'>
-                            {testHistory.passedTests}
-                          </Typography>
-                          <Typography variant='body2' color='text.secondary'>
-                            Passed Tests
-                          </Typography>
-                        </Grid>
-                        <Grid size={{ xs: 6, sm: 3 }}>
-                          <Typography variant='h4' color='error.main'>
-                            {testHistory.failedTests}
-                          </Typography>
-                          <Typography variant='body2' color='text.secondary'>
-                            Failed Tests
-                          </Typography>
-                        </Grid>
-                        <Grid size={{ xs: 6, sm: 3 }}>
-                          <Typography variant='h4' color='info.main'>
-                            {testHistory.averageScore?.toFixed(1)}%
-                          </Typography>
-                          <Typography variant='body2' color='text.secondary'>
-                            Average Score
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Box>
-
-                    {/* Test Details */}
-                    <Typography variant='subtitle1' sx={{ fontWeight: 'bold', mb: 2 }}>
-                      Test History Details
-                    </Typography>
-                    <TableContainer component={Paper} variant='outlined'>
-                      <Table size='small'>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Test Date</TableCell>
-                            <TableCell>Belt From</TableCell>
-                            <TableCell>Belt To</TableCell>
-                            <TableCell>Score</TableCell>
-                            <TableCell>Result</TableCell>
-                            <TableCell>Instructor</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {testHistory.tests.map((test) => (
-                            <TableRow key={test.testid}>
-                              <TableCell>{new Date(test.test_date).toLocaleDateString()}</TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={test.belt_from}
-                                  size='small'
-                                  sx={{
-                                    backgroundColor: getBeltColor(
-                                      test.belt_from,
-                                      beltRequirements || []
-                                    ),
-                                    color: getBeltTextColor(test.belt_from, beltRequirements || []),
-                                  }}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={test.belt_to}
-                                  size='small'
-                                  sx={{
-                                    backgroundColor: getBeltColor(
-                                      test.belt_to,
-                                      beltRequirements || []
-                                    ),
-                                    color: getBeltTextColor(test.belt_to, beltRequirements || []),
-                                  }}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <Typography
-                                  variant='body2'
-                                  color={
-                                    test.overall_score && test.overall_score >= 70
-                                      ? 'success.main'
-                                      : 'error.main'
-                                  }
-                                >
-                                  {test.overall_score?.toFixed(1)}%
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={test.passed ? 'Passed' : 'Failed'}
-                                  color={test.passed ? 'success' : 'error'}
-                                  size='small'
-                                />
-                              </TableCell>
-                              <TableCell>{test.instructor_name || 'N/A'}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Box>
-                ) : (
-                  <Alert severity='info'>No test history found for this student.</Alert>
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
+          {testHistory && (
+            <TestingHistory
+              testHistory={testHistory}
+              testHistoryLoading={testHistoryLoading}
+              beltRequirements={beltRequirements || []}
+              testHistoryError={testHistoryError}
+            />
+          )}
         </Grid>
       </Box>
 
@@ -772,10 +351,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
               savingAssessment={savingAssessment}
               handleCreateAssessment={handleCreateAssessment}
               handleCompleteAssessment={handleCompleteAssessment}
-              handleEditAssessment={setEditingAssessment}
               handleCancelAssessment={handleCancelAssessment}
-              getBeltColor={getBeltColor}
-              getBeltTextColor={getBeltTextColor}
             />
           )}
         </DialogContent>

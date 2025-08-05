@@ -19,8 +19,8 @@ import {
 } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { Student, UpdateStudentRequest } from '../../../../services/studentsService';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
+import { Student, UpdateStudentRequest } from 'models/Students/Students';
 
 interface EditStudentDialogProps {
   open: boolean;
