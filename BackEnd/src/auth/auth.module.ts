@@ -7,6 +7,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
 import { Instructors } from '../models/instructors';
 import { InstructorsService } from '../service/instructors.service';
 
@@ -25,7 +27,21 @@ import { InstructorsService } from '../service/instructors.service';
     }),
     SequelizeModule.forFeature([Instructors]),
   ],
-  providers: [JwtStrategy, JwtAuthGuard, RolesGuard, InstructorsService],
-  exports: [JwtStrategy, JwtAuthGuard, RolesGuard, PassportModule, JwtModule],
+  controllers: [AuthController],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    JwtAuthGuard,
+    RolesGuard,
+    InstructorsService,
+  ],
+  exports: [
+    AuthService,
+    JwtStrategy,
+    JwtAuthGuard,
+    RolesGuard,
+    PassportModule,
+    JwtModule,
+  ],
 })
 export class AuthModule {}

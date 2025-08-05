@@ -64,6 +64,7 @@ import { LoggerService } from './service/logger.service';
 
 // Auth
 import { JwtStrategy } from './auth/jwt.strategy';
+import { AuthModule } from './auth/auth.module';
 
 // Health
 import { HealthController } from './health/health.controller';
@@ -234,6 +235,7 @@ import { AppConfigService } from './config/app-config.service';
       ],
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   controllers: [
     AboutController,
@@ -291,7 +293,6 @@ import { AppConfigService } from './config/app-config.service';
     StudentTestsService,
     StudentAssessmentsService,
     InstructorsService,
-    JwtStrategy,
     // Global rate limiting guard
     {
       provide: APP_GUARD,
