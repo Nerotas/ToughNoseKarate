@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Providers from './providers';
 import ClientThemeProvider from './theme-provider';
+import ErrorBoundary from '../components/ErrorBoundary';
 import './global.css';
 import ConfigValidator from './config-validator';
 
@@ -24,9 +25,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ConfigValidator>
-          <Providers>
-            <ClientThemeProvider>{children}</ClientThemeProvider>
-          </Providers>
+          <ErrorBoundary>
+            <Providers>
+              <ClientThemeProvider>{children}</ClientThemeProvider>
+            </Providers>
+          </ErrorBoundary>
         </ConfigValidator>
       </body>
     </html>

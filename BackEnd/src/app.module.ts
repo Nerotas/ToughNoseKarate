@@ -6,6 +6,8 @@ import { PassportModule } from '@nestjs/passport';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { CacheModule } from '@nestjs/cache-manager';
 import { TerminusModule } from '@nestjs/terminus';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 import { MetricsMiddleware } from './middlewares/metrics.middleware';
 import { MetricsModule } from 'metrics.module';
@@ -172,9 +174,49 @@ import { AppConfigService } from './config/app-config.service';
       testResults,
       StudentAssessments,
     ]),
-    CacheModule.register(),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const redisHost = configService.get<string>('REDIS_HOST');
+        const redisPort = configService.get<number>('REDIS_PORT');
+        const redisPassword = configService.get<string>('REDIS_PASSWORD');
+        const cacheTtl = configService.get<number>('CACHE_TTL', 300) * 1000; // Convert to milliseconds
+
+        // Try Redis first, fallback to memory cache
+        try {
+          const { redisStore } = await import('cache-manager-redis-yet');
+          return {
+            store: redisStore,
+            url: `redis://${redisPassword ? `:${redisPassword}@` : ''}${redisHost}:${redisPort}`,
+            ttl: cacheTtl,
+            max: 100, // Maximum number of items in cache
+          };
+        } catch (error) {
+          console.warn(
+            'Redis not available, using memory cache:',
+            error.message,
+          );
+          return {
+            ttl: cacheTtl,
+            max: 100, // Maximum number of items in cache
+          };
+        }
+      },
+      inject: [ConfigService],
+    }),
     TerminusModule,
     MetricsModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => [
+        {
+          name: 'short',
+          ttl: configService.get<number>('THROTTLE_TTL', 60) * 1000, // Convert to milliseconds
+          limit: configService.get<number>('THROTTLE_LIMIT', 10),
+        },
+      ],
+      inject: [ConfigService],
+    }),
   ],
   controllers: [
     AboutController,
@@ -231,6 +273,11 @@ import { AppConfigService } from './config/app-config.service';
     StudentProgressService,
     StudentTestsService,
     StudentAssessmentsService,
+    // Global rate limiting guard
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {
