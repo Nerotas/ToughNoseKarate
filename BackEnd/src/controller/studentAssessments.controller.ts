@@ -10,14 +10,30 @@ import {
   Query,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import {
   StudentAssessmentsService,
   CreateStudentAssessmentDto,
   UpdateStudentAssessmentDto,
 } from '../service/studentAssessments.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
+import { InstructorOnly } from '../decorators/roles.decorator';
+import { User } from '../decorators/user.decorator';
+import { InstructorPayload } from '../auth/jwt.strategy';
 
+@ApiTags('Student Assessments')
 @Controller('student-assessments')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@InstructorOnly()
+@ApiBearerAuth('JWT')
 export class StudentAssessmentsController {
   constructor(
     private readonly studentAssessmentsService: StudentAssessmentsService,

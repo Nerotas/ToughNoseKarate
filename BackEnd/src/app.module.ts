@@ -1,7 +1,6 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtService, JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { CacheModule } from '@nestjs/cache-manager';
@@ -59,11 +58,9 @@ import { StudentsService } from './service/students.service';
 import { StudentProgressService } from './service/studentProgress.service';
 import { StudentTestsService } from './service/studentTests.service';
 import { StudentAssessmentsService } from './service/studentAssessments.service';
-import { InstructorsService } from './service/instructors.service';
 import { LoggerService } from './service/logger.service';
 
 // Auth
-import { JwtStrategy } from './auth/jwt.strategy';
 import { AuthModule } from './auth/auth.module';
 
 // Health
@@ -113,16 +110,6 @@ import { AppConfigService } from './config/app-config.service';
       },
     }),
     PassportModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRATION', '1d'),
-        },
-      }),
-      inject: [ConfigService],
-    }),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -274,7 +261,6 @@ import { AppConfigService } from './config/app-config.service';
     FormDefinitionsService,
     FormsService,
     LocalHealthCheckService,
-    JwtService,
     KicksService,
     KicksDefinitionsService,
     Logger,
@@ -292,7 +278,6 @@ import { AppConfigService } from './config/app-config.service';
     StudentProgressService,
     StudentTestsService,
     StudentAssessmentsService,
-    InstructorsService,
     // Global rate limiting guard
     {
       provide: APP_GUARD,
