@@ -6,7 +6,10 @@ import {
   Index,
   Sequelize,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript';
+import { studentTests } from './studentTests';
+import { beltProgression } from './beltProgression';
 
 export interface studentsAttributes {
   studentid?: number;
@@ -61,4 +64,11 @@ export class students
   lastTestUTC?: string;
   @Column({ type: DataType.TINYINT, defaultValue: '0' })
   eligibleForTesting?: number;
+
+  // Associations
+  @HasMany(() => studentTests)
+  student_tests?: studentTests[];
+
+  @HasMany(() => beltProgression)
+  belt_progressions?: beltProgression[];
 }

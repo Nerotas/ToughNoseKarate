@@ -5,8 +5,10 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
 import { students } from './students';
+import { testResults } from './testResults';
 
 export interface studentTestsAttributes {
   testid?: number;
@@ -72,4 +74,7 @@ export class studentTests
   // Associations
   @BelongsTo(() => students)
   student?: students;
+
+  @HasMany(() => testResults)
+  test_results?: testResults[];
 }

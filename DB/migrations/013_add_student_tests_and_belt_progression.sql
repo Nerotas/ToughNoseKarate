@@ -1,51 +1,149 @@
 -- Migration: 013_add_student_tests_and_belt_progression.sql
 -- Description: Add essential tables for test tracking and belt progression
 -- Date: 2025-08-04
--- Add belt ordering to belt_requirements table
-ALTER TABLE
-  belt_requirements
-ADD
-  COLUMN belt_order INT NOT NULL DEFAULT 1
-AFTER
-  beltRank,
-ADD
-  INDEX idx_belt_order (belt_order);
-
+-- Add belt ordering to belt_requirements table (if not exists)
+-- Note: belt_order column already exists in the table, so we'll skip this step
+-- ALTER TABLE
+--   belt_requirements
+-- ADD
+--   COLUMN belt_order INT NOT NULL DEFAULT 1
+-- AFTER
+--   belt_rank,
+-- ADD
+--   INDEX idx_belt_order (belt_order);
 -- Update belt orders (adjust these values based on your actual belt progression)
 UPDATE
   belt_requirements
 SET
   belt_order = 1
 WHERE
-  beltRank = 'white';
+  belt_rank = 'White';
 
 UPDATE
   belt_requirements
 SET
   belt_order = 2
 WHERE
-  beltRank = 'orange';
+  belt_rank = 'Gold White';
 
 UPDATE
   belt_requirements
 SET
   belt_order = 3
 WHERE
-  beltRank = 'yellow';
+  belt_rank = 'Gold';
 
 UPDATE
   belt_requirements
 SET
   belt_order = 4
 WHERE
-  beltRank = 'green';
+  belt_rank = 'Gold Black';
 
 UPDATE
   belt_requirements
 SET
   belt_order = 5
 WHERE
-  beltRank = 'purple';
+  belt_rank = 'Purple White';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 6
+WHERE
+  belt_rank = 'Purple';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 7
+WHERE
+  belt_rank = 'Orange White';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 8
+WHERE
+  belt_rank = 'Orange';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 9
+WHERE
+  belt_rank = 'Blue White';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 10
+WHERE
+  belt_rank = 'Blue';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 11
+WHERE
+  belt_rank = 'Blue Black';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 12
+WHERE
+  belt_rank = 'Green White';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 13
+WHERE
+  belt_rank = 'Green';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 14
+WHERE
+  belt_rank = 'Green Black';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 15
+WHERE
+  belt_rank = 'Brown White';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 16
+WHERE
+  belt_rank = 'Brown';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 17
+WHERE
+  belt_rank = 'Brown Black';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 18
+WHERE
+  belt_rank = 'Red White';
+
+UPDATE
+  belt_requirements
+SET
+  belt_order = 19
+WHERE
+  belt_rank = 'Red';
 
 UPDATE
   belt_requirements
