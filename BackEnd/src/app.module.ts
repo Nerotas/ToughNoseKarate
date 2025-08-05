@@ -174,7 +174,36 @@ import { AppConfigService } from './config/app-config.service';
       testResults,
       StudentAssessments,
     ]),
-    CacheModule.register(),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const redisHost = configService.get<string>('REDIS_HOST');
+        const redisPort = configService.get<number>('REDIS_PORT');
+        const redisPassword = configService.get<string>('REDIS_PASSWORD');
+        const cacheTtl = configService.get<number>('CACHE_TTL', 300) * 1000; // Convert to milliseconds
+
+        // Try Redis first, fallback to memory cache
+        try {
+          const { redisStore } = await import('cache-manager-redis-yet');
+          return {
+            store: redisStore,
+            url: `redis://${redisPassword ? `:${redisPassword}@` : ''}${redisHost}:${redisPort}`,
+            ttl: cacheTtl,
+            max: 100, // Maximum number of items in cache
+          };
+        } catch (error) {
+          console.warn(
+            'Redis not available, using memory cache:',
+            error.message,
+          );
+          return {
+            ttl: cacheTtl,
+            max: 100, // Maximum number of items in cache
+          };
+        }
+      },
+      inject: [ConfigService],
+    }),
     TerminusModule,
     MetricsModule,
     ThrottlerModule.forRootAsync({

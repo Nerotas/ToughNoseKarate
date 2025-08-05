@@ -70,6 +70,12 @@ export const configValidationSchema = Joi.object({
 
   THROTTLE_LIMIT: Joi.number().default(10),
 
+  // Optional: Cache configuration
+  CACHE_TTL: Joi.number().default(300), // 5 minutes default
+  REDIS_HOST: Joi.string().default('localhost'),
+  REDIS_PORT: Joi.number().default(6379),
+  REDIS_PASSWORD: Joi.string().optional(),
+
   // Optional: CORS origins
   CORS_ORIGINS: Joi.string().default(
     'http://localhost:3000,http://127.0.0.1:3000',
