@@ -104,7 +104,6 @@ Update your TypeScript models by adding:
 
 - `studentTests.ts`
 - `testResults.ts`
-- `beltProgression.ts`
 
 Register new models in `app.module.ts`:
 
@@ -113,7 +112,6 @@ SequelizeModule.forFeature([
   // ... existing models
   studentTests,
   testResults,
-  beltProgression,
 ]);
 ```
 

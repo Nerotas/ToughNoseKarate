@@ -34,7 +34,6 @@ import { StudentsController } from './controller/students.controller';
 import { StudentProgressController } from './controller/studentProgress.controller';
 import { StudentTestsController } from './controller/studentTests.controller';
 import { StudentAssessmentsController } from './controller/studentAssessments.controller';
-import { BeltProgressionController } from './controller/beltProgression.controller';
 
 // Services
 import { AppService } from './service/app.service';
@@ -58,7 +57,6 @@ import { StudentsService } from './service/students.service';
 import { StudentProgressService } from './service/studentProgress.service';
 import { StudentTestsService } from './service/studentTests.service';
 import { StudentAssessmentsService } from './service/studentAssessments.service';
-import { BeltProgressionService } from './service/beltProgression.service';
 import { LoggerService } from './service/logger.service';
 
 // Health
@@ -87,7 +85,7 @@ import { stances } from './models/stances';
 import { students } from './models/students';
 import { studentTests } from './models/studentTests';
 import { testResults } from './models/testResults';
-import { beltProgression } from './models/beltProgression';
+import { StudentAssessments } from './models/student_assessments';
 import { FamiliesService } from './service/families.service';
 import { BeltRequirementsService } from './service/beltRequirements.service';
 import { BlocksService } from './service/blocks.service';
@@ -139,7 +137,7 @@ import { AppConfigService } from './config/app-config.service';
           students,
           studentTests,
           testResults,
-          beltProgression,
+          StudentAssessments,
         ],
         autoLoadModels: true,
         synchronize: false,
@@ -172,7 +170,7 @@ import { AppConfigService } from './config/app-config.service';
       students,
       studentTests,
       testResults,
-      beltProgression,
+      StudentAssessments,
     ]),
     CacheModule.register(),
     TerminusModule,
@@ -203,7 +201,6 @@ import { AppConfigService } from './config/app-config.service';
     StudentProgressController,
     StudentTestsController,
     StudentAssessmentsController,
-    BeltProgressionController,
   ],
   providers: [
     AppConfigService,
@@ -234,7 +231,6 @@ import { AppConfigService } from './config/app-config.service';
     StudentProgressService,
     StudentTestsService,
     StudentAssessmentsService,
-    BeltProgressionService,
   ],
 })
 export class AppModule implements NestModule {

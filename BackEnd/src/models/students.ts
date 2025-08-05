@@ -9,7 +9,6 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import { studentTests } from './studentTests';
-import { beltProgression } from './beltProgression';
 
 export interface studentsAttributes {
   studentid?: number;
@@ -69,6 +68,5 @@ export class students
   @HasMany(() => studentTests)
   student_tests?: studentTests[];
 
-  @HasMany(() => beltProgression)
-  belt_progressions?: beltProgression[];
+
 }

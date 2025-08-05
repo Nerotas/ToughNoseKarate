@@ -17,7 +17,7 @@ import {
   UpdateStudentAssessmentDto,
 } from '../service/studentAssessments.service';
 
-@Controller('student-assessments')
+@Controller('v1/student-assessments')
 export class StudentAssessmentsController {
   constructor(
     private readonly studentAssessmentsService: StudentAssessmentsService,

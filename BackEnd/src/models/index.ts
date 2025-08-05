@@ -1,5 +1,4 @@
 export * from './beltRequirements';
-export * from './beltProgression';
 export * from './blocks';
 export * from './combinations';
 export * from './falling';
