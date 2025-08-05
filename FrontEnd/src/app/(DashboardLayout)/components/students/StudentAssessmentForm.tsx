@@ -93,7 +93,7 @@ const assessmentValidationSchema = Yup.object().shape({
     .min(0, 'Score must be 0 or higher')
     .max(10, 'Score must be 10 or lower'),
 
-  // Self Defense
+  // One Steps
   traditional_1: Yup.number()
     .nullable()
     .min(0, 'Score must be 0 or higher')
@@ -556,12 +556,12 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
       spin_heel_kick: ['spin heel kick'],
       studder_step_kick: ['studder step kick'],
       butterfly_kick: ['butterfly kick'],
-    }; // Self Defense mappings (simplified for now)
-    const selfDefenseMappings: { [key: string]: string[] } = {
-      traditional_1: ['traditional', 'self defense'],
-      traditional_2: ['traditional', 'self defense'],
-      traditional_3: ['traditional', 'self defense'],
-      traditional_4: ['traditional', 'self defense'],
+    }; // One Steps mappings (simplified for now)
+    const oneStepsMappings: { [key: string]: string[] } = {
+      traditional_1: ['traditional', 'one steps'],
+      traditional_2: ['traditional', 'one steps'],
+      traditional_3: ['traditional', 'one steps'],
+      traditional_4: ['traditional', 'one steps'],
       made_up_1: ['made up', 'free style'],
       made_up_2: ['made up', 'free style'],
       made_up_3: ['made up', 'free style'],
@@ -614,13 +614,12 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
       return checkInArray(kickMappings, targetBelt.kicks);
     }
 
-    // Check self defense (check both selfDefense and oneSteps arrays)
-    if (selfDefenseMappings[fieldName]) {
+    // Check one steps (check both selfDefense and oneSteps arrays)
+    if (oneStepsMappings[fieldName]) {
       const hasInSelfDefense =
-        targetBelt.selfDefense.length > 0 &&
-        checkInArray(selfDefenseMappings, targetBelt.selfDefense);
+        targetBelt.selfDefense.length > 0 && checkInArray(oneStepsMappings, targetBelt.selfDefense);
       const hasInOneSteps =
-        targetBelt.oneSteps.length > 0 && checkInArray(selfDefenseMappings, targetBelt.oneSteps);
+        targetBelt.oneSteps.length > 0 && checkInArray(oneStepsMappings, targetBelt.oneSteps);
       return hasInSelfDefense || hasInOneSteps;
     }
 
@@ -842,7 +841,7 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                   </Typography>
                   <Alert severity='info' sx={{ mb: 2 }}>
                     Use the "Edit Assessment" button to input scores for different categories
-                    (Forms, Self Defense, Kicks, etc.)
+                    (Forms, One Steps, Kicks, etc.)
                   </Alert>
 
                   {/* Quick scoring summary */}
@@ -874,7 +873,7 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                         }}
                       >
                         <Typography variant='body2' color='text.secondary'>
-                          Self Defense
+                          One Steps
                         </Typography>
                         <Typography variant='h6'>
                           {currentAssessment.traditional_1 || 'N/A'}
@@ -1199,7 +1198,7 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                             {targetBelt.stances.join(', ') || 'None'} • Blocks:{' '}
                             {targetBelt.blocks.join(', ') || 'None'} • Punches:{' '}
                             {targetBelt.punches.join(', ') || 'None'} • Kicks:{' '}
-                            {targetBelt.kicks.join(', ') || 'None'} • Self Defense:{' '}
+                            {targetBelt.kicks.join(', ') || 'None'} • One Steps:{' '}
                             {[...targetBelt.selfDefense, ...targetBelt.oneSteps].join(', ') ||
                               'None'}
                           </Typography>
@@ -1257,11 +1256,11 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                       ))}
                     </>
 
-                    {/* Self Defense Section - Show all self defense fields */}
+                    {/* One Steps Section - Show all one steps fields */}
                     <>
                       <Grid size={12}>
                         <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                          Self Defense - Score 0-10
+                          One Steps - Score 0-10
                         </Typography>
                       </Grid>
 
