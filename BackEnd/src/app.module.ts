@@ -33,6 +33,7 @@ import { StancesController } from './controller/stances.controller';
 import { StudentsController } from './controller/students.controller';
 import { StudentProgressController } from './controller/studentProgress.controller';
 import { StudentTestsController } from './controller/studentTests.controller';
+import { StudentAssessmentsController } from './controller/studentAssessments.controller';
 import { BeltProgressionController } from './controller/beltProgression.controller';
 
 // Services
@@ -56,6 +57,7 @@ import { StancesService } from './service/stances.service';
 import { StudentsService } from './service/students.service';
 import { StudentProgressService } from './service/studentProgress.service';
 import { StudentTestsService } from './service/studentTests.service';
+import { StudentAssessmentsService } from './service/studentAssessments.service';
 import { BeltProgressionService } from './service/beltProgression.service';
 import { LoggerService } from './service/logger.service';
 
@@ -200,6 +202,7 @@ import { AppConfigService } from './config/app-config.service';
     StudentsController,
     StudentProgressController,
     StudentTestsController,
+    StudentAssessmentsController,
     BeltProgressionController,
   ],
   providers: [
@@ -230,6 +233,7 @@ import { AppConfigService } from './config/app-config.service';
     StudentsService,
     StudentProgressService,
     StudentTestsService,
+    StudentAssessmentsService,
     BeltProgressionService,
   ],
 })
