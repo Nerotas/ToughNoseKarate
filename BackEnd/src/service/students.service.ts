@@ -17,7 +17,7 @@ export class StudentsService {
     return this.studentsModel.findOne({ where: { studentid } });
   }
 
-  async create(createStudentsDto: any): Promise<students> {
+  async create(createStudentsDto: students): Promise<students> {
     return this.studentsModel.create(createStudentsDto);
   }
 

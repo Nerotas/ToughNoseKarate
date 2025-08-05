@@ -5,13 +5,13 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FamiliesService } from '../service/families.service';
 
 @ApiTags('System')
-@Controller('families')
+@Controller({ path: 'families', version: '1' })
 export class FamiliesController {
   constructor(private readonly familiesService: FamiliesService) {}
   @Post()
@@ -22,6 +22,21 @@ export class FamiliesController {
   findAll() {
     return this.familiesService.findAll();
   }
+
+  @Get('student/:studentid')
+  @ApiOperation({ summary: 'Get family members by student ID' })
+  @ApiResponse({ status: 200, description: 'Family members found.' })
+  findByStudentId(@Param('studentid') studentid: string) {
+    return this.familiesService.findByStudentId(+studentid);
+  }
+
+  @Get('parent/:parentid')
+  @ApiOperation({ summary: 'Get family members by parent ID' })
+  @ApiResponse({ status: 200, description: 'Family members found.' })
+  findByParentId(@Param('parentid') parentid: string) {
+    return this.familiesService.findByParentId(+parentid);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.familiesService.findOne(+id);

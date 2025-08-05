@@ -31,6 +31,9 @@ import { SelfDefenseDefinitionsController } from './controller/selfDefenseDefini
 import { StanceDefinitionsController } from './controller/stanceDefinitions.controller';
 import { StancesController } from './controller/stances.controller';
 import { StudentsController } from './controller/students.controller';
+import { StudentProgressController } from './controller/studentProgress.controller';
+import { StudentTestsController } from './controller/studentTests.controller';
+import { StudentAssessmentsController } from './controller/studentAssessments.controller';
 
 // Services
 import { AppService } from './service/app.service';
@@ -51,6 +54,9 @@ import { SelfDefenseDefinitionsService } from './service/selfDefenseDefinitions.
 import { StanceDefinitionsService } from './service/stanceDefinitions.service';
 import { StancesService } from './service/stances.service';
 import { StudentsService } from './service/students.service';
+import { StudentProgressService } from './service/studentProgress.service';
+import { StudentTestsService } from './service/studentTests.service';
+import { StudentAssessmentsService } from './service/studentAssessments.service';
 import { LoggerService } from './service/logger.service';
 
 // Health
@@ -77,6 +83,9 @@ import { selfDefenseDefinitions } from './models/selfDefenseDefinitions';
 import { stanceDefinitions } from './models/stanceDefinitions';
 import { stances } from './models/stances';
 import { students } from './models/students';
+import { studentTests } from './models/studentTests';
+import { testResults } from './models/testResults';
+import { StudentAssessments } from './models/student_assessments';
 import { FamiliesService } from './service/families.service';
 import { BeltRequirementsService } from './service/beltRequirements.service';
 import { BlocksService } from './service/blocks.service';
@@ -126,6 +135,9 @@ import { AppConfigService } from './config/app-config.service';
           stanceDefinitions,
           stances,
           students,
+          studentTests,
+          testResults,
+          StudentAssessments,
         ],
         autoLoadModels: true,
         synchronize: false,
@@ -156,6 +168,9 @@ import { AppConfigService } from './config/app-config.service';
       stanceDefinitions,
       stances,
       students,
+      studentTests,
+      testResults,
+      StudentAssessments,
     ]),
     CacheModule.register(),
     TerminusModule,
@@ -183,6 +198,9 @@ import { AppConfigService } from './config/app-config.service';
     StanceDefinitionsController,
     StancesController,
     StudentsController,
+    StudentProgressController,
+    StudentTestsController,
+    StudentAssessmentsController,
   ],
   providers: [
     AppConfigService,
@@ -210,6 +228,9 @@ import { AppConfigService } from './config/app-config.service';
     StanceDefinitionsService,
     StancesService,
     StudentsService,
+    StudentProgressService,
+    StudentTestsService,
+    StudentAssessmentsService,
   ],
 })
 export class AppModule implements NestModule {

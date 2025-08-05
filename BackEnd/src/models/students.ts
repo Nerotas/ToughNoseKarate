@@ -6,7 +6,9 @@ import {
   Index,
   Sequelize,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript';
+import { studentTests } from './studentTests';
 
 export interface studentsAttributes {
   studentid?: number;
@@ -14,14 +16,16 @@ export interface studentsAttributes {
   lastName: string;
   preferedName?: string;
   age?: number;
-  rank?: string;
-  startDateUtc: string;
-  endDateUtc?: string;
+  beltRank?: string;
+  startDateUTC: string;
+  endDateUTC?: string;
   email: string;
   phone?: string;
   notes?: string;
   active?: number;
   child?: number;
+  lastTestUTC?: string;
+  eligibleForTesting?: number;
 }
 
 @Table({ tableName: 'students', timestamps: false })
@@ -40,19 +44,29 @@ export class students
   @Column({ allowNull: true, type: DataType.INTEGER })
   age?: number;
   @Column({ type: DataType.STRING(45), defaultValue: 'white' })
-  rank?: string;
+  beltRank?: string;
   @Column({ field: 'startDateUTC', type: DataType.STRING(45) })
-  startDateUtc!: string;
+  startDateUTC!: string;
   @Column({ field: 'endDateUTC', allowNull: true, type: DataType.STRING(45) })
-  endDateUtc?: string;
+  endDateUTC?: string;
   @Column({ type: DataType.STRING(45) })
   email!: string;
   @Column({ allowNull: true, type: DataType.STRING(45) })
   phone?: string;
-  @Column({ allowNull: true, type: DataType.STRING })
+  @Column({ allowNull: true, type: DataType.TEXT })
   notes?: string;
   @Column({ type: DataType.TINYINT, defaultValue: '1' })
   active?: number;
   @Column({ allowNull: true, type: DataType.TINYINT, defaultValue: '0' })
   child?: number;
+  @Column({ allowNull: true, type: DataType.STRING(45) })
+  lastTestUTC?: string;
+  @Column({ type: DataType.TINYINT, defaultValue: '0' })
+  eligibleForTesting?: number;
+
+  // Associations
+  @HasMany(() => studentTests)
+  student_tests?: studentTests[];
+
+
 }
