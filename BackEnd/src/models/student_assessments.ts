@@ -325,12 +325,6 @@ export class StudentAssessments extends Model {
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  middle_block?: number;
-
-  @Column({
-    type: DataType.DECIMAL(3, 1),
-    allowNull: true,
-  })
   low_block?: number;
 
   @Column({
@@ -343,26 +337,38 @@ export class StudentAssessments extends Model {
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
+  inside_block?: number;
+
+  @Column({
+    type: DataType.DECIMAL(3, 1),
+    allowNull: true,
+  })
+  outside_block?: number;
+
+  @Column({
+    type: DataType.DECIMAL(3, 1),
+    allowNull: true,
+  })
+  block_punch?: number;
+
+  @Column({
+    type: DataType.DECIMAL(3, 1),
+    allowNull: true,
+  })
   double_block?: number;
+
+  @Column({
+    type: DataType.DECIMAL(3, 1),
+    allowNull: true,
+  })
+  double_block_punch?: number;
 
   // Punches - Score out of 10 for each
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  high_punch?: number;
-
-  @Column({
-    type: DataType.DECIMAL(3, 1),
-    allowNull: true,
-  })
-  middle_punch?: number;
-
-  @Column({
-    type: DataType.DECIMAL(3, 1),
-    allowNull: true,
-  })
-  low_punch?: number;
+  center_punch?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
@@ -455,18 +461,6 @@ export class StudentAssessments extends Model {
     allowNull: true,
   })
   spearhand?: number;
-
-  @Column({
-    type: DataType.DECIMAL(3, 1),
-    allowNull: true,
-  })
-  block_punch_combo?: number;
-
-  @Column({
-    type: DataType.DECIMAL(3, 1),
-    allowNull: true,
-  })
-  double_block_punch_combo?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),

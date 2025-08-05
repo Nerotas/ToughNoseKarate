@@ -52,7 +52,15 @@ const assessmentValidationSchema = Yup.object().shape({
     .nullable()
     .min(0, 'Score must be 0 or higher')
     .max(10, 'Score must be 10 or lower'),
+  geocho_hyung_il_bu_sahm_gup: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
   geocho_hyung_yi_bu: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  geocho_hyung_yi_bu_sahm_gup: Yup.number()
     .nullable()
     .min(0, 'Score must be 0 or higher')
     .max(10, 'Score must be 10 or lower'),
@@ -156,6 +164,78 @@ const assessmentValidationSchema = Yup.object().shape({
     .nullable()
     .min(0, 'Score must be 0 or higher')
     .max(10, 'Score must be 10 or lower'),
+  upper_cut: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  hook_punch: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  spin_bottom_fist: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  charging_punch: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  slide_up_jab_punch: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  chop_low: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  chop_high: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  spearhand: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  stepping_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  slide_up_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  spin_back_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  inside_crescent_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  outside_crescent_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  spin_outside_crescent_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  jump_spin_outside_crescent: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  spin_heel_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  studder_step_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  butterfly_kick: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
 
   // Stances
   stance_front: Yup.number()
@@ -176,14 +256,6 @@ const assessmentValidationSchema = Yup.object().shape({
     .max(10, 'Score must be 10 or lower'),
 
   // Blocks
-  high_block: Yup.number()
-    .nullable()
-    .min(0, 'Score must be 0 or higher')
-    .max(10, 'Score must be 10 or lower'),
-  middle_block: Yup.number()
-    .nullable()
-    .min(0, 'Score must be 0 or higher')
-    .max(10, 'Score must be 10 or lower'),
   low_block: Yup.number()
     .nullable()
     .min(0, 'Score must be 0 or higher')
@@ -192,21 +264,33 @@ const assessmentValidationSchema = Yup.object().shape({
     .nullable()
     .min(0, 'Score must be 0 or higher')
     .max(10, 'Score must be 10 or lower'),
+  high_block: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  inside_block: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  outside_block: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  block_punch: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
   double_block: Yup.number()
+    .nullable()
+    .min(0, 'Score must be 0 or higher')
+    .max(10, 'Score must be 10 or lower'),
+  double_block_punch: Yup.number()
     .nullable()
     .min(0, 'Score must be 0 or higher')
     .max(10, 'Score must be 10 or lower'),
 
   // Punches
-  high_punch: Yup.number()
-    .nullable()
-    .min(0, 'Score must be 0 or higher')
-    .max(10, 'Score must be 10 or lower'),
-  middle_punch: Yup.number()
-    .nullable()
-    .min(0, 'Score must be 0 or higher')
-    .max(10, 'Score must be 10 or lower'),
-  low_punch: Yup.number()
+  center_punch: Yup.number()
     .nullable()
     .min(0, 'Score must be 0 or higher')
     .max(10, 'Score must be 10 or lower'),
@@ -261,7 +345,9 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
         assessment_date: new Date().toISOString().split('T')[0],
         target_belt_rank: '',
         geocho_hyung_il_bu: null,
+        geocho_hyung_il_bu_sahm_gup: null,
         geocho_hyung_yi_bu: null,
+        geocho_hyung_yi_bu_sahm_gup: null,
         geocho_hyung_sahm_bu: null,
         pyong_an_cho_dan: null,
         pyong_an_yi_dan: null,
@@ -286,18 +372,37 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
         roundhouse_kick: null,
         back_kick: null,
         hook_kick: null,
+        upper_cut: null,
+        hook_punch: null,
+        spin_bottom_fist: null,
+        charging_punch: null,
+        slide_up_jab_punch: null,
+        chop_low: null,
+        chop_high: null,
+        spearhand: null,
+        stepping_kick: null,
+        slide_up_kick: null,
+        spin_back_kick: null,
+        inside_crescent_kick: null,
+        outside_crescent_kick: null,
+        spin_outside_crescent_kick: null,
+        jump_spin_outside_crescent: null,
+        spin_heel_kick: null,
+        studder_step_kick: null,
+        butterfly_kick: null,
         stance_front: null,
         stance_back: null,
         stance_straddle: null,
         stance_shifting: null,
-        high_block: null,
-        middle_block: null,
         low_block: null,
         knife_hand_block: null,
+        high_block: null,
+        inside_block: null,
+        outside_block: null,
+        block_punch: null,
         double_block: null,
-        high_punch: null,
-        middle_punch: null,
-        low_punch: null,
+        double_block_punch: null,
+        center_punch: null,
         reverse_punch: null,
         jab: null,
         overall_score: null,
@@ -309,7 +414,9 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
       assessment_date: new Date(assessment.assessment_date).toISOString().split('T')[0],
       target_belt_rank: assessment.target_belt_rank || '',
       geocho_hyung_il_bu: assessment.geocho_hyung_il_bu || null,
+      geocho_hyung_il_bu_sahm_gup: assessment.geocho_hyung_il_bu_sahm_gup || null,
       geocho_hyung_yi_bu: assessment.geocho_hyung_yi_bu || null,
+      geocho_hyung_yi_bu_sahm_gup: assessment.geocho_hyung_yi_bu_sahm_gup || null,
       geocho_hyung_sahm_bu: assessment.geocho_hyung_sahm_bu || null,
       pyong_an_cho_dan: assessment.pyong_an_cho_dan || null,
       pyong_an_yi_dan: assessment.pyong_an_yi_dan || null,
@@ -334,18 +441,37 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
       roundhouse_kick: assessment.roundhouse_kick || null,
       back_kick: assessment.back_kick || null,
       hook_kick: assessment.hook_kick || null,
+      upper_cut: assessment.upper_cut || null,
+      hook_punch: assessment.hook_punch || null,
+      spin_bottom_fist: assessment.spin_bottom_fist || null,
+      charging_punch: assessment.charging_punch || null,
+      slide_up_jab_punch: assessment.slide_up_jab_punch || null,
+      chop_low: assessment.chop_low || null,
+      chop_high: assessment.chop_high || null,
+      spearhand: assessment.spearhand || null,
+      stepping_kick: assessment.stepping_kick || null,
+      slide_up_kick: assessment.slide_up_kick || null,
+      spin_back_kick: assessment.spin_back_kick || null,
+      inside_crescent_kick: assessment.inside_crescent_kick || null,
+      outside_crescent_kick: assessment.outside_crescent_kick || null,
+      spin_outside_crescent_kick: assessment.spin_outside_crescent_kick || null,
+      jump_spin_outside_crescent: assessment.jump_spin_outside_crescent || null,
+      spin_heel_kick: assessment.spin_heel_kick || null,
+      studder_step_kick: assessment.studder_step_kick || null,
+      butterfly_kick: assessment.butterfly_kick || null,
       stance_front: assessment.stance_front || null,
       stance_back: assessment.stance_back || null,
       stance_straddle: assessment.stance_straddle || null,
       stance_shifting: assessment.stance_shifting || null,
-      high_block: assessment.high_block || null,
-      middle_block: assessment.middle_block || null,
       low_block: assessment.low_block || null,
       knife_hand_block: assessment.knife_hand_block || null,
+      high_block: assessment.high_block || null,
+      inside_block: assessment.inside_block || null,
+      outside_block: assessment.outside_block || null,
+      block_punch: assessment.block_punch || null,
       double_block: assessment.double_block || null,
-      high_punch: assessment.high_punch || null,
-      middle_punch: assessment.middle_punch || null,
-      low_punch: assessment.low_punch || null,
+      double_block_punch: assessment.double_block_punch || null,
+      center_punch: assessment.center_punch || null,
       reverse_punch: assessment.reverse_punch || null,
       jab: assessment.jab || null,
       overall_score: assessment.overall_score || null,
@@ -398,9 +524,7 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
 
     // Punch field mappings
     const punchMappings: { [key: string]: string[] } = {
-      high_punch: ['high punch', 'upper punch'],
-      middle_punch: ['middle punch', 'mid punch'],
-      low_punch: ['low punch', 'lower punch'],
+      center_punch: ['center punch', 'middle punch', 'mid punch'],
       reverse_punch: ['reverse punch'],
       jab: ['jab', 'jab punch'],
     };
@@ -412,9 +536,27 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
       roundhouse_kick: ['roundhouse kick', 'round kick'],
       back_kick: ['back kick'],
       hook_kick: ['hook kick'],
-    };
-
-    // Self Defense mappings (simplified for now)
+      upper_cut: ['upper cut', 'uppercut'],
+      hook_punch: ['hook punch'],
+      spin_bottom_fist: ['spin bottom fist'],
+      charging_punch: ['charging punch'],
+      slide_up_jab_punch: ['slide up jab'],
+      chop_low: ['chop low', 'low chop'],
+      chop_high: ['chop high', 'high chop'],
+      spearhand: ['spear hand'],
+      block_punch_combo: ['block punch combo'],
+      double_block_punch_combo: ['double block punch combo'],
+      stepping_kick: ['stepping kick'],
+      slide_up_kick: ['slide up kick'],
+      spin_back_kick: ['spin back kick'],
+      inside_crescent_kick: ['inside crescent kick'],
+      outside_crescent_kick: ['outside crescent kick'],
+      spin_outside_crescent_kick: ['spin outside crescent kick'],
+      jump_spin_outside_crescent: ['jump spin outside crescent'],
+      spin_heel_kick: ['spin heel kick'],
+      studder_step_kick: ['studder step kick'],
+      butterfly_kick: ['butterfly kick'],
+    }; // Self Defense mappings (simplified for now)
     const selfDefenseMappings: { [key: string]: string[] } = {
       traditional_1: ['traditional', 'self defense'],
       traditional_2: ['traditional', 'self defense'],
@@ -692,6 +834,7 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
               </Box>
 
               {/* Show detailed assessment categories when in progress */}
+
               {currentAssessment.assessment_status === 'in_progress' && (
                 <Box sx={{ mt: 3 }}>
                   <Typography variant='subtitle1' sx={{ fontWeight: 'bold', mb: 2 }}>
@@ -818,7 +961,9 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                 assessment_date: new Date(values.assessment_date).toISOString(),
                 // Convert null values to undefined to match the API interface
                 geocho_hyung_il_bu: values.geocho_hyung_il_bu || undefined,
+                geocho_hyung_il_bu_sahm_gup: values.geocho_hyung_il_bu_sahm_gup || undefined,
                 geocho_hyung_yi_bu: values.geocho_hyung_yi_bu || undefined,
+                geocho_hyung_yi_bu_sahm_gup: values.geocho_hyung_yi_bu_sahm_gup || undefined,
                 geocho_hyung_sahm_bu: values.geocho_hyung_sahm_bu || undefined,
                 pyong_an_cho_dan: values.pyong_an_cho_dan || undefined,
                 pyong_an_yi_dan: values.pyong_an_yi_dan || undefined,
@@ -843,18 +988,37 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                 roundhouse_kick: values.roundhouse_kick || undefined,
                 back_kick: values.back_kick || undefined,
                 hook_kick: values.hook_kick || undefined,
+                upper_cut: values.upper_cut || undefined,
+                hook_punch: values.hook_punch || undefined,
+                spin_bottom_fist: values.spin_bottom_fist || undefined,
+                charging_punch: values.charging_punch || undefined,
+                slide_up_jab_punch: values.slide_up_jab_punch || undefined,
+                chop_low: values.chop_low || undefined,
+                chop_high: values.chop_high || undefined,
+                spearhand: values.spearhand || undefined,
+                stepping_kick: values.stepping_kick || undefined,
+                slide_up_kick: values.slide_up_kick || undefined,
+                spin_back_kick: values.spin_back_kick || undefined,
+                inside_crescent_kick: values.inside_crescent_kick || undefined,
+                outside_crescent_kick: values.outside_crescent_kick || undefined,
+                spin_outside_crescent_kick: values.spin_outside_crescent_kick || undefined,
+                jump_spin_outside_crescent: values.jump_spin_outside_crescent || undefined,
+                spin_heel_kick: values.spin_heel_kick || undefined,
+                studder_step_kick: values.studder_step_kick || undefined,
+                butterfly_kick: values.butterfly_kick || undefined,
                 stance_front: values.stance_front || undefined,
                 stance_back: values.stance_back || undefined,
                 stance_straddle: values.stance_straddle || undefined,
                 stance_shifting: values.stance_shifting || undefined,
-                high_block: values.high_block || undefined,
-                middle_block: values.middle_block || undefined,
                 low_block: values.low_block || undefined,
                 knife_hand_block: values.knife_hand_block || undefined,
+                high_block: values.high_block || undefined,
+                inside_block: values.inside_block || undefined,
+                outside_block: values.outside_block || undefined,
+                block_punch: values.block_punch || undefined,
                 double_block: values.double_block || undefined,
-                high_punch: values.high_punch || undefined,
-                middle_punch: values.middle_punch || undefined,
-                low_punch: values.low_punch || undefined,
+                double_block_punch: values.double_block_punch || undefined,
+                center_punch: values.center_punch || undefined,
                 reverse_punch: values.reverse_punch || undefined,
                 jab: values.jab || undefined,
                 overall_score: values.overall_score || undefined,
@@ -873,7 +1037,9 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                   ...updateData,
                   // Convert back to the expected types
                   geocho_hyung_il_bu: updateData.geocho_hyung_il_bu || undefined,
+                  geocho_hyung_il_bu_sahm_gup: updateData.geocho_hyung_il_bu_sahm_gup || undefined,
                   geocho_hyung_yi_bu: updateData.geocho_hyung_yi_bu || undefined,
+                  geocho_hyung_yi_bu_sahm_gup: updateData.geocho_hyung_yi_bu_sahm_gup || undefined,
                   geocho_hyung_sahm_bu: updateData.geocho_hyung_sahm_bu || undefined,
                   pyong_an_cho_dan: updateData.pyong_an_cho_dan || undefined,
                   pyong_an_yi_dan: updateData.pyong_an_yi_dan || undefined,
@@ -898,18 +1064,37 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                   roundhouse_kick: updateData.roundhouse_kick || undefined,
                   back_kick: updateData.back_kick || undefined,
                   hook_kick: updateData.hook_kick || undefined,
+                  upper_cut: updateData.upper_cut || undefined,
+                  hook_punch: updateData.hook_punch || undefined,
+                  spin_bottom_fist: updateData.spin_bottom_fist || undefined,
+                  charging_punch: updateData.charging_punch || undefined,
+                  slide_up_jab_punch: updateData.slide_up_jab_punch || undefined,
+                  chop_low: updateData.chop_low || undefined,
+                  chop_high: updateData.chop_high || undefined,
+                  spearhand: updateData.spearhand || undefined,
+                  stepping_kick: updateData.stepping_kick || undefined,
+                  slide_up_kick: updateData.slide_up_kick || undefined,
+                  spin_back_kick: updateData.spin_back_kick || undefined,
+                  inside_crescent_kick: updateData.inside_crescent_kick || undefined,
+                  outside_crescent_kick: updateData.outside_crescent_kick || undefined,
+                  spin_outside_crescent_kick: updateData.spin_outside_crescent_kick || undefined,
+                  jump_spin_outside_crescent: updateData.jump_spin_outside_crescent || undefined,
+                  spin_heel_kick: updateData.spin_heel_kick || undefined,
+                  studder_step_kick: updateData.studder_step_kick || undefined,
+                  butterfly_kick: updateData.butterfly_kick || undefined,
                   stance_front: updateData.stance_front || undefined,
                   stance_back: updateData.stance_back || undefined,
                   stance_straddle: updateData.stance_straddle || undefined,
                   stance_shifting: updateData.stance_shifting || undefined,
-                  high_block: updateData.high_block || undefined,
-                  middle_block: updateData.middle_block || undefined,
                   low_block: updateData.low_block || undefined,
                   knife_hand_block: updateData.knife_hand_block || undefined,
+                  high_block: updateData.high_block || undefined,
+                  inside_block: updateData.inside_block || undefined,
+                  outside_block: updateData.outside_block || undefined,
+                  block_punch: updateData.block_punch || undefined,
                   double_block: updateData.double_block || undefined,
-                  high_punch: updateData.high_punch || undefined,
-                  middle_punch: updateData.middle_punch || undefined,
-                  low_punch: updateData.low_punch || undefined,
+                  double_block_punch: updateData.double_block_punch || undefined,
+                  center_punch: updateData.center_punch || undefined,
                   reverse_punch: updateData.reverse_punch || undefined,
                   jab: updateData.jab || undefined,
                   overall_score: updateData.overall_score || undefined,
@@ -1022,161 +1207,263 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                       </Grid>
                     )}
 
-                    {/* Forms Section - Only show if target belt has forms */}
-                    {targetBelt && targetBelt.forms.length > 0 && (
-                      <>
-                        <Grid size={12}>
-                          <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                            Forms (Hyungs) - Score 0-10
-                          </Typography>
+                    {/* Forms Section - Show all forms */}
+                    <>
+                      <Grid size={12}>
+                        <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                          Forms (Hyungs) - Score 0-10
+                        </Typography>
+                      </Grid>
+
+                      {[
+                        { name: 'geocho_hyung_il_bu', label: 'Geocho Hyung Il Bu' },
+                        {
+                          name: 'geocho_hyung_il_bu_sahm_gup',
+                          label: 'Geocho Hyung Il Bu (Sahm Gup)',
+                        },
+                        { name: 'geocho_hyung_yi_bu', label: 'Geocho Hyung Yi Bu' },
+                        {
+                          name: 'geocho_hyung_yi_bu_sahm_gup',
+                          label: 'Geocho Hyung Yi Bu (Sahm Gup)',
+                        },
+                        { name: 'geocho_hyung_sahm_bu', label: 'Geocho Hyung Sahm Bu' },
+                        { name: 'pyong_an_cho_dan', label: 'Pyong An Cho Dan' },
+                        { name: 'pyong_an_yi_dan', label: 'Pyong An Yi Dan' },
+                        { name: 'pyong_an_sahm_dan', label: 'Pyong An Sahm Dan' },
+                        { name: 'pyong_an_sa_dan', label: 'Pyong An Sa Dan' },
+                        { name: 'pyong_an_oh_dan', label: 'Pyong An Oh Dan' },
+                        { name: 'bassai', label: 'Bassai' },
+                      ].map((field) => (
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                          <TextField
+                            fullWidth
+                            label={field.label}
+                            name={field.name}
+                            type='number'
+                            value={values[field.name as keyof typeof values] || ''}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched[field.name as keyof typeof touched] &&
+                              Boolean(errors[field.name as keyof typeof errors])
+                            }
+                            helperText={
+                              touched[field.name as keyof typeof touched] &&
+                              errors[field.name as keyof typeof errors]
+                            }
+                            inputProps={{ min: 0, max: 10, step: 0.1 }}
+                          />
                         </Grid>
+                      ))}
+                    </>
 
-                        {[
-                          { name: 'geocho_hyung_il_bu', label: 'Geocho Hyung Il Bu' },
-                          { name: 'geocho_hyung_yi_bu', label: 'Geocho Hyung Yi Bu' },
-                          { name: 'geocho_hyung_sahm_bu', label: 'Geocho Hyung Sahm Bu' },
-                          { name: 'pyong_an_cho_dan', label: 'Pyong An Cho Dan' },
-                          { name: 'pyong_an_yi_dan', label: 'Pyong An Yi Dan' },
-                          { name: 'pyong_an_sahm_dan', label: 'Pyong An Sahm Dan' },
-                          { name: 'pyong_an_sa_dan', label: 'Pyong An Sa Dan' },
-                          { name: 'pyong_an_oh_dan', label: 'Pyong An Oh Dan' },
-                          { name: 'bassai', label: 'Bassai' },
-                        ]
-                          .filter((field) => isFieldRelevant(field.name, targetBelt))
-                          .map((field) => (
-                            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
-                              <TextField
-                                fullWidth
-                                label={field.label}
-                                name={field.name}
-                                type='number'
-                                value={values[field.name as keyof typeof values] || ''}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={
-                                  touched[field.name as keyof typeof touched] &&
-                                  Boolean(errors[field.name as keyof typeof errors])
-                                }
-                                helperText={
-                                  touched[field.name as keyof typeof touched] &&
-                                  errors[field.name as keyof typeof errors]
-                                }
-                                inputProps={{ min: 0, max: 10, step: 0.1 }}
-                              />
-                            </Grid>
-                          ))}
-                      </>
-                    )}
+                    {/* Self Defense Section - Show all self defense fields */}
+                    <>
+                      <Grid size={12}>
+                        <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                          Self Defense - Score 0-10
+                        </Typography>
+                      </Grid>
 
-                    {/* Self Defense Section - Only show if target belt has self defense or one steps */}
-                    {targetBelt &&
-                      (targetBelt.selfDefense.length > 0 || targetBelt.oneSteps.length > 0) && (
-                        <>
-                          <Grid size={12}>
-                            <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                              Self Defense - Score 0-10
-                            </Typography>
-                          </Grid>
+                      {[
+                        { name: 'traditional_1', label: 'Traditional 1' },
+                        { name: 'traditional_2', label: 'Traditional 2' },
+                        { name: 'traditional_3', label: 'Traditional 3' },
+                        { name: 'traditional_4', label: 'Traditional 4' },
+                        { name: 'made_up_1', label: 'Made Up 1' },
+                        { name: 'made_up_2', label: 'Made Up 2' },
+                        { name: 'made_up_3', label: 'Made Up 3' },
+                        { name: 'made_up_4', label: 'Made Up 4' },
+                        { name: 'three_steps_1', label: 'Three Steps 1' },
+                        { name: 'three_steps_2', label: 'Three Steps 2' },
+                        { name: 'three_steps_3', label: 'Three Steps 3' },
+                        { name: 'three_steps_4', label: 'Three Steps 4' },
+                      ].map((field) => (
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                          <TextField
+                            fullWidth
+                            label={field.label}
+                            name={field.name}
+                            type='number'
+                            value={values[field.name as keyof typeof values] || ''}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched[field.name as keyof typeof touched] &&
+                              Boolean(errors[field.name as keyof typeof errors])
+                            }
+                            helperText={
+                              touched[field.name as keyof typeof touched] &&
+                              errors[field.name as keyof typeof errors]
+                            }
+                            inputProps={{ min: 0, max: 10, step: 0.1 }}
+                          />
+                        </Grid>
+                      ))}
+                    </>
 
-                          {[
-                            { name: 'traditional_1', label: 'Traditional 1' },
-                            { name: 'traditional_2', label: 'Traditional 2' },
-                            { name: 'traditional_3', label: 'Traditional 3' },
-                            { name: 'traditional_4', label: 'Traditional 4' },
-                            { name: 'made_up_1', label: 'Made Up 1' },
-                            { name: 'made_up_2', label: 'Made Up 2' },
-                            { name: 'made_up_3', label: 'Made Up 3' },
-                            { name: 'made_up_4', label: 'Made Up 4' },
-                            { name: 'three_steps_1', label: 'Three Steps 1' },
-                            { name: 'three_steps_2', label: 'Three Steps 2' },
-                            { name: 'three_steps_3', label: 'Three Steps 3' },
-                            { name: 'three_steps_4', label: 'Three Steps 4' },
-                          ]
-                            .filter((field) => isFieldRelevant(field.name, targetBelt))
-                            .map((field) => (
-                              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
-                                <TextField
-                                  fullWidth
-                                  label={field.label}
-                                  name={field.name}
-                                  type='number'
-                                  value={values[field.name as keyof typeof values] || ''}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  error={
-                                    touched[field.name as keyof typeof touched] &&
-                                    Boolean(errors[field.name as keyof typeof errors])
-                                  }
-                                  helperText={
-                                    touched[field.name as keyof typeof touched] &&
-                                    errors[field.name as keyof typeof errors]
-                                  }
-                                  inputProps={{ min: 0, max: 10, step: 0.1 }}
-                                />
-                              </Grid>
-                            ))}
-                        </>
-                      )}
+                    {/* Techniques Section - Show all available techniques */}
+                    <>
+                      <Grid size={12}>
+                        <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                          Kicks - Score 0-10
+                        </Typography>
+                      </Grid>
 
-                    {/* Techniques Section - Only show relevant techniques */}
-                    {targetBelt &&
-                      (targetBelt.kicks.length > 0 ||
-                        targetBelt.stances.length > 0 ||
-                        targetBelt.blocks.length > 0 ||
-                        targetBelt.punches.length > 0) && (
-                        <>
-                          <Grid size={12}>
-                            <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                              Techniques - Score 0-10
-                            </Typography>
-                          </Grid>
+                      {[
+                        { name: 'front_kick', label: 'Front Kick' },
+                        { name: 'side_kick', label: 'Side Kick' },
+                        { name: 'roundhouse_kick', label: 'Roundhouse Kick' },
+                        { name: 'back_kick', label: 'Back Kick' },
+                        { name: 'hook_kick', label: 'Hook Kick' },
+                        { name: 'upper_cut', label: 'Upper Cut' },
+                        { name: 'stepping_kick', label: 'Stepping Kick' },
+                        { name: 'slide_up_kick', label: 'Slide Up Kick' },
+                        { name: 'spin_back_kick', label: 'Spin Back Kick' },
+                        { name: 'inside_crescent_kick', label: 'Inside Crescent Kick' },
+                        { name: 'outside_crescent_kick', label: 'Outside Crescent Kick' },
+                        { name: 'spin_outside_crescent_kick', label: 'Spin Outside Crescent Kick' },
+                        { name: 'jump_spin_outside_crescent', label: 'Jump Spin Outside Crescent' },
+                        { name: 'spin_heel_kick', label: 'Spin Heel Kick' },
+                        { name: 'studder_step_kick', label: 'Studder Step Kick' },
+                        { name: 'butterfly_kick', label: 'Butterfly Kick' },
+                      ].map((field) => (
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                          <TextField
+                            fullWidth
+                            label={field.label}
+                            name={field.name}
+                            type='number'
+                            value={values[field.name as keyof typeof values] || ''}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched[field.name as keyof typeof touched] &&
+                              Boolean(errors[field.name as keyof typeof errors])
+                            }
+                            helperText={
+                              touched[field.name as keyof typeof touched] &&
+                              errors[field.name as keyof typeof errors]
+                            }
+                            inputProps={{ min: 0, max: 10, step: 0.1 }}
+                          />
+                        </Grid>
+                      ))}
 
-                          {[
-                            { name: 'front_kick', label: 'Front Kick' },
-                            { name: 'side_kick', label: 'Side Kick' },
-                            { name: 'roundhouse_kick', label: 'Roundhouse Kick' },
-                            { name: 'back_kick', label: 'Back Kick' },
-                            { name: 'hook_kick', label: 'Hook Kick' },
-                            { name: 'stance_front', label: 'Front Stance' },
-                            { name: 'stance_back', label: 'Back Stance' },
-                            { name: 'stance_straddle', label: 'Straddle Stance' },
-                            { name: 'stance_shifting', label: 'Shifting Stance' },
-                            { name: 'high_block', label: 'High Block' },
-                            { name: 'middle_block', label: 'Middle Block' },
-                            { name: 'low_block', label: 'Low Block' },
-                            { name: 'knife_hand_block', label: 'Knife Hand Block' },
-                            { name: 'double_block', label: 'Double Block' },
-                            { name: 'high_punch', label: 'High Punch' },
-                            { name: 'middle_punch', label: 'Middle Punch' },
-                            { name: 'low_punch', label: 'Low Punch' },
-                            { name: 'reverse_punch', label: 'Reverse Punch' },
-                            { name: 'jab', label: 'Jab' },
-                          ]
-                            .filter((field) => isFieldRelevant(field.name, targetBelt))
-                            .map((field) => (
-                              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
-                                <TextField
-                                  fullWidth
-                                  label={field.label}
-                                  name={field.name}
-                                  type='number'
-                                  value={values[field.name as keyof typeof values] || ''}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  error={
-                                    touched[field.name as keyof typeof touched] &&
-                                    Boolean(errors[field.name as keyof typeof errors])
-                                  }
-                                  helperText={
-                                    touched[field.name as keyof typeof touched] &&
-                                    errors[field.name as keyof typeof errors]
-                                  }
-                                  inputProps={{ min: 0, max: 10, step: 0.1 }}
-                                />
-                              </Grid>
-                            ))}
-                        </>
-                      )}
+                      <Grid size={12}>
+                        <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                          Stances - Score 0-10
+                        </Typography>
+                      </Grid>
+
+                      {[
+                        { name: 'stance_front', label: 'Front Stance' },
+                        { name: 'stance_back', label: 'Back Stance' },
+                        { name: 'stance_straddle', label: 'Straddle Stance' },
+                        { name: 'stance_shifting', label: 'Shifting Stance' },
+                      ].map((field) => (
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                          <TextField
+                            fullWidth
+                            label={field.label}
+                            name={field.name}
+                            type='number'
+                            value={values[field.name as keyof typeof values] || ''}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched[field.name as keyof typeof touched] &&
+                              Boolean(errors[field.name as keyof typeof errors])
+                            }
+                            helperText={
+                              touched[field.name as keyof typeof touched] &&
+                              errors[field.name as keyof typeof errors]
+                            }
+                            inputProps={{ min: 0, max: 10, step: 0.1 }}
+                          />
+                        </Grid>
+                      ))}
+
+                      <Grid size={12}>
+                        <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                          Blocks - Score 0-10
+                        </Typography>
+                      </Grid>
+
+                      {[
+                        { name: 'low_block', label: 'Low Block' },
+                        { name: 'knife_hand_block', label: 'Knife Hand Block' },
+                        { name: 'high_block', label: 'High Block' },
+                        { name: 'inside_block', label: 'Inside Block' },
+                        { name: 'outside_block', label: 'Outside Block' },
+                        { name: 'block_punch', label: 'Block Punch' },
+                        { name: 'double_block', label: 'Double Block' },
+                        { name: 'double_block_punch', label: 'Double Block Punch' },
+                      ].map((field) => (
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                          <TextField
+                            fullWidth
+                            label={field.label}
+                            name={field.name}
+                            type='number'
+                            value={values[field.name as keyof typeof values] || ''}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched[field.name as keyof typeof touched] &&
+                              Boolean(errors[field.name as keyof typeof errors])
+                            }
+                            helperText={
+                              touched[field.name as keyof typeof touched] &&
+                              errors[field.name as keyof typeof errors]
+                            }
+                            inputProps={{ min: 0, max: 10, step: 0.1 }}
+                          />
+                        </Grid>
+                      ))}
+
+                      <Grid size={12}>
+                        <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
+                          Punches - Score 0-10
+                        </Typography>
+                      </Grid>
+
+                      {[
+                        { name: 'center_punch', label: 'Center Punch' },
+                        { name: 'reverse_punch', label: 'Reverse Punch' },
+                        { name: 'jab', label: 'Jab' },
+                        { name: 'hook_punch', label: 'Hook Punch' },
+                        { name: 'spin_bottom_fist', label: 'Spin Bottom Fist' },
+                        { name: 'charging_punch', label: 'Charging Punch' },
+                        { name: 'slide_up_jab_punch', label: 'Slide Up Jab Punch' },
+                        { name: 'chop_low', label: 'Chop Low' },
+                        { name: 'chop_high', label: 'Chop High' },
+                        { name: 'spearhand', label: 'Spearhand' },
+                        { name: 'block_punch_combo', label: 'Block Punch Combo' },
+                        { name: 'double_block_punch_combo', label: 'Double Block Punch Combo' },
+                      ].map((field) => (
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={field.name}>
+                          <TextField
+                            fullWidth
+                            label={field.label}
+                            name={field.name}
+                            type='number'
+                            value={values[field.name as keyof typeof values] || ''}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched[field.name as keyof typeof touched] &&
+                              Boolean(errors[field.name as keyof typeof errors])
+                            }
+                            helperText={
+                              touched[field.name as keyof typeof touched] &&
+                              errors[field.name as keyof typeof errors]
+                            }
+                            inputProps={{ min: 0, max: 10, step: 0.1 }}
+                          />
+                        </Grid>
+                      ))}
+                    </>
 
                     {/* Overall Assessment */}
                     <Grid size={12}>

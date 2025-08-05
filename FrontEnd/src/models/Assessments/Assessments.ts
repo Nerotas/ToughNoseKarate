@@ -65,15 +65,16 @@ export interface StudentAssessment {
 
   // Blocks
   high_block?: number;
-  middle_block?: number;
   low_block?: number;
   knife_hand_block?: number;
+  inside_block?: number;
+  outside_block?: number;
+  block_punch?: number;
   double_block?: number;
+  double_block_punch?: number;
 
   // Punches
-  high_punch?: number;
-  middle_punch?: number;
-  low_punch?: number;
+  center_punch?: number;
   reverse_punch?: number;
   jab?: number;
 
@@ -93,8 +94,6 @@ export interface StudentAssessment {
   chop_low?: number;
   chop_high?: number;
   spearhand?: number;
-  block_punch_combo?: number;
-  double_block_punch_combo?: number;
   stepping_kick?: number;
   slide_up_kick?: number;
   spin_back_kick?: number;
@@ -354,15 +353,16 @@ export interface CreateStudentAssessmentRequest {
 
   // Blocks
   high_block?: number;
-  middle_block?: number;
   low_block?: number;
   knife_hand_block?: number;
+  inside_block?: number;
+  outside_block?: number;
+  block_punch?: number;
   double_block?: number;
+  double_block_punch?: number;
 
   // Punches
-  high_punch?: number;
-  middle_punch?: number;
-  low_punch?: number;
+  center_punch?: number;
   reverse_punch?: number;
   jab?: number;
 
@@ -382,8 +382,6 @@ export interface CreateStudentAssessmentRequest {
   chop_low?: number;
   chop_high?: number;
   spearhand?: number;
-  block_punch_combo?: number;
-  double_block_punch_combo?: number;
   stepping_kick?: number;
   slide_up_kick?: number;
   spin_back_kick?: number;
