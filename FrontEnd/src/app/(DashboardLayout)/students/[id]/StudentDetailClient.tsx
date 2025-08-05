@@ -1,5 +1,15 @@
 'use client';
 import { useState } from 'react';
+import { AssessmentSummary, StudentAssessment } from '../../../../models/Assessments/Assessments';
+import {
+  studentsService,
+  Student as StudentServiceType,
+  UpdateStudentRequest,
+} from '../../../../services/studentsService';
+import { studentAssessmentsService } from '../../../../services/studentAssessmentsService';
+import StudentAssessmentForm from '../../components/students/StudentAssessmentForm';
+import EditStudentDialog from '../../components/students/EditStudentDialog';
+import Loading from 'app/loading';
 import {
   Box,
   Card,
@@ -44,10 +54,6 @@ import DashboardCard from '../../components/shared/DashboardCard';
 import useGet from '../../../../hooks/useGet';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import { TestHistory } from '../../../../models/StudentTests/StudentTests';
-import { StudentAssessment, AssessmentSummary } from '../../../../models/Assessments/Assessments';
-import { studentAssessmentsService } from '../../../../services/studentAssessmentsService';
-import StudentAssessmentForm from '../../components/students/StudentAssessmentForm';
-import Loading from 'app/loading';
 
 // Student interface for API data
 interface Student {
@@ -135,6 +141,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     isFetching: studentFetching,
     error: studentError,
     isError: studentIsError,
+    refetch: studentRefetch,
   } = useGet<Student>({
     apiLabel: 'students',
     url: `/students/${studentId}`,
@@ -193,11 +200,27 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
   // Assessment state
   const [assessmentDialogOpen, setAssessmentDialogOpen] = useState(false);
   const [editingAssessment, setEditingAssessment] = useState<StudentAssessment | null>(null);
-  const [savingAssessment, setSavingAssessment] = useState(false);
+
+  // Edit student state
+  const [editStudentDialogOpen, setEditStudentDialogOpen] = useState(false);
+
+  // Handle student update
+  const handleStudentUpdate = async (studentId: number, updatedData: UpdateStudentRequest) => {
+    try {
+      await studentsService.updateStudent(studentId, updatedData);
+      await studentRefetch(); // Refetch updated student data
+      setEditStudentDialogOpen(false);
+    } catch (error) {
+      console.error('Failed to update student:', error);
+      // You might want to show a toast notification here
+    }
+  };
 
   const handleEditStudent = () => {
-    // TODO: Open edit dialog or navigate to edit page
+    setEditStudentDialogOpen(true);
   };
+
+  const [savingAssessment, setSavingAssessment] = useState(false);
 
   // Assessment handlers
   const handleCreateAssessment = async () => {
@@ -739,6 +762,50 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
           )}
         </Grid>
       </Box>
+
+      {/* Assessment Dialog */}
+      <Dialog
+        open={assessmentDialogOpen}
+        onClose={() => setAssessmentDialogOpen(false)}
+        maxWidth='lg'
+        fullWidth
+      >
+        <DialogTitle>
+          {editingAssessment ? 'Edit Assessment' : 'Create Assessment'}
+          <IconButton
+            onClick={() => setAssessmentDialogOpen(false)}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <IconX />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          {assessmentDialogOpen && (
+            <StudentAssessmentForm
+              currentAssessment={editingAssessment}
+              beltRequirements={beltRequirements || []}
+              assessmentLoading={assessmentLoading}
+              assessmentError={assessmentError}
+              savingAssessment={savingAssessment}
+              handleCreateAssessment={handleCreateAssessment}
+              handleCompleteAssessment={handleCompleteAssessment}
+              handleEditAssessment={setEditingAssessment}
+              handleCancelAssessment={handleCancelAssessment}
+              getBeltColor={getBeltColor}
+              getBeltTextColor={getBeltTextColor}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Student Dialog */}
+      <EditStudentDialog
+        open={editStudentDialogOpen}
+        onClose={() => setEditStudentDialogOpen(false)}
+        student={student}
+        beltRequirements={beltRequirements || []}
+        onUpdate={handleStudentUpdate}
+      />
     </PageContainer>
   );
 };
