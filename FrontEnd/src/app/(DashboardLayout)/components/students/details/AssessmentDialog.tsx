@@ -40,9 +40,7 @@ const AssessmentDialog: React.FC<AssessmentDialogProps> = ({
 }) => {
   return (
     <Dialog open={editDialogOpen} onClose={closeEditDialog} maxWidth='md' fullWidth>
-      <DialogTitle>
-        <Typography variant='h5'>Edit Assessment</Typography>
-      </DialogTitle>
+      <DialogTitle>Edit Assessment</DialogTitle>
 
       <Formik
         initialValues={getInitialValues(editingAssessment)}
