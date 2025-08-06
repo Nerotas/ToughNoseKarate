@@ -16,30 +16,14 @@ import { useState } from 'react';
 import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 
 // Student interface for API data
-interface Student {
-  studentid: number;
-  firstName: string;
-  lastName: string;
-  preferredName?: string;
-  age?: number;
-  beltRank: string;
-  startDateUTC: string;
-  endDateUTC?: string;
-  email: string;
-  phone?: string;
-  notes?: string;
-  active: number;
-  child: number;
-  lastTestUTC?: string;
-  eligibleForTesting: number;
-}
+import { StudentDisplay } from 'models/Students/Students';
 
 interface PromoteStudentDialogProps {
   open: boolean;
   onClose: () => void;
-  student: Student | null;
+  student: StudentDisplay | null;
   beltRequirements: BeltRequirements[];
-  onConfirm: (student: Student) => Promise<void>;
+  onConfirm: (student: StudentDisplay) => Promise<void>;
 }
 
 // Helper function to get belt color from belt requirements data

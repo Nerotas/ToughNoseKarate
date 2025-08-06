@@ -25,23 +25,9 @@ import AddStudentModule from '../components/students/AddStudentModule';
 import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
 import axiosInstance from 'utils/helpers/AxiosInstance';
+import { Student, StudentDisplay } from 'models/Students/Students';
 
 // Import Student interface from shared models
-import { Student } from '../../../models/Student/Student';
-
-// Extended interface for display with calculated fields
-interface StudentDisplay extends Student {
-  eligibleForTesting: unknown;
-  id: number; // Mapped from studentid
-  name: string;
-  currentBelt: string;
-  beltColor: string;
-  joinDate: string;
-  lastTest: string | null;
-  isChild: boolean;
-  isActive: boolean;
-  age: number;
-}
 
 // Helper function to get belt color from belt requirements data
 const getBeltColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
@@ -72,11 +58,11 @@ const StudentsClient = () => {
 
   // State for Edit Student dialog
   const [editStudentOpen, setEditStudentOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<StudentDisplay | null>(null);
 
   // State for Promote Student dialog
   const [promoteStudentOpen, setPromoteStudentOpen] = useState(false);
-  const [studentToPromote, setStudentToPromote] = useState<Student | null>(null);
+  const [studentToPromote, setStudentToPromote] = useState<StudentDisplay | null>(null);
 
   // Fetch belt requirements for colors and progression
   const {
@@ -119,7 +105,7 @@ const StudentsClient = () => {
     const sortedBelts = (beltRequirements || []).sort((a, b) => a.beltOrder - b.beltOrder);
 
     const currentIndex = sortedBelts.findIndex(
-      (belt) => belt.beltRank.toLowerCase() === student.beltRank.toLowerCase()
+      (belt) => belt.beltRank.toLowerCase() === (student.beltRank ?? '').toLowerCase()
     );
 
     let nextBeltRank: string;
@@ -148,27 +134,26 @@ const StudentsClient = () => {
 
   // Function to transform API student data to display format
   const transformStudent = (student: Student): StudentDisplay => {
-    const age = student.age || 0;
-
-    return {
+    return new StudentDisplay({
       ...student,
-      id: student.studentid,
+      id: student.studentid ?? 0,
       name: `${student.preferredName || student.firstName} ${student.lastName}`,
       currentBelt: `${student.beltRank} Belt`,
-      beltColor: getBeltColor(student.beltRank, beltRequirements || []),
-      age,
+      beltColor: getBeltColor(student.beltRank ?? '', beltRequirements || []),
+      age: student.age || 0,
       joinDate: student.startDateUTC,
       lastTest: student.lastTestUTC || null,
-      isChild: student.child,
-      isActive: student.active,
-    };
+      isChild: !!student.child,
+      isActive: !!student.active,
+      eligibleForTesting: student.eligibleForTesting ?? 0,
+    });
   };
 
   // Transform API data to display format
-  const allStudents = (apiStudents || []).map(transformStudent);
+  const allStudents: StudentDisplay[] = (apiStudents || []).map(transformStudent);
 
   // Filter students based on active/inactive toggle
-  const students = showActiveOnly
+  const students: StudentDisplay[] = showActiveOnly
     ? allStudents.filter((student) => student.isActive)
     : allStudents.filter((student) => !student.isActive);
 
@@ -189,7 +174,7 @@ const StudentsClient = () => {
 
   // Handler to promote a student to the next belt
   const handlePromoteStudent = (student: Student) => {
-    setStudentToPromote(student);
+    setStudentToPromote(transformStudent(student));
     setPromoteStudentOpen(true);
   };
 
@@ -206,7 +191,7 @@ const StudentsClient = () => {
 
   // Handler to open edit student dialog
   const handleEditStudentClick = (student: Student) => {
-    setSelectedStudent(student);
+    setSelectedStudent(transformStudent(student));
     setEditStudentOpen(true);
   };
 
@@ -519,9 +504,9 @@ const StudentsClient = () => {
         <PromoteStudentDialog
           open={promoteStudentOpen}
           onClose={handlePromoteStudentClose}
-          student={studentToPromote}
+          student={studentToPromote as StudentDisplay | null}
           beltRequirements={beltRequirements || []}
-          onConfirm={promoteStudent}
+          onConfirm={promoteStudent as (student: StudentDisplay) => Promise<void>}
         />
       </Box>
     </PageContainer>
