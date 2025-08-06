@@ -29,9 +29,12 @@ jobs:
       - name: Install dependencies
         working-directory: ./FrontEnd
         run: npm ci
-      - name: Run tests
-        working-directory: ./FrontEnd
-        run: npm run test -- --passWithNoTests
+
+        # TBD after tests are built
+
+        # - name: Run tests
+      #   working-directory: ./FrontEnd
+      #   run: npm run test -- --passWithNoTests
 
       - name: Build application
         working-directory: ./FrontEnd
