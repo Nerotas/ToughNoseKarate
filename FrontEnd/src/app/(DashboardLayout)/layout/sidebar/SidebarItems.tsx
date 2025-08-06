@@ -142,7 +142,7 @@ const SidebarItems = () => {
           }).filter(Boolean)}
 
         {/* Admin-only menu items */}
-        {isAuthenticated && instructor?.role === 'admin' && (
+        {/* {isAuthenticated && instructor?.role === 'admin' && (
           <>
             <Divider sx={{ my: 1 }} />
             <Typography
@@ -177,14 +177,13 @@ const SidebarItems = () => {
                 }}
               >
                 <ListItemIcon>
-                  {/* You can import IconUserCog or similar for admin icon */}
                   <Typography>👥</Typography>
                 </ListItemIcon>
                 <ListItemText primary='Manage Instructors' />
               </ListItemButton>
             </ListItem>
           </>
-        )}
+        )} */
 
         {/* User info section at bottom */}
         {isAuthenticated && (

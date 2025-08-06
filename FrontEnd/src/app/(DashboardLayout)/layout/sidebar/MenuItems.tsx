@@ -91,16 +91,4 @@ export const AuthMenuItems = [
     icon: IconUsers,
     href: '/students',
   },
-  {
-    id: uniqueId(),
-    title: 'Student Assessments',
-    icon: IconClipboardCheck,
-    href: '/student-assessments',
-  },
-  {
-    id: uniqueId(),
-    title: 'Families',
-    icon: IconUsersGroup,
-    href: '/families',
-  },
 ];
