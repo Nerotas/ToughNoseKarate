@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Menuitems from './MenuItems';
+import { Menuitems } from './MenuItems';
 import Logo from '../shared/logo/Logo';
 
 interface MenuItemType {

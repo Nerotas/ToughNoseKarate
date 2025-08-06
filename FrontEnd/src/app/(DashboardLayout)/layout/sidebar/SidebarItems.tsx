@@ -183,7 +183,7 @@ const SidebarItems = () => {
               </ListItemButton>
             </ListItem>
           </>
-        )} */
+        )} */}
 
         {/* User info section at bottom */}
         {isAuthenticated && (
