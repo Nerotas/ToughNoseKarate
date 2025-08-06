@@ -6,6 +6,7 @@ import { AppModule } from './app.module';
 import { LoggerService } from './service/logger.service';
 import { AppConfigService } from './config/app-config.service';
 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,

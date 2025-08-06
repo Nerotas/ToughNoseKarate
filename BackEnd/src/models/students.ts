@@ -34,19 +34,27 @@ export class students
 {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
   studentid?: number;
-  @Column({ type: DataType.STRING(45) })
+  @Column({ field: 'firstname', type: DataType.STRING(45) })
   firstName!: string;
-  @Column({ type: DataType.STRING(45) })
+  @Column({ field: 'lastname', type: DataType.STRING(45) })
   lastName!: string;
-  @Column({ allowNull: true, type: DataType.STRING(45) })
+  @Column({
+    field: 'preferredname',
+    allowNull: true,
+    type: DataType.STRING(45),
+  })
   preferredName?: string;
   @Column({ allowNull: true, type: DataType.INTEGER })
   age?: number;
-  @Column({ type: DataType.STRING(45), defaultValue: 'white' })
+  @Column({
+    field: 'beltrank',
+    type: DataType.STRING(45),
+    defaultValue: 'white',
+  })
   beltRank?: string;
-  @Column({ field: 'startDateUTC', type: DataType.STRING(45) })
+  @Column({ field: 'startdateutc', type: DataType.STRING(45) })
   startDateUTC!: string;
-  @Column({ field: 'endDateUTC', allowNull: true, type: DataType.STRING(45) })
+  @Column({ field: 'enddateutc', allowNull: true, type: DataType.STRING(45) })
   endDateUTC?: string;
   @Column({ type: DataType.STRING(45) })
   email!: string;
@@ -54,12 +62,21 @@ export class students
   phone?: string;
   @Column({ allowNull: true, type: DataType.TEXT })
   notes?: string;
-  @Column({ type: DataType.TINYINT, defaultValue: '1' })
+  @Column({ field: 'active', type: DataType.TINYINT, defaultValue: 1 })
   active?: number;
-  @Column({ allowNull: true, type: DataType.TINYINT, defaultValue: '0' })
+  @Column({
+    field: 'child',
+    allowNull: true,
+    type: DataType.TINYINT,
+    defaultValue: 0,
+  })
   child?: number;
-  @Column({ allowNull: true, type: DataType.STRING(45) })
+  @Column({ field: 'lasttestutc', allowNull: true, type: DataType.STRING(45) })
   lastTestUTC?: string;
-  @Column({ type: DataType.TINYINT, defaultValue: '0' })
+  @Column({
+    field: 'eligiblefortesting',
+    type: DataType.TINYINT,
+    defaultValue: 0,
+  })
   eligibleForTesting?: number;
 }

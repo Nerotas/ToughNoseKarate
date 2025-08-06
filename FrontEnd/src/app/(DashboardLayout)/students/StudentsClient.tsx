@@ -26,27 +26,12 @@ import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 
-// Student interface for API data
-interface Student {
-  studentid: number;
-  firstName: string;
-  lastName: string;
-  preferredName?: string;
-  age?: number;
-  beltRank: string;
-  startDateUTC: string;
-  endDateUTC?: string;
-  email: string;
-  phone?: string;
-  notes?: string;
-  active: number;
-  child: number;
-  lastTestUTC?: string;
-  eligibleForTesting: number;
-}
+// Import Student interface from shared models
+import { Student } from '../../../models/Student/Student';
 
 // Extended interface for display with calculated fields
 interface StudentDisplay extends Student {
+  eligibleForTesting: unknown;
   id: number; // Mapped from studentid
   name: string;
   currentBelt: string;
@@ -153,9 +138,9 @@ const StudentsClient = () => {
       age: student.age,
       beltRank: nextBeltRank,
       lastTestUTC: new Date().toISOString(),
-      active: student.active === 1 ? 1 : 0,
-      child: student.child === 1 ? 1 : 0,
-      eligibleForTesting: student.eligibleForTesting === 1 ? 1 : 0,
+      active: student.active,
+      child: student.child,
+      eligibleForTesting: student.eligibleForTesting,
     });
 
     refetchStudents();
@@ -174,8 +159,8 @@ const StudentsClient = () => {
       age,
       joinDate: student.startDateUTC,
       lastTest: student.lastTestUTC || null,
-      isChild: student.child === 1,
-      isActive: student.active === 1,
+      isChild: student.child,
+      isActive: student.active,
     };
   };
 
@@ -434,7 +419,7 @@ const StudentsClient = () => {
                   </Typography>
                 </Box>
                 <Typography variant='h3' color='success.main'>
-                  {students.filter((student) => student.eligibleForTesting === 1).length}
+                  {students.filter((student) => student.eligibleForTesting).length}
                 </Typography>
               </CardContent>
             </Card>
@@ -466,7 +451,7 @@ const StudentsClient = () => {
                   </Typography>
                 </Box>
                 <Typography variant='h3' color='warning.main'>
-                  {students.filter((student) => student.child === 1).length}
+                  {students.filter((student) => student.isChild).length}
                 </Typography>
               </CardContent>
             </Card>
