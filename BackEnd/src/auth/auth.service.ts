@@ -17,7 +17,7 @@ export interface LoginDto {
 }
 
 export interface LoginResponse {
-  access_token: string;
+  success: boolean;
   instructor: {
     id: number;
     email: string;
@@ -71,7 +71,9 @@ export class AuthService {
     return instructor;
   }
 
-  async login(instructor: Instructors): Promise<LoginResponse> {
+  async login(
+    instructor: Instructors,
+  ): Promise<{ access_token: string; instructor: any }> {
     const payload: JwtPayload = {
       email: instructor.getDataValue('email'),
       sub: instructor.getDataValue('instructor_id'),
@@ -92,7 +94,9 @@ export class AuthService {
     };
   }
 
-  async loginWithCredentials(loginDto: LoginDto): Promise<LoginResponse> {
+  async loginWithCredentials(
+    loginDto: LoginDto,
+  ): Promise<{ access_token: string; instructor: any }> {
     const instructor = await this.validateInstructor(
       loginDto.email,
       loginDto.password,

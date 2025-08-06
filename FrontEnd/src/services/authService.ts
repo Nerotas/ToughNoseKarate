@@ -7,7 +7,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  access_token: string;
+  success: boolean;
   instructor: {
     id: number;
     email: string;
@@ -34,7 +34,8 @@ export interface ChangePasswordRequest {
 }
 
 export interface RefreshTokenResponse {
-  access_token: string;
+  success: boolean;
+  message: string;
 }
 
 class AuthService {
@@ -44,51 +45,17 @@ class AuthService {
     this.api = axios.create({
       baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/v1',
       timeout: 10000,
+      withCredentials: true, // Include cookies in requests
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    // Request interceptor to add JWT token
-    this.api.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-
-    // Response interceptor to handle 401 errors
+    // Simple response interceptor for error handling
     this.api.interceptors.response.use(
       (response) => response,
       async (error) => {
-        const originalRequest = error.config;
-
-        // If we get a 401 and haven't already tried to refresh
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-
-          try {
-            // Try to refresh the token
-            const response = await this.refreshToken();
-            localStorage.setItem('accessToken', response.access_token);
-
-            // Retry the original request with new token
-            originalRequest.headers.Authorization = `Bearer ${response.access_token}`;
-            return this.api(originalRequest);
-          } catch (refreshError) {
-            // Refresh failed, redirect to login
-            localStorage.removeItem('accessToken');
-            window.location.href = '/auth/login';
-            return Promise.reject(refreshError);
-          }
-        }
-
+        // Don't handle 401 here since AxiosInstance already handles it
         return Promise.reject(error);
       }
     );
@@ -166,12 +133,14 @@ class AuthService {
 
   // Method to check if user is authenticated
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('accessToken');
+    // With cookies, we can't easily check authentication status client-side
+    // This would need to be determined by making an API call or checking auth context
+    return true; // Simplified for now, actual auth state managed by AuthContext
   }
 
-  // Method to get current token
+  // Method to get current token (not applicable with HttpOnly cookies)
   getToken(): string | null {
-    return localStorage.getItem('accessToken');
+    return null; // HttpOnly cookies can't be accessed via JavaScript
   }
 }
 

@@ -7,6 +7,8 @@ import {
   HttpCode,
   HttpStatus,
   Patch,
+  Res,
+  Req,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,6 +18,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
+import { Response, Request } from 'express';
 
 import { AuthService, LoginDto, LoginResponse } from './auth.service';
 import { CreateInstructorDto } from '../service/instructors.service';
@@ -55,7 +58,7 @@ export class AuthController {
     description: 'Login successful',
     schema: {
       example: {
-        access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        success: true,
         instructor: {
           id: 1,
           email: 'instructor@toughnosekarate.com',
@@ -68,8 +71,24 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   @ApiResponse({ status: 429, description: 'Too many login attempts' })
-  async login(@Body() loginDto: LoginDto): Promise<LoginResponse> {
-    return this.authService.loginWithCredentials(loginDto);
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<LoginResponse> {
+    const result = await this.authService.loginWithCredentials(loginDto);
+
+    // Set JWT as HttpOnly cookie
+    response.cookie('accessToken', result.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    });
+
+    return {
+      success: true,
+      instructor: result.instructor,
+    };
   }
 
   @Post('register')
@@ -154,16 +173,33 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh JWT token' })
   @ApiResponse({
     status: 200,
-    description: 'New access token generated',
+    description: 'New access token generated and set in cookie',
     schema: {
       example: {
-        access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        success: true,
+        message: 'Token refreshed successfully',
       },
     },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async refreshToken(@User() user: InstructorPayload) {
-    return this.authService.refreshToken(user.instructorId);
+  async refreshToken(
+    @User() user: InstructorPayload,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const result = await this.authService.refreshToken(user.instructorId);
+
+    // Set new JWT as HttpOnly cookie
+    response.cookie('accessToken', result.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    });
+
+    return {
+      success: true,
+      message: 'Token refreshed successfully',
+    };
   }
 
   @Patch('change-password')
@@ -199,14 +235,21 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Logout instructor (client-side token removal)' })
+  @ApiOperation({
+    summary: 'Logout instructor and clear authentication cookie',
+  })
   @ApiResponse({ status: 200, description: 'Logout successful' })
-  async logout() {
-    // For JWT, logout is handled client-side by removing the token
-    // This endpoint is here for consistency and potential future server-side logout logic
+  async logout(@Res({ passthrough: true }) response: Response) {
+    // Clear the authentication cookie
+    response.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
     return {
-      message:
-        'Logout successful. Please remove the JWT token from client storage.',
+      success: true,
+      message: 'Logout successful. Authentication cookie cleared.',
     };
   }
 }

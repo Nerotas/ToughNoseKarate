@@ -15,11 +15,8 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (request) => {
-    // Add JWT token to requests
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      request.headers.Authorization = `Bearer ${token}`;
-    }
+    // JWT token is now automatically included via cookies
+    // No need to manually add Authorization header
 
     // Add API version to requests if not already present
     if (!request.url?.includes('/v')) {
@@ -40,7 +37,7 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
- 
+
 axiosInstance.interceptors.response.use(
   (response) => {
     if (shouldEnableDebug()) {
@@ -65,15 +62,12 @@ axiosInstance.interceptors.response.use(
       try {
         // Try to refresh the token using the auth service
         const { authService } = await import('../../services/authService');
-        const response = await authService.refreshToken();
-        localStorage.setItem('accessToken', response.access_token);
+        await authService.refreshToken();
 
-        // Retry the original request with new token
-        originalRequest.headers.Authorization = `Bearer ${response.access_token}`;
+        // Retry the original request (cookie will be automatically included)
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, clear token and redirect to login
-        localStorage.removeItem('accessToken');
+        // Refresh failed, redirect to login
         console.warn('Token refresh failed - redirecting to login');
         if (typeof window !== 'undefined') {
           window.location.href = '/auth/login';
