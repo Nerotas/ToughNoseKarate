@@ -13,7 +13,7 @@ export interface studentsAttributes {
   studentid?: number;
   firstName: string;
   lastName: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank?: string;
   startDateUTC: string;
@@ -39,7 +39,7 @@ export class students
   @Column({ type: DataType.STRING(45) })
   lastName!: string;
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  preferedName?: string;
+  preferredName?: string;
   @Column({ allowNull: true, type: DataType.INTEGER })
   age?: number;
   @Column({ type: DataType.STRING(45), defaultValue: 'white' })

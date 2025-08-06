@@ -31,7 +31,7 @@ interface Student {
   studentid: number;
   firstName: string;
   lastName: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank: string;
   startDateUTC: string;
@@ -149,7 +149,7 @@ const StudentsClient = () => {
     await axiosInstance.patch(`/students/${student.studentid}`, {
       firstName: student.firstName,
       lastName: student.lastName,
-      preferedName: student.preferedName,
+      preferredName: student.preferredName,
       age: student.age,
       beltRank: nextBeltRank,
       lastTestUTC: new Date().toISOString(),
@@ -168,7 +168,7 @@ const StudentsClient = () => {
     return {
       ...student,
       id: student.studentid,
-      name: `${student.preferedName || student.firstName} ${student.lastName}`,
+      name: `${student.preferredName || student.firstName} ${student.lastName}`,
       currentBelt: `${student.beltRank} Belt`,
       beltColor: getBeltColor(student.beltRank, beltRequirements || []),
       age,

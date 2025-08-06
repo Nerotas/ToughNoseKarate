@@ -141,7 +141,7 @@ SELECT
   studentid,
   firstName,
   lastName,
-  preferedName,
+  preferredName,
   age,
   date_of_birth,
   medical_conditions,

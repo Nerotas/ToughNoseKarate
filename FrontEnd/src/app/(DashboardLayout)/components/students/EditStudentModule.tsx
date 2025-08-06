@@ -34,7 +34,7 @@ interface Student {
   studentid: number;
   firstName: string;
   lastName: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank: string;
   startDateUTC: string;
@@ -51,7 +51,7 @@ interface Student {
 interface StudentFormData {
   firstName: string;
   lastName: string;
-  preferedName: string;
+  preferredName: string;
   age: number | '';
   beltRank: string;
   email: string;
@@ -72,7 +72,7 @@ const validationSchema = Yup.object().shape({
     .required('Last name is required')
     .min(2, 'Last name must be at least 2 characters')
     .max(50, 'Last name must be less than 50 characters'),
-  preferedName: Yup.string().max(50, 'Preferred name must be less than 50 characters'),
+  preferredName: Yup.string().max(50, 'Preferred name must be less than 50 characters'),
   age: Yup.number()
     .nullable()
     .min(1, 'Age must be at least 1')
@@ -105,7 +105,7 @@ const EditStudentModule = ({
       return {
         firstName: '',
         lastName: '',
-        preferedName: '',
+        preferredName: '',
         age: '',
         beltRank: 'white',
         email: '',
@@ -121,7 +121,7 @@ const EditStudentModule = ({
     return {
       firstName: student.firstName || '',
       lastName: student.lastName || '',
-      preferedName: student.preferedName || '',
+      preferredName: student.preferredName || '',
       age: student.age || '',
       beltRank: student.beltRank || 'white',
       email: student.email || '',
@@ -262,13 +262,13 @@ const EditStudentModule = ({
                       <TextField
                         fullWidth
                         label='Preferred Name'
-                        name='preferedName'
-                        value={values.preferedName}
+                        name='preferredName'
+                        value={values.preferredName}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={touched.preferedName && Boolean(errors.preferedName)}
+                        error={touched.preferredName && Boolean(errors.preferredName)}
                         helperText={
-                          (touched.preferedName && errors.preferedName) ||
+                          (touched.preferredName && errors.preferredName) ||
                           'Optional - if different from first name'
                         }
                         variant='outlined'

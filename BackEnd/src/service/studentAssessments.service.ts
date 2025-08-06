@@ -39,7 +39,7 @@ export class StudentAssessmentsService {
         {
           model: students,
           as: 'student',
-          attributes: ['firstName', 'lastName', 'preferedName', 'beltRank'],
+          attributes: ['firstName', 'lastName', 'preferredName', 'beltRank'],
         },
       ],
       order: [['assessment_date', 'DESC']],
@@ -53,7 +53,7 @@ export class StudentAssessmentsService {
         {
           model: students,
           as: 'student',
-          attributes: ['firstName', 'lastName', 'preferedName', 'beltRank'],
+          attributes: ['firstName', 'lastName', 'preferredName', 'beltRank'],
         },
       ],
       order: [['assessment_date', 'DESC']],
@@ -106,7 +106,7 @@ export class StudentAssessmentsService {
         {
           model: students,
           as: 'student',
-          attributes: ['firstName', 'lastName', 'preferedName', 'beltRank'],
+          attributes: ['firstName', 'lastName', 'preferredName', 'beltRank'],
         },
       ],
     });
@@ -124,7 +124,7 @@ export class StudentAssessmentsService {
         {
           model: students,
           as: 'student',
-          attributes: ['firstName', 'lastName', 'preferedName', 'beltRank'],
+          attributes: ['firstName', 'lastName', 'preferredName', 'beltRank'],
         },
       ],
       order: [['assessment_date', 'DESC']],
@@ -202,7 +202,7 @@ export class StudentAssessmentsService {
         {
           model: students,
           as: 'student',
-          attributes: ['firstName', 'lastName', 'preferedName', 'beltRank'],
+          attributes: ['firstName', 'lastName', 'preferredName', 'beltRank'],
         },
       ],
       order: [['assessment_date', 'DESC']],
@@ -218,7 +218,7 @@ export class StudentAssessmentsService {
         {
           model: students,
           as: 'student',
-          attributes: ['firstName', 'lastName', 'preferedName', 'beltRank'],
+          attributes: ['firstName', 'lastName', 'preferredName', 'beltRank'],
         },
       ],
       order: [['assessment_date', 'DESC']],

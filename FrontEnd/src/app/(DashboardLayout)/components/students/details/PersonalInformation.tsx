@@ -1,11 +1,4 @@
-import {
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Divider,
-} from '@mui/material';
+import { Grid, Card, CardContent, Typography, Box, Divider } from '@mui/material';
 import { IconUser } from '@tabler/icons-react';
 import { Student } from 'models/Students/Students';
 
@@ -30,12 +23,12 @@ const PersonalInformation = ({ student }: { student: Student }) => {
               </Typography>
             </Box>
 
-            {student.preferedName && (
+            {student.preferredName && (
               <Box>
                 <Typography variant='subtitle2' color='text.secondary'>
                   Preferred Name
                 </Typography>
-                <Typography variant='body1'>{student.preferedName}</Typography>
+                <Typography variant='body1'>{student.preferredName}</Typography>
               </Box>
             )}
 

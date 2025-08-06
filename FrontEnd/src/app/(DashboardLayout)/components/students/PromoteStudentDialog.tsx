@@ -20,7 +20,7 @@ interface Student {
   studentid: number;
   firstName: string;
   lastName: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank: string;
   startDateUTC: string;
@@ -105,7 +105,7 @@ const PromoteStudentDialog: React.FC<PromoteStudentDialogProps> = ({
     }
   };
 
-  const studentName = student.preferedName || student.firstName;
+  const studentName = student.preferredName || student.firstName;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>

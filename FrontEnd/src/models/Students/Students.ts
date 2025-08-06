@@ -2,7 +2,7 @@ export interface Student {
   studentid: number;
   firstName: string;
   lastName: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank: string;
   startDateUTC: string;
@@ -20,7 +20,7 @@ export interface Student {
 export interface CreateStudentRequest {
   firstName: string;
   lastName: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank?: string;
   startDateUTC: string;
@@ -38,7 +38,7 @@ export interface CreateStudentRequest {
 export interface UpdateStudentRequest {
   firstName?: string;
   lastName?: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank?: string;
   startDateUTC?: string;
@@ -58,7 +58,7 @@ export interface Family {
   studentid?: number;
   firstName: string; // Student first name
   lastName: string; // Student last name
-  preferedName?: string; // Student preferred name
+  preferredName?: string; // Student preferred name
   parentFirstName?: string;
   parentLastName?: string;
   age?: number; // Student age
