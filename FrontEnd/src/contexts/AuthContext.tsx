@@ -37,20 +37,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [instructor, setInstructor] = useState<Instructor | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing token on app startup
+  // Check for existing authentication on app startup
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-          // Validate token by fetching profile
-          const profile = await authService.getProfile();
-          setInstructor(profile);
-        }
+        // Try to get profile to check if authenticated via cookie
+        const profile = await authService.getProfile();
+        setInstructor(profile);
       } catch (error) {
-        console.error('Token validation failed:', error);
-        // Invalid token, remove it
-        localStorage.removeItem('accessToken');
+        // No valid authentication cookie, user is not logged in
+        console.log('No valid authentication found');
+        setInstructor(null);
       } finally {
         setIsLoading(false);
       }
@@ -65,10 +62,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsLoading(true);
       const response = await authService.login(email, password);
 
-      // Store token
-      localStorage.setItem('accessToken', response.access_token);
-
-      // Set instructor data
+      // With cookies, the token is automatically stored by the browser
+      // Just set instructor data
       setInstructor(response.instructor);
 
       console.log(`✅ Login successful: ${response.instructor.email}`);
@@ -81,21 +76,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   // Logout function
-  const logout = () => {
-    localStorage.removeItem('accessToken');
+  const logout = async () => {
+    try {
+      // Call backend logout to clear cookie
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Continue with local logout even if backend call fails
+    }
+
     setInstructor(null);
-
-    // Optional: Call backend logout endpoint
-    authService.logout().catch(console.error);
-
     console.log('✅ Logout successful');
   };
 
   // Refresh token function
   const refreshToken = async (): Promise<void> => {
     try {
-      const response = await authService.refreshToken();
-      localStorage.setItem('accessToken', response.access_token);
+      await authService.refreshToken();
+      // With cookies, the new token is automatically stored by the browser
       console.log('✅ Token refreshed successfully');
     } catch (error) {
       console.error('Token refresh failed:', error);

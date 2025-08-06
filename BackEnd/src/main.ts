@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { LoggerService } from './service/logger.service';
 import { AppConfigService } from './config/app-config.service';
@@ -30,6 +31,9 @@ async function bootstrap() {
     prefix: 'v',
     defaultVersion: '1',
   });
+
+  // Enable cookie parser
+  app.use(cookieParser());
 
   // Add global validation pipe for input validation
   app.useGlobalPipes(
