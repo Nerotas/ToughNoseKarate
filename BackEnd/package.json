@@ -11,6 +11,7 @@
     "start:dev": "set PORT=3001 && nest start --watch",
     "start:debug": "set PORT=3001 && nest start --debug --watch",
     "start:prod": "node dist/main",
+    "deploy": "railway up",
     "lint": "eslint . --ext .js,.ts,.jsx,.tsx --fix",
     "format": "prettier --write .",
     "freshInstall": "clear && rm -rf ./node_modules && rm -rf ./package-lock.json && npm install --package-lock-only && npm ci && npm run format",
