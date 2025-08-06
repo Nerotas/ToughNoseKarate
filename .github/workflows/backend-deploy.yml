@@ -1,0 +1,104 @@
+name: Deploy Backend to Netlify Functions
+
+on:
+  push:
+    branches: [main, staging]
+    paths: ["BackEnd/**"]
+  pull_request:
+    branches: [main]
+    paths: ["BackEnd/**"]
+
+env:
+  NODE_VERSION: "18"
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: BackEnd/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./BackEnd
+        run: npm ci
+
+      - name: Lint code
+        working-directory: ./BackEnd
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: ./BackEnd
+        run: npm run test -- --passWithNoTests
+
+      - name: Build application
+        working-directory: ./BackEnd
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build
+          path: |
+            BackEnd/dist/
+            BackEnd/package.json
+            BackEnd/package-lock.json
+
+  deploy-staging:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-build
+          path: ./BackEnd/
+
+      - name: Deploy to Netlify Functions (Staging)
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: "./BackEnd"
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy Backend from GitHub Actions (Staging)"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_BACKEND_STAGING_SITE_ID }}
+
+  deploy-production:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-build
+          path: ./BackEnd/
+
+      - name: Deploy to Netlify Functions (Production)
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: "./BackEnd"
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy Backend from GitHub Actions (Production)"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_BACKEND_PRODUCTION_SITE_ID }}
