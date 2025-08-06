@@ -8,7 +8,6 @@ import {
   ForeignKey,
   HasMany,
 } from 'sequelize-typescript';
-import { studentTests } from './studentTests';
 
 export interface studentsAttributes {
   studentid?: number;
@@ -63,10 +62,4 @@ export class students
   lastTestUTC?: string;
   @Column({ type: DataType.TINYINT, defaultValue: '0' })
   eligibleForTesting?: number;
-
-  // Associations
-  @HasMany(() => studentTests)
-  student_tests?: studentTests[];
-
-
 }

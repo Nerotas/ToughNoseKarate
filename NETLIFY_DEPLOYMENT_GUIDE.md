@@ -1,31 +1,116 @@
-# Netlify Deployment Guide for Tough Nose Karate
+# Netlify Deployment Guide - Tough Nose Karate
 
-This guide provides step-by-step instructions for deploying the Tough Nose Karate application to Netlify, including domain purchase, SSL configuration, and production setup.
+Choose your deployment path based on your needs and budget. Both options provide a complete, professional karate management system.
 
-## 📋 Table of Contents
+## 🛤️ Choose Your Deployment Path
 
-- [Prerequisites](#prerequisites)
-- [Domain Purchase & Configuration](#domain-purchase--configuration)
-- [Database Setup (PlanetScale)](#database-setup-planetscale)
-- [Netlify Account Setup](#netlify-account-setup)
-- [GitHub Integration](#github-integration)
-- [Environment Variables Configuration](#environment-variables-configuration)
-- [DNS Configuration](#dns-configuration)
-- [SSL Certificate Setup](#ssl-certificate-setup)
-- [Deployment Process](#deployment-process)
-- [Post-Deployment Verification](#post-deployment-verification)
-- [Monitoring & Analytics](#monitoring--analytics)
-- [Troubleshooting](#troubleshooting)
+### 🆓 **Free Deployment** - Perfect for Getting Started
 
-## ✅ Prerequisites
+**Cost: $0/month**
 
-Before starting the deployment process, ensure you have:
+**Best for:**
 
-- [ ] GitHub account with the ToughNoseKarate repository
-- [ ] Valid email address for domain registration
-- [ ] Credit card for domain purchase and premium services
-- [ ] Basic understanding of DNS concepts
-- [ ] Access to the codebase with deployment configurations
+- Small dojos (50-100 students)
+- Testing and development
+- Budget-conscious startups
+- Learning the system
+
+**What you get:**
+
+- ✅ Complete karate management system
+- ✅ Professional .netlify.app URL
+- ✅ Secure authentication
+- ✅ Mobile-responsive design
+- ✅ Automatic SSL certificates
+- ✅ 100GB bandwidth/month
+- ✅ 125k API requests/month
+
+**URL Example:** `https://toughnose-karate.netlify.app`
+
+👉 **[Start Free Deployment →](NETLIFY_DEPLOYMENT_GUIDE_FREE.md)**
+
+---
+
+### 🏆 **Premium Deployment** - Professional Custom Domain
+
+**Cost: $20-50/month**
+
+**Best for:**
+
+- Established dojos
+- Professional branding
+- Marketing and growth
+- Business credibility
+
+**What you get:**
+
+- ✅ Everything in Free plan, PLUS:
+- ✅ Custom domain (toughnosekarate.com)
+- ✅ Premium performance (1TB bandwidth)
+- ✅ Priority support
+- ✅ Advanced analytics
+- ✅ Professional appearance
+- ✅ Marketing advantages
+
+**URL Example:** `https://toughnosekarate.com`
+
+👉 **[Start Premium Deployment →](NETLIFY_DEPLOYMENT_GUIDE_PREMIUM.md)**
+
+---
+
+## 📊 Quick Comparison
+
+| Feature                     | Free Plan         | Premium Plan       |
+| --------------------------- | ----------------- | ------------------ |
+| **Monthly Cost**            | $0                | $20-50             |
+| **Custom Domain**           | No (.netlify.app) | Yes (yoursite.com) |
+| **SSL Certificate**         | ✅ Auto           | ✅ Auto            |
+| **Bandwidth**               | 100GB/month       | 1TB/month          |
+| **API Requests**            | 125k/month        | Unlimited          |
+| **Support**                 | Community         | Priority Email     |
+| **Analytics**               | Basic             | Advanced           |
+| **Professional Appearance** | Good              | Excellent          |
+| **SEO Benefits**            | Limited           | Full               |
+| **Marketing Value**         | Moderate          | High               |
+
+## 🎯 Recommendation Guide
+
+### Choose **Free** if:
+
+- ✅ You're just starting out
+- ✅ Budget is a primary concern
+- ✅ You have fewer than 100 students
+- ✅ You want to test the system first
+- ✅ .netlify.app URL is acceptable
+
+### Choose **Premium** if:
+
+- ✅ You want professional branding
+- ✅ Marketing and growth are priorities
+- ✅ You need a custom domain for credibility
+- ✅ SEO and online presence matter
+- ✅ You can invest $20-50/month
+
+## 🔄 Easy Upgrade Path
+
+**Start Free → Upgrade Later**
+
+- Begin with free deployment
+- Test all features and functionality
+- Upgrade to premium when ready
+- Keep all data and configurations
+- Seamless transition process
+
+## 🚀 Getting Started
+
+1. **Choose your path** above
+2. **Follow the step-by-step guide**
+3. **Deploy in 30-60 minutes**
+4. **Launch your professional karate management system**
+
+Both paths provide the same powerful features - the only difference is the URL and some premium hosting benefits.
+
+**Ready to transform your dojo with modern technology? Choose your deployment path above! 🥋**
 
 ## 🌐 Domain Purchase & Configuration
 

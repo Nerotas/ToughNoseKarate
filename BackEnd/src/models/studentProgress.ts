@@ -7,14 +7,6 @@ import {
   ForeignKey,
 } from 'sequelize-typescript';
 import { students } from './students';
-import { blocks } from './blocks';
-import { combinations } from './combinations';
-import { falling } from './falling';
-import { forms } from './forms';
-import { kicks } from './kicks';
-import { oneSteps } from './oneSteps';
-import { punches } from './punches';
-import { stances } from './stances';
 
 // This interface represents the complete student progress data
 export interface StudentProgressAttributes {
