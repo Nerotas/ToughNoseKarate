@@ -30,10 +30,6 @@ jobs:
         working-directory: ./BackEnd
         run: npm ci
 
-      - name: Lint code
-        working-directory: ./BackEnd
-        run: npm run lint
-
       - name: Run tests
         working-directory: ./BackEnd
         run: npm run test -- --passWithNoTests

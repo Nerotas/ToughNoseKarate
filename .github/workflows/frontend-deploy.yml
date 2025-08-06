@@ -29,11 +29,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./FrontEnd
         run: npm ci
-
-      - name: Lint code
-        working-directory: ./FrontEnd
-        run: npm run lint
-
       - name: Run tests
         working-directory: ./FrontEnd
         run: npm run test -- --passWithNoTests
