@@ -1,4 +1,4 @@
-name: Deploy Backend to Netlify Functions
+name: Backend CI for Railway
 
 on:
   push:
@@ -50,55 +50,3 @@ jobs:
             BackEnd/dist/
             BackEnd/package.json
             BackEnd/package-lock.json
-
-  deploy-staging:
-    needs: test-and-build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/staging'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-build
-          path: ./BackEnd/
-
-      - name: Deploy to Netlify Functions (Staging)
-        uses: nwtgck/actions-netlify@v3.0
-        with:
-          publish-dir: "./BackEnd"
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy Backend from GitHub Actions (Staging)"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_BACKEND_STAGING_SITE_ID }}
-
-  deploy-production:
-    needs: test-and-build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-build
-          path: ./BackEnd/
-
-      - name: Deploy to Netlify Functions (Production)
-        uses: nwtgck/actions-netlify@v3.0
-        with:
-          publish-dir: "./BackEnd"
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy Backend from GitHub Actions (Production)"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_BACKEND_PRODUCTION_SITE_ID }}

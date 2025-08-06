@@ -1,9 +1,0 @@
-{
-  "name": "toughnose-karate-backend-functions",
-  "version": "1.0.0",
-  "description": "Netlify Functions for Tough Nose Karate Backend",
-  "main": "api.js",
-  "dependencies": {
-    "@vendia/serverless-express": "^4.12.4"
-  }
-}

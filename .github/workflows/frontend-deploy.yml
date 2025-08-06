@@ -42,24 +42,22 @@ jobs:
         working-directory: ./FrontEnd
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_API_PATH: ${{ secrets.NEXT_PUBLIC_API_PATH }}
           NEXT_PUBLIC_API_VERSION: v1
           NEXT_PUBLIC_DEBUG: false
 
-      - name: Deploy to Netlify (Staging)
-        if: github.ref == 'refs/heads/staging'
-        uses: nwtgck/actions-netlify@v3.0
-        with:
-          publish-dir: "./FrontEnd/.next"
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions (Staging)"
-          enable-pull-request-comment: true
-          enable-commit-comment: true
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_STAGING_SITE_ID }}
+      # - name: Deploy to Netlify (Staging)
+      #   if: github.ref == 'refs/heads/staging'
+      #   uses: nwtgck/actions-netlify@v3.0
+      #   with:
+      #     publish-dir: "./FrontEnd/.next"
+      #     production-branch: main
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     deploy-message: "Deploy from GitHub Actions (Staging)"
+      #     enable-pull-request-comment: true
+      #     enable-commit-comment: true
+      #   env:
+      #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_STAGING_SITE_ID }}
 
       - name: Deploy to Netlify (Production)
         if: github.ref == 'refs/heads/main'
