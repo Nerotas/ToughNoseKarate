@@ -1,7 +1,6 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { CacheModule } from '@nestjs/cache-manager';
@@ -61,6 +60,9 @@ import { StudentTestsService } from './service/studentTests.service';
 import { StudentAssessmentsService } from './service/studentAssessments.service';
 import { LoggerService } from './service/logger.service';
 
+// Auth
+import { AuthModule } from './auth/auth.module';
+
 // Health
 import { HealthController } from './health/health.controller';
 import { LocalHealthCheckService } from './health/health.service';
@@ -88,6 +90,7 @@ import { students } from './models/students';
 import { studentTests } from './models/studentTests';
 import { testResults } from './models/testResults';
 import { StudentAssessments } from './models/student_assessments';
+import { Instructors } from './models/instructors';
 import { FamiliesService } from './service/families.service';
 import { BeltRequirementsService } from './service/beltRequirements.service';
 import { BlocksService } from './service/blocks.service';
@@ -125,6 +128,7 @@ import { AppConfigService } from './config/app-config.service';
           families,
           FormDefinitions,
           forms,
+          Instructors,
           kicks,
           kicksDefinitions,
           oneSteps,
@@ -158,6 +162,7 @@ import { AppConfigService } from './config/app-config.service';
       families,
       FormDefinitions,
       forms,
+      Instructors,
       kicks,
       kicksDefinitions,
       oneSteps,
@@ -217,6 +222,7 @@ import { AppConfigService } from './config/app-config.service';
       ],
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   controllers: [
     AboutController,
@@ -255,7 +261,6 @@ import { AppConfigService } from './config/app-config.service';
     FormDefinitionsService,
     FormsService,
     LocalHealthCheckService,
-    JwtService,
     KicksService,
     KicksDefinitionsService,
     Logger,

@@ -6,12 +6,24 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { FamiliesService } from '../service/families.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
+import { InstructorOnly } from '../decorators/roles.decorator';
 
-@ApiTags('System')
+@ApiTags('Families')
 @Controller({ path: 'families', version: '1' })
+@UseGuards(JwtAuthGuard, RolesGuard)
+@InstructorOnly()
+@ApiBearerAuth('JWT')
 export class FamiliesController {
   constructor(private readonly familiesService: FamiliesService) {}
   @Post()

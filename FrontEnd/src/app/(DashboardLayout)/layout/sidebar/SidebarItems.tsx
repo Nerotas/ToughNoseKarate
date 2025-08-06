@@ -13,10 +13,12 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Logo from '../shared/logo/Logo';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 const SidebarItems = () => {
   const pathname = usePathname();
-  const isAuth = true; // Replace with actual authentication check
+  const { isAuthenticated, instructor } = useAuth();
+
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ p: 2 }}>
@@ -81,7 +83,7 @@ const SidebarItems = () => {
           );
         }).filter(Boolean)}
 
-        {isAuth &&
+        {isAuthenticated &&
           AuthMenuItems.map((item) => {
             if (item.subheader) {
               return (
@@ -138,6 +140,65 @@ const SidebarItems = () => {
               </ListItem>
             );
           }).filter(Boolean)}
+
+        {/* Admin-only menu items */}
+        {/* {isAuthenticated && instructor?.role === 'admin' && (
+          <>
+            <Divider sx={{ my: 1 }} />
+            <Typography
+              variant='caption'
+              sx={{
+                px: 3,
+                py: 1,
+                color: 'text.secondary',
+                fontWeight: 'bold',
+                fontSize: '0.75rem',
+              }}
+            >
+              ADMIN
+            </Typography>
+            <ListItem disablePadding sx={{ px: 2 }}>
+              <ListItemButton
+                component={Link}
+                href='/admin/instructors'
+                selected={pathname === '/admin/instructors'}
+                sx={{
+                  borderRadius: 2,
+                  '&.Mui-selected': {
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                    },
+                    '& .MuiListItemIcon-root': {
+                      color: 'primary.contrastText',
+                    },
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  <Typography>👥</Typography>
+                </ListItemIcon>
+                <ListItemText primary='Manage Instructors' />
+              </ListItemButton>
+            </ListItem>
+          </>
+        )} */}
+
+        {/* User info section at bottom */}
+        {isAuthenticated && (
+          <Box sx={{ mt: 'auto', p: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Typography variant='caption' color='text.secondary' display='block'>
+              Signed in as
+            </Typography>
+            <Typography variant='body2' fontWeight='medium'>
+              {instructor?.firstName} {instructor?.lastName}
+            </Typography>
+            <Typography variant='caption' color='text.secondary'>
+              {instructor?.role?.toUpperCase()} • {instructor?.email}
+            </Typography>
+          </Box>
+        )}
       </List>
     </Box>
   );

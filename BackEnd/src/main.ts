@@ -61,12 +61,10 @@ async function bootstrap() {
     .addTag('Techniques', 'Technique definition endpoints')
     .addTag('Belt Requirements', 'Belt requirement endpoints')
     .addTag('Health', 'System health endpoints')
-
-    // TODO: Implement authentication (e.g., addBearerAuth) when the application goes live.
-    // .addBearerAuth(
-    //   { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
-    //   'JWT',
-    // )
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
+      'JWT',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document, {

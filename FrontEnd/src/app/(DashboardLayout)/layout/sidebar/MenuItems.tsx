@@ -12,6 +12,8 @@ import {
   IconSwords,
   IconShield,
   IconSchool,
+  IconUsersGroup,
+  IconFileText,
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
@@ -81,7 +83,7 @@ export const Menuitems = [
 export const AuthMenuItems = [
   {
     navlabel: true,
-    subheader: 'AUTH',
+    subheader: 'STUDENT MANAGEMENT',
   },
   {
     id: uniqueId(),

@@ -5,6 +5,7 @@ export * from './falling';
 export * from './families';
 export * from './formDefinitions';
 export * from './forms';
+export * from './instructors';
 export * from './kicks';
 export * from './kicksDefinitions';
 export * from './oneSteps';

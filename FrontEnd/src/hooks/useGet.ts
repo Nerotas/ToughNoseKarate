@@ -1,6 +1,8 @@
 import { QueryKey, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
 import axiosInstance from 'utils/helpers/AxiosInstance';
+import { getConfig } from '../utils/config/frontend.config';
 
 // Fetch function that works both client and server side
 const getFetch = async (url: string, headers?: AxiosRequestHeaders): Promise<any> => {
@@ -8,17 +10,29 @@ const getFetch = async (url: string, headers?: AxiosRequestHeaders): Promise<any
   return data;
 };
 
-// Server-side fetch function for pre-fetching
+// Server-side fetch function for pre-fetching public endpoints only
+// This should only be used for endpoints that don't require authentication (like belt-requirements)
 export const serverFetch = async (url: string, headers?: Record<string, string>): Promise<any> => {
-  const { data } = await axiosInstance.get(url, {
+  // Get config for server-side
+  const config = getConfig();
+
+  // Create a server-safe axios instance that doesn't access localStorage
+  const serverAxiosInstance = axios.create({
+    baseURL: config.NEXT_PUBLIC_API_PATH,
+    timeout: 10000,
     headers: {
       'Content-Type': 'application/json',
       ...headers,
     },
-    // Add timeout for server-side requests
-    timeout: 10000, // 10 seconds
   });
 
+  // Add API version to URL if not present
+  let finalUrl = url;
+  if (!url.includes('/v')) {
+    finalUrl = `/${config.NEXT_PUBLIC_API_VERSION}${url}`;
+  }
+
+  const { data } = await serverAxiosInstance.get(finalUrl);
   return data;
 };
 

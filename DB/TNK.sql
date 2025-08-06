@@ -18,44 +18,27 @@ USE `toughnosekarate`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `belt_progression`
+-- Temporary view structure for view `assessment_overview`
 --
 
-DROP TABLE IF EXISTS `belt_progression`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
+DROP TABLE IF EXISTS `assessment_overview`;
+/*!50001 DROP VIEW IF EXISTS `assessment_overview`*/;
+SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `belt_progression` (
-  `progression_id` int NOT NULL AUTO_INCREMENT,
-  `studentid` int NOT NULL,
-  `belt_rank` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `promoted_date` date NOT NULL,
-  `promoted_by` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `testid` int DEFAULT NULL,
-  `is_current` tinyint(1) DEFAULT '1',
-  `ceremony_date` date DEFAULT NULL,
-  `belt_certificate_number` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `notes` text COLLATE utf8mb4_unicode_ci,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`progression_id`),
-  KEY `idx_studentid` (`studentid`),
-  KEY `idx_belt_rank` (`belt_rank`),
-  KEY `idx_promoted_date` (`promoted_date`),
-  KEY `idx_is_current` (`is_current`),
-  KEY `idx_testid` (`testid`),
-  CONSTRAINT `belt_progression_ibfk_1` FOREIGN KEY (`studentid`) REFERENCES `students` (`studentid`) ON DELETE CASCADE,
-  CONSTRAINT `belt_progression_ibfk_2` FOREIGN KEY (`testid`) REFERENCES `student_tests` (`testid`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Complete history of belt promotions for each student';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `belt_progression`
---
-
-LOCK TABLES `belt_progression` WRITE;
-/*!40000 ALTER TABLE `belt_progression` DISABLE KEYS */;
-INSERT INTO `belt_progression` VALUES (1,1,'Green','2025-07-13',NULL,NULL,1,NULL,NULL,'Migrated from existing student data','2025-08-04 23:57:11'),(2,2,'Blue Black','2025-01-21',NULL,NULL,1,NULL,NULL,'Migrated from existing student data','2025-08-04 23:57:11');
-/*!40000 ALTER TABLE `belt_progression` ENABLE KEYS */;
-UNLOCK TABLES;
+/*!50001 CREATE VIEW `assessment_overview` AS SELECT 
+ 1 AS `assessment_id`,
+ 1 AS `student_id`,
+ 1 AS `student_name`,
+ 1 AS `current_belt`,
+ 1 AS `target_belt_rank`,
+ 1 AS `assessment_date`,
+ 1 AS `overall_score`,
+ 1 AS `passed`,
+ 1 AS `assessment_status`,
+ 1 AS `examiner_notes`,
+ 1 AS `forms_completion_pct`,
+ 1 AS `avg_forms_score`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `belt_requirements`
@@ -286,6 +269,39 @@ CREATE TABLE `forms` (
 LOCK TABLES `forms` WRITE;
 /*!40000 ALTER TABLE `forms` DISABLE KEYS */;
 /*!40000 ALTER TABLE `forms` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instructors`
+--
+
+DROP TABLE IF EXISTS `instructors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `instructors` (
+  `instructor_id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `role` enum('instructor','admin') DEFAULT 'instructor',
+  `is_active` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `last_login` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`instructor_id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instructors`
+--
+
+LOCK TABLES `instructors` WRITE;
+/*!40000 ALTER TABLE `instructors` DISABLE KEYS */;
+INSERT INTO `instructors` VALUES (1,'toughnosekarate@gmail.com','$2b$10$/40tmBY8gJUlbEL7zO5dNeYkMPU9s8iClaD8mt0CfziCYyNC9SPjq','Admin','User','admin',1,'2025-08-05 20:30:10','2025-08-05 20:30:10',NULL),(4,'test@toughnosekarate.com','$2b$10$hpVCiwSvgI0snXPSRWhfCuK/aPLvcajhYOjqMEeqvHOVg17WVXh6O','Test','Instructor','instructor',1,'2025-08-05 21:40:43','2025-08-06 00:55:09','2025-08-06 00:55:09');
+/*!40000 ALTER TABLE `instructors` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -686,6 +702,121 @@ LOCK TABLES `stances` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `student_assessments`
+--
+
+DROP TABLE IF EXISTS `student_assessments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `student_assessments` (
+  `assessment_id` int NOT NULL AUTO_INCREMENT,
+  `student_id` int NOT NULL,
+  `instructor_id` int DEFAULT NULL,
+  `assessment_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `target_belt_rank` varchar(50) DEFAULT NULL,
+  `certificate_name` varchar(255) DEFAULT NULL,
+  `belt_size` varchar(10) DEFAULT NULL,
+  `geocho_hyung_il_bu` decimal(3,1) DEFAULT NULL,
+  `geocho_hyung_il_bu_sahm_gup` decimal(3,1) DEFAULT NULL,
+  `geocho_hyung_yi_bu` decimal(3,1) DEFAULT NULL,
+  `geocho_hyung_yi_bu_sahm_gup` decimal(3,1) DEFAULT NULL,
+  `geocho_hyung_sahm_bu` decimal(3,1) DEFAULT NULL,
+  `pyong_an_cho_dan` decimal(3,1) DEFAULT NULL,
+  `pyong_an_yi_dan` decimal(3,1) DEFAULT NULL,
+  `pyong_an_sahm_dan` decimal(3,1) DEFAULT NULL,
+  `pyong_an_sa_dan` decimal(3,1) DEFAULT NULL,
+  `pyong_an_oh_dan` decimal(3,1) DEFAULT NULL,
+  `bassai` decimal(3,1) DEFAULT NULL,
+  `traditional_1` decimal(3,1) DEFAULT NULL,
+  `traditional_2` decimal(3,1) DEFAULT NULL,
+  `traditional_3` decimal(3,1) DEFAULT NULL,
+  `traditional_4` decimal(3,1) DEFAULT NULL,
+  `made_up_1` decimal(3,1) DEFAULT NULL,
+  `made_up_2` decimal(3,1) DEFAULT NULL,
+  `made_up_3` decimal(3,1) DEFAULT NULL,
+  `made_up_4` decimal(3,1) DEFAULT NULL,
+  `three_steps_1` decimal(3,1) DEFAULT NULL,
+  `three_steps_2` decimal(3,1) DEFAULT NULL,
+  `three_steps_3` decimal(3,1) DEFAULT NULL,
+  `three_steps_4` decimal(3,1) DEFAULT NULL,
+  `jump_kick_front` decimal(3,1) DEFAULT NULL,
+  `jump_kick_round` decimal(3,1) DEFAULT NULL,
+  `jump_kick_side` decimal(3,1) DEFAULT NULL,
+  `jump_kick_back` decimal(3,1) DEFAULT NULL,
+  `jump_kick_f_side` decimal(3,1) DEFAULT NULL,
+  `jump_kick_crescent` decimal(3,1) DEFAULT NULL,
+  `jump_kick_heel` decimal(3,1) DEFAULT NULL,
+  `combination_fighting` decimal(3,1) DEFAULT NULL,
+  `combination_hands` decimal(3,1) DEFAULT NULL,
+  `combination_basic` decimal(3,1) DEFAULT NULL,
+  `stance_front` decimal(3,1) DEFAULT NULL,
+  `stance_back` decimal(3,1) DEFAULT NULL,
+  `stance_straddle` decimal(3,1) DEFAULT NULL,
+  `stance_shifting` decimal(3,1) DEFAULT NULL,
+  `falling_back` decimal(3,1) DEFAULT NULL,
+  `falling_front` decimal(3,1) DEFAULT NULL,
+  `falling_roll` decimal(3,1) DEFAULT NULL,
+  `falling_breaking` decimal(3,1) DEFAULT NULL,
+  `high_block` decimal(3,1) DEFAULT NULL,
+  `low_block` decimal(3,1) DEFAULT NULL,
+  `knife_hand_block` decimal(3,1) DEFAULT NULL,
+  `double_block` decimal(3,1) DEFAULT NULL,
+  `center_punch` decimal(3,1) DEFAULT NULL,
+  `reverse_punch` decimal(3,1) DEFAULT NULL,
+  `jab` decimal(3,1) DEFAULT NULL,
+  `front_kick` decimal(3,1) DEFAULT NULL,
+  `side_kick` decimal(3,1) DEFAULT NULL,
+  `roundhouse_kick` decimal(3,1) DEFAULT NULL,
+  `back_kick` decimal(3,1) DEFAULT NULL,
+  `hook_kick` decimal(3,1) DEFAULT NULL,
+  `overall_score` decimal(5,2) DEFAULT NULL,
+  `passed` tinyint(1) DEFAULT NULL,
+  `examiner_notes` text,
+  `assessment_status` enum('in_progress','completed','cancelled') DEFAULT 'in_progress',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `upper_cut` decimal(3,1) DEFAULT NULL,
+  `hook_punch` decimal(3,1) DEFAULT NULL,
+  `spin_bottom_fist` decimal(3,1) DEFAULT NULL,
+  `charging_punch` decimal(3,1) DEFAULT NULL,
+  `slide_up_jab_punch` decimal(3,1) DEFAULT NULL,
+  `chop_low` decimal(3,1) DEFAULT NULL,
+  `chop_high` decimal(3,1) DEFAULT NULL,
+  `spearhand` decimal(3,1) DEFAULT NULL,
+  `stepping_kick` decimal(3,1) DEFAULT NULL,
+  `slide_up_kick` decimal(3,1) DEFAULT NULL,
+  `spin_back_kick` decimal(3,1) DEFAULT NULL,
+  `inside_crescent_kick` decimal(3,1) DEFAULT NULL,
+  `outside_crescent_kick` decimal(3,1) DEFAULT NULL,
+  `spin_outside_crescent_kick` decimal(3,1) DEFAULT NULL,
+  `jump_spin_outside_crescent` decimal(3,1) DEFAULT NULL,
+  `spin_heel_kick` decimal(3,1) DEFAULT NULL,
+  `studder_step_kick` decimal(3,1) DEFAULT NULL,
+  `butterfly_kick` decimal(3,1) DEFAULT NULL,
+  `inside_block` decimal(3,1) DEFAULT NULL COMMENT 'Inside Block score (0-10)',
+  `outside_block` decimal(3,1) DEFAULT NULL COMMENT 'Outside Block score (0-10)',
+  `block_punch` decimal(3,1) DEFAULT NULL COMMENT 'Block Punch score (0-10)',
+  `double_block_punch` decimal(3,1) DEFAULT NULL COMMENT 'Double Block Punch score (0-10)',
+  PRIMARY KEY (`assessment_id`),
+  KEY `idx_student_assessments_student_id` (`student_id`),
+  KEY `idx_student_assessments_date` (`assessment_date`),
+  KEY `idx_student_assessments_status` (`assessment_status`),
+  KEY `idx_student_assessments_target_belt` (`target_belt_rank`),
+  CONSTRAINT `student_assessments_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`studentid`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_assessments`
+--
+
+LOCK TABLES `student_assessments` WRITE;
+/*!40000 ALTER TABLE `student_assessments` DISABLE KEYS */;
+INSERT INTO `student_assessments` VALUES (1,1,1,'2025-08-05 00:00:00','Green Black',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','in_progress','2025-08-05 16:17:52','2025-08-05 16:30:36',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,1,NULL,'2025-08-05 00:00:00','Green Black',NULL,NULL,8.0,8.0,8.0,8.0,8.0,8.0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','in_progress','2025-08-05 16:20:37','2025-08-05 17:34:48',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `student_assessments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Temporary view structure for view `student_emergency_contacts`
 --
 
@@ -739,34 +870,86 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `student_progress_summary`
+-- Table structure for table `student_test_history`
 --
 
-DROP TABLE IF EXISTS `student_progress_summary`;
-/*!50001 DROP VIEW IF EXISTS `student_progress_summary`*/;
-SET @saved_cs_client     = @@character_set_client;
+DROP TABLE IF EXISTS `student_test_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `student_progress_summary` AS SELECT 
- 1 AS `studentid`,
- 1 AS `firstName`,
- 1 AS `lastName`,
- 1 AS `preferedName`,
- 1 AS `beltRank`,
- 1 AS `eligibleForTesting`,
- 1 AS `lastTestUTC`,
- 1 AS `current_belt_date`,
- 1 AS `promoted_by`,
- 1 AS `total_tests`,
- 1 AS `passed_tests`,
- 1 AS `avg_test_score`,
- 1 AS `waiver_signed`,
- 1 AS `waiver_date`,
- 1 AS `emergency_contact_name`,
- 1 AS `medical_conditions`,
- 1 AS `allergies`,
- 1 AS `last_test_date`,
- 1 AS `last_test_score`*/;
-SET character_set_client = @saved_cs_client;
+CREATE TABLE `student_test_history` (
+  `test_history_id` int NOT NULL AUTO_INCREMENT,
+  `student_id` int NOT NULL,
+  `instructor_id` int DEFAULT NULL,
+  `test_date` datetime NOT NULL,
+  `belt_from` varchar(50) NOT NULL,
+  `belt_to` varchar(50) NOT NULL,
+  `certificate_name` varchar(255) DEFAULT NULL,
+  `belt_size` varchar(10) DEFAULT NULL,
+  `geocho_hyung_il_bu` decimal(3,1) DEFAULT NULL,
+  `geocho_hyung_il_bu_sahm_gup` decimal(3,1) DEFAULT NULL,
+  `geocho_hyung_yi_bu` decimal(3,1) DEFAULT NULL,
+  `geocho_hyung_yi_bu_sahm_gup` decimal(3,1) DEFAULT NULL,
+  `geocho_hyung_sahm_bu` decimal(3,1) DEFAULT NULL,
+  `pyong_an_cho_dan` decimal(3,1) DEFAULT NULL,
+  `pyong_an_yi_dan` decimal(3,1) DEFAULT NULL,
+  `pyong_an_sahm_dan` decimal(3,1) DEFAULT NULL,
+  `pyong_an_sa_dan` decimal(3,1) DEFAULT NULL,
+  `pyong_an_oh_dan` decimal(3,1) DEFAULT NULL,
+  `bassai` decimal(3,1) DEFAULT NULL,
+  `traditional_1` decimal(3,1) DEFAULT NULL,
+  `traditional_2` decimal(3,1) DEFAULT NULL,
+  `traditional_3` decimal(3,1) DEFAULT NULL,
+  `traditional_4` decimal(3,1) DEFAULT NULL,
+  `made_up_1` decimal(3,1) DEFAULT NULL,
+  `made_up_2` decimal(3,1) DEFAULT NULL,
+  `made_up_3` decimal(3,1) DEFAULT NULL,
+  `made_up_4` decimal(3,1) DEFAULT NULL,
+  `three_steps_1` decimal(3,1) DEFAULT NULL,
+  `three_steps_2` decimal(3,1) DEFAULT NULL,
+  `three_steps_3` decimal(3,1) DEFAULT NULL,
+  `three_steps_4` decimal(3,1) DEFAULT NULL,
+  `jump_kick_front` decimal(3,1) DEFAULT NULL,
+  `jump_kick_round` decimal(3,1) DEFAULT NULL,
+  `jump_kick_side` decimal(3,1) DEFAULT NULL,
+  `jump_kick_back` decimal(3,1) DEFAULT NULL,
+  `jump_kick_f_side` decimal(3,1) DEFAULT NULL,
+  `jump_kick_crescent` decimal(3,1) DEFAULT NULL,
+  `jump_kick_heel` decimal(3,1) DEFAULT NULL,
+  `combination_fighting` decimal(3,1) DEFAULT NULL,
+  `combination_hands` decimal(3,1) DEFAULT NULL,
+  `combination_basic` decimal(3,1) DEFAULT NULL,
+  `stance_front` decimal(3,1) DEFAULT NULL,
+  `stance_back` decimal(3,1) DEFAULT NULL,
+  `stance_straddle` decimal(3,1) DEFAULT NULL,
+  `stance_shifting` decimal(3,1) DEFAULT NULL,
+  `falling_back` decimal(3,1) DEFAULT NULL,
+  `falling_front` decimal(3,1) DEFAULT NULL,
+  `falling_roll` decimal(3,1) DEFAULT NULL,
+  `falling_breaking` decimal(3,1) DEFAULT NULL,
+  `overall_score` decimal(5,2) NOT NULL,
+  `passed` tinyint(1) NOT NULL,
+  `examiner_name` varchar(255) DEFAULT NULL,
+  `examiner_notes` text,
+  `new_rank` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`test_history_id`),
+  KEY `idx_test_history_student_id` (`student_id`),
+  KEY `idx_test_history_date` (`test_date`),
+  KEY `idx_test_history_belt_from` (`belt_from`),
+  KEY `idx_test_history_belt_to` (`belt_to`),
+  KEY `idx_test_history_passed` (`passed`),
+  CONSTRAINT `student_test_history_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`studentid`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_test_history`
+--
+
+LOCK TABLES `student_test_history` WRITE;
+/*!40000 ALTER TABLE `student_test_history` DISABLE KEYS */;
+/*!40000 ALTER TABLE `student_test_history` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `student_tests`
@@ -890,6 +1073,24 @@ LOCK TABLES `test_results` WRITE;
 UNLOCK TABLES;
 
 --
+-- Final view structure for view `assessment_overview`
+--
+
+/*!50001 DROP VIEW IF EXISTS `assessment_overview`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `assessment_overview` AS select `sa`.`assessment_id` AS `assessment_id`,`sa`.`student_id` AS `student_id`,concat(`s`.`firstName`,' ',`s`.`lastName`) AS `student_name`,`s`.`beltRank` AS `current_belt`,`sa`.`target_belt_rank` AS `target_belt_rank`,`sa`.`assessment_date` AS `assessment_date`,`sa`.`overall_score` AS `overall_score`,`sa`.`passed` AS `passed`,`sa`.`assessment_status` AS `assessment_status`,`sa`.`examiner_notes` AS `examiner_notes`,round((((((((((((((coalesce(`sa`.`geocho_hyung_il_bu`,0) > 0) + (coalesce(`sa`.`geocho_hyung_il_bu_sahm_gup`,0) > 0)) + (coalesce(`sa`.`geocho_hyung_yi_bu`,0) > 0)) + (coalesce(`sa`.`geocho_hyung_yi_bu_sahm_gup`,0) > 0)) + (coalesce(`sa`.`geocho_hyung_sahm_bu`,0) > 0)) + (coalesce(`sa`.`pyong_an_cho_dan`,0) > 0)) + (coalesce(`sa`.`pyong_an_yi_dan`,0) > 0)) + (coalesce(`sa`.`pyong_an_sahm_dan`,0) > 0)) + (coalesce(`sa`.`pyong_an_sa_dan`,0) > 0)) + (coalesce(`sa`.`pyong_an_oh_dan`,0) > 0)) + (coalesce(`sa`.`bassai`,0) > 0)) * 100.0) / 11),1) AS `forms_completion_pct`,round((((((((((((coalesce(`sa`.`geocho_hyung_il_bu`,0) + coalesce(`sa`.`geocho_hyung_il_bu_sahm_gup`,0)) + coalesce(`sa`.`geocho_hyung_yi_bu`,0)) + coalesce(`sa`.`geocho_hyung_yi_bu_sahm_gup`,0)) + coalesce(`sa`.`geocho_hyung_sahm_bu`,0)) + coalesce(`sa`.`pyong_an_cho_dan`,0)) + coalesce(`sa`.`pyong_an_yi_dan`,0)) + coalesce(`sa`.`pyong_an_sahm_dan`,0)) + coalesce(`sa`.`pyong_an_sa_dan`,0)) + coalesce(`sa`.`pyong_an_oh_dan`,0)) + coalesce(`sa`.`bassai`,0)) / greatest(1,(((((((((((coalesce(`sa`.`geocho_hyung_il_bu`,0) > 0) + (coalesce(`sa`.`geocho_hyung_il_bu_sahm_gup`,0) > 0)) + (coalesce(`sa`.`geocho_hyung_yi_bu`,0) > 0)) + (coalesce(`sa`.`geocho_hyung_yi_bu_sahm_gup`,0) > 0)) + (coalesce(`sa`.`geocho_hyung_sahm_bu`,0) > 0)) + (coalesce(`sa`.`pyong_an_cho_dan`,0) > 0)) + (coalesce(`sa`.`pyong_an_yi_dan`,0) > 0)) + (coalesce(`sa`.`pyong_an_sahm_dan`,0) > 0)) + (coalesce(`sa`.`pyong_an_sa_dan`,0) > 0)) + (coalesce(`sa`.`pyong_an_oh_dan`,0) > 0)) + (coalesce(`sa`.`bassai`,0) > 0)))),1) AS `avg_forms_score` from (`student_assessments` `sa` join `students` `s` on((`sa`.`student_id` = `s`.`studentid`))) order by `sa`.`assessment_date` desc */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `families`
 --
 
@@ -942,24 +1143,6 @@ UNLOCK TABLES;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `student_progress_summary`
---
-
-/*!50001 DROP VIEW IF EXISTS `student_progress_summary`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `student_progress_summary` AS select `s`.`studentid` AS `studentid`,`s`.`firstName` AS `firstName`,`s`.`lastName` AS `lastName`,`s`.`preferedName` AS `preferedName`,`s`.`beltRank` AS `beltRank`,`s`.`eligibleForTesting` AS `eligibleForTesting`,`s`.`lastTestUTC` AS `lastTestUTC`,`bp`.`promoted_date` AS `current_belt_date`,`bp`.`promoted_by` AS `promoted_by`,(select count(0) from `student_tests` `st` where (`st`.`studentid` = `s`.`studentid`)) AS `total_tests`,(select count(0) from `student_tests` `st` where ((`st`.`studentid` = `s`.`studentid`) and (`st`.`passed` = 1))) AS `passed_tests`,(select avg(`st`.`overall_score`) from `student_tests` `st` where ((`st`.`studentid` = `s`.`studentid`) and (`st`.`passed` = 1))) AS `avg_test_score`,`s`.`waiver_signed` AS `waiver_signed`,`s`.`waiver_date` AS `waiver_date`,`s`.`emergency_contact_name` AS `emergency_contact_name`,`s`.`medical_conditions` AS `medical_conditions`,`s`.`allergies` AS `allergies`,(select `st`.`test_date` from `student_tests` `st` where (`st`.`studentid` = `s`.`studentid`) order by `st`.`test_date` desc limit 1) AS `last_test_date`,(select `st`.`overall_score` from `student_tests` `st` where (`st`.`studentid` = `s`.`studentid`) order by `st`.`test_date` desc limit 1) AS `last_test_score` from (`students` `s` left join `belt_progression` `bp` on(((`s`.`studentid` = `bp`.`studentid`) and (`bp`.`is_current` = 1)))) where (`s`.`active` = 1) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -970,4 +1153,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-04 19:03:32
+-- Dump completed on 2025-08-05 20:54:24

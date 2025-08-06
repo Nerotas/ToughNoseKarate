@@ -1,4 +1,26 @@
-# JWT Authentication & Authorization Roadmap
+# JWT Authentication & Authorizatio-- Insert default admin
+
+-- STEP 1: Generate your password hash using one of these methods:
+
+-- METHOD 1: Use the password generator script
+-- Run: npx ts-node src/utils/generatePasswordHash.ts
+-- (Change the password in the script first)
+
+-- METHOD 2: Generate hash manually with Node.js
+-- const bcrypt = require('bcrypt');
+-- const hash = await bcrypt.hash('YourPassword123!', 10);
+-- console.log(hash);
+
+-- METHOD 3: Use online bcrypt generator (less secure)
+-- Visit: https://bcrypt.tools/hash-generator
+
+-- STEP 2: Replace $YOUR_HASHED_PASSWORD with actual hash:
+INSERT INTO instructors (email, password_hash, first_name, last_name, role)
+VALUES ('admin@toughnosekarate.com', '$YOUR_HASHED_PASSWORD', 'Admin', 'User', 'admin');
+
+-- Example with generated hash:
+-- INSERT INTO instructors (email, password_hash, first_name, last_name, role)
+-- VALUES ('admin@toughnosekarate.com', '$2b$10$c0psj5mdu2GQdQ6OfRfWEedGCpdIqokVVNNnTQMqJrHsjutw62zdm', 'Admin', 'User', 'admin');oadmap
 
 **Goal: Restrict student information to logged-in instructors only**
 
