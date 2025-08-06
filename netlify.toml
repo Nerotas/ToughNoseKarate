@@ -1,7 +1,7 @@
 [build]
   base = "FrontEnd"
   command = "npm run build"
-  publish = "FrontEnd/.next"
+  publish = ".next"
 
 [build.environment]
   NODE_ENV = "production"
