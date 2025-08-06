@@ -1,17 +1,11 @@
 [build]
+  base = "FrontEnd"
   command = "npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_ENV = "production"
   NPM_FLAGS = "--production=false"
-
-# Redirect all API calls to backend
-[[redirects]]
-  from = "/api/*"
-  to = "https://your-backend.netlify.app/api/:splat"
-  status = 200
-  force = true
 
 # SPA fallback for client-side routing
 [[redirects]]
@@ -33,3 +27,5 @@
   for = "/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
