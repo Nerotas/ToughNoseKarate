@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
-import { StudentAssessment } from '../../../models/Assessments/Assessments';
-import { studentsService } from '../../../services/studentsService';
-import { studentAssessmentsService } from '../../../services/studentAssessmentsService';
-import StudentAssessmentForm from '../../(DashboardLayout)/components/students/details/StudentAssessmentForm';
-import EditStudentDialog from '../../(DashboardLayout)/components/students/EditStudentDialog';
+import { StudentAssessment } from '../../../../models/Assessments/Assessments';
+import { studentsService } from '../../../../services/studentsService';
+import { studentAssessmentsService } from '../../../../services/studentAssessmentsService';
+import StudentAssessmentForm from '../../components/students/details/StudentAssessmentForm';
+import EditStudentDialog from '../../components/students/EditStudentDialog';
 import Loading from 'app/loading';
 import {
   Box,
@@ -18,10 +18,10 @@ import {
 } from '@mui/material';
 import { IconArrowLeft, IconEdit, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
-import PageContainer from '../../(DashboardLayout)/components/container/PageContainer';
-import useGet from '../../../hooks/useGet';
-import { BeltRequirements } from '../../../models/BeltRequirements/BeltRequirements';
-import { TestHistory } from '../../../models/StudentTests/StudentTests';
+import PageContainer from '../../components/container/PageContainer';
+import useGet from '../../../../hooks/useGet';
+import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
+import { TestHistory } from '../../../../models/StudentTests/StudentTests';
 import {
   StudentDetailClientProps,
   Family,

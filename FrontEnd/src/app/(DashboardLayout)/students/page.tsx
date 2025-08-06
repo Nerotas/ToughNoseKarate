@@ -1,6 +1,6 @@
-import SSRWrapper from '../../wrappers/SSRWrapper';
+import SSRWrapper from '../../../wrappers/SSRWrapper';
 import StudentsClient from './StudentsClient';
-import ProtectedRoute from '../../components/ProtectedRoute';
+import ProtectedRoute from '../../../components/ProtectedRoute';
 
 /**
  * Server-side rendered Students page with pre-fetched data

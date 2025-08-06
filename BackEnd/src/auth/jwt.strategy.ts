@@ -27,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Payload structure: { email, sub: instructorId, role, iat, exp }
     const instructor = await this.instructorsService.findById(payload.sub);
 
-    if (!instructor || !instructor.is_active) {
+    if (!instructor || instructor.getDataValue('is_active') === false) {
       throw new UnauthorizedException(
         'Invalid token - instructor not found or inactive',
       );
@@ -35,9 +35,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // Return the instructor payload that will be attached to request.user
     return {
-      instructorId: instructor.instructor_id,
-      email: instructor.email,
-      role: instructor.role,
+      instructorId: instructor.getDataValue('instructor_id'),
+      email: instructor.getDataValue('email'),
+      role: instructor.getDataValue('role'),
     };
   }
 }

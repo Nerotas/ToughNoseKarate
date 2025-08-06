@@ -148,7 +148,7 @@ export class InstructorsService {
     instructor: Instructors,
     password: string,
   ): Promise<boolean> {
-    return bcrypt.compare(password, instructor.password_hash);
+    return bcrypt.compare(password, instructor.getDataValue('password_hash'));
   }
 
   async count(): Promise<number> {

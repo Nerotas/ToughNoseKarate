@@ -50,7 +50,7 @@ export class AuthService {
       return null;
     }
 
-    if (!instructor.is_active) {
+    if (instructor.getDataValue('is_active') === false) {
       throw new UnauthorizedException('Account is deactivated');
     }
 
@@ -64,16 +64,18 @@ export class AuthService {
     }
 
     // Update last login timestamp
-    await this.instructorsService.updateLastLogin(instructor.instructor_id);
+    await this.instructorsService.updateLastLogin(
+      instructor.getDataValue('instructor_id'),
+    );
 
     return instructor;
   }
 
   async login(instructor: Instructors): Promise<LoginResponse> {
     const payload: JwtPayload = {
-      email: instructor.email,
-      sub: instructor.instructor_id,
-      role: instructor.role,
+      email: instructor.getDataValue('email'),
+      sub: instructor.getDataValue('instructor_id'),
+      role: instructor.getDataValue('role'),
     };
 
     const access_token = this.jwtService.sign(payload);
@@ -81,11 +83,11 @@ export class AuthService {
     return {
       access_token,
       instructor: {
-        id: instructor.instructor_id,
-        email: instructor.email,
-        firstName: instructor.first_name,
-        lastName: instructor.last_name,
-        role: instructor.role,
+        id: instructor.getDataValue('instructor_id'),
+        email: instructor.getDataValue('email'),
+        firstName: instructor.getDataValue('first_name'),
+        lastName: instructor.getDataValue('last_name'),
+        role: instructor.getDataValue('role'),
       },
     };
   }
@@ -164,16 +166,16 @@ export class AuthService {
   async refreshToken(instructorId: number): Promise<{ access_token: string }> {
     const instructor = await this.instructorsService.findById(instructorId);
 
-    if (!instructor || !instructor.is_active) {
+    if (!instructor || instructor.getDataValue('is_active') === false) {
       throw new UnauthorizedException(
         'Invalid instructor or account deactivated',
       );
     }
 
     const payload: JwtPayload = {
-      email: instructor.email,
-      sub: instructor.instructor_id,
-      role: instructor.role,
+      email: instructor.getDataValue('email'),
+      sub: instructor.getDataValue('instructor_id'),
+      role: instructor.getDataValue('role'),
     };
 
     return {
