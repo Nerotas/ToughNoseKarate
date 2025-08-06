@@ -10,7 +10,7 @@ interface StudentInformationProps {
 }
 
 const StudentInformation = ({ student, beltColor, beltTextColor }: StudentInformationProps) => {
-  const studentName = student.preferedName || student.firstName;
+  const studentName = student.preferredName || student.firstName;
 
   return (
     <DashboardCard title='Student Information'>

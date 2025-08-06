@@ -7,14 +7,6 @@ import {
   ForeignKey,
 } from 'sequelize-typescript';
 import { students } from './students';
-import { blocks } from './blocks';
-import { combinations } from './combinations';
-import { falling } from './falling';
-import { forms } from './forms';
-import { kicks } from './kicks';
-import { oneSteps } from './oneSteps';
-import { punches } from './punches';
-import { stances } from './stances';
 
 // This interface represents the complete student progress data
 export interface StudentProgressAttributes {
@@ -22,7 +14,7 @@ export interface StudentProgressAttributes {
   studentid: number;
   firstName: string;
   lastName: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank?: string;
   startDateUTC: string;
@@ -167,7 +159,7 @@ export class StudentProgress
   lastName!: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  preferedName?: string;
+  preferredName?: string;
 
   @Column({ allowNull: true, type: DataType.INTEGER })
   age?: number;

@@ -29,6 +29,7 @@
     "@types/react-dom": "^19.1.7",
     "apexcharts": "4.7.0",
     "axios": "^1.11.0",
+    "critters": "^0.0.23",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "eslint": "^8.57.0",

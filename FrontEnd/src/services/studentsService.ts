@@ -1,4 +1,4 @@
-import { Student, CreateStudentRequest, UpdateStudentRequest } from 'models/Students/Students';
+import { Student, UpdateStudentRequest } from 'models/Students/Students';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 
 class StudentsService {
@@ -15,7 +15,7 @@ class StudentsService {
   }
 
   // Create a new student
-  async createStudent(studentData: CreateStudentRequest): Promise<Student> {
+  async createStudent(studentData: UpdateStudentRequest): Promise<Student> {
     const response = await axiosInstance.post('/v1/students', studentData);
     return response.data;
   }

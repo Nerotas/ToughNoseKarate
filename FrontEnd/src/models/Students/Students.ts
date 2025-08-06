@@ -1,44 +1,46 @@
-export interface Student {
-  studentid: number;
-  firstName: string;
-  lastName: string;
-  preferedName?: string;
-  age?: number;
-  beltRank: string;
-  startDateUTC: string;
+export class Student {
+  studentid: number = 0;
+  firstName: string = '';
+  lastName: string = '';
+  preferredName: string = '';
+  age: number = 0;
+  beltRank: string = '';
+  startDateUTC: string = '';
   endDateUTC?: string;
-  email: string;
+  email: string = '';
   phone?: string;
   notes?: string;
-  active: number;
-  child: number;
+  active: number = 1;
+  child: number = 0;
   lastTestUTC?: string;
-  eligibleForTesting: number;
+  eligibleForTesting: number = 0;
+
+  constructor(init?: Partial<Student>) {
+    Object.assign(this, init);
+  }
 }
 
-// DTO for creating a new student
-export interface CreateStudentRequest {
-  firstName: string;
-  lastName: string;
-  preferedName?: string;
-  age?: number;
-  beltRank?: string;
-  startDateUTC: string;
-  endDateUTC?: string;
-  email: string;
-  phone?: string;
-  notes?: string;
-  active?: number;
-  child?: number;
-  lastTestUTC?: string;
-  eligibleForTesting?: number;
+export class StudentDisplay extends Student {
+  id: number = 0;
+  name: string = '';
+  currentBelt: string = '';
+  beltColor: string = '';
+  joinDate: string = '';
+  lastTest: string | null = null;
+  isChild: boolean = false;
+  isActive: boolean = true;
+
+  constructor(init?: Partial<StudentDisplay>) {
+    super(init);
+    Object.assign(this, init);
+  }
 }
 
 // DTO for updating a student
 export interface UpdateStudentRequest {
   firstName?: string;
   lastName?: string;
-  preferedName?: string;
+  preferredName?: string;
   age?: number;
   beltRank?: string;
   startDateUTC?: string;
@@ -58,7 +60,7 @@ export interface Family {
   studentid?: number;
   firstName: string; // Student first name
   lastName: string; // Student last name
-  preferedName?: string; // Student preferred name
+  preferredName?: string; // Student preferred name
   parentFirstName?: string;
   parentLastName?: string;
   age?: number; // Student age

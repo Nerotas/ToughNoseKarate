@@ -33,7 +33,7 @@ interface EditStudentDialogProps {
 const studentValidationSchema = Yup.object({
   firstName: Yup.string().required('First name is required').max(45, 'First name too long'),
   lastName: Yup.string().required('Last name is required').max(45, 'Last name too long'),
-  preferedName: Yup.string().max(45, 'Preferred name too long'),
+  preferredName: Yup.string().max(45, 'Preferred name too long'),
   age: Yup.number().min(1, 'Age must be positive').max(150, 'Age must be reasonable'),
   email: Yup.string().email('Invalid email format').required('Email is required'),
   phone: Yup.string().max(20, 'Phone number too long'),
@@ -53,7 +53,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   const initialValues = {
     firstName: student.firstName || '',
     lastName: student.lastName || '',
-    preferedName: student.preferedName || '',
+    preferredName: student.preferredName || '',
     age: student.age || '',
     email: student.email || '',
     phone: student.phone || '',
@@ -71,7 +71,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
       const updateData: UpdateStudentRequest = {
         firstName: values.firstName,
         lastName: values.lastName,
-        preferedName: values.preferedName || undefined,
+        preferredName: values.preferredName || undefined,
         age: values.age ? parseInt(values.age) : undefined,
         email: values.email,
         phone: values.phone || undefined,
@@ -148,12 +148,12 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
                   <TextField
                     fullWidth
                     label='Preferred Name'
-                    name='preferedName'
-                    value={values.preferedName}
+                    name='preferredName'
+                    value={values.preferredName}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={touched.preferedName && Boolean(errors.preferedName)}
-                    helperText={touched.preferedName && errors.preferedName}
+                    error={touched.preferredName && Boolean(errors.preferredName)}
+                    helperText={touched.preferredName && errors.preferredName}
                   />
                 </Grid>
 
