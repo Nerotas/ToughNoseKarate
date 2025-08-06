@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs", "yarn"]
+
+[phases.install]
+cmds = ["yarn install --frozen-lockfile || npm install"]
+
+[phases.build]
+cmds = ["yarn build || npm run build"]
+
+[phases.start]
+cmds = ["node dist/main.js"]
