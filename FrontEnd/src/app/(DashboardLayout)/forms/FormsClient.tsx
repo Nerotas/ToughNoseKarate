@@ -121,14 +121,30 @@ const FormsClient = () => {
                     </Typography>
 
                     <Box sx={{ mb: 2 }}>
-                      <Button
-                        variant='outlined'
-                        startIcon={<IconPlayerPlay />}
-                        size='small'
-                        sx={{ mr: 1 }}
-                      >
-                        Watch Video
-                      </Button>
+                      {form.videoLink ? (
+                        <Button
+                          variant='outlined'
+                          startIcon={<IconPlayerPlay />}
+                          size='small'
+                          sx={{ mr: 1 }}
+                          href={form.videoLink}
+                          component="a"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Watch Video
+                        </Button>
+                      ) : (
+                        <Button
+                          variant='outlined'
+                          startIcon={<IconPlayerPlay />}
+                          size='small'
+                          sx={{ mr: 1 }}
+                          disabled
+                        >
+                          Watch Video
+                        </Button>
+                      )}
                     </Box>
 
                     <Accordion>

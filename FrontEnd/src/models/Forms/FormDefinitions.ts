@@ -9,4 +9,5 @@ export class FormDefinitions {
   difficultyLevel: number = 0;
   description?: string = '';
   keyPoints?: string[] = [];
+  videoLink?: string = '';
 }

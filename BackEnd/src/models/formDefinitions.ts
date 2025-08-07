@@ -17,6 +17,7 @@ export interface FormDefinitionsAttributes {
   beltTextColor: string;
   difficultyLevel: number;
   description?: string;
+  videoLink?: string; // URL to a video demonstration
   keyPoints?: string[]; // JSON array
 }
 
@@ -43,6 +44,13 @@ export class FormDefinitions extends Model<FormDefinitionsAttributes> {
     field: 'korean_name',
   })
   declare koreanName?: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'video_link',
+  })
+  declare videoLink?: string;
 
   @Column({
     type: DataType.STRING,
