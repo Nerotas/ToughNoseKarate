@@ -1,9 +1,0 @@
-.vscode
-dist
-node_modules
-.env
-
-.dockerignore
-Dockerfile
-cypress
-cypress*
