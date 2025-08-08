@@ -28,7 +28,6 @@ import { InstructorPayload } from '../auth/jwt.strategy';
 @Controller({ path: 'students', version: '1' })
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(['admin', 'instructor'])
-@InstructorOnly()
 @ApiBearerAuth('JWT')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
