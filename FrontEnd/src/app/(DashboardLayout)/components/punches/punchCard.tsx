@@ -11,7 +11,6 @@ import {
   ListItemText,
 } from '@mui/material';
 import { IconHandStop, IconCheckbox, IconX, IconTarget, IconEdit } from '@tabler/icons-react';
-import { getBeltTextColor } from 'helpers/BeltColors';
 import { size } from 'lodash';
 import { PunchDefinition } from 'models/Punches/Punches';
 import PunchEditModule from './punchEditModule';
