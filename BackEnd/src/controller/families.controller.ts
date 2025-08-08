@@ -23,7 +23,6 @@ import { InstructorOnly, Roles } from '../decorators/roles.decorator';
 @Controller({ path: 'families', version: '1' })
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(['admin', 'instructor'])
-@InstructorOnly()
 @ApiBearerAuth('JWT')
 export class FamiliesController {
   constructor(private readonly familiesService: FamiliesService) {}
