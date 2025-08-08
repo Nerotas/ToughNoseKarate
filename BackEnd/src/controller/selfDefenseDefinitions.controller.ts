@@ -5,10 +5,14 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { SelfDefenseDefinitionsService } from '../service/selfDefenseDefinitions.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @ApiTags('Techniques')
 @Controller('self-defense-definitions')
@@ -17,6 +21,8 @@ export class SelfDefenseDefinitionsController {
     private readonly selfDefenseDefinitionsService: SelfDefenseDefinitionsService,
   ) {}
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   create(@Body() createSelfDefenseDefinitionsDto: any) {
     return this.selfDefenseDefinitionsService.create(
       createSelfDefenseDefinitionsDto,
@@ -31,6 +37,8 @@ export class SelfDefenseDefinitionsController {
     return this.selfDefenseDefinitionsService.findOne(+id);
   }
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   update(
     @Param('id') id: string,
     @Body() updateSelfDefenseDefinitionsDto: any,
@@ -41,6 +49,8 @@ export class SelfDefenseDefinitionsController {
     );
   }
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   remove(@Param('id') id: string) {
     return this.selfDefenseDefinitionsService.remove(+id);
   }

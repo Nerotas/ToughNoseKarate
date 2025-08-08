@@ -5,10 +5,14 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { BeltRequirementsService } from '../service/beltRequirements.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @ApiTags('Belt Requirements')
 @Controller('belt-Requirements')
@@ -16,18 +20,26 @@ export class BeltRequirementsController {
   constructor(
     private readonly beltRequirementsService: BeltRequirementsService,
   ) {}
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   @Post()
   create(@Body() createBeltRequirementsDto: any) {
     return this.beltRequirementsService.create(createBeltRequirementsDto);
   }
+
   @Get()
   findAll() {
     return this.beltRequirementsService.findAll();
   }
+
   @Get(':beltRank')
   findOne(@Param('beltRank') beltRank: string) {
     return this.beltRequirementsService.findOne(beltRank);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   @Patch(':beltRank')
   update(
     @Param('beltRank') beltRank: string,
@@ -38,6 +50,9 @@ export class BeltRequirementsController {
       updateBeltRequirementsDto,
     );
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   @Delete(':beltRank')
   remove(@Param('beltRank') beltRank: string) {
     return this.beltRequirementsService.remove(beltRank);
