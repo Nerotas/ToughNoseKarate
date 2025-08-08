@@ -256,7 +256,7 @@ export class FormDefinitionsController {
 
   @Post('bulk')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(['admin', 'instructor'])
+  @Roles(['admin'])
   @ApiOperation({ summary: 'Bulk create form definitions (for seeding data)' })
   @ApiResponse({
     status: 201,
