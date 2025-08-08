@@ -10,7 +10,7 @@ import {
   ListItem,
   ListItemText,
 } from '@mui/material';
-import { IconHandStop, IconCheckbox, IconX, IconTarget } from '@tabler/icons-react';
+import { IconHandStop, IconCheckbox, IconX, IconTarget, IconEdit } from '@tabler/icons-react';
 import { getBeltTextColor } from 'helpers/BeltColors';
 import { size } from 'lodash';
 import { PunchDefinition } from 'models/Punches/Punches';
@@ -67,6 +67,7 @@ const PunchCard = ({
                   border: punch.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
                 }}
               />
+              <Chip label={'Edit'} icon={<IconEdit />} onClick={handleOpenEdit} />
             </Box>
 
             <Typography variant='body2' paragraph>
