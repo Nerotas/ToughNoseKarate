@@ -32,6 +32,7 @@ export default function PunchesClient() {
     isFetching,
     error,
     isError,
+    refetch,
   } = useGet<PunchDefinition[]>({
     apiLabel: 'punches-definitions',
     url: '/punches-definitions',
@@ -44,6 +45,10 @@ export default function PunchesClient() {
       refetchOnWindowFocus: false,
     },
   });
+
+  const refetchPunches = async () => {
+    await refetch();
+  };
 
   return (
     <PageContainer title='Punches' description='Tang Soo Do Punching Techniques'>
@@ -88,7 +93,12 @@ export default function PunchesClient() {
 
           {punchDefinitions &&
             punchDefinitions.map((punch) => (
-              <PunchCard key={punch.id} punch={punch} getBeltTextColor={getBeltTextColor} />
+              <PunchCard
+                key={punch.id}
+                punch={punch}
+                getBeltTextColor={getBeltTextColor}
+                refetchPunches={refetchPunches}
+              />
             ))}
         </Grid>
 
