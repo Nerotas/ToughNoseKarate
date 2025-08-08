@@ -12,9 +12,16 @@ import {
 } from '@mui/material';
 import { IconHandStop, IconCheckbox, IconX, IconTarget } from '@tabler/icons-react';
 import { getBeltTextColor } from 'helpers/BeltColors';
+import { size } from 'lodash';
 import { PunchDefinition } from 'models/Punches/Punches';
 
-const PunchCard = ({ punch, getBeltTextColor }: { punch: PunchDefinition, getBeltTextColor: (color: string) => string  }) => {
+const PunchCard = ({
+  punch,
+  getBeltTextColor,
+}: {
+  punch: PunchDefinition;
+  getBeltTextColor: (color: string) => string;
+}) => {
   return (
     <Grid size={{ xs: 12, md: 6 }} key={punch.id}>
       <Card sx={{ height: '100%' }}>
@@ -51,23 +58,27 @@ const PunchCard = ({ punch, getBeltTextColor }: { punch: PunchDefinition, getBel
             {punch.description}
           </Typography>
 
-          <Box sx={{ mb: 3 }}>
-            <Typography variant='subtitle2' gutterBottom>
-              Technique:
-            </Typography>
-            <Typography variant='body2' color='text.secondary'>
-              {punch.technique}
-            </Typography>
-          </Box>
+          {size(punch.technique) > 0 && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant='subtitle2' gutterBottom>
+                Technique:
+              </Typography>
+              <Typography variant='body2' color='text.secondary'>
+                {punch.technique}
+              </Typography>
+            </Box>
+          )}
 
-          <Box sx={{ mb: 3 }}>
-            <Typography variant='subtitle2' gutterBottom>
-              Body Mechanics:
-            </Typography>
-            <Typography variant='body2' color='text.secondary'>
-              {punch.bodyMechanics}
-            </Typography>
-          </Box>
+          {size(punch.bodyMechanics) > 0 && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant='subtitle2' gutterBottom>
+                Body Mechanics:
+              </Typography>
+              <Typography variant='body2' color='text.secondary'>
+                {punch.bodyMechanics}
+              </Typography>
+            </Box>
+          )}
 
           <Divider sx={{ my: 2 }} />
 
