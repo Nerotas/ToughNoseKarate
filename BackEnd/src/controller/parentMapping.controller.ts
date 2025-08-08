@@ -5,12 +5,18 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ParentMappingService } from '../service/parentMapping.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @ApiTags('Students')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(['admin', 'instructor'])
 @Controller('parent-Mapping')
 export class ParentMappingController {
   constructor(private readonly parentMappingService: ParentMappingService) {}

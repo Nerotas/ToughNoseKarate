@@ -5,10 +5,14 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { StanceDefinitionsService } from '../service/stanceDefinitions.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @ApiTags('Techniques')
 @Controller('stance-definitions')
@@ -17,6 +21,8 @@ export class StanceDefinitionsController {
     private readonly stanceDefinitionsService: StanceDefinitionsService,
   ) {}
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   create(@Body() createStanceDefinitionsDto: any) {
     return this.stanceDefinitionsService.create(createStanceDefinitionsDto);
   }
@@ -29,6 +35,8 @@ export class StanceDefinitionsController {
     return this.stanceDefinitionsService.findOne(+id);
   }
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   update(@Param('id') id: string, @Body() updateStanceDefinitionsDto: any) {
     return this.stanceDefinitionsService.update(
       +id,
@@ -36,6 +44,8 @@ export class StanceDefinitionsController {
     );
   }
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   remove(@Param('id') id: string) {
     return this.stanceDefinitionsService.remove(+id);
   }

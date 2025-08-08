@@ -17,11 +17,12 @@ import {
 import { FamiliesService } from '../service/families.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
-import { InstructorOnly } from '../decorators/roles.decorator';
+import { InstructorOnly, Roles } from '../decorators/roles.decorator';
 
 @ApiTags('Families')
 @Controller({ path: 'families', version: '1' })
 @UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(['admin', 'instructor'])
 @InstructorOnly()
 @ApiBearerAuth('JWT')
 export class FamiliesController {

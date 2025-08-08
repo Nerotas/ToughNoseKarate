@@ -20,8 +20,9 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { FormDefinitionsService } from '../service/formDefinitions.service';
-import { AdminGuard } from '../guards/roles.guard';
+import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('form-definitions')
 @Controller({ path: 'form-definitions', version: '1' })
@@ -31,7 +32,7 @@ export class FormDefinitionsController {
   ) {}
 
   @Post()
-  @UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['admin', 'instructor'])
   @ApiOperation({ summary: 'Create a new form definition' })
   @ApiResponse({
@@ -133,7 +134,7 @@ export class FormDefinitionsController {
   }
 
   @Patch(':id')
-  @UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['admin', 'instructor'])
   @ApiOperation({ summary: 'Update a form definition' })
   @ApiParam({ name: 'id', description: 'Form definition ID', type: 'number' })
@@ -176,8 +177,8 @@ export class FormDefinitionsController {
   }
 
   @Delete(':id')
-  @UseGuards(AdminGuard)
-  @Roles(['admin'])
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   @ApiOperation({
     summary: 'Soft delete a form definition (set active_indicator to 0)',
   })
@@ -215,8 +216,8 @@ export class FormDefinitionsController {
   }
 
   @Delete(':id/permanent')
-  @UseGuards(AdminGuard)
-  @Roles(['admin'])
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   @ApiOperation({
     summary: 'Permanently delete a form definition',
   })
@@ -254,8 +255,8 @@ export class FormDefinitionsController {
   }
 
   @Post('bulk')
-  @UseGuards(AdminGuard)
-  @Roles(['admin'])
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   @ApiOperation({ summary: 'Bulk create form definitions (for seeding data)' })
   @ApiResponse({
     status: 201,

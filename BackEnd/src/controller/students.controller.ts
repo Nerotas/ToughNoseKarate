@@ -20,13 +20,14 @@ import { StudentsService } from '../service/students.service';
 import { students } from 'src/models/students';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
-import { InstructorOnly } from '../decorators/roles.decorator';
+import { InstructorOnly, Roles } from '../decorators/roles.decorator';
 import { User } from '../decorators/user.decorator';
 import { InstructorPayload } from '../auth/jwt.strategy';
 
 @ApiTags('Students')
 @Controller({ path: 'students', version: '1' })
 @UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(['admin', 'instructor'])
 @InstructorOnly()
 @ApiBearerAuth('JWT')
 export class StudentsController {

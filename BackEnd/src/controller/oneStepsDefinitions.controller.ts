@@ -6,9 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OneStepsDefinitionsService } from '../service/oneStepsDefinitions.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @ApiTags('onestep-definitions')
 @Controller({ path: 'onestep-definitions', version: '1' })
@@ -17,6 +21,8 @@ export class OneStepsDefinitionsController {
     private readonly oneStepsDefinitionsService: OneStepsDefinitionsService,
   ) {}
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   create(@Body() createOneStepsDefinitionsDto: any) {
     return this.oneStepsDefinitionsService.create(createOneStepsDefinitionsDto);
   }
@@ -38,6 +44,8 @@ export class OneStepsDefinitionsController {
     return this.oneStepsDefinitionsService.findOne(+id);
   }
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   update(@Param('id') id: string, @Body() updateOneStepsDefinitionsDto: any) {
     return this.oneStepsDefinitionsService.update(
       +id,
@@ -45,6 +53,8 @@ export class OneStepsDefinitionsController {
     );
   }
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
   remove(@Param('id') id: string) {
     return this.oneStepsDefinitionsService.remove(+id);
   }

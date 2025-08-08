@@ -12,12 +12,7 @@ import {
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import {
   StudentAssessmentsService,
   CreateStudentAssessmentDto,
@@ -25,13 +20,12 @@ import {
 } from '../service/studentAssessments.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
-import { InstructorOnly } from '../decorators/roles.decorator';
-import { User } from '../decorators/user.decorator';
-import { InstructorPayload } from '../auth/jwt.strategy';
+import { InstructorOnly, Roles } from '../decorators/roles.decorator';
 
 @ApiTags('Student Assessments')
 @Controller('student-assessments')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(['admin', 'instructor'])
 @InstructorOnly()
 @ApiBearerAuth('JWT')
 export class StudentAssessmentsController {
