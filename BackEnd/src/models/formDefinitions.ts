@@ -93,7 +93,7 @@ export class FormDefinitions extends Model<FormDefinitionsAttributes> {
   declare description?: string;
 
   @Column({
-    type: DataType.JSON,
+    type: DataType.ARRAY(DataType.TEXT),
     allowNull: true,
     field: 'key_points',
   })

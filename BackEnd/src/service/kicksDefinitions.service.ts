@@ -9,6 +9,31 @@ export class KicksDefinitionsService {
     private kicksDefinitionsModel: typeof kicksDefinitions,
   ) {}
 
+  private normalizePayload(payload: any): any {
+    const normalized = { ...payload };
+
+    // Ensure array fields are properly formatted for PostgreSQL
+    ['execution', 'keyPoints', 'commonMistakes', 'applications'].forEach(
+      (field) => {
+        if (normalized[field] !== undefined && normalized[field] !== null) {
+          // Coerce to array if it's not already
+          if (!Array.isArray(normalized[field])) {
+            normalized[field] = [normalized[field]];
+          }
+        }
+      },
+    );
+
+    // Remove undefined fields to avoid database issues
+    Object.keys(normalized).forEach((key) => {
+      if (normalized[key] === undefined) {
+        delete normalized[key];
+      }
+    });
+
+    return normalized;
+  }
+
   async findAll(): Promise<kicksDefinitions[]> {
     return this.kicksDefinitionsModel.findAll();
   }
@@ -18,14 +43,16 @@ export class KicksDefinitionsService {
   }
 
   async create(createKicksDefinitionsDto: any): Promise<kicksDefinitions> {
-    return this.kicksDefinitionsModel.create(createKicksDefinitionsDto);
+    const normalized = this.normalizePayload(createKicksDefinitionsDto);
+    return this.kicksDefinitionsModel.create(normalized);
   }
 
   async update(
     id: number,
     updateKicksDefinitionsDto: any,
   ): Promise<[number, kicksDefinitions[]]> {
-    return this.kicksDefinitionsModel.update(updateKicksDefinitionsDto, {
+    const normalized = this.normalizePayload(updateKicksDefinitionsDto);
+    return this.kicksDefinitionsModel.update(normalized, {
       where: { id },
       returning: true,
     });
