@@ -26,7 +26,6 @@ import { InstructorOnly, Roles } from '../decorators/roles.decorator';
 @Controller('student-assessments')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(['admin', 'instructor'])
-@InstructorOnly()
 @ApiBearerAuth('JWT')
 export class StudentAssessmentsController {
   constructor(
