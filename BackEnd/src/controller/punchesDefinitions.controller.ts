@@ -13,6 +13,7 @@ import { PunchesDefinitionsService } from '../service/punchesDefinitions.service
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { PunchesDefinitionsAttributes } from 'src/models';
 
 @ApiTags('Techniques')
 @Controller('punches-definitions')
@@ -37,7 +38,12 @@ export class PunchesDefinitionsController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['admin', 'instructor'])
-  update(@Param('id') id: string, @Body() updatePunchesDefinitionsDto: any) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePunchesDefinitionsDto: PunchesDefinitionsAttributes,
+  ) {
+    console.log(updatePunchesDefinitionsDto);
+
     return this.punchesDefinitionsService.update(
       +id,
       updatePunchesDefinitionsDto,

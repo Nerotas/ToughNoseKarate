@@ -29,7 +29,7 @@ const PunchForm = ({ punch, refetchPunches, handleCloseEdit }: PunchFormProps) =
   };
 
   const onSubmit = async (values: PunchDefinition) => {
-    await axiosInstance.patch(`/punches/${values.id}`, values);
+    await axiosInstance.patch(`/punches-definitions/${values.id}`, values);
     await refetchPunches();
     handleCloseEdit();
   };

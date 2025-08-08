@@ -1,66 +1,75 @@
-import {
-  Model,
-  Table,
-  Column,
-  DataType,
-  Index,
-  Sequelize,
-  ForeignKey,
-} from 'sequelize-typescript';
+import { Model, Table, Column, DataType } from 'sequelize-typescript';
 
-export interface punchesDefinitionsAttributes {
+export interface PunchesDefinitionsAttributes {
   id?: number;
   name: string;
   korean: string;
   belt: string;
   beltColor: string;
   description: string;
-  target: string;
-  execution: object;
-  keyPoints: object;
-  commonMistakes: object;
-  applications: object;
+  target: string | null;
+  execution?: string | null; // text column (optional)
+  keyPoints: string[]; // CHANGED: array
+  commonMistakes: string[]; // CHANGED: array
+  applications: string[]; // CHANGED: array
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 @Table({ tableName: 'punches_definitions', timestamps: false })
 export class punchesDefinitions
-  extends Model<punchesDefinitionsAttributes, punchesDefinitionsAttributes>
-  implements punchesDefinitionsAttributes
+  extends Model<PunchesDefinitionsAttributes, PunchesDefinitionsAttributes>
+  implements PunchesDefinitionsAttributes
 {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
   declare id?: number;
 
   @Column({ type: DataType.STRING(100) })
-  name!: string;
+  declare name: string;
 
   @Column({ type: DataType.STRING(100) })
-  korean!: string;
+  declare korean: string;
 
   @Column({ type: DataType.STRING(45) })
-  belt!: string;
+  declare belt: string;
 
   @Column({ field: 'belt_color', type: DataType.STRING(7) })
-  beltColor!: string;
+  declare beltColor: string;
 
   @Column({ type: DataType.STRING })
-  description!: string;
+  declare description: string;
 
-  @Column({ type: DataType.STRING })
-  target!: string;
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare target: string | null;
 
-  @Column({ type: DataType.JSON })
-  execution!: object;
+  // If your DB column is TEXT (not JSON), keep TEXT here
+  @Column({ type: DataType.TEXT, allowNull: true })
+  declare execution: string | null;
 
-  @Column({ field: 'key_points', type: DataType.JSON })
-  keyPoints!: object;
+  // CHANGED: use ARRAY(TEXT) to match Postgres _text columns
+  @Column({
+    field: 'key_points',
+    type: DataType.ARRAY(DataType.TEXT),
+    allowNull: false,
+    defaultValue: [],
+  })
+  declare keyPoints: string[];
 
-  @Column({ field: 'common_mistakes', type: DataType.JSON })
-  commonMistakes!: object;
+  @Column({
+    field: 'common_mistakes',
+    type: DataType.ARRAY(DataType.TEXT),
+    allowNull: false,
+    defaultValue: [],
+  })
+  declare commonMistakes: string[];
 
-  @Column({ type: DataType.JSON })
-  applications!: object;
+  @Column({
+    field: 'applications',
+    type: DataType.ARRAY(DataType.TEXT),
+    allowNull: false,
+    defaultValue: [],
+  })
+  declare applications: string[];
 
   @Column({ field: 'created_at', type: DataType.DATE, allowNull: true })
   declare createdAt?: Date;

@@ -16,6 +16,7 @@ import { size } from 'lodash';
 import { PunchDefinition } from 'models/Punches/Punches';
 import PunchEditModule from './punchEditModule';
 import { useState } from 'react';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 const PunchCard = ({
   punch,
@@ -26,6 +27,8 @@ const PunchCard = ({
   getBeltTextColor: (color: string) => string;
   refetchPunches: () => Promise<void>;
 }) => {
+  const { isAuthenticated, instructor } = useAuth();
+
   const [open, setOpen] = useState(false);
 
   const handleOpenEdit = () => {
@@ -67,7 +70,9 @@ const PunchCard = ({
                   border: punch.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
                 }}
               />
-              <Chip label={'Edit'} icon={<IconEdit />} onClick={handleOpenEdit} />
+              {isAuthenticated && instructor && (
+                <Chip label={'Edit'} icon={<IconEdit />} onClick={handleOpenEdit} />
+              )}
             </Box>
 
             <Typography variant='body2' paragraph>
