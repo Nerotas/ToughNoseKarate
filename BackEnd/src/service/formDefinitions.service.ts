@@ -6,10 +6,32 @@ import {
 
 @Injectable()
 export class FormDefinitionsService {
+  private normalizePayload(payload: any): any {
+    const normalized = { ...payload };
+
+    // Ensure array fields are properly formatted for PostgreSQL
+    ['keyPoints'].forEach((field) => {
+      if (normalized[field] !== undefined && normalized[field] !== null) {
+        // Coerce to array if it's not already
+        if (!Array.isArray(normalized[field])) {
+          normalized[field] = [normalized[field]];
+        }
+      }
+    });
+
+    // Remove undefined fields to avoid database issues
+    Object.keys(normalized).forEach((key) => {
+      if (normalized[key] === undefined) {
+        delete normalized[key];
+      }
+    });
+
+    return normalized;
+  }
+
   async create(createFormDefinitionDto: any): Promise<FormDefinitions> {
-    const formDefinition = await FormDefinitions.create(
-      createFormDefinitionDto,
-    );
+    const normalized = this.normalizePayload(createFormDefinitionDto);
+    const formDefinition = await FormDefinitions.create(normalized);
     return formDefinition;
   }
 
@@ -46,12 +68,10 @@ export class FormDefinitionsService {
     id: number,
     updateFormDefinitionDto: any,
   ): Promise<FormDefinitions | null> {
-    const [affectedCount] = await FormDefinitions.update(
-      updateFormDefinitionDto,
-      {
-        where: { id },
-      },
-    );
+    const normalized = this.normalizePayload(updateFormDefinitionDto);
+    const [affectedCount] = await FormDefinitions.update(normalized, {
+      where: { id },
+    });
 
     if (affectedCount === 0) {
       return null;
@@ -70,6 +90,9 @@ export class FormDefinitionsService {
 
   // Bulk insert method for seeding data
   async bulkCreate(formDefinitions: any[]): Promise<FormDefinitions[]> {
-    return await FormDefinitions.bulkCreate(formDefinitions);
+    const normalized = formDefinitions.map((form) =>
+      this.normalizePayload(form),
+    );
+    return await FormDefinitions.bulkCreate(normalized);
   }
 }

@@ -19,11 +19,11 @@ export interface selfDefenseDefinitionsAttributes {
   difficulty: string;
   scenario: string;
   technique: string;
-  setup: object;
-  execution: object;
-  keyPoints: object;
-  commonMistakes: object;
-  applications: object;
+  setup: string[];
+  execution: string[];
+  keyPoints: string[];
+  commonMistakes: string[];
+  applications: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -66,20 +66,20 @@ export class selfDefenseDefinitions
   @Column({ type: DataType.STRING })
   technique!: string;
 
-  @Column({ type: DataType.JSON })
-  setup!: object;
+  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  setup!: string[];
 
-  @Column({ type: DataType.JSON })
-  execution!: object;
+  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  execution!: string[];
 
-  @Column({ field: 'key_points', type: DataType.JSON })
-  keyPoints!: object;
+  @Column({ field: 'key_points', type: DataType.ARRAY(DataType.TEXT) })
+  keyPoints!: string[];
 
-  @Column({ field: 'common_mistakes', type: DataType.JSON })
-  commonMistakes!: object;
+  @Column({ field: 'common_mistakes', type: DataType.ARRAY(DataType.TEXT) })
+  commonMistakes!: string[];
 
-  @Column({ type: DataType.JSON })
-  applications!: object;
+  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  applications!: string[];
 
   @Column({ field: 'created_at', type: DataType.DATE, allowNull: true })
   declare createdAt?: Date;

@@ -16,10 +16,10 @@ export interface kicksDefinitionsAttributes {
   beltColor: string;
   description: string;
   target: string;
-  execution: object;
-  keyPoints: object;
-  commonMistakes: object;
-  applications: object;
+  execution: string[];
+  keyPoints: string[];
+  commonMistakes: string[];
+  applications: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -50,17 +50,17 @@ export class kicksDefinitions
   @Column({ type: DataType.STRING })
   target!: string;
 
-  @Column({ type: DataType.JSON })
-  execution!: object;
+  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  execution!: string[];
 
-  @Column({ field: 'key_points', type: DataType.JSON })
-  keyPoints!: object;
+  @Column({ field: 'key_points', type: DataType.ARRAY(DataType.TEXT) })
+  keyPoints!: string[];
 
-  @Column({ field: 'common_mistakes', type: DataType.JSON })
-  commonMistakes!: object;
+  @Column({ field: 'common_mistakes', type: DataType.ARRAY(DataType.TEXT) })
+  commonMistakes!: string[];
 
-  @Column({ type: DataType.JSON })
-  applications!: object;
+  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  applications!: string[];
 
   @Column({ field: 'created_at', type: DataType.DATE, allowNull: true })
   declare createdAt?: Date;

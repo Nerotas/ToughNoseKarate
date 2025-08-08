@@ -16,10 +16,10 @@ export interface oneStepsDefinitionsAttributes {
   beltColor: string;
   description: string;
   attack: string;
-  defense: object;
-  keyPoints: object;
-  commonMistakes: object;
-  applications: object;
+  defense: string[];
+  keyPoints: string[];
+  commonMistakes: string[];
+  applications: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -50,17 +50,17 @@ export class oneStepsDefinitions
   @Column({ type: DataType.STRING })
   attack!: string;
 
-  @Column({ type: DataType.JSON })
-  defense!: object;
+  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  defense!: string[];
 
-  @Column({ field: 'key_points', type: DataType.JSON })
-  keyPoints!: object;
+  @Column({ field: 'key_points', type: DataType.ARRAY(DataType.TEXT) })
+  keyPoints!: string[];
 
-  @Column({ field: 'common_mistakes', type: DataType.JSON })
-  commonMistakes!: object;
+  @Column({ field: 'common_mistakes', type: DataType.ARRAY(DataType.TEXT) })
+  commonMistakes!: string[];
 
-  @Column({ type: DataType.JSON })
-  applications!: object;
+  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  applications!: string[];
 
   @Column({ field: 'created_at', type: DataType.DATE, allowNull: true })
   declare createdAt?: Date;

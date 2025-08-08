@@ -17,9 +17,9 @@ export interface stanceDefinitionsAttributes {
   description: string;
   position: string;
   bodyPosition: string;
-  keyPoints: object;
-  commonMistakes: object;
-  applications: object;
+  keyPoints: string[];
+  commonMistakes: string[];
+  applications: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -45,12 +45,12 @@ export class stanceDefinitions
   position!: string;
   @Column({ field: 'body_position', type: DataType.STRING })
   bodyPosition!: string;
-  @Column({ field: 'key_points', type: DataType.JSON })
-  keyPoints!: object;
-  @Column({ field: 'common_mistakes', type: DataType.JSON })
-  commonMistakes!: object;
-  @Column({ type: DataType.JSON })
-  applications!: object;
+  @Column({ field: 'key_points', type: DataType.ARRAY(DataType.TEXT) })
+  keyPoints!: string[];
+  @Column({ field: 'common_mistakes', type: DataType.ARRAY(DataType.TEXT) })
+  commonMistakes!: string[];
+  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  applications!: string[];
   @Column({
     field: 'created_at',
     allowNull: true,
