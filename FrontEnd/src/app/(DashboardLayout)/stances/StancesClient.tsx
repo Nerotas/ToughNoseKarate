@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
   Grid,
   Box,
@@ -11,6 +12,7 @@ import {
   ListItemText,
   Alert,
   Divider,
+  Button,
 } from '@mui/material';
 import { IconBrandTorchain, IconCheckbox, IconX } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
@@ -18,12 +20,18 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { StanceDefinition } from 'models/Stances/Stances';
 import useGet from '../../../hooks/useGet';
 import Loading from 'app/loading';
+import { useAuth } from '../../../contexts/AuthContext';
+import StanceEditModule from '../components/stances/stanceEditModule';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
 };
 
 export default function StancesClient() {
+  const { isAuthenticated, instructor } = useAuth();
+  const [editingStance, setEditingStance] = useState<StanceDefinition | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   // Use the custom useGet hook - will use SSR data if available, fallback if not
   const {
     data: stancesDefinitions,
@@ -31,6 +39,7 @@ export default function StancesClient() {
     isFetching,
     error,
     isError,
+    refetch,
   } = useGet<StanceDefinition[]>({
     apiLabel: 'stance-definitions',
     url: '/stance-Definitions',
@@ -46,6 +55,20 @@ export default function StancesClient() {
 
   // Use API data only
   const displayStances = stancesDefinitions || [];
+
+  const openEditModal = (stance: StanceDefinition) => {
+    setEditingStance(stance);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditingStance(null);
+    setIsEditModalOpen(false);
+  };
+
+  const refetchStances = async () => {
+    await refetch();
+  };
 
   return (
     <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
@@ -204,6 +227,20 @@ export default function StancesClient() {
                       ))}
                     </Box>
                   </Box>
+
+                  {isAuthenticated &&
+                    (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
+                      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button
+                          variant='outlined'
+                          size='small'
+                          color='primary'
+                          onClick={() => openEditModal(stance)}
+                        >
+                          Edit
+                        </Button>
+                      </Box>
+                    )}
                 </CardContent>
               </Card>
             </Grid>
@@ -276,6 +313,16 @@ export default function StancesClient() {
           </DashboardCard>
         </Box>
       </Box>
+
+      {/* Edit Modal */}
+      {editingStance && (
+        <StanceEditModule
+          open={isEditModalOpen}
+          stance={editingStance}
+          refetchStances={refetchStances}
+          handleCloseEdit={closeEditModal}
+        />
+      )}
     </PageContainer>
   );
 }

@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
   Grid,
   Box,
@@ -20,14 +21,21 @@ import PageContainer from '../components/container/PageContainer';
 import useGet from '../../../hooks/useGet';
 import Loading from 'app/loading';
 import { FormDefinitions } from 'models/Forms/FormDefinitions';
+import { useAuth } from '../../../contexts/AuthContext';
+import FormEditModule from '../components/forms/formEditModule';
 
 const FormsClient = () => {
+  const { isAuthenticated, instructor } = useAuth();
+  const [editingForm, setEditingForm] = useState<FormDefinitions | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const {
     data: forms,
     isLoading,
     isFetching,
     error,
     isError,
+    refetch,
   } = useGet<FormDefinitions[]>({
     url: '/form-definitions',
     apiLabel: 'form-definitions',
@@ -54,6 +62,20 @@ const FormsClient = () => {
       }
     }
     return [];
+  };
+
+  const openEditModal = (form: FormDefinitions) => {
+    setEditingForm(form);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditingForm(null);
+    setIsEditModalOpen(false);
+  };
+
+  const refetchForms = async () => {
+    await refetch();
   };
 
   return (
@@ -128,9 +150,9 @@ const FormsClient = () => {
                           size='small'
                           sx={{ mr: 1 }}
                           href={form.videoLink}
-                          component="a"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          component='a'
+                          target='_blank'
+                          rel='noopener noreferrer'
                         >
                           Watch Video
                         </Button>
@@ -164,6 +186,20 @@ const FormsClient = () => {
                         </List>
                       </AccordionDetails>
                     </Accordion>
+
+                    {isAuthenticated &&
+                      (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
+                        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                          <Button
+                            variant='outlined'
+                            size='small'
+                            color='primary'
+                            onClick={() => openEditModal(form)}
+                          >
+                            Edit
+                          </Button>
+                        </Box>
+                      )}
                   </CardContent>
                 </Card>
               </Grid>
@@ -219,6 +255,16 @@ const FormsClient = () => {
             </CardContent>
           </Card>
         </Box>
+
+        {/* Edit Modal */}
+        {editingForm && (
+          <FormEditModule
+            open={isEditModalOpen}
+            form={editingForm}
+            refetchForms={refetchForms}
+            handleCloseEdit={closeEditModal}
+          />
+        )}
       </Box>
     </PageContainer>
   );
