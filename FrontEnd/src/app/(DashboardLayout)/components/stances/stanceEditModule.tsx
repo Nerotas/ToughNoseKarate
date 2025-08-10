@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import StanceDefinitionForm from './stanceDefinitionForm';
 import { StanceDefinition } from 'models/Stances/Stances';
-import { RefetchOptions, QueryObserverResult } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 interface StanceEditModuleProps {
