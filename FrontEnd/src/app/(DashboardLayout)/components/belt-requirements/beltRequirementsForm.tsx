@@ -57,90 +57,59 @@ const BeltRequirementsForm = ({
     handleCloseEdit();
   };
 
-  const ArrayFieldSection = ({ name, title }: { name: string; title: string }) => (
+  const ArrayFieldSection: React.FC<{
+    name: string;
+    title: string;
+    placeholder?: string;
+  }> = ({ name, title, placeholder }) => (
     <Grid size={12}>
       <FieldArray name={name}>
-        {({ push, remove }) => (
-          <Box>
-            <Typography variant='subtitle1' gutterBottom>
-              {title}
-            </Typography>
-            <Stack spacing={2}>
-              {(initialValues as any)[name]?.map((_: any, index: number) => (
-                <Box key={`${name}-${index}`} display='flex' alignItems='center' gap={1}>
-                  <Field name={`${name}.${index}`}>
-                    {({ field }: any) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label={`${title} #${index + 1}`}
-                        size='small'
-                      />
-                    )}
-                  </Field>
-                  <IconButton onClick={() => remove(index)} color='error' size='small'>
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-              ))}
-              <Button
-                startIcon={<AddIcon />}
-                onClick={() => push('')}
-                variant='outlined'
-                size='small'
-                sx={{ alignSelf: 'flex-start' }}
-              >
-                Add {title}
-              </Button>
-            </Stack>
-          </Box>
-        )}
-      </FieldArray>
-    </Grid>
-  const ArrayFieldSection = ({ name, title }: { name: string; title: string }) => {
-    const { values } = useFormikContext<BeltRequirements>();
-    return (
-      <Grid size={12}>
-        <FieldArray name={name}>
-          {({ push, remove }) => (
-            <Box>
+        {({ push, remove, form }) => {
+          const list = (form.values as any)[name] as string[] | undefined;
+          return (
+            <Box sx={{ mb: 3 }}>
               <Typography variant='subtitle1' gutterBottom>
                 {title}
               </Typography>
-              <Stack spacing={2}>
-                {(values as any)[name]?.map((_: any, index: number) => (
-                  <Box key={`${name}-${index}`} display='flex' alignItems='center' gap={1}>
-                    <Field name={`${name}.${index}`}>
+              <Stack spacing={1}>
+                {list?.map((_, idx) => (
+                  <Box key={`${name}-${idx}`} display='flex' gap={1} alignItems='center'>
+                    <Field name={`${name}.${idx}`}>
                       {({ field }: any) => (
                         <TextField
                           {...field}
                           fullWidth
-                          label={`${title} #${index + 1}`}
                           size='small'
+                          label={`${title} #${idx + 1}`}
+                          placeholder={placeholder}
                         />
                       )}
                     </Field>
-                    <IconButton onClick={() => remove(index)} color='error' size='small'>
-                      <DeleteIcon />
+                    <IconButton
+                      size='small'
+                      color='error'
+                      onClick={() => remove(idx)}
+                      aria-label={`remove-${name}-${idx}`}
+                    >
+                      <DeleteIcon fontSize='small' />
                     </IconButton>
                   </Box>
                 ))}
                 <Button
-                  startIcon={<AddIcon />}
-                  onClick={() => push('')}
                   variant='outlined'
                   size='small'
-                  sx={{ alignSelf: 'flex-start' }}
+                  startIcon={<AddIcon />}
+                  onClick={() => push('')}
                 >
-                  Add {title}
+                  Add {title.replace(/s$/, '')}
                 </Button>
               </Stack>
             </Box>
-          )}
-        </FieldArray>
-      </Grid>
-    );
-  };
+          );
+        }}
+      </FieldArray>
+    </Grid>
+  );
 
   return (
     <Formik
