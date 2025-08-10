@@ -2,68 +2,63 @@ import { LoginResponse, InstructorProfile, RefreshTokenResponse } from 'models/A
 import axiosInstance from 'utils/helpers/AxiosInstance';
 
 class AuthService {
-  // Use shared instance
   private api = axiosInstance;
+  private sessionReady = false;
+  private profile: InstructorProfile | null = null;
 
   async login(email: string, password: string): Promise<LoginResponse> {
+    const { data } = await this.api.post<LoginResponse>('/auth/login', { email, password });
+    await this.ensureSession();
+    return data;
+  }
+
+  async ensureSession(): Promise<boolean> {
+    if (this.sessionReady) return true;
     try {
-      const { data } = await this.api.post<LoginResponse>('/auth/login', { email, password });
-      return data;
-    } catch (e) {
-      throw this.handleApiError(e);
+      this.profile = await this.getProfile();
+      this.sessionReady = true;
+      return true;
+    } catch {
+      this.sessionReady = false;
+      return false;
     }
   }
 
   async logout(): Promise<void> {
     try {
       await this.api.post('/auth/logout');
-    } catch (e) {
-      // swallow logout errors
-      console.warn('Logout error', e);
+    } finally {
+      this.sessionReady = false;
+      this.profile = null;
     }
   }
 
   async getProfile(): Promise<InstructorProfile> {
-    try {
-      const { data } = await this.api.get<InstructorProfile>('/auth/profile');
-      return data;
-    } catch (e) {
-      throw this.handleApiError(e);
-    }
+    const { data } = await this.api.get<InstructorProfile>('/auth/profile');
+    return data;
   }
 
   async refreshToken(): Promise<RefreshTokenResponse> {
-    try {
-      const { data } = await this.api.post<RefreshTokenResponse>('/auth/refresh');
-      return data;
-    } catch (e) {
-      throw this.handleApiError(e);
-    }
+    const { data } = await this.api.post<RefreshTokenResponse>('/auth/refresh');
+    return data;
   }
 
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {
-    try {
-      await this.api.patch('/auth/change-password', { currentPassword, newPassword });
-    } catch (e) {
-      throw this.handleApiError(e);
-    }
-  }
-
-  private handleApiError(error: any): Error {
-    if (error?.response) {
-      return new Error(error.response.data?.message || 'Request failed');
-    }
-    if (error?.request) {
-      return new Error('Network error');
-    }
-    return new Error('Unexpected error');
+    await this.api.patch('/auth/change-password', { currentPassword, newPassword });
   }
 
   isAuthenticated(): boolean {
-    return true;
+    return this.sessionReady;
   }
-  getToken(): string | null {
-    return null;
+
+  getCachedProfile(): InstructorProfile | null {
+    return this.profile;
+  }
+
+  private handleApiError(error: any): Error {
+    if (error?.response) return new Error(error.response.data?.message || 'Request failed');
+    if (error?.request) return new Error('Network error');
+    return new Error('Unexpected error');
   }
 }
 
