@@ -65,7 +65,7 @@ const BeltRequirementsForm = ({
     <Grid size={12}>
       <FieldArray name={name}>
         {({ push, remove, form }) => {
-          const list = (form.values as any)[name] as string[] | undefined;
+          const list = (form.values as BeltRequirements)[name] as string[] | undefined;
           return (
             <Box sx={{ mb: 3 }}>
               <Typography variant='subtitle1' gutterBottom>
