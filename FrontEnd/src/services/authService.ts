@@ -1,5 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { getConfig } from 'utils/config/frontend.config';
 
+// Get validated configuration
+const config = getConfig();
 // Types for API requests/responses
 export interface LoginRequest {
   email: string;
@@ -43,7 +46,7 @@ class AuthService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/v1',
+      baseURL: config.NEXT_PUBLIC_API_PATH,
       timeout: 10000,
       withCredentials: true, // Include cookies in requests
       headers: {
