@@ -75,7 +75,7 @@ const BeltRequirementsForm = ({
                 {list?.map((_, idx) => (
                   <Box key={`${name}-${idx}`} display='flex' gap={1} alignItems='center'>
                     <Field name={`${name}.${idx}`}>
-                      {({ field }: any) => (
+                      {({ field }: FieldProps) => (
                         <TextField
                           {...field}
                           fullWidth
