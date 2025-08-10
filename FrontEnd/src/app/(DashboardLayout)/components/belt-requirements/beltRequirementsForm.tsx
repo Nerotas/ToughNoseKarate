@@ -97,7 +97,50 @@ const BeltRequirementsForm = ({
         )}
       </FieldArray>
     </Grid>
-  );
+  const ArrayFieldSection = ({ name, title }: { name: string; title: string }) => {
+    const { values } = useFormikContext<BeltRequirements>();
+    return (
+      <Grid size={12}>
+        <FieldArray name={name}>
+          {({ push, remove }) => (
+            <Box>
+              <Typography variant='subtitle1' gutterBottom>
+                {title}
+              </Typography>
+              <Stack spacing={2}>
+                {(values as any)[name]?.map((_: any, index: number) => (
+                  <Box key={`${name}-${index}`} display='flex' alignItems='center' gap={1}>
+                    <Field name={`${name}.${index}`}>
+                      {({ field }: any) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label={`${title} #${index + 1}`}
+                          size='small'
+                        />
+                      )}
+                    </Field>
+                    <IconButton onClick={() => remove(index)} color='error' size='small'>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                ))}
+                <Button
+                  startIcon={<AddIcon />}
+                  onClick={() => push('')}
+                  variant='outlined'
+                  size='small'
+                  sx={{ alignSelf: 'flex-start' }}
+                >
+                  Add {title}
+                </Button>
+              </Stack>
+            </Box>
+          )}
+        </FieldArray>
+      </Grid>
+    );
+  };
 
   return (
     <Formik
