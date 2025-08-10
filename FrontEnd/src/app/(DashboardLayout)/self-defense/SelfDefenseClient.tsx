@@ -314,18 +314,19 @@ const SelfDefenseClient: React.FC = () => {
             </Accordion>
           )}
 
-          {isAuthenticated && instructor?.role === 'instructor' && (
-            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-              <Button
-                variant='outlined'
-                size='small'
-                color='primary'
-                onClick={() => openEditModal(technique)}
-              >
-                Edit
-              </Button>
-            </Box>
-          )}
+          {isAuthenticated &&
+            (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
+              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Button
+                  variant='outlined'
+                  size='small'
+                  color='primary'
+                  onClick={() => openEditModal(technique)}
+                >
+                  Edit
+                </Button>
+              </Box>
+            )}
         </CardContent>
       </Card>
     </Grid>

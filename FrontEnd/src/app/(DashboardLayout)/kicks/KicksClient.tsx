@@ -269,18 +269,19 @@ export default function KicksClient() {
                     </Box>
                   </Box>
 
-                  {isAuthenticated && instructor?.role === 'instructor' && (
-                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                      <Button
-                        variant='outlined'
-                        size='small'
-                        color='primary'
-                        onClick={() => openEditModal(kick)}
-                      >
-                        Edit
-                      </Button>
-                    </Box>
-                  )}
+                  {isAuthenticated &&
+                    (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
+                      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button
+                          variant='outlined'
+                          size='small'
+                          color='primary'
+                          onClick={() => openEditModal(kick)}
+                        >
+                          Edit
+                        </Button>
+                      </Box>
+                    )}
                 </CardContent>
               </Card>
             </Grid>

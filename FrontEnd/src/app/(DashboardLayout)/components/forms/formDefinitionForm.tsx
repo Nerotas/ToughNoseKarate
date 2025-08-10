@@ -18,9 +18,28 @@ const validationSchema = Yup.object({
     .min(1, 'Must be at least 1')
     .max(10, 'Must be at most 10')
     .required('Required'),
-  keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  keyPoints: Yup.array().of(Yup.string().trim().max(500, 'Too long')).default([]),
   videoLink: Yup.string().trim().url('Must be a valid URL').optional(),
 });
+// Helper to coerce any incoming shape to string[]
+const toStringArray = (v: any): string[] => {
+  if (Array.isArray(v)) return v.map(String);
+  if (typeof v === 'string') {
+    const trimmed = v.trim();
+    if (!trimmed) return [];
+    // Try JSON parse first
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) return parsed.map(String);
+    } catch {}
+    // Fallback: split by newline or comma
+    return trimmed
+      .split(/\r?\n|,/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
+};
 
 interface FormDefinitionFormProps {
   form: FormDefinitions;
@@ -39,7 +58,7 @@ const FormDefinitionForm = ({ form, refetchForms, handleCloseEdit }: FormDefinit
     beltTextColor: form.beltTextColor || '',
     difficultyLevel: form.difficultyLevel || 1,
     description: form.description || '',
-    keyPoints: form.keyPoints || [],
+    keyPoints: toStringArray(form.keyPoints),
     videoLink: form.videoLink || '',
   };
 
@@ -239,41 +258,51 @@ const FormDefinitionForm = ({ form, refetchForms, handleCloseEdit }: FormDefinit
               {/* Key Points */}
               <Grid size={12}>
                 <FieldArray name='keyPoints'>
-                  {({ push, remove }) => (
-                    <Box>
-                      <Typography variant='subtitle1' gutterBottom>
-                        Key Points
-                      </Typography>
-                      <Stack spacing={2}>
-                        {values.keyPoints?.map((_, index) => (
-                          <Box key={`kp-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`keyPoints.${index}`}>
-                              {({ field }: any) => (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  label={`Key Point #${index + 1}`}
-                                  size='small'
-                                />
-                              )}
-                            </Field>
-                            <IconButton onClick={() => remove(index)} color='error' size='small'>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        ))}
-                        <Button
-                          startIcon={<AddIcon />}
-                          onClick={() => push('')}
-                          variant='outlined'
-                          size='small'
-                          sx={{ alignSelf: 'flex-start' }}
-                        >
-                          Add Key Point
-                        </Button>
-                      </Stack>
-                    </Box>
-                  )}
+                  {({ push, remove, form: formik }) => {
+                    const arr = Array.isArray(formik.values.keyPoints)
+                      ? formik.values.keyPoints
+                      : [];
+                    return (
+                      <Box>
+                        <Typography variant='subtitle1' gutterBottom>
+                          Key Points
+                        </Typography>
+                        <Stack spacing={2}>
+                          {arr.map((_: any, index: number) => (
+                            <Box key={`kp-${index}`} display='flex' alignItems='center' gap={1}>
+                              <Field name={`keyPoints.${index}`}>
+                                {({ field }: any) => (
+                                  <TextField
+                                    {...field}
+                                    fullWidth
+                                    label={`Key Point #${index + 1}`}
+                                    size='small'
+                                  />
+                                )}
+                              </Field>
+                              <IconButton
+                                onClick={() => remove(index)}
+                                color='error'
+                                size='small'
+                                aria-label='remove-key-point'
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Box>
+                          ))}
+                          <Button
+                            startIcon={<AddIcon />}
+                            onClick={() => push('')}
+                            variant='outlined'
+                            size='small'
+                            sx={{ alignSelf: 'flex-start' }}
+                          >
+                            Add Key Point
+                          </Button>
+                        </Stack>
+                      </Box>
+                    );
+                  }}
                 </FieldArray>
               </Grid>
 
