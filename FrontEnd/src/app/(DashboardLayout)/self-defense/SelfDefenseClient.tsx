@@ -21,6 +21,7 @@ import {
   ListItem,
   ListItemText,
   Divider,
+  Button,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -28,14 +29,19 @@ import FitnessCenter from '@mui/icons-material/FitnessCenter';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import WarningIcon from '@mui/icons-material/Warning';
 import { SelfDefenseDefinition } from '../../../models/SelfDefense/SelfDefense';
+import { useAuth } from '../../../contexts/AuthContext';
+import SelfDefenseEditModule from '../components/self-defense/selfDefenseEditModule';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
 
 const SelfDefenseClient: React.FC = () => {
+  const { isAuthenticated, instructor } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedBelt, setSelectedBelt] = useState<string>('All');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('All');
+  const [editingSelfDefense, setEditingSelfDefense] = useState<SelfDefenseDefinition | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const {
     data: selfDefenseDefinitions,
@@ -43,6 +49,7 @@ const SelfDefenseClient: React.FC = () => {
     isFetching,
     error,
     isError,
+    refetch,
   } = useGet<SelfDefenseDefinition[]>({
     apiLabel: 'self-defense-definitions',
     url: '/self-defense-definitions',
@@ -100,6 +107,20 @@ const SelfDefenseClient: React.FC = () => {
       default:
         return 'default';
     }
+  };
+
+  const openEditModal = (selfDefense: SelfDefenseDefinition) => {
+    setEditingSelfDefense(selfDefense);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditingSelfDefense(null);
+    setIsEditModalOpen(false);
+  };
+
+  const refetchSelfDefense = async () => {
+    await refetch();
   };
 
   const getCategoryIcon = (category: string) => {
@@ -292,6 +313,19 @@ const SelfDefenseClient: React.FC = () => {
               </AccordionDetails>
             </Accordion>
           )}
+
+          {isAuthenticated && instructor?.role === 'instructor' && (
+            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                variant='outlined'
+                size='small'
+                color='primary'
+                onClick={() => openEditModal(technique)}
+              >
+                Edit
+              </Button>
+            </Box>
+          )}
         </CardContent>
       </Card>
     </Grid>
@@ -393,6 +427,16 @@ const SelfDefenseClient: React.FC = () => {
             Try adjusting your filters or search term
           </Typography>
         </Box>
+      )}
+
+      {/* Edit Modal */}
+      {editingSelfDefense && (
+        <SelfDefenseEditModule
+          open={isEditModalOpen}
+          selfDefense={editingSelfDefense}
+          refetchSelfDefense={refetchSelfDefense}
+          handleCloseEdit={closeEditModal}
+        />
       )}
     </Box>
   );

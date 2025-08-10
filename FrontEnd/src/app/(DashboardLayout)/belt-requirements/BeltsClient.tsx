@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
   Grid,
   Box,
@@ -10,6 +11,7 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Button,
 } from '@mui/material';
 import { IconAward, IconCheck } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
@@ -18,8 +20,16 @@ import RequirementsList from '../components/belt-requirements/RequirementsList';
 import useGet from 'hooks/useGet';
 import { BeltRequirements as BeltRequirementsType } from 'models/BeltRequirements/BeltRequirements';
 import Loading from 'app/loading';
+import { useAuth } from '../../../contexts/AuthContext';
+import BeltRequirementsEditModule from '../components/belt-requirements/beltRequirementsEditModule';
 
 const BeltRequirements = () => {
+  const { isAuthenticated, instructor } = useAuth();
+  const [editingBeltRequirement, setEditingBeltRequirement] = useState<BeltRequirementsType | null>(
+    null
+  );
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   // Use the custom useGet hook - will use SSR data if available, fallback if not
   const {
     data: beltRequirements,
@@ -27,6 +37,7 @@ const BeltRequirements = () => {
     isFetching,
     error,
     isError,
+    refetch,
   } = useGet<BeltRequirementsType[]>({
     apiLabel: 'belt-requirements',
     url: '/belt-requirements',
@@ -43,6 +54,20 @@ const BeltRequirements = () => {
   // Use API data if available, otherwise use static data
   const displayBeltRequirements =
     beltRequirements && beltRequirements.length > 0 ? beltRequirements : [];
+
+  const openEditModal = (beltRequirement: BeltRequirementsType) => {
+    setEditingBeltRequirement(beltRequirement);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditingBeltRequirement(null);
+    setIsEditModalOpen(false);
+  };
+
+  const refetchBeltRequirements = async () => {
+    await refetch();
+  };
 
   return (
     <PageContainer
@@ -111,6 +136,19 @@ const BeltRequirements = () => {
                       {belt.comments}
                     </Typography>
                   )}
+
+                  {isAuthenticated && instructor?.role === 'instructor' && (
+                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                      <Button
+                        variant='outlined'
+                        size='small'
+                        color='primary'
+                        onClick={() => openEditModal(belt)}
+                      >
+                        Edit
+                      </Button>
+                    </Box>
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -128,6 +166,16 @@ const BeltRequirements = () => {
             </Typography>
           </DashboardCard>
         </Box>
+
+        {/* Edit Modal */}
+        {editingBeltRequirement && (
+          <BeltRequirementsEditModule
+            open={isEditModalOpen}
+            beltRequirement={editingBeltRequirement}
+            refetchBeltRequirements={refetchBeltRequirements}
+            handleCloseEdit={closeEditModal}
+          />
+        )}
       </Box>
     </PageContainer>
   );

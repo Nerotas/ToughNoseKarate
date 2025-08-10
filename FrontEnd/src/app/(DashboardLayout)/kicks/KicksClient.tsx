@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
   Grid,
   Box,
@@ -11,6 +12,7 @@ import {
   ListItemText,
   Alert,
   Divider,
+  Button,
 } from '@mui/material';
 import { IconRun, IconCheckbox, IconX, IconTarget, IconFlag } from '@tabler/icons-react';
 import PageContainer from '../components/container/PageContainer';
@@ -18,6 +20,8 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { KickDefinition } from '../../../models/Kicks/Kicks';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
+import { useAuth } from '../../../contexts/AuthContext';
+import KickEditModule from '../components/kicks/kickEditModule';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -37,12 +41,17 @@ const getDifficultyColor = (difficulty: string) => {
 };
 
 export default function KicksClient() {
+  const { isAuthenticated, instructor } = useAuth();
+  const [editingKick, setEditingKick] = useState<KickDefinition | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const {
     data: kickDefinitions,
     isLoading,
     isFetching,
     error,
     isError,
+    refetch,
   } = useGet<KickDefinition[]>({
     apiLabel: 'kicks-definitions',
     url: '/kicks-definitions',
@@ -58,6 +67,20 @@ export default function KicksClient() {
 
   // Use API data only
   const displayKicks = kickDefinitions || [];
+
+  const openEditModal = (kick: KickDefinition) => {
+    setEditingKick(kick);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditingKick(null);
+    setIsEditModalOpen(false);
+  };
+
+  const refetchKicks = async () => {
+    await refetch();
+  };
 
   return (
     <PageContainer title='Kicks' description='Tang Soo Do Kicking Techniques'>
@@ -245,6 +268,19 @@ export default function KicksClient() {
                       ))}
                     </Box>
                   </Box>
+
+                  {isAuthenticated && instructor?.role === 'instructor' && (
+                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                      <Button
+                        variant='outlined'
+                        size='small'
+                        color='primary'
+                        onClick={() => openEditModal(kick)}
+                      >
+                        Edit
+                      </Button>
+                    </Box>
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -316,6 +352,16 @@ export default function KicksClient() {
             </Grid>
           </DashboardCard>
         </Box>
+
+        {/* Edit Modal */}
+        {editingKick && (
+          <KickEditModule
+            open={isEditModalOpen}
+            kick={editingKick}
+            refetchKicks={refetchKicks}
+            handleCloseEdit={closeEditModal}
+          />
+        )}
       </Box>
     </PageContainer>
   );

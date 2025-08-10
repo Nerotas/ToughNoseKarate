@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
   Grid,
   Box,
@@ -11,6 +12,7 @@ import {
   ListItemText,
   Alert,
   Divider,
+  Button,
 } from '@mui/material';
 import {
   IconSwords,
@@ -25,7 +27,8 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { OneStepDefinition } from '../../../models/OneSteps/OneSteps';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
-import { useEffect } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
+import OneStepEditModule from '../components/one-steps/oneStepEditModule';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -45,12 +48,17 @@ const getDifficultyColor = (difficulty: string) => {
 };
 
 export default function OneStepsClient() {
+  const { isAuthenticated, instructor } = useAuth();
+  const [editingOneStep, setEditingOneStep] = useState<OneStepDefinition | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const {
     data: oneStepDefinitions,
     isLoading,
     isFetching,
     error,
     isError,
+    refetch,
   } = useGet<OneStepDefinition[]>({
     apiLabel: 'onestep-definitions',
     url: '/onestep-definitions',
@@ -66,6 +74,20 @@ export default function OneStepsClient() {
 
   // Use API data only
   const displayOneSteps = oneStepDefinitions || [];
+
+  const openEditModal = (oneStep: OneStepDefinition) => {
+    setEditingOneStep(oneStep);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditingOneStep(null);
+    setIsEditModalOpen(false);
+  };
+
+  const refetchOneSteps = async () => {
+    await refetch();
+  };
 
   return (
     <PageContainer title='One-Step Sparring' description='Tang Soo Do One-Step Sparring Techniques'>
@@ -254,6 +276,19 @@ export default function OneStepsClient() {
                       ))}
                     </Box>
                   </Box>
+
+                  {isAuthenticated && instructor?.role === 'instructor' && (
+                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                      <Button
+                        variant='outlined'
+                        size='small'
+                        color='primary'
+                        onClick={() => openEditModal(oneStep)}
+                      >
+                        Edit
+                      </Button>
+                    </Box>
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -325,6 +360,16 @@ export default function OneStepsClient() {
             </Grid>
           </DashboardCard>
         </Box>
+
+        {/* Edit Modal */}
+        {editingOneStep && (
+          <OneStepEditModule
+            open={isEditModalOpen}
+            oneStep={editingOneStep}
+            refetchOneSteps={refetchOneSteps}
+            handleCloseEdit={closeEditModal}
+          />
+        )}
       </Box>
     </PageContainer>
   );
