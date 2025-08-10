@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import { StanceDefinition } from 'models/Stances/Stances';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { TextField, Button, Box, Typography, Grid, IconButton, Stack, Chip } from '@mui/material';
