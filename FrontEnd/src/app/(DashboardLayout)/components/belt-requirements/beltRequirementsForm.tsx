@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
+import { Formik, Form, Field, FieldArray, ErrorMessage, FieldProps } from 'formik';
 import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { TextField, Button, Box, Typography, Grid, IconButton, Stack, Chip } from '@mui/material';
@@ -57,15 +57,27 @@ const BeltRequirementsForm = ({
     handleCloseEdit();
   };
 
+  // Define the allowed array field names
+  type ArrayFieldNames =
+    | 'forms'
+    | 'stances'
+    | 'blocks'
+    | 'punches'
+    | 'kicks'
+    | 'jumps'
+    | 'falling'
+    | 'oneSteps'
+    | 'selfDefense';
+
   const ArrayFieldSection: React.FC<{
-    name: string;
+    name: ArrayFieldNames;
     title: string;
     placeholder?: string;
   }> = ({ name, title, placeholder }) => (
     <Grid size={12}>
       <FieldArray name={name}>
         {({ push, remove, form }) => {
-          const list = (form.values as BeltRequirements)[name] as string[] | undefined;
+          const list = form.values[name] as string[] | undefined;
           return (
             <Box sx={{ mb: 3 }}>
               <Typography variant='subtitle1' gutterBottom>
