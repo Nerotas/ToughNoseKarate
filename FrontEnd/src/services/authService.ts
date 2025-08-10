@@ -46,7 +46,7 @@ class AuthService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: config.NEXT_PUBLIC_API_PATH,
+      baseURL: `${config.NEXT_PUBLIC_API_PATH}/${config.NEXT_PUBLIC_API_VERSION}`,
       timeout: 10000,
       withCredentials: true, // Include cookies in requests
       headers: {
