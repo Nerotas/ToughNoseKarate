@@ -41,7 +41,6 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Students')
 @Controller('students')
 export class StudentsController {
-  
   @Get()
   findAll() {
     return this.studentsService.findAll();
