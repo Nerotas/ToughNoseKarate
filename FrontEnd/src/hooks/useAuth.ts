@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/authService';
 import { InstructorProfile } from '../models/Auth/Auth';
+import { useRef } from 'react';
 
 // Auth query keys
 export const authKeys = {
@@ -13,6 +14,10 @@ export const authKeys = {
 // Main auth hook
 export const useAuth = () => {
   const queryClient = useQueryClient();
+
+  // Guards against concurrent force logout / refresh loops
+  const forcingLogoutRef = useRef(false);
+  const refreshInFlightRef = useRef(false);
 
   // Profile query - this is our source of truth for authentication status
   const {
@@ -29,54 +34,83 @@ export const useAuth = () => {
     refetchOnWindowFocus: false,
   });
 
+  // Centralized force logout (used by explicit logout and refresh failure)
+  const forceLogout = async (reason?: string) => {
+    if (forcingLogoutRef.current) return;
+    forcingLogoutRef.current = true;
+    try {
+      // Cancel any pending auth queries first to avoid refetch-after-clear race
+      await queryClient.cancelQueries({ queryKey: authKeys.all });
+      // Best‑effort backend logout (ignore errors)
+      try {
+        await authService.logout();
+      } catch {}
+      // Clear cached user
+      queryClient.setQueryData(authKeys.profile(), null);
+      // Optionally remove all auth queries (after nulling)
+      queryClient.removeQueries({ queryKey: authKeys.all });
+      if (process.env.NEXT_PUBLIC_ENABLE_DEBUG === 'true') {
+        console.log('🔒 Forced logout', reason ? `(${reason})` : '');
+      }
+    } finally {
+      forcingLogoutRef.current = false;
+    }
+  };
+
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       authService.login(email, password),
     onSuccess: (data) => {
       // Update the profile query with the instructor data
-      queryClient.setQueryData(authKeys.profile(), data.instructor);
-      console.log(`✅ Login successful: ${data.instructor.email}`);
-    },
-    onError: (error) => {
-      console.error('Login failed:', error);
+      queryClient.setQueryData<InstructorProfile | null>(
+        authKeys.profile(),
+        data.instructor as any
+      );
+      if (process.env.NEXT_PUBLIC_ENABLE_DEBUG === 'true') {
+        console.log(`✅ Login successful: ${data.instructor.email}`);
+      }
     },
   });
 
   // Logout mutation
   const logoutMutation = useMutation({
-    mutationFn: authService.logout,
-    onSettled: () => {
-      // Clear all auth-related queries
-      queryClient.removeQueries({ queryKey: authKeys.all });
-      queryClient.clear(); // Clear all cached data on logout
-      console.log('✅ Logout successful');
-    },
-    onError: (error) => {
-      console.error('Logout error:', error);
-      // Still clear queries even if backend call fails
-      queryClient.removeQueries({ queryKey: authKeys.all });
+    mutationFn: async () => {
+      await forceLogout('user_initiated');
     },
   });
 
   // Refresh token mutation
   const refreshMutation = useMutation({
-    mutationFn: authService.refreshToken,
+    mutationFn: async () => {
+      if (refreshInFlightRef.current) return;
+      refreshInFlightRef.current = true;
+      try {
+        await authService.refreshToken();
+      } finally {
+        refreshInFlightRef.current = false;
+      }
+    },
     onSuccess: () => {
       // Refresh the profile query to get updated data
       queryClient.invalidateQueries({ queryKey: authKeys.profile() });
-      console.log('✅ Token refreshed successfully');
+      if (process.env.NEXT_PUBLIC_ENABLE_DEBUG === 'true') {
+        console.log('✅ Token refreshed');
+      }
     },
-    onError: (error) => {
-      console.error('Token refresh failed:', error);
-      // Force logout on refresh failure
-      logoutMutation.mutate();
+    onError: async (err) => {
+      if (process.env.NEXT_PUBLIC_ENABLE_DEBUG === 'true') {
+        console.warn('🔁 Refresh failed, forcing logout', err);
+      }
+      await forceLogout('refresh_failed');
     },
   });
 
   // Helper functions
   const login = async (email: string, password: string): Promise<void> => {
     await loginMutation.mutateAsync({ email, password });
+    // Optionally refetch to confirm cookie-based profile
+    await updateProfile();
   };
 
   const logout = () => {
@@ -90,7 +124,8 @@ export const useAuth = () => {
   const isAuthenticated = !!instructor && !error;
 
   // Combined loading state
-  const isAuthLoading = isLoading || loginMutation.isPending || logoutMutation.isPending;
+  const isAuthLoading =
+    isLoading || loginMutation.isPending || logoutMutation.isPending || refreshMutation.isPending;
 
   return {
     // State
