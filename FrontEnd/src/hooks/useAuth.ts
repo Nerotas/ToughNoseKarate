@@ -88,7 +88,7 @@ export const useAuth = () => {
   };
 
   const logout = () => logoutMutation.mutate();
-  const refreshToken = () => refreshMutation.mutate();
+  const refreshToken = () => refreshMutation.mutateAsync();
 
   const isAuthenticated = !!instructor && profileStatus !== 'error' && !logoutMutation.isPending;
 
