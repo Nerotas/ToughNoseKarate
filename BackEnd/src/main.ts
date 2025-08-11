@@ -32,7 +32,7 @@ async function bootstrap() {
     methods: string[];
     optionsSuccessStatus: number;
   }
-
+  // Use official CorsOriginCallback and CorsOptions from 'cors'
   app.enableCors(<CorsOptions>{
     origin: (origin: string | undefined, cb: CorsOriginCallback) => {
       if (!origin) return cb(null, true); // allow Postman/curl
