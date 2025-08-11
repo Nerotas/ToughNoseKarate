@@ -22,539 +22,539 @@ export class StudentAssessments extends Model {
     primaryKey: true,
     autoIncrement: true,
   })
-  assessment_id!: number;
+  declare assessment_id: number;
 
   @ForeignKey(() => students)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  student_id!: number;
+  declare student_id: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
   })
-  instructor_id?: number;
+  declare instructor_id?: number;
 
   @Column({
     type: DataType.DATE,
     defaultValue: DataType.NOW,
   })
-  assessment_date!: Date;
+  declare assessment_date: Date;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: true,
   })
-  target_belt_rank?: string;
+  declare target_belt_rank?: string;
 
   // Header Information
   @Column({
     type: DataType.STRING(255),
     allowNull: true,
   })
-  certificate_name?: string;
+  declare certificate_name?: string;
 
   @Column({
     type: DataType.STRING(10),
     allowNull: true,
   })
-  belt_size?: string;
+  declare belt_size?: string;
 
   // Forms (Hyungs) - Score out of 10 for each
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  geocho_hyung_il_bu?: number;
+  declare geocho_hyung_il_bu?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  geocho_hyung_il_bu_sahm_gup?: number;
+  declare geocho_hyung_il_bu_sahm_gup?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  geocho_hyung_yi_bu?: number;
+  declare geocho_hyung_yi_bu?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  geocho_hyung_yi_bu_sahm_gup?: number;
+  declare geocho_hyung_yi_bu_sahm_gup?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  geocho_hyung_sahm_bu?: number;
+  declare geocho_hyung_sahm_bu?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  pyong_an_cho_dan?: number;
+  declare pyong_an_cho_dan?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  pyong_an_yi_dan?: number;
+  declare pyong_an_yi_dan?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  pyong_an_sahm_dan?: number;
+  declare pyong_an_sahm_dan?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  pyong_an_sa_dan?: number;
+  declare pyong_an_sa_dan?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  pyong_an_oh_dan?: number;
+  declare pyong_an_oh_dan?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  bassai?: number;
+  declare bassai?: number;
 
   // Self Defense sections
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  traditional_1?: number;
+  declare traditional_1?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  traditional_2?: number;
+  declare traditional_2?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  traditional_3?: number;
+  declare traditional_3?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  traditional_4?: number;
+  declare traditional_4?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  made_up_1?: number;
+  declare made_up_1?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  made_up_2?: number;
+  declare made_up_2?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  made_up_3?: number;
+  declare made_up_3?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  made_up_4?: number;
+  declare made_up_4?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  three_steps_1?: number;
+  declare three_steps_1?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  three_steps_2?: number;
+  declare three_steps_2?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  three_steps_3?: number;
+  declare three_steps_3?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  three_steps_4?: number;
+  declare three_steps_4?: number;
 
   // Jump Kicks
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jump_kick_front?: number;
+  declare jump_kick_front?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jump_kick_round?: number;
+  declare jump_kick_round?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jump_kick_side?: number;
+  declare jump_kick_side?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jump_kick_back?: number;
+  declare jump_kick_back?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jump_kick_f_side?: number;
+  declare jump_kick_f_side?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jump_kick_crescent?: number;
+  declare jump_kick_crescent?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jump_kick_heel?: number;
+  declare jump_kick_heel?: number;
 
   // Combinations
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  combination_fighting?: number;
+  declare combination_fighting?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  combination_hands?: number;
+  declare combination_hands?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  combination_basic?: number;
+  declare combination_basic?: number;
 
   // Stances
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  stance_front?: number;
+  declare stance_front?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  stance_back?: number;
+  declare stance_back?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  stance_straddle?: number;
+  declare stance_straddle?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  stance_shifting?: number;
+  declare stance_shifting?: number;
 
   // Falling
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  falling_back?: number;
+  declare falling_back?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  falling_front?: number;
+  declare falling_front?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  falling_roll?: number;
+  declare falling_roll?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  falling_breaking?: number;
+  declare falling_breaking?: number;
 
   // Blocks - Score out of 10 for each
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  high_block?: number;
+  declare high_block?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  low_block?: number;
+  declare low_block?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  knife_hand_block?: number;
+  declare knife_hand_block?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  inside_block?: number;
+  declare inside_block?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  outside_block?: number;
+  declare outside_block?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  block_punch?: number;
+  declare block_punch?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  double_block?: number;
+  declare double_block?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  double_block_punch?: number;
+  declare double_block_punch?: number;
 
   // Punches - Score out of 10 for each
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  center_punch?: number;
+  declare center_punch?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  reverse_punch?: number;
+  declare reverse_punch?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jab?: number;
+  declare jab?: number;
 
   // Kicks - Score out of 10 for each
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  front_kick?: number;
+  declare front_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  side_kick?: number;
+  declare side_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  roundhouse_kick?: number;
+  declare roundhouse_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  back_kick?: number;
+  declare back_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  hook_kick?: number;
+  declare hook_kick?: number;
 
   // Advanced/Specialized Techniques - Score out of 10 for each
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  upper_cut?: number;
+  declare upper_cut?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  hook_punch?: number;
+  declare hook_punch?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  spin_bottom_fist?: number;
+  declare spin_bottom_fist?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  charging_punch?: number;
+  declare charging_punch?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  slide_up_jab_punch?: number;
+  declare slide_up_jab_punch?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  chop_low?: number;
+  declare chop_low?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  chop_high?: number;
+  declare chop_high?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  spearhand?: number;
+  declare spearhand?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  stepping_kick?: number;
+  declare stepping_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  slide_up_kick?: number;
+  declare slide_up_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  spin_back_kick?: number;
+  declare spin_back_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  inside_crescent_kick?: number;
+  declare inside_crescent_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  outside_crescent_kick?: number;
+  declare outside_crescent_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  spin_outside_crescent_kick?: number;
+  declare spin_outside_crescent_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  jump_spin_outside_crescent?: number;
+  declare jump_spin_outside_crescent?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  spin_heel_kick?: number;
+  declare spin_heel_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  studder_step_kick?: number;
+  declare studder_step_kick?: number;
 
   @Column({
     type: DataType.DECIMAL(3, 1),
     allowNull: true,
   })
-  butterfly_kick?: number;
+  declare butterfly_kick?: number;
 
   // Overall Assessment
   @Column({
     type: DataType.DECIMAL(5, 2),
     allowNull: true,
   })
-  overall_score?: number;
+  declare overall_score?: number;
 
   @Column({
     type: DataType.BOOLEAN,
     allowNull: true,
   })
-  passed?: boolean;
+  declare passed?: boolean;
 
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  examiner_notes?: string;
+  declare examiner_notes?: string;
 
   // Status and metadata
   @Column({
     type: DataType.ENUM('in_progress', 'completed', 'cancelled'),
     defaultValue: 'in_progress',
   })
-  assessment_status!: 'in_progress' | 'completed' | 'cancelled';
+  declare assessment_status: 'in_progress' | 'completed' | 'cancelled';
 
   @CreatedAt
-  created_at!: Date;
+  declare created_at: Date;
 
   @UpdatedAt
-  updated_at!: Date;
+  declare updated_at: Date;
 
   // Associations
   @BelongsTo(() => students)
-  student!: students;
+  declare student: students;
 }

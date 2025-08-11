@@ -38,53 +38,53 @@ export class families
   implements familiesAttributes
 {
   @Column({ allowNull: true, type: DataType.INTEGER })
-  parentid?: number;
+  declare parentid?: number;
 
   @Column({ type: DataType.INTEGER, defaultValue: '0', primaryKey: true })
-  studentid?: number;
+  declare studentid?: number;
 
   @Column({ type: DataType.STRING(45) })
-  firstName!: string;
+  declare firstName: string;
 
   @Column({ type: DataType.STRING(45) })
-  lastName!: string;
+  declare lastName: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  preferredName?: string;
+  declare preferredName?: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  parentFirstName?: string;
+  declare parentFirstName?: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  parentLastName?: string;
+  declare parentLastName?: string;
 
   @Column({ allowNull: true, type: DataType.INTEGER })
-  age?: number;
+  declare age?: number;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  beltRank?: string;
+  declare beltRank?: string;
 
   @Column({ type: DataType.STRING(45) })
-  startDate!: string;
+  declare startDate: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  endDate?: string;
+  declare endDate?: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  lastTest?: string;
+  declare lastTest?: string;
 
   @Column({ type: DataType.STRING(45) })
-  email!: string;
+  declare email: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  phone?: string;
+  declare phone?: string;
 
   @Column({ allowNull: true, type: DataType.STRING })
-  notes?: string;
+  declare notes?: string;
 
   @Column({ type: DataType.TINYINT, defaultValue: '1' })
-  active?: number;
+  declare active?: number;
 
   @Column({ allowNull: true, type: DataType.TINYINT })
-  eligibleForTesting?: number;
+  declare eligibleForTesting?: number;
 }

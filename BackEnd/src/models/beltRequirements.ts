@@ -31,40 +31,40 @@ export class beltRequirements
   implements beltRequirementsAttributes
 {
   @Column({ field: 'belt_order', primaryKey: true, type: DataType.INTEGER })
-  beltOrder!: number;
+  declare beltOrder: number;
   @Column({ field: 'belt_rank', type: DataType.STRING(45) })
-  beltRank!: string;
+  declare beltRank: string;
   @Column({ type: DataType.JSON })
-  forms!: object;
+  declare forms: object;
   @Column({ type: DataType.JSON })
-  stances!: object;
+  declare stances: object;
   @Column({ type: DataType.JSON })
-  blocks!: object;
+  declare blocks: object;
   @Column({ type: DataType.JSON })
-  punches!: object;
+  declare punches: object;
   @Column({ type: DataType.JSON })
-  kicks!: object;
+  declare kicks: object;
   @Column({ type: DataType.JSON })
-  jumps!: object;
+  declare jumps: object;
   @Column({ type: DataType.JSON })
-  falling!: object;
+  declare falling: object;
   @Column({ field: 'one_steps', type: DataType.JSON })
-  oneSteps!: object;
+  declare oneSteps: object;
   @Column({ field: 'self_defense', type: DataType.JSON })
-  selfDefense!: object;
+  declare selfDefense: object;
   @Column({ allowNull: true, type: DataType.STRING })
-  comments?: string;
+  declare comments?: string;
   @Column({
     allowNull: true,
     type: DataType.STRING(7),
     comment: 'Hex color code for belt background',
   })
-  color?: string;
+  declare color?: string;
   @Column({
     field: 'text_color',
     allowNull: true,
     type: DataType.STRING(7),
     comment: 'Hex color code for belt text',
   })
-  textColor?: string;
+  declare textColor?: string;
 }

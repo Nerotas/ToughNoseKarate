@@ -150,57 +150,57 @@ export class StudentProgress
   implements StudentProgressAttributes
 {
   @Column({ primaryKey: true, type: DataType.INTEGER })
-  studentid!: number;
+  declare studentid: number;
 
   @Column({ type: DataType.STRING(45) })
-  firstName!: string;
+  declare firstName: string;
 
   @Column({ type: DataType.STRING(45) })
-  lastName!: string;
+  declare lastName: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  preferredName?: string;
+  declare preferredName?: string;
 
   @Column({ allowNull: true, type: DataType.INTEGER })
-  age?: number;
+  declare age?: number;
 
   @Column({ type: DataType.STRING(45), defaultValue: 'white' })
-  beltRank?: string;
+  declare beltRank?: string;
 
   @Column({ field: 'startDateUTC', type: DataType.STRING(45) })
-  startDateUTC!: string;
+  declare startDateUTC: string;
 
   @Column({ field: 'endDateUTC', allowNull: true, type: DataType.STRING(45) })
-  endDateUTC?: string;
+  declare endDateUTC?: string;
 
   @Column({ type: DataType.STRING(45) })
-  email!: string;
+  declare email: string;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  phone?: string;
+  declare phone?: string;
 
   @Column({ allowNull: true, type: DataType.TEXT })
-  notes?: string;
+  declare notes?: string;
 
   @Column({ type: DataType.TINYINT, defaultValue: '1' })
-  active?: number;
+  declare active?: number;
 
   @Column({ allowNull: true, type: DataType.TINYINT, defaultValue: '0' })
-  child?: number;
+  declare child?: number;
 
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  lastTestUTC?: string;
+  declare lastTestUTC?: string;
 
   @Column({ type: DataType.TINYINT, defaultValue: '0' })
-  eligibleForTesting?: number;
+  declare eligibleForTesting?: number;
 
   // Virtual fields for progress data
-  blocks?: any;
-  combinations?: any;
-  falling?: any;
-  forms?: any;
-  kicks?: any;
-  oneSteps?: any;
-  punches?: any;
-  stances?: any;
+  declare blocks?: any;
+  declare combinations?: any;
+  declare falling?: any;
+  declare forms?: any;
+  declare kicks?: any;
+  declare oneSteps?: any;
+  declare punches?: any;
+  declare stances?: any;
 }

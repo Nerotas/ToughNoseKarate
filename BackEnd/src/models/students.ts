@@ -33,50 +33,50 @@ export class students
   implements studentsAttributes
 {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
-  studentid?: number;
+  declare studentid?: number;
   @Column({ field: 'firstname', type: DataType.STRING(45) })
-  firstName!: string;
+  declare firstName: string;
   @Column({ field: 'lastname', type: DataType.STRING(45) })
-  lastName!: string;
+  declare lastName: string;
   @Column({
     field: 'preferredname',
     allowNull: true,
     type: DataType.STRING(45),
   })
-  preferredName?: string;
+  declare preferredName?: string;
   @Column({ allowNull: true, type: DataType.INTEGER })
-  age?: number;
+  declare age?: number;
   @Column({
     field: 'beltrank',
     type: DataType.STRING(45),
     defaultValue: 'white',
   })
-  beltRank?: string;
+  declare beltRank?: string;
   @Column({ field: 'startdateutc', type: DataType.STRING(45) })
-  startDateUTC!: string;
+  declare startDateUTC: string;
   @Column({ field: 'enddateutc', allowNull: true, type: DataType.STRING(45) })
-  endDateUTC?: string;
+  declare endDateUTC?: string;
   @Column({ type: DataType.STRING(45) })
-  email!: string;
+  declare email: string;
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  phone?: string;
+  declare phone?: string;
   @Column({ allowNull: true, type: DataType.TEXT })
-  notes?: string;
+  declare notes?: string;
   @Column({ field: 'active', type: DataType.TINYINT, defaultValue: 1 })
-  active?: number;
+  declare active?: number;
   @Column({
     field: 'child',
     allowNull: true,
     type: DataType.TINYINT,
     defaultValue: 0,
   })
-  child?: number;
+  declare child?: number;
   @Column({ field: 'lasttestutc', allowNull: true, type: DataType.STRING(45) })
-  lastTestUTC?: string;
+  declare lastTestUTC?: string;
   @Column({
     field: 'eligiblefortesting',
     type: DataType.TINYINT,
     defaultValue: 0,
   })
-  eligibleForTesting?: number;
+  declare eligibleForTesting?: number;
 }

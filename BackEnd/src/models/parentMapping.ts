@@ -25,9 +25,9 @@ export class parentMapping
     autoIncrement: true,
     type: DataType.INTEGER,
   })
-  idparentMapping?: number;
+  declare idparentMapping?: number;
   @Column({ type: DataType.INTEGER })
-  parentid!: number;
+  declare parentid: number;
   @Column({ type: DataType.INTEGER })
-  studentid!: number;
+  declare studentid: number;
 }

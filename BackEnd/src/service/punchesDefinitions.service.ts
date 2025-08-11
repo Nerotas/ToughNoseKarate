@@ -20,7 +20,9 @@ export class PunchesDefinitionsService {
       try {
         const parsed = JSON.parse(v);
         if (Array.isArray(parsed)) return parsed.map(String);
-      } catch {}
+      } catch (error) {
+        console.error('Failed to parse JSON in punches definitions:', error);
+      }
       const parts = v
         .split(/\r?\n|,/)
         .map((s) => s.trim())

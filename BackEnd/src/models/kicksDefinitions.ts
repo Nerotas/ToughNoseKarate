@@ -33,34 +33,34 @@ export class kicksDefinitions
   declare id?: number;
 
   @Column({ type: DataType.STRING(100) })
-  name!: string;
+  declare name: string;
 
   @Column({ type: DataType.STRING(100) })
-  korean!: string;
+  declare korean: string;
 
   @Column({ type: DataType.STRING(45) })
-  belt!: string;
+  declare belt: string;
 
   @Column({ field: 'belt_color', type: DataType.STRING(7) })
-  beltColor!: string;
+  declare beltColor: string;
 
   @Column({ type: DataType.STRING })
-  description!: string;
+  declare description: string;
 
   @Column({ type: DataType.STRING })
-  target!: string;
+  declare target: string;
 
   @Column({ type: DataType.ARRAY(DataType.TEXT) })
-  execution!: string[];
+  declare execution: string[];
 
   @Column({ field: 'key_points', type: DataType.ARRAY(DataType.TEXT) })
-  keyPoints!: string[];
+  declare keyPoints: string[];
 
   @Column({ field: 'common_mistakes', type: DataType.ARRAY(DataType.TEXT) })
-  commonMistakes!: string[];
+  declare commonMistakes: string[];
 
   @Column({ type: DataType.ARRAY(DataType.TEXT) })
-  applications!: string[];
+  declare applications: string[];
 
   @Column({ field: 'created_at', type: DataType.DATE, allowNull: true })
   declare createdAt?: Date;
