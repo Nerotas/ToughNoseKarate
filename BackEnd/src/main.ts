@@ -11,28 +11,27 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const isProd = process.env.NODE_ENV === 'production';
 
-  // Set trust proxy on the raw Express instance
   const expressApp = app.getHttpAdapter().getInstance() as Express;
   expressApp.set('trust proxy', 1);
 
-  // Simplest: exact origins, no allowedHeaders override
-  const whitelist = new Set([
-    'http://localhost:3000',
-    'https://toughnosekarate.netlify.app',
-    process.env.FRONTEND_URL || '',
-  ]);
+  // CORS config
+  const whitelist = new Set(
+    [
+      !isProd && 'http://localhost:3000', // Only allow localhost in development
+      'https://toughnosekarate.netlify.app',
+      process.env.FRONTEND_URL || '',
+    ].filter(Boolean) as string[],
+  );
 
   interface CorsOriginCallback {
     (err: Error | null, allow?: boolean): void;
   }
-
   interface CorsOptions {
     origin: (origin: string | undefined, cb: CorsOriginCallback) => void;
     credentials: boolean;
     methods: string[];
     optionsSuccessStatus: number;
   }
-  // Use official CorsOriginCallback and CorsOptions from 'cors'
   app.enableCors(<CorsOptions>{
     origin: (origin: string | undefined, cb: CorsOriginCallback) => {
       if (!origin) return cb(null, true); // allow Postman/curl
@@ -59,8 +58,15 @@ async function bootstrap() {
     console.log(`🗄️  Database: ${configService.getDatabaseConnectionInfo()}`);
     console.log(`🌍 Environment: ${configService.nodeEnv}`);
   } catch (error) {
-    console.error('❌ Environment validation failed:', error.message);
-    process.exit(1);
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      console.error(
+        '❌ Environment validation failed:',
+        (error as { message?: string }).message,
+      );
+    } else {
+      console.error('❌ Environment validation failed:', error);
+    }
+    throw error;
   }
 
   // Enable API versioning
@@ -111,9 +117,15 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get(LoggerService));
-  const port = configService.port;
+
+  // Use Railway’s PORT if provided; fallback to config or 3001
+  const port =
+    Number.parseInt(
+      process.env.PORT ?? String(configService.port ?? 3001),
+      10,
+    ) || 3001;
   console.log(`🚀 App listening on port ${port} - press Ctrl+C to stop`);
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 }
 
 process.on('SIGINT', function () {
