@@ -20,9 +20,9 @@ export class parents
   implements parentsAttributes
 {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
-  parentid?: number;
+  declare parentid?: number;
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  firstName?: string;
+  declare firstName?: string;
   @Column({ allowNull: true, type: DataType.STRING(45) })
-  lastName?: string;
+  declare lastName?: string;
 }
