@@ -49,7 +49,6 @@ export const useAuth = () => {
     onSettled: () => {
       // Clear all auth-related queries
       queryClient.removeQueries({ queryKey: authKeys.all });
-      queryClient.clear(); // Clear all cached data on logout
       console.log('✅ Logout successful');
     },
     onError: (error) => {
