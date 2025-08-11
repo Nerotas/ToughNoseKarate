@@ -5,13 +5,15 @@ import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { LoggerService } from './service/logger.service';
 import { AppConfigService } from './config/app-config.service';
+import type { Express } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const isProd = process.env.NODE_ENV === 'production';
 
-  // Behind proxy in prod (needed for secure cookies)
-  app.set('trust proxy', 1);
+  // Set trust proxy on the raw Express instance
+  const expressApp = app.getHttpAdapter().getInstance() as Express;
+  expressApp.set('trust proxy', 1);
 
   // Simplest: exact origins, no allowedHeaders override
   const whitelist = new Set([
