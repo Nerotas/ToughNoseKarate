@@ -21,6 +21,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   useEffect(() => {
     // Wait for loading to complete
+    console.log('instructor', instructor);
+    console.log('isAuthenticated', isAuthenticated);
+
     if (isAuthLoading) return;
 
     // Redirect to login if not authenticated
@@ -36,6 +39,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         `🔒 Access denied: Required role '${requiredRole}', user has '${instructor?.role}'`
       );
       router.push('/unauthorized');
+      return;
+    }
+
+    // Check if instructor or role is missing
+    if (!instructor || !instructor.role) {
+      console.log('🔒 Access denied: User not authenticated or role missing');
+      router.push(fallbackPath);
       return;
     }
 

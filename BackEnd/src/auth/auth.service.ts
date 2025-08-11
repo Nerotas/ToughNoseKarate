@@ -157,6 +157,7 @@ export class AuthService {
       throw new UnauthorizedException('Instructor not found');
     }
 
+    console.log('getProfile', instructor);
     return {
       id: instructor.instructor_id,
       email: instructor.email,
@@ -197,5 +198,13 @@ export class AuthService {
     };
 
     return this.jwtService.sign(payload, { expiresIn: '15m' });
+  }
+
+  async validate(payload: JwtPayload) {
+    return {
+      instructorId: payload.sub, // <-- must be instructorId, not just sub
+      email: payload.email,
+      role: payload.role,
+    };
   }
 }

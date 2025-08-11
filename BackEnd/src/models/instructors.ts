@@ -38,84 +38,55 @@ export class Instructors extends Model<
   InstructorAttributes,
   InstructorCreationAttributes
 > {
+  // Use "declare" so TS does not emit runtime fields that shadow Sequelize’s accessors
   @PrimaryKey
   @AutoIncrement
-  @Column({
-    type: DataType.INTEGER,
-    field: 'instructor_id',
-  })
-  instructor_id!: number;
+  @Column({ type: DataType.INTEGER, field: 'instructor_id' })
+  declare instructor_id: number;
 
   @Unique
-  @Column({
-    type: DataType.STRING(255),
-    allowNull: false,
-  })
-  email!: string;
+  @Column({ type: DataType.STRING(255), allowNull: false })
+  declare email: string;
 
-  @Column({
-    type: DataType.STRING(255),
-    allowNull: false,
-  })
-  password_hash!: string;
+  @Column({ type: DataType.STRING(255), allowNull: false })
+  declare password_hash: string;
 
-  @Column({
-    type: DataType.STRING(100),
-    allowNull: false,
-  })
-  first_name!: string;
+  @Column({ type: DataType.STRING(100), allowNull: false })
+  declare first_name: string;
 
-  @Column({
-    type: DataType.STRING(100),
-    allowNull: false,
-  })
-  last_name!: string;
+  @Column({ type: DataType.STRING(100), allowNull: false })
+  declare last_name: string;
 
   @Column({
     type: DataType.ENUM('instructor', 'admin'),
     defaultValue: 'instructor',
     allowNull: false,
   })
-  role!: 'instructor' | 'admin';
+  declare role: 'instructor' | 'admin';
 
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: true,
-    allowNull: false,
-  })
-  is_active!: boolean;
+  @Column({ type: DataType.BOOLEAN, defaultValue: true, allowNull: false })
+  declare is_active: boolean;
 
   @CreatedAt
-  @Column({
-    type: DataType.DATE,
-    field: 'created_at',
-  })
-  created_at!: Date;
+  @Column({ type: DataType.DATE, field: 'created_at' })
+  declare created_at: Date;
 
   @UpdatedAt
-  @Column({
-    type: DataType.DATE,
-    field: 'updated_at',
-  })
-  updated_at!: Date;
+  @Column({ type: DataType.DATE, field: 'updated_at' })
+  declare updated_at: Date;
 
-  @Column({
-    type: DataType.DATE,
-    allowNull: true,
-  })
-  last_login?: Date;
+  @Column({ type: DataType.DATE, allowNull: true })
+  declare last_login: Date | null;
 
-  // Virtual properties for easier access
+  // Virtuals/helpers
   get fullName(): string {
     return `${this.first_name} ${this.last_name}`;
   }
 
-  // Method to check if instructor is admin
   isAdmin(): boolean {
     return this.role === 'admin';
   }
 
-  // Method to safely return instructor data (without password)
   toSafeObject() {
     const { password_hash, ...safeData } = this.toJSON();
     return safeData;
