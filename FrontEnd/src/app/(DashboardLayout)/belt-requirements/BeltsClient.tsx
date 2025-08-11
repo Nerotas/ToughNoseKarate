@@ -5,17 +5,13 @@ import DashboardCard from '../components/shared/DashboardCard';
 import useGet from 'hooks/useGet';
 import { BeltRequirements as BeltRequirementsType } from 'models/BeltRequirements/BeltRequirements';
 import Loading from 'app/loading';
-import { useAuth } from '../../../hooks/useAuth';
 import BeltRequirementCard from '../components/belt-requirements/beltRequirementCard';
 
 const BeltRequirements = () => {
-  const { isAuthenticated, instructor } = useAuth();
-
   // Use the custom useGet hook - will use SSR data if available, fallback if not
   const {
     data: beltRequirements,
-    isLoading,
-    isFetching,
+    isPending,
     refetch,
   } = useGet<BeltRequirementsType[]>({
     apiLabel: 'belt-requirements',
@@ -54,14 +50,12 @@ const BeltRequirements = () => {
         </Typography>
 
         <Grid container spacing={3}>
-          {isLoading || (isFetching && <Loading />)}
+          {isPending && <Loading />}
 
           {displayBeltRequirements.map((belt) => (
             <BeltRequirementCard
               key={`${belt.beltOrder}_${belt.beltRank}`}
               belt={belt}
-              isAuthenticated={isAuthenticated}
-              instructor={instructor}
               refetchBeltRequirements={refetchBeltRequirements}
             />
           ))}

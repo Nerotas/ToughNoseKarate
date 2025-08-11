@@ -4,20 +4,16 @@ import RequirementsList from './RequirementsList';
 import { useState } from 'react';
 import BeltRequirementsEditModule from './beltRequirementsEditModule';
 import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
+import { useAuth } from 'hooks/useAuth';
 
 interface BeltRequirementCardProps {
   belt: BeltRequirements;
-  isAuthenticated: boolean;
-  instructor: any;
   refetchBeltRequirements: () => Promise<void>;
 }
 
-const BeltRequirementCard = ({
-  belt,
-  isAuthenticated,
-  instructor,
-  refetchBeltRequirements,
-}: BeltRequirementCardProps) => {
+const BeltRequirementCard = ({ belt, refetchBeltRequirements }: BeltRequirementCardProps) => {
+  const { isAuthenticated, instructor } = useAuth();
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const openEditModal = () => {

@@ -47,9 +47,7 @@ export default function KicksClient() {
 
   const {
     data: kickDefinitions,
-    isLoading,
-    isFetching,
-    error,
+    isPending,
     isError,
     refetch,
   } = useGet<KickDefinition[]>({
@@ -118,7 +116,7 @@ export default function KicksClient() {
           </Alert>
         )}
 
-        {(isLoading || isFetching) && <Loading />}
+        {isPending && <Loading />}
 
         <Grid container spacing={3}>
           {displayKicks.map((kick) => (
