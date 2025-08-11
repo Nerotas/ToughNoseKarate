@@ -17,15 +17,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "strict": false,
+    "strict": false
   },
-  "include": [
-    "src/**/*.ts",
-    ".eslintrc.cjs",
-    "types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*.ts", ".eslintrc.cjs", "types/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

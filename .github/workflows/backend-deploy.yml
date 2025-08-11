@@ -9,7 +9,7 @@ on:
     paths: ["BackEnd/**"]
 
 env:
-  NODE_VERSION: "18"
+  NODE_VERSION: "20"
 
 jobs:
   test-and-build:
@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: "20"
           cache: "npm"
           cache-dependency-path: BackEnd/package-lock.json
 
@@ -30,7 +30,7 @@ jobs:
         working-directory: ./BackEnd
         run: npm ci
 
-        # 
+        #
       # - name: Run tests
       #   working-directory: ./BackEnd
       #   run: npm run test -- --passWithNoTests
