@@ -18,7 +18,8 @@ class AuthService {
       this.profile = await this.getProfile();
       this.sessionReady = true;
       return true;
-    } catch {
+    } catch (error) {
+      console.error('Error in ensureSession:', error);
       this.sessionReady = false;
       return false;
     }
