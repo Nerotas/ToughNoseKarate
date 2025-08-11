@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { validateRuntimeConfig, shouldEnableDebug } from '../utils/config/frontend.config';
+import Loading from 'app/loading';
 
 interface ConfigValidatorProps {
   children: React.ReactNode;
@@ -153,15 +154,8 @@ export default function ConfigValidator({ children }: ConfigValidatorProps) {
             color: '#666',
           }}
         >
-          <div
-            style={{
-              fontSize: '2rem',
-              marginBottom: '1rem',
-            }}
-          >
-            🔧
-          </div>
-          <p>Validating configuration...</p>
+          <Loading />
+          <p>Rolling out mats...</p>
         </div>
       </div>
     );

@@ -9,6 +9,7 @@ import {
   Patch,
   Res,
   Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -185,20 +186,17 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  @SkipThrottle() // optional: prevent throttling harmless profile pings
-  async getProfile(@User() user: InstructorPayload, @Req() req: Request) {
-    // TEMP DEBUG (remove after confirming)
-    if (process.env.LOG_AUTH_DEBUG === 'true') {
-      console.log(
-        'Profile cookies keys:',
-        Object.keys((req as any).cookies || {}),
-      );
-      console.log('User payload:', user);
+  @SkipThrottle()
+  async profile(@User() user: any) {
+    if (!user || !user.instructorId) {
+      throw new UnauthorizedException('No user found in JWT payload');
     }
-    // If strategy sets only id: change to user.id
-    const id =
-      (user as any).instructorId ?? (user as any).id ?? (user as any).sub;
-    return this.authService.getProfile(id);
+    const profile = await this.authService.getProfile(user.instructorId);
+    console.log('User profile:', profile);
+    if (!profile || Object.keys(profile).length === 0) {
+      throw new UnauthorizedException('No profile found for user');
+    }
+    return profile;
   }
 
   @Post('logout')

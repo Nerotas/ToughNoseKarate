@@ -18,9 +18,7 @@ export interface InstructorProfile {
   firstName: string;
   lastName: string;
   role: 'instructor' | 'admin';
-  isActive: boolean;
   lastLogin?: string;
-  createdAt: string;
 }
 export interface ChangePasswordRequest {
   currentPassword: string;

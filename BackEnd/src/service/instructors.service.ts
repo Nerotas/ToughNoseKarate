@@ -79,6 +79,7 @@ export class InstructorsService {
   async findByIdSafe(id: number): Promise<Instructors | null> {
     return this.instructorModel.findByPk(id, {
       attributes: { exclude: ['password_hash'] }, // Safe version without password
+      logging: console.log,
     });
   }
 

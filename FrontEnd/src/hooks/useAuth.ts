@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/authService';
 import { InstructorProfile } from '../models/Auth/Auth';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 // Auth query keys
 export const authKeys = {
@@ -26,7 +26,7 @@ export const useAuth = () => {
   } = useQuery({
     queryKey: authKeys.profile(),
     queryFn: authService.getProfile,
-    enabled: false, // do not auto-run before login
+    enabled: false,
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000,
@@ -91,6 +91,17 @@ export const useAuth = () => {
   const refreshToken = () => refreshMutation.mutateAsync();
 
   const isAuthenticated = !!instructor && profileStatus !== 'error' && !logoutMutation.isPending;
+
+  useEffect(() => {
+    console.log('Profile query result:', instructor, profileStatus, profileError);
+  }, [instructor, profileStatus, profileError]);
+
+  useEffect(() => {
+    if (instructor && Object.keys(instructor).length === 0) {
+      // Treat empty object as unauthenticated
+      qc.setQueryData(authKeys.profile(), null);
+    }
+  }, [instructor]);
 
   return {
     // State
