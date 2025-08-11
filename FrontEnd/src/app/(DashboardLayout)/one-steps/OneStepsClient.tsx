@@ -1,34 +1,11 @@
 'use client';
-import { useState } from 'react';
-import {
-  Grid,
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  Alert,
-  Divider,
-  Button,
-} from '@mui/material';
-import {
-  IconSwords,
-  IconCheckbox,
-  IconX,
-  IconTarget,
-  IconFlag,
-  IconShield,
-} from '@tabler/icons-react';
+import { Grid, Box, Typography, List, ListItem, ListItemText, Alert } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import { OneStepDefinition } from '../../../models/OneSteps/OneSteps';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
-import { useAuth } from '../../../hooks/useAuth';
-import OneStepEditModule from '../components/one-steps/oneStepEditModule';
+import OneStepCard from '../components/one-steps/OneStepCard';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -48,15 +25,9 @@ const getDifficultyColor = (difficulty: string) => {
 };
 
 export default function OneStepsClient() {
-  const { isAuthenticated, instructor } = useAuth();
-  const [editingOneStep, setEditingOneStep] = useState<OneStepDefinition | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
   const {
     data: oneStepDefinitions,
-    isLoading,
-    isFetching,
-    error,
+    isPending,
     isError,
     refetch,
   } = useGet<OneStepDefinition[]>({
@@ -75,23 +46,13 @@ export default function OneStepsClient() {
   // Use API data only
   const displayOneSteps = oneStepDefinitions || [];
 
-  const openEditModal = (oneStep: OneStepDefinition) => {
-    setEditingOneStep(oneStep);
-    setIsEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setEditingOneStep(null);
-    setIsEditModalOpen(false);
-  };
-
   const refetchOneSteps = async () => {
     await refetch();
   };
 
   return (
     <PageContainer title='One-Step Sparring' description='Tang Soo Do One-Step Sparring Techniques'>
-      {isLoading || (isFetching && <Loading />)}
+      {isPending && <Loading />}
 
       <Box>
         <Typography
@@ -131,168 +92,13 @@ export default function OneStepsClient() {
 
         <Grid container spacing={3}>
           {displayOneSteps?.map((oneStep) => (
-            <Grid size={{ xs: 12, lg: 6 }} key={oneStep.id}>
-              <Card sx={{ height: '100%' }}>
-                <CardContent>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                      mb: 2,
-                    }}
-                  >
-                    <Box>
-                      <Typography variant='h5' gutterBottom>
-                        {oneStep.name}
-                      </Typography>
-                      <Typography variant='h6' color='text.secondary' gutterBottom>
-                        {`(${oneStep.korean})`}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      <Chip
-                        icon={<IconSwords />}
-                        label={oneStep.belt}
-                        sx={{
-                          backgroundColor: oneStep.beltColor,
-                          color: getBeltTextColor(oneStep.beltColor),
-                          fontWeight: 'bold',
-                          border: oneStep.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
-                        }}
-                      />
-                      <Chip
-                        icon={<IconFlag />}
-                        label={oneStep.difficulty}
-                        color={getDifficultyColor(oneStep.difficulty)}
-                        size='small'
-                      />
-                    </Box>
-                  </Box>
-
-                  <Typography variant='body2' paragraph>
-                    {oneStep.description}
-                  </Typography>
-
-                  <Box sx={{ mb: 3 }}>
-                    <Typography variant='subtitle2' gutterBottom>
-                      Attack:
-                    </Typography>
-                    <Typography variant='body2' color='error.main'>
-                      {oneStep.attack}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ mb: 3 }}>
-                    <Typography variant='subtitle2' gutterBottom>
-                      Defense:
-                    </Typography>
-                    <Typography variant='body2' color='primary.main'>
-                      {oneStep.defense}
-                    </Typography>
-                  </Box>
-
-                  <Divider sx={{ my: 2 }} />
-
-                  <Box sx={{ mb: 3 }}>
-                    <Typography
-                      variant='subtitle2'
-                      gutterBottom
-                      sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      <IconShield size={16} color='blue' style={{ marginRight: 8 }} />
-                      Sequence:
-                    </Typography>
-                    <List dense sx={{ pl: 2 }}>
-                      {oneStep.sequence?.map((step, index) => (
-                        <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
-                          <ListItemText
-                            primary={`${index + 1}. ${step}`}
-                            primaryTypographyProps={{ variant: 'body2' }}
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
-
-                  <Box sx={{ mb: 3 }}>
-                    <Typography
-                      variant='subtitle2'
-                      gutterBottom
-                      sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      <IconCheckbox size={16} color='green' style={{ marginRight: 8 }} />
-                      Key Points:
-                    </Typography>
-                    <List dense sx={{ pl: 2 }}>
-                      {oneStep.keyPoints?.map((point, index) => (
-                        <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
-                          <ListItemText
-                            primary={`• ${point}`}
-                            primaryTypographyProps={{ variant: 'body2' }}
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
-
-                  <Box sx={{ mb: 3 }}>
-                    <Typography
-                      variant='subtitle2'
-                      gutterBottom
-                      sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      <IconX size={16} color='red' style={{ marginRight: 8 }} />
-                      Common Mistakes:
-                    </Typography>
-                    <List dense sx={{ pl: 2 }}>
-                      {oneStep.commonMistakes?.map((mistake, index) => (
-                        <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
-                          <ListItemText
-                            primary={`• ${mistake}`}
-                            primaryTypographyProps={{
-                              variant: 'body2',
-                              color: 'text.secondary',
-                            }}
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
-
-                  <Box>
-                    <Typography variant='subtitle2' gutterBottom>
-                      Applications:
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {oneStep.applications?.map((app, index) => (
-                        <Chip
-                          key={index}
-                          label={app}
-                          size='small'
-                          variant='outlined'
-                          color='primary'
-                        />
-                      ))}
-                    </Box>
-                  </Box>
-
-                  {isAuthenticated &&
-                    (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
-                      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button
-                          variant='outlined'
-                          size='small'
-                          color='primary'
-                          onClick={() => openEditModal(oneStep)}
-                        >
-                          Edit
-                        </Button>
-                      </Box>
-                    )}
-                </CardContent>
-              </Card>
-            </Grid>
+            <OneStepCard
+              key={oneStep.id}
+              oneStep={oneStep}
+              refetchOneSteps={refetchOneSteps}
+              getBeltTextColor={getBeltTextColor}
+              getDifficultyColor={getDifficultyColor}
+            />
           ))}
         </Grid>
 
@@ -361,16 +167,6 @@ export default function OneStepsClient() {
             </Grid>
           </DashboardCard>
         </Box>
-
-        {/* Edit Modal */}
-        {editingOneStep && (
-          <OneStepEditModule
-            open={isEditModalOpen}
-            oneStep={editingOneStep}
-            refetchOneSteps={refetchOneSteps}
-            handleCloseEdit={closeEditModal}
-          />
-        )}
       </Box>
     </PageContainer>
   );

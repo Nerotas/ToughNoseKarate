@@ -28,9 +28,7 @@ const getBeltTextColor = (beltColor: string) => {
 export default function PunchesClient() {
   const {
     data: punchDefinitions,
-    isLoading,
-    isFetching,
-    error,
+    isPending,
     isError,
     refetch,
   } = useGet<PunchDefinition[]>({
@@ -89,7 +87,7 @@ export default function PunchesClient() {
         )}
 
         <Grid container spacing={3}>
-          {isLoading || (isFetching && <Loading />)}
+          {isPending && <Loading />}
 
           {punchDefinitions &&
             punchDefinitions.map((punch) => (

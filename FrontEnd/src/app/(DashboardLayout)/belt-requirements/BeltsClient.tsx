@@ -1,42 +1,17 @@
 'use client';
-import { useState } from 'react';
-import {
-  Grid,
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Button,
-} from '@mui/material';
-import { IconAward, IconCheck } from '@tabler/icons-react';
+import { Grid, Box, Typography } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
-import RequirementsList from '../components/belt-requirements/RequirementsList';
 import useGet from 'hooks/useGet';
 import { BeltRequirements as BeltRequirementsType } from 'models/BeltRequirements/BeltRequirements';
 import Loading from 'app/loading';
-import { useAuth } from '../../../hooks/useAuth';
-import BeltRequirementsEditModule from '../components/belt-requirements/beltRequirementsEditModule';
+import BeltRequirementCard from '../components/belt-requirements/beltRequirementCard';
 
 const BeltRequirements = () => {
-  const { isAuthenticated, instructor } = useAuth();
-  const [editingBeltRequirement, setEditingBeltRequirement] = useState<BeltRequirementsType | null>(
-    null
-  );
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
   // Use the custom useGet hook - will use SSR data if available, fallback if not
   const {
     data: beltRequirements,
-    isLoading,
-    isFetching,
-    error,
-    isError,
+    isPending,
     refetch,
   } = useGet<BeltRequirementsType[]>({
     apiLabel: 'belt-requirements',
@@ -54,16 +29,6 @@ const BeltRequirements = () => {
   // Use API data if available, otherwise use static data
   const displayBeltRequirements =
     beltRequirements && beltRequirements.length > 0 ? beltRequirements : [];
-
-  const openEditModal = (beltRequirement: BeltRequirementsType) => {
-    setEditingBeltRequirement(beltRequirement);
-    setIsEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setEditingBeltRequirement(null);
-    setIsEditModalOpen(false);
-  };
 
   const refetchBeltRequirements = async () => {
     await refetch();
@@ -85,74 +50,14 @@ const BeltRequirements = () => {
         </Typography>
 
         <Grid container spacing={3}>
-          {isLoading || (isFetching && <Loading />)}
+          {isPending && <Loading />}
 
           {displayBeltRequirements.map((belt) => (
-            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={`${belt.beltOrder}_${belt.beltRank}`}>
-              <Card sx={{ height: '100%' }}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Chip
-                      icon={<IconAward />}
-                      label={belt.beltRank}
-                      sx={{
-                        backgroundColor: belt.color,
-                        color: belt.textColor,
-                        fontWeight: 'bold',
-                        border: belt.color === '#FFFFFF' ? '1px solid #ccc' : 'none',
-                      }}
-                    />
-                  </Box>
-
-                  {belt.forms.length > 0 && (
-                    <RequirementsList requirements={belt.forms} requirementName='Forms' />
-                  )}
-                  {belt.blocks.length > 0 && (
-                    <RequirementsList requirements={belt.blocks} requirementName='Blocks' />
-                  )}
-                  {belt.punches.length > 0 && (
-                    <RequirementsList requirements={belt.punches} requirementName='Punches' />
-                  )}
-                  {belt.kicks.length > 0 && (
-                    <RequirementsList requirements={belt.kicks} requirementName='Kicks' />
-                  )}
-                  {belt.jumps.length > 0 && (
-                    <RequirementsList requirements={belt.jumps} requirementName='Jumps' />
-                  )}
-                  {belt.falling.length > 0 && (
-                    <RequirementsList requirements={belt.falling} requirementName='Falling' />
-                  )}
-                  {belt.oneSteps.length > 0 && (
-                    <RequirementsList requirements={belt.oneSteps} requirementName='One Steps' />
-                  )}
-                  {belt.selfDefense.length > 0 && (
-                    <RequirementsList
-                      requirements={belt.selfDefense}
-                      requirementName='Self Defense'
-                    />
-                  )}
-                  {belt.comments && (
-                    <Typography variant='body2' sx={{ mt: 2 }}>
-                      {belt.comments}
-                    </Typography>
-                  )}
-
-                  {isAuthenticated &&
-                    (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
-                      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button
-                          variant='outlined'
-                          size='small'
-                          color='primary'
-                          onClick={() => openEditModal(belt)}
-                        >
-                          Edit
-                        </Button>
-                      </Box>
-                    )}
-                </CardContent>
-              </Card>
-            </Grid>
+            <BeltRequirementCard
+              key={`${belt.beltOrder}_${belt.beltRank}`}
+              belt={belt}
+              refetchBeltRequirements={refetchBeltRequirements}
+            />
           ))}
         </Grid>
 
@@ -167,16 +72,6 @@ const BeltRequirements = () => {
             </Typography>
           </DashboardCard>
         </Box>
-
-        {/* Edit Modal */}
-        {editingBeltRequirement && (
-          <BeltRequirementsEditModule
-            open={isEditModalOpen}
-            beltRequirement={editingBeltRequirement}
-            refetchBeltRequirements={refetchBeltRequirements}
-            handleCloseEdit={closeEditModal}
-          />
-        )}
       </Box>
     </PageContainer>
   );
