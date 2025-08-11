@@ -18,35 +18,62 @@ const apiBase = `${trimSlashes(config.NEXT_PUBLIC_API_PATH)}/${ensureVersion(
 
 const axiosInstance = axios.create({
   baseURL: apiBase,
-  timeout: 30000, // Reduced from 600000 (10 minutes) to 30 seconds
+  timeout: 30000,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // Do not set global Content-Type to avoid preflight on GET/HEAD
 });
 
-// Single‑flight refresh control
+// Single-flight refresh control
 let isRefreshing = false;
-let waitQueue: Array<(ok: boolean) => void> = [];
-
+const waitQueue: Array<(ok: boolean) => void> = [];
 const enqueue = (cb: (ok: boolean) => void) => waitQueue.push(cb);
 const flush = (ok: boolean) => {
   while (waitQueue.length) {
-    const fn = waitQueue.shift();
     try {
-      fn?.(ok);
+      waitQueue.shift()?.(ok);
     } catch {}
   }
 };
 
+// Ensure Content-Type only when sending JSON body
 axiosInstance.interceptors.request.use(
   (request) => {
-    // URL already relative; no need to inject /v1 (baseURL includes version)
     if (shouldEnableDebug()) {
       console.log(
-        `🔄 API Request: ${request.method?.toUpperCase()} ${request.baseURL}${request.url}`
+        `🔄 API Request: ${request.method?.toUpperCase()} ${request.baseURL || ''}${request.url || ''}`
       );
     }
+    const method = (request.method || 'get').toUpperCase();
+    const hasBody = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) && request.data != null;
+
+    const hdrs: any = request.headers;
+
+    // Axios v1 uses AxiosHeaders; handle both shapes
+    const removeHeader = (name: string) => {
+      if (!hdrs) return;
+      if (typeof hdrs.delete === 'function') {
+        hdrs.delete(name);
+      } else {
+        delete hdrs[name];
+        delete hdrs[name.toLowerCase()];
+      }
+    };
+    const setHeader = (name: string, value: string) => {
+      if (!hdrs) return;
+      if (typeof hdrs.set === 'function') {
+        hdrs.set(name, value);
+      } else {
+        hdrs[name] = value;
+      }
+    };
+
+    if (!hasBody) {
+      removeHeader('Content-Type');
+    } else {
+      // Set only when sending a body
+      setHeader('Content-Type', 'application/json');
+    }
+
     return request;
   },
   (error) => Promise.reject(error)
@@ -76,9 +103,9 @@ axiosInstance.interceptors.response.use(
       url.includes('/auth/refresh') ||
       url.includes('/auth/change-password');
 
+      //attempt auth refetch
     if (status === 401 && !isAuthEndpoint) {
       if ((originalRequest as any)._retry) {
-        // Already retried once; give up
         if (shouldEnableDebug()) console.warn('401 after retry, redirecting to login');
         if (typeof window !== 'undefined') window.location.href = '/auth/login';
         return Promise.reject(error);
@@ -89,8 +116,9 @@ axiosInstance.interceptors.response.use(
         isRefreshing = true;
         if (shouldEnableDebug()) console.log('🔁 Starting token refresh');
         try {
-          const { authService } = await import('../../services/authService');
-          await authService.refreshToken(); // sets new access cookie
+          const mod = await import('../../services/authService');
+          const svc: any = (mod as any).authService || (mod as any).default || mod;
+          await svc.refreshToken(); // sets new access cookie
           flush(true);
         } catch (refreshErr) {
           if (shouldEnableDebug()) console.warn('Refresh failed, flushing queue');
@@ -111,7 +139,6 @@ axiosInstance.interceptors.response.use(
       });
     }
 
-    // Stop hammering on rate limit
     if (status === 429) {
       return Promise.reject(new Error('Too many requests. Please wait and retry.'));
     }

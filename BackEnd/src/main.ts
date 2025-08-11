@@ -5,10 +5,49 @@ import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { LoggerService } from './service/logger.service';
 import { AppConfigService } from './config/app-config.service';
+import type { Express } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const isProd = process.env.NODE_ENV === 'production';
+
+  // Set trust proxy on the raw Express instance
+  const expressApp = app.getHttpAdapter().getInstance() as Express;
+  expressApp.set('trust proxy', 1);
+
+  // Simplest: exact origins, no allowedHeaders override
+  const whitelist = new Set([
+    'http://localhost:3000',
+    'https://toughnosekarate.netlify.app',
+    process.env.FRONTEND_URL || '',
+  ]);
+
+  interface CorsOriginCallback {
+    (err: Error | null, allow?: boolean): void;
+  }
+
+  interface CorsOptions {
+    origin: (origin: string | undefined, cb: CorsOriginCallback) => void;
+    credentials: boolean;
+    methods: string[];
+    optionsSuccessStatus: number;
+  }
+  // Use official CorsOriginCallback and CorsOptions from 'cors'
+  app.enableCors(<CorsOptions>{
+    origin: (origin: string | undefined, cb: CorsOriginCallback) => {
+      if (!origin) return cb(null, true); // allow Postman/curl
+      if (
+        whitelist.has(origin) ||
+        (isProd && origin.endsWith('.netlify.app'))
+      ) {
+        return cb(null, true);
+      }
+      return cb(new Error(`CORS blocked: ${origin}`), false);
+    },
+    credentials: true,
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    optionsSuccessStatus: 204,
+  });
 
   // Get configuration service
   const configService = app.get(AppConfigService);
@@ -45,14 +84,6 @@ async function bootstrap() {
       },
     }),
   );
-
-  // Configure CORS using config service
-  app.enableCors({
-    origin: ['http://localhost:3000', 'https://toughnosekarate.netlify.app'],
-    credentials: true,
-    methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  });
 
   const config = new DocumentBuilder()
     .setTitle('Tough Nose Karate API')
