@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menuitems, AuthMenuItems } from './MenuItems';
+import { Menuitems, AuthMenuItems, LoginMenuItems } from './MenuItems';
 import {
   Box,
   List,
@@ -9,10 +9,12 @@ import {
   ListItemText,
   Typography,
   Divider,
+  Button,
 } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Logo from '../shared/logo/Logo';
+import { IconChalkboardTeacher } from '@tabler/icons-react';
 import { useAuth } from '../../../../contexts/AuthContext';
 
 const SidebarItems = () => {
@@ -186,7 +188,7 @@ const SidebarItems = () => {
         )} */}
 
         {/* User info section at bottom */}
-        {isAuthenticated && (
+        {isAuthenticated && instructor && instructor.firstName && (
           <Box sx={{ mt: 'auto', p: 2, borderTop: 1, borderColor: 'divider' }}>
             <Typography variant='caption' color='text.secondary' display='block'>
               Signed in as
@@ -199,6 +201,34 @@ const SidebarItems = () => {
             </Typography>
           </Box>
         )}
+
+        {!isAuthenticated &&
+          LoginMenuItems.map((item) => (
+            <ListItem key={item.id} disablePadding sx={{ px: 2 }}>
+              <ListItemButton
+                component={Link}
+                href={item.href}
+                sx={{
+                  borderRadius: 2,
+                  '&.Mui-selected': {
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                    },
+                    '& .MuiListItemIcon-root': {
+                      color: 'primary.contrastText',
+                    },
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  <item.icon stroke={1.5} size='1.3rem' />
+                </ListItemIcon>
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
+          ))}
       </List>
     </Box>
   );

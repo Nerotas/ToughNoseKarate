@@ -5,13 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { InstructorsService } from '../service/instructors.service';
 
-export interface InstructorPayload {
-  instructorId: number;
-  email: string;
-  role: 'instructor' | 'admin';
-}
-
-interface JwtPayload {
+interface RefreshJwtPayload {
   sub: number;
   email: string;
   role: string;
@@ -19,45 +13,42 @@ interface JwtPayload {
   exp: number;
 }
 
-const cookieExtractor = (req: Request): string | null => {
+const refreshCookieExtractor = (req: Request): string | null => {
   if (!req) return null;
-  // Prefer accessToken cookie
-  const tokenFromCookie = req.cookies?.accessToken;
-  if (tokenFromCookie) return tokenFromCookie;
-  // Fallback to Authorization header
-  const auth = req.headers['authorization'];
-  if (auth && auth.startsWith('Bearer ')) return auth.substring(7);
-  return null;
+  return req.cookies?.refreshToken || null;
 };
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class RefreshJwtStrategy extends PassportStrategy(
+  Strategy,
+  'refresh-jwt',
+) {
   constructor(
     private configService: ConfigService,
     private instructorsService: InstructorsService,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+      jwtFromRequest: ExtractJwt.fromExtractors([refreshCookieExtractor]),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET'),
+      secretOrKey:
+        configService.get<string>('REFRESH_JWT_SECRET') ||
+        configService.get<string>('JWT_SECRET'),
     });
   }
 
-  async validate(payload: JwtPayload): Promise<InstructorPayload> {
+  async validate(payload: RefreshJwtPayload) {
     if (!payload?.sub) {
-      throw new UnauthorizedException('Invalid token payload');
+      throw new UnauthorizedException('Invalid refresh token payload');
     }
 
-    // Payload structure: { email, sub: instructorId, role, iat, exp }
     const instructor = await this.instructorsService.findById(payload.sub);
 
     if (!instructor || instructor.getDataValue('is_active') === false) {
       throw new UnauthorizedException(
-        'Invalid token - instructor not found or inactive',
+        'Invalid refresh token - instructor not found or inactive',
       );
     }
 
-    // Return the instructor payload that will be attached to request.user
     return {
       instructorId: instructor.getDataValue('instructor_id'),
       email: instructor.getDataValue('email'),

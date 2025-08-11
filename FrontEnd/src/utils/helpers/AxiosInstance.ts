@@ -4,8 +4,20 @@ import { getConfig, shouldEnableDebug } from '../config/frontend.config';
 // Get validated configuration
 const config = getConfig();
 
+// Normalize segments safely (prevents double slashes)
+const trimSlashes = (s: string) => s.replace(/\/+$/, '');
+const ensureVersion = (v: string) => {
+  if (!v) return 'v1';
+  return v.startsWith('v') ? v : `v${v}`;
+};
+
+// Build versioned base URL once
+const apiBase = `${trimSlashes(config.NEXT_PUBLIC_API_PATH)}/${ensureVersion(
+  config.NEXT_PUBLIC_API_VERSION
+)}`;
+
 const axiosInstance = axios.create({
-  baseURL: config.NEXT_PUBLIC_API_PATH,
+  baseURL: apiBase,
   timeout: 30000, // Reduced from 600000 (10 minutes) to 30 seconds
   withCredentials: true,
   headers: {
@@ -13,29 +25,31 @@ const axiosInstance = axios.create({
   },
 });
 
+// Single‑flight refresh control
+let isRefreshing = false;
+let waitQueue: Array<(ok: boolean) => void> = [];
+
+const enqueue = (cb: (ok: boolean) => void) => waitQueue.push(cb);
+const flush = (ok: boolean) => {
+  while (waitQueue.length) {
+    const fn = waitQueue.shift();
+    try {
+      fn?.(ok);
+    } catch {}
+  }
+};
+
 axiosInstance.interceptors.request.use(
-  async (request) => {
-    // JWT token is now automatically included via cookies
-    // No need to manually add Authorization header
-
-    // Add API version to requests if not already present
-    if (!request.url?.includes('/v')) {
-      request.url = `/${config.NEXT_PUBLIC_API_VERSION}${request.url}`;
-    }
-
-    // Log requests in debug mode
+  (request) => {
+    // URL already relative; no need to inject /v1 (baseURL includes version)
     if (shouldEnableDebug()) {
-      console.log(`🔄 API Request: ${request.method?.toUpperCase()} ${request.url}`);
+      console.log(
+        `🔄 API Request: ${request.method?.toUpperCase()} ${request.baseURL}${request.url}`
+      );
     }
-
     return request;
   },
-  (error) => {
-    if (shouldEnableDebug()) {
-      console.error('❌ API Request Error:', error);
-    }
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
@@ -46,46 +60,60 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
+    const { response, config: originalRequest } = error;
     if (shouldEnableDebug()) {
       console.error(
-        `❌ API Response Error: ${error.response?.status} ${error.config?.url}`,
-        error.response?.data
+        `❌ API Response Error: ${response?.status} ${originalRequest?.url}`,
+        response?.data || ''
       );
     }
+    if (!response) return Promise.reject(error);
 
-    const originalRequest = error.config;
+    const status = response.status;
+    const url = (originalRequest?.url || '').toLowerCase();
+    const isAuthEndpoint =
+      url.includes('/auth/login') ||
+      url.includes('/auth/refresh') ||
+      url.includes('/auth/change-password');
 
-    // Handle 401 errors with token refresh
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    if (status === 401 && !isAuthEndpoint) {
+      if ((originalRequest as any)._retry) {
+        // Already retried once; give up
+        if (shouldEnableDebug()) console.warn('401 after retry, redirecting to login');
+        if (typeof window !== 'undefined') window.location.href = '/auth/login';
+        return Promise.reject(error);
+      }
+      (originalRequest as any)._retry = true;
 
-      try {
-        // Try to refresh the token using the auth service
-        const { authService } = await import('../../services/authService');
-        await authService.refreshToken();
-
-        // Retry the original request (cookie will be automatically included)
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed, redirect to login
-        console.warn('Token refresh failed - redirecting to login');
-        if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
+      if (!isRefreshing) {
+        isRefreshing = true;
+        if (shouldEnableDebug()) console.log('🔁 Starting token refresh');
+        try {
+          const { authService } = await import('../../services/authService');
+          await authService.refreshToken(); // sets new access cookie
+          flush(true);
+        } catch (refreshErr) {
+          if (shouldEnableDebug()) console.warn('Refresh failed, flushing queue');
+          flush(false);
+          if (typeof window !== 'undefined') window.location.href = '/auth/login';
+          return Promise.reject(refreshErr);
+        } finally {
+          isRefreshing = false;
         }
-        return Promise.reject(refreshError);
       }
-    } else if (error.response?.status === 401) {
-      // Already tried to refresh or no token - redirect to login
-      console.warn('Unauthorized access - user may need to log in');
-      if (typeof window !== 'undefined') {
-        window.location.href = '/auth/login';
-      }
-    } else if (error.response?.status >= 500) {
-      // Handle server errors
-      console.error('Server error occurred');
-    } else if (error.code === 'NETWORK_ERROR') {
-      // Handle network errors
-      console.error('Network error - check connection');
+
+      // Queue pending requests until refresh done
+      return new Promise((resolve, reject) => {
+        enqueue((ok) => {
+          if (!ok) return reject(error);
+          resolve(axiosInstance(originalRequest));
+        });
+      });
+    }
+
+    // Stop hammering on rate limit
+    if (status === 429) {
+      return Promise.reject(new Error('Too many requests. Please wait and retry.'));
     }
 
     return Promise.reject(error);

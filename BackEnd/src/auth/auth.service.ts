@@ -73,17 +73,19 @@ export class AuthService {
 
   async login(
     instructor: Instructors,
-  ): Promise<{ access_token: string; instructor: any }> {
+  ): Promise<{ access_token: string; refresh_token: string; instructor: any }> {
     const payload: JwtPayload = {
       email: instructor.getDataValue('email'),
       sub: instructor.getDataValue('instructor_id'),
       role: instructor.getDataValue('role'),
     };
 
-    const access_token = this.jwtService.sign(payload);
+    const access_token = this.jwtService.sign(payload, { expiresIn: '15m' });
+    const refresh_token = this.jwtService.sign(payload, { expiresIn: '7d' });
 
     return {
       access_token,
+      refresh_token,
       instructor: {
         id: instructor.getDataValue('instructor_id'),
         email: instructor.getDataValue('email'),
@@ -96,7 +98,7 @@ export class AuthService {
 
   async loginWithCredentials(
     loginDto: LoginDto,
-  ): Promise<{ access_token: string; instructor: any }> {
+  ): Promise<{ access_token: string; refresh_token: string; instructor: any }> {
     const instructor = await this.validateInstructor(
       loginDto.email,
       loginDto.password,
@@ -183,7 +185,17 @@ export class AuthService {
     };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, { expiresIn: '15m' }),
     };
+  }
+
+  async issueAccessToken(user: any): Promise<string> {
+    const payload: JwtPayload = {
+      email: user.email,
+      sub: user.instructorId,
+      role: user.role,
+    };
+
+    return this.jwtService.sign(payload, { expiresIn: '15m' });
   }
 }
