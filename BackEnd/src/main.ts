@@ -7,9 +7,8 @@ import { LoggerService } from './service/logger.service';
 import { AppConfigService } from './config/app-config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    bufferLogs: true,
-  });
+  const app = await NestFactory.create(AppModule);
+  const isProd = process.env.NODE_ENV === 'production';
 
   // Get configuration service
   const configService = app.get(AppConfigService);
@@ -50,12 +49,12 @@ async function bootstrap() {
   // Configure CORS using config service
   app.enableCors({
     origin: [
+      'http://localhost:3000',
       'https://toughnosekarate.netlify.app',
-      ...configService.corsOrigins,
     ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
+    methods: ['GET','HEAD','POST','PUT','PATCH','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type','Authorization'],
   });
 
   const config = new DocumentBuilder()

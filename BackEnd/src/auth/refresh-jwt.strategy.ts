@@ -13,10 +13,8 @@ interface RefreshJwtPayload {
   exp: number;
 }
 
-const refreshCookieExtractor = (req: Request): string | null => {
-  if (!req) return null;
-  return req.cookies?.refreshToken || null;
-};
+const refreshCookieExtractor = (req: Request) =>
+  req?.cookies?.refreshToken || null;
 
 @Injectable()
 export class RefreshJwtStrategy extends PassportStrategy(

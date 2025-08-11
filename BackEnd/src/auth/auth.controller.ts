@@ -79,23 +79,26 @@ export class AuthController {
     const result = await this.authService.loginWithCredentials(loginDto);
 
     const isProd = process.env.NODE_ENV === 'production';
-
-    // Set JWT as HttpOnly cookies
-    response.cookie('accessToken', result.access_token, {
+    const baseCookie = {
       httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
+      secure: isProd, // required for SameSite=None on HTTPS
+      sameSite: isProd ? ('none' as const) : ('lax' as const),
       path: '/',
+    };
+
+    response.cookie('accessToken', result.access_token, {
+      ...baseCookie,
       maxAge: 15 * 60 * 1000, // 15 minutes
     });
-
     response.cookie('refreshToken', result.refresh_token, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
-      path: '/',
+      ...baseCookie,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
+
+    // TEMP debug
+    if (!isProd) {
+      console.log('Set login cookies');
+    }
 
     return {
       success: true,
@@ -154,68 +157,57 @@ export class AuthController {
     };
   }
 
-  @Get('profile')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('JWT')
-  @ApiOperation({ summary: 'Get current instructor profile' })
-  @ApiResponse({
-    status: 200,
-    description: 'Current instructor profile',
-    schema: {
-      example: {
-        id: 1,
-        email: 'instructor@toughnosekarate.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'instructor',
-        isActive: true,
-        lastLogin: '2024-01-01T12:00:00Z',
-        createdAt: '2024-01-01T00:00:00Z',
-      },
-    },
-  })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getProfile(@User() user: InstructorPayload) {
-    return this.authService.getProfile(user.instructorId);
-  }
-
   @Post('refresh')
-  @UseGuards(RefreshJwtAuthGuard)
-  @SkipThrottle()
-  @ApiBearerAuth('JWT')
-  @ApiOperation({ summary: 'Refresh JWT token using refresh token' })
-  @ApiResponse({
-    status: 200,
-    description: 'New access token generated and set in cookie',
-    schema: {
-      example: {
-        success: true,
-        message: 'Token refreshed successfully',
-      },
-    },
-  })
-  @ApiResponse({ status: 401, description: 'Invalid refresh token' })
-  async refreshToken(
-    @User() user: InstructorPayload,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    const result = await this.authService.refreshToken(user.instructorId);
-
+  @SkipThrottle() // avoid rate limiting refresh
+  @UseGuards(RefreshJwtAuthGuard) // use the custom guard wrapper
+  async refresh(@User() user, @Res({ passthrough: true }) res: Response) {
+    const accessToken = await this.authService.issueAccessToken(user);
     const isProd = process.env.NODE_ENV === 'production';
-
-    // Set new JWT as HttpOnly cookie
-    response.cookie('accessToken', result.access_token, {
+    const baseCookie = {
       httpOnly: true,
       secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
+      sameSite: isProd ? ('none' as const) : ('lax' as const),
       path: '/',
-      maxAge: 15 * 60 * 1000, // 15 minutes
-    });
-
-    return {
-      success: true,
-      message: 'Token refreshed successfully',
     };
+    res.cookie('accessToken', accessToken, {
+      ...baseCookie,
+      maxAge: 15 * 60 * 1000,
+    });
+    return { success: true };
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  @SkipThrottle() // optional: prevent throttling harmless profile pings
+  async getProfile(@User() user: InstructorPayload, @Req() req: Request) {
+    // TEMP DEBUG (remove after confirming)
+    if (process.env.LOG_AUTH_DEBUG === 'true') {
+      console.log(
+        'Profile cookies keys:',
+        Object.keys((req as any).cookies || {}),
+      );
+      console.log('User payload:', user);
+    }
+    // If strategy sets only id: change to user.id
+    const id =
+      (user as any).instructorId ?? (user as any).id ?? (user as any).sub;
+    return this.authService.getProfile(id);
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async logout(@Res({ passthrough: true }) response: Response) {
+    const isProd = process.env.NODE_ENV === 'production';
+    const baseCookie = {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? ('none' as const) : ('lax' as const),
+      path: '/',
+    };
+    response.clearCookie('accessToken', baseCookie);
+    response.clearCookie('refreshToken', baseCookie);
+    return { success: true, message: 'Logout successful.' };
   }
 
   @Patch('change-password')
@@ -245,37 +237,5 @@ export class AuthController {
     );
 
     return { message: 'Password changed successfully' };
-  }
-
-  @Post('logout')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('JWT')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Logout instructor and clear authentication cookie',
-  })
-  @ApiResponse({ status: 200, description: 'Logout successful' })
-  async logout(@Res({ passthrough: true }) response: Response) {
-    const isProd = process.env.NODE_ENV === 'production';
-
-    // Clear the authentication cookies
-    response.clearCookie('accessToken', {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
-      path: '/',
-    });
-
-    response.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
-      path: '/',
-    });
-
-    return {
-      success: true,
-      message: 'Logout successful. Authentication cookies cleared.',
-    };
   }
 }

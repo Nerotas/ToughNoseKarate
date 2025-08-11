@@ -19,16 +19,7 @@ interface JwtPayload {
   exp: number;
 }
 
-const cookieExtractor = (req: Request): string | null => {
-  if (!req) return null;
-  // Prefer accessToken cookie
-  const tokenFromCookie = req.cookies?.accessToken;
-  if (tokenFromCookie) return tokenFromCookie;
-  // Fallback to Authorization header
-  const auth = req.headers['authorization'];
-  if (auth && auth.startsWith('Bearer ')) return auth.substring(7);
-  return null;
-};
+const cookieExtractor = (req: Request) => req?.cookies?.accessToken || null;
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -59,9 +50,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // Return the instructor payload that will be attached to request.user
     return {
-      instructorId: instructor.getDataValue('instructor_id'),
-      email: instructor.getDataValue('email'),
-      role: instructor.getDataValue('role'),
+      instructorId: payload.sub, // ensure this field exists for controller
+      email: payload.email,
+      role: payload.role?.toLowerCase() === 'admin' ? 'admin' : 'instructor',
     };
   }
 }
