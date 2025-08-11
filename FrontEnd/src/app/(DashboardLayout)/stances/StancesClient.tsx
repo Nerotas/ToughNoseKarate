@@ -20,7 +20,7 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { StanceDefinition } from 'models/Stances/Stances';
 import useGet from '../../../hooks/useGet';
 import Loading from 'app/loading';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../hooks/useAuth';
 import StanceEditModule from '../components/stances/stanceEditModule';
 
 const getBeltTextColor = (beltColor: string) => {

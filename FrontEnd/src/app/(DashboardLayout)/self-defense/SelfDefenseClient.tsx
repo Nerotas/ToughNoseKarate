@@ -29,7 +29,7 @@ import FitnessCenter from '@mui/icons-material/FitnessCenter';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import WarningIcon from '@mui/icons-material/Warning';
 import { SelfDefenseDefinition } from '../../../models/SelfDefense/SelfDefense';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../hooks/useAuth';
 import SelfDefenseEditModule from '../components/self-defense/selfDefenseEditModule';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';

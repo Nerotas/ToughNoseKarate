@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Logo from '../shared/logo/Logo';
 import { IconChalkboardTeacher } from '@tabler/icons-react';
-import { useAuth } from '../../../../contexts/AuthContext';
+import { useAuth } from '../../../../hooks/useAuth';
 
 const SidebarItems = () => {
   const pathname = usePathname();

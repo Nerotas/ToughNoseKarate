@@ -20,7 +20,7 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { KickDefinition } from '../../../models/Kicks/Kicks';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../hooks/useAuth';
 import KickEditModule from '../components/kicks/kickEditModule';
 
 const getBeltTextColor = (beltColor: string) => {

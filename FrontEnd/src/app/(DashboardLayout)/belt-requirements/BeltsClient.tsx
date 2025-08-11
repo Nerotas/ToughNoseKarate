@@ -20,7 +20,7 @@ import RequirementsList from '../components/belt-requirements/RequirementsList';
 import useGet from 'hooks/useGet';
 import { BeltRequirements as BeltRequirementsType } from 'models/BeltRequirements/BeltRequirements';
 import Loading from 'app/loading';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../hooks/useAuth';
 import BeltRequirementsEditModule from '../components/belt-requirements/beltRequirementsEditModule';
 
 const BeltRequirements = () => {

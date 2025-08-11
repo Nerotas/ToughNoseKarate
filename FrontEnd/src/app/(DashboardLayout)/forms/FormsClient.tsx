@@ -21,7 +21,7 @@ import PageContainer from '../components/container/PageContainer';
 import useGet from '../../../hooks/useGet';
 import Loading from 'app/loading';
 import { FormDefinitions } from 'models/Forms/FormDefinitions';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../hooks/useAuth';
 import FormEditModule from '../components/forms/formEditModule';
 
 const FormsClient = () => {

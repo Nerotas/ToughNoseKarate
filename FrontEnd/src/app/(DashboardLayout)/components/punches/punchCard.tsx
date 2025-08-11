@@ -15,7 +15,7 @@ import { size } from 'lodash';
 import { PunchDefinition } from 'models/Punches/Punches';
 import PunchEditModule from './punchEditModule';
 import { useState } from 'react';
-import { useAuth } from '../../../../contexts/AuthContext';
+import { useAuth } from '../../../../hooks/useAuth';
 
 const PunchCard = ({
   punch,

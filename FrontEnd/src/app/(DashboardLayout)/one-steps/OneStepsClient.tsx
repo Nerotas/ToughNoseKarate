@@ -27,7 +27,7 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { OneStepDefinition } from '../../../models/OneSteps/OneSteps';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../hooks/useAuth';
 import OneStepEditModule from '../components/one-steps/oneStepEditModule';
 
 const getBeltTextColor = (beltColor: string) => {
