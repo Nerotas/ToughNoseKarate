@@ -60,7 +60,12 @@ async function bootstrap() {
     console.log(`🗄️  Database: ${configService.getDatabaseConnectionInfo()}`);
     console.log(`🌍 Environment: ${configService.nodeEnv}`);
   } catch (error: any) {
-    console.error('❌ Environment validation failed:', error?.message || error);
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      console.error('❌ Environment validation failed:', (error as { message?: string }).message);
+    } else {
+      console.error('❌ Environment validation failed:', error);
+    }
     throw error; // don’t process.exit in prod
   }
 
