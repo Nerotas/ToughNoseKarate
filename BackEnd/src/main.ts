@@ -116,7 +116,10 @@ async function bootstrap() {
   // Use Railway’s PORT if provided; fallback to config or 3001
   const port =
     Number.parseInt(
-      process.env.PORT ?? String((configService as any).port ?? 3001),
+  const configService = app.get(AppConfigService);
+  const port =
+    Number.parseInt(
+      process.env.PORT ?? String(configService.port ?? 3001),
       10,
     ) || 3001;
   console.log(`🚀 App listening on port ${port} - press Ctrl+C to stop`);
