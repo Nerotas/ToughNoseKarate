@@ -14,6 +14,7 @@ import {
   IconSchool,
   IconUsersGroup,
   IconFileText,
+  IconChalkboardTeacher,
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
@@ -90,5 +91,14 @@ export const AuthMenuItems = [
     title: 'Students',
     icon: IconUsers,
     href: '/students',
+  },
+];
+
+export const LoginMenuItems = [
+  {
+    id: uniqueId(),
+    title: 'Instructor Login',
+    icon: IconChalkboardTeacher,
+    href: '/auth/login',
   },
 ];

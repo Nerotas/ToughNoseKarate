@@ -17,12 +17,13 @@ import {
   ApiBearerAuth,
   ApiBody,
 } from '@nestjs/swagger';
-import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
+import { ThrottlerGuard, Throttle, SkipThrottle } from '@nestjs/throttler';
 import { Response, Request } from 'express';
 
 import { AuthService, LoginDto, LoginResponse } from './auth.service';
 import { CreateInstructorDto } from '../service/instructors.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { RefreshJwtAuthGuard } from './refresh-jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { AdminOnly } from '../decorators/roles.decorator';
 import { User } from '../decorators/user.decorator';
@@ -77,12 +78,23 @@ export class AuthController {
   ): Promise<LoginResponse> {
     const result = await this.authService.loginWithCredentials(loginDto);
 
-    // Set JWT as HttpOnly cookie
+    const isProd = process.env.NODE_ENV === 'production';
+
+    // Set JWT as HttpOnly cookies
     response.cookie('accessToken', result.access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      secure: isProd,
+      sameSite: isProd ? 'strict' : 'lax',
+      path: '/',
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    });
+
+    response.cookie('refreshToken', result.refresh_token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'strict' : 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     return {
@@ -168,9 +180,10 @@ export class AuthController {
   }
 
   @Post('refresh')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RefreshJwtAuthGuard)
+  @SkipThrottle()
   @ApiBearerAuth('JWT')
-  @ApiOperation({ summary: 'Refresh JWT token' })
+  @ApiOperation({ summary: 'Refresh JWT token using refresh token' })
   @ApiResponse({
     status: 200,
     description: 'New access token generated and set in cookie',
@@ -181,19 +194,22 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 401, description: 'Invalid refresh token' })
   async refreshToken(
     @User() user: InstructorPayload,
     @Res({ passthrough: true }) response: Response,
   ) {
     const result = await this.authService.refreshToken(user.instructorId);
 
+    const isProd = process.env.NODE_ENV === 'production';
+
     // Set new JWT as HttpOnly cookie
     response.cookie('accessToken', result.access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      secure: isProd,
+      sameSite: isProd ? 'strict' : 'lax',
+      path: '/',
+      maxAge: 15 * 60 * 1000, // 15 minutes
     });
 
     return {
@@ -240,16 +256,26 @@ export class AuthController {
   })
   @ApiResponse({ status: 200, description: 'Logout successful' })
   async logout(@Res({ passthrough: true }) response: Response) {
-    // Clear the authentication cookie
+    const isProd = process.env.NODE_ENV === 'production';
+
+    // Clear the authentication cookies
     response.clearCookie('accessToken', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProd,
+      sameSite: isProd ? 'strict' : 'lax',
+      path: '/',
+    });
+
+    response.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'strict' : 'lax',
+      path: '/',
     });
 
     return {
       success: true,
-      message: 'Logout successful. Authentication cookie cleared.',
+      message: 'Logout successful. Authentication cookies cleared.',
     };
   }
 }

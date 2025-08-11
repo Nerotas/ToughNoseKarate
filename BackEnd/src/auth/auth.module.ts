@@ -5,7 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 import { JwtStrategy } from './jwt.strategy';
+import { RefreshJwtStrategy } from './refresh-jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { RefreshJwtAuthGuard } from './refresh-jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
@@ -31,14 +33,18 @@ import { InstructorsService } from '../service/instructors.service';
   providers: [
     AuthService,
     JwtStrategy,
+    RefreshJwtStrategy,
     JwtAuthGuard,
+    RefreshJwtAuthGuard,
     RolesGuard,
     InstructorsService,
   ],
   exports: [
     AuthService,
     JwtStrategy,
+    RefreshJwtStrategy,
     JwtAuthGuard,
+    RefreshJwtAuthGuard,
     RolesGuard,
     PassportModule,
     JwtModule,

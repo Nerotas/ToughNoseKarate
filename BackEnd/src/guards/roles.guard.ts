@@ -23,7 +23,17 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    // Allow access if user's role matches any required role
-    return requiredRoles.includes(user.role);
+    const userRole = String(user.role).toLowerCase();
+
+    // Admin can access everything
+    if (userRole === 'admin') {
+      return true;
+    }
+
+    // Check if user's role matches any required role (case-insensitive)
+    const normalizedRequiredRoles = requiredRoles.map((role) =>
+      role.toLowerCase(),
+    );
+    return normalizedRequiredRoles.includes(userRole);
   }
 }
