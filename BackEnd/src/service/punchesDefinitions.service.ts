@@ -21,7 +21,7 @@ export class PunchesDefinitionsService {
         const parsed = JSON.parse(v);
         if (Array.isArray(parsed)) return parsed.map(String);
       } catch (error) {
-        console.error(error);
+        console.error('Failed to parse JSON in punches definitions:', error);
       }
       const parts = v
         .split(/\r?\n|,/)
