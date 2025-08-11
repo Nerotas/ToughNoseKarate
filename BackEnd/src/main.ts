@@ -14,7 +14,7 @@ async function bootstrap() {
   const expressApp = app.getHttpAdapter().getInstance() as Express;
   expressApp.set('trust proxy', 1);
 
-  // Simplest: exact origins, no allowedHeaders override
+  // CORS config
   const whitelist = new Set(
     [
       !isProd && 'http://localhost:3000', // Only allow localhost in development
@@ -26,14 +26,12 @@ async function bootstrap() {
   interface CorsOriginCallback {
     (err: Error | null, allow?: boolean): void;
   }
-
   interface CorsOptions {
     origin: (origin: string | undefined, cb: CorsOriginCallback) => void;
     credentials: boolean;
     methods: string[];
     optionsSuccessStatus: number;
   }
-  // Use official CorsOriginCallback and CorsOptions from 'cors'
   app.enableCors(<CorsOptions>{
     origin: (origin: string | undefined, cb: CorsOriginCallback) => {
       if (!origin) return cb(null, true); // allow Postman/curl
@@ -59,14 +57,16 @@ async function bootstrap() {
     console.log(`✅ Environment validation passed`);
     console.log(`🗄️  Database: ${configService.getDatabaseConnectionInfo()}`);
     console.log(`🌍 Environment: ${configService.nodeEnv}`);
-  } catch (error: any) {
-  } catch (error: unknown) {
+  } catch (error) {
     if (typeof error === 'object' && error !== null && 'message' in error) {
-      console.error('❌ Environment validation failed:', (error as { message?: string }).message);
+      console.error(
+        '❌ Environment validation failed:',
+        (error as { message?: string }).message,
+      );
     } else {
       console.error('❌ Environment validation failed:', error);
     }
-    throw error; // don’t process.exit in prod
+    throw error;
   }
 
   // Enable API versioning
@@ -119,9 +119,6 @@ async function bootstrap() {
   app.useLogger(app.get(LoggerService));
 
   // Use Railway’s PORT if provided; fallback to config or 3001
-  const port =
-    Number.parseInt(
-  const configService = app.get(AppConfigService);
   const port =
     Number.parseInt(
       process.env.PORT ?? String(configService.port ?? 3001),
