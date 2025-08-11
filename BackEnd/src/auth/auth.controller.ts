@@ -162,16 +162,23 @@ export class AuthController {
   @UseGuards(RefreshJwtAuthGuard) // use the custom guard wrapper
   async refresh(@User() user, @Res({ passthrough: true }) res: Response) {
     const accessToken = await this.authService.issueAccessToken(user);
+    const refreshToken = await this.authService.refreshToken(user);
+
     const isProd = process.env.NODE_ENV === 'production';
-    const baseCookie = {
+    const baseCookie: import('express').CookieOptions = {
       httpOnly: true,
       secure: isProd,
-      sameSite: isProd ? ('none' as const) : ('lax' as const),
+      sameSite: isProd ? 'none' : 'lax',
       path: '/',
     };
+
     res.cookie('accessToken', accessToken, {
       ...baseCookie,
       maxAge: 15 * 60 * 1000,
+    });
+    res.cookie('refreshToken', refreshToken, {
+      ...baseCookie,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return { success: true };
   }

@@ -48,13 +48,10 @@ async function bootstrap() {
 
   // Configure CORS using config service
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://toughnosekarate.netlify.app',
-    ],
+    origin: ['http://localhost:3000', 'https://toughnosekarate.netlify.app'],
     credentials: true,
-    methods: ['GET','HEAD','POST','PUT','PATCH','DELETE','OPTIONS'],
-    allowedHeaders: ['Content-Type','Authorization'],
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   const config = new DocumentBuilder()

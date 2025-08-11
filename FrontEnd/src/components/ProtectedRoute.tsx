@@ -16,12 +16,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredRole,
   fallbackPath = '/auth/login',
 }) => {
-  const { isAuthenticated, isLoading, instructor } = useAuth();
+  const { isAuthenticated, isAuthLoading, instructor } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     // Wait for loading to complete
-    if (isLoading) return;
+    if (isAuthLoading) return;
 
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
@@ -40,10 +40,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
 
     console.log(`✅ Access granted: User ${instructor?.email} (${instructor?.role})`);
-  }, [isAuthenticated, isLoading, instructor, requiredRole, router, fallbackPath]);
+  }, [isAuthenticated, isAuthLoading, instructor, requiredRole, router, fallbackPath]);
 
   // Show loading spinner while checking authentication
-  if (isLoading) {
+  if (isAuthLoading) {
     return (
       <Box
         display='flex'
