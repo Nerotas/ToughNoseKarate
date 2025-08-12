@@ -20,12 +20,11 @@ const PunchForm = ({ punch, refetchPunches, handleCloseEdit }: PunchFormProps) =
     description: punch.description || '',
     belt: punch.belt || '',
     beltColor: punch.beltColor || '',
-    technique: punch.technique || '',
-    bodyMechanics: punch.bodyMechanics || '',
+    target: punch.target || '',
+    execution: punch.execution || [],
     keyPoints: punch.keyPoints || [],
     commonMistakes: punch.commonMistakes || [],
     applications: punch.applications || [],
-    targetAreas: punch.targetAreas || [],
   };
 
   const onSubmit = async (values: PunchDefinition) => {
@@ -152,37 +151,59 @@ const PunchForm = ({ punch, refetchPunches, handleCloseEdit }: PunchFormProps) =
               </Grid>
 
               <Grid size={12}>
-                <Field name='technique'>
+                <Field name='target'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Technique'
-                      placeholder='Technique type'
-                      error={Boolean(errors.technique && touched.technique)}
-                      helperText={errors.technique && touched.technique ? errors.technique : ''}
+                      label='Target'
+                      placeholder='Target area'
+                      error={Boolean(errors.target && touched.target)}
+                      helperText={errors.target && touched.target ? errors.target : ''}
                     />
                   )}
                 </Field>
               </Grid>
 
+              {/* Execution Steps */}
               <Grid size={12}>
-                <Field name='bodyMechanics'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Body Mechanics'
-                      multiline
-                      rows={3}
-                      placeholder='Explain body mechanics'
-                      error={Boolean(errors.bodyMechanics && touched.bodyMechanics)}
-                      helperText={
-                        errors.bodyMechanics && touched.bodyMechanics ? errors.bodyMechanics : ''
-                      }
-                    />
+                <FieldArray name='execution'>
+                  {({ push, remove }) => (
+                    <Box>
+                      <Typography variant='subtitle1' gutterBottom>
+                        Execution Steps
+                      </Typography>
+                      <Stack spacing={2}>
+                        {values.execution?.map((_, index) => (
+                          <Box key={`ex-${index}`} display='flex' alignItems='center' gap={1}>
+                            <Field name={`execution.${index}`}>
+                              {({ field }: any) => (
+                                <TextField
+                                  {...field}
+                                  fullWidth
+                                  label={`Step #${index + 1}`}
+                                  size='small'
+                                />
+                              )}
+                            </Field>
+                            <IconButton onClick={() => remove(index)} color='error' size='small'>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        ))}
+                        <Button
+                          startIcon={<AddIcon />}
+                          onClick={() => push('')}
+                          variant='outlined'
+                          size='small'
+                          sx={{ alignSelf: 'flex-start' }}
+                        >
+                          Add Execution Step
+                        </Button>
+                      </Stack>
+                    </Box>
                   )}
-                </Field>
+                </FieldArray>
               </Grid>
 
               {/* Array fields */}
@@ -308,47 +329,6 @@ const PunchForm = ({ punch, refetchPunches, handleCloseEdit }: PunchFormProps) =
                           sx={{ alignSelf: 'flex-start' }}
                         >
                           Add Application
-                        </Button>
-                      </Stack>
-                    </Box>
-                  )}
-                </FieldArray>
-              </Grid>
-
-              {/* Target Areas */}
-              <Grid size={12}>
-                <FieldArray name='targetAreas'>
-                  {({ push, remove }) => (
-                    <Box>
-                      <Typography variant='subtitle1' gutterBottom>
-                        Target Areas
-                      </Typography>
-                      <Stack spacing={2}>
-                        {values.targetAreas?.map((_, index) => (
-                          <Box key={`ta-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`targetAreas.${index}`}>
-                              {({ field }: any) => (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  label={`Target Area #${index + 1}`}
-                                  size='small'
-                                />
-                              )}
-                            </Field>
-                            <IconButton onClick={() => remove(index)} color='error' size='small'>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        ))}
-                        <Button
-                          startIcon={<AddIcon />}
-                          onClick={() => push('')}
-                          variant='outlined'
-                          size='small'
-                          sx={{ alignSelf: 'flex-start' }}
-                        >
-                          Add Target Area
                         </Button>
                       </Stack>
                     </Box>

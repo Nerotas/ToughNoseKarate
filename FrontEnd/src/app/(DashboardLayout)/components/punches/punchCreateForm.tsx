@@ -1,15 +1,12 @@
 import React from 'react';
 import { Formik, Form, Field, FieldArray } from 'formik';
-import { PunchDefinition } from 'models/Punches/Punches';
+import { PunchDefinition, PunchCreate } from 'models/Punches/Punches';
 import { validationSchema } from 'helpers/Punches';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { TextField, Button, Box, Typography, Grid, IconButton, Stack } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
-type PunchCreate = Omit<PunchDefinition, 'id'> & { id?: string };
-
 const defaultValues: PunchCreate = {
-  id: undefined,
   name: '',
   korean: '',
   description: '',
@@ -155,45 +152,59 @@ const PunchCreateForm = ({ refetchPunches, handleCloseCreate }: PunchCreateFormP
               </Grid>
 
               <Grid size={12}>
-                <Field name='technique'>
+                <Field name='target'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Technique'
-                      placeholder='Technique type'
-                      error={Boolean((errors as any).technique && (touched as any).technique)}
-                      helperText={
-                        (errors as any).technique && (touched as any).technique
-                          ? (errors as any).technique
-                          : ''
-                      }
+                      label='Target'
+                      placeholder='Target area (e.g., solar plexus, face)'
+                      error={Boolean(errors.target && touched.target)}
+                      helperText={errors.target && touched.target ? (errors as any).target : ''}
                     />
                   )}
                 </Field>
               </Grid>
 
+              {/* Execution Steps */}
               <Grid size={12}>
-                <Field name='bodyMechanics'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Body Mechanics'
-                      multiline
-                      rows={3}
-                      placeholder='Explain body mechanics'
-                      error={Boolean(
-                        (errors as any).bodyMechanics && (touched as any).bodyMechanics
-                      )}
-                      helperText={
-                        (errors as any).bodyMechanics && (touched as any).bodyMechanics
-                          ? (errors as any).bodyMechanics
-                          : ''
-                      }
-                    />
+                <FieldArray name='execution'>
+                  {({ push, remove }) => (
+                    <Box>
+                      <Typography variant='subtitle1' gutterBottom>
+                        Execution Steps
+                      </Typography>
+                      <Stack spacing={2}>
+                        {values.execution?.map((_, index) => (
+                          <Box key={`ex-${index}`} display='flex' alignItems='center' gap={1}>
+                            <Field name={`execution.${index}`}>
+                              {({ field }: any) => (
+                                <TextField
+                                  {...field}
+                                  fullWidth
+                                  label={`Step #${index + 1}`}
+                                  size='small'
+                                />
+                              )}
+                            </Field>
+                            <IconButton onClick={() => remove(index)} color='error' size='small'>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        ))}
+                        <Button
+                          startIcon={<AddIcon />}
+                          onClick={() => push('')}
+                          variant='outlined'
+                          size='small'
+                          sx={{ alignSelf: 'flex-start' }}
+                        >
+                          Add Execution Step
+                        </Button>
+                      </Stack>
+                    </Box>
                   )}
-                </Field>
+                </FieldArray>
               </Grid>
 
               {/* Key Points */}
@@ -318,8 +329,6 @@ const PunchCreateForm = ({ refetchPunches, handleCloseCreate }: PunchCreateFormP
                   )}
                 </FieldArray>
               </Grid>
-
-
 
               <Grid size={12}>
                 <Box display='flex' justifyContent='flex-end' gap={2} mt={3}>
