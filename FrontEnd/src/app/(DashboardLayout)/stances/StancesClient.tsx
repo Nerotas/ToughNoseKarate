@@ -22,6 +22,7 @@ import useGet from '../../../hooks/useGet';
 import Loading from 'app/loading';
 import { useAuth } from '../../../hooks/useAuth';
 import StanceEditModule from '../components/stances/stanceEditModule';
+import StanceCreateModule from '../components/stances/stanceCreateModule';
 import StancesCard from '../components/stances/stancesCard';
 
 export default function StancesClient() {
@@ -43,6 +44,9 @@ export default function StancesClient() {
       refetchOnWindowFocus: false,
     },
   });
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
 
   // Use API data only
   const displayStances = stancesDefinitions || [];
@@ -57,20 +61,17 @@ export default function StancesClient() {
   return (
     <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
       {isPending && <Loading />}
-
       <Box>
-        <Typography
-          variant='h2'
-          gutterBottom
-          sx={{
-            mb: 3,
-            fontSize: { xs: '1.75rem', sm: '2.125rem', md: '2.5rem' },
-            fontWeight: 600,
-            lineHeight: 1.2,
-          }}
-        >
-          Tang Soo Do Stances
-        </Typography>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Typography variant='h2' gutterBottom sx={{ mb: 3 }}>
+            Stances
+          </Typography>
+          {canCreate && (
+            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+              Add Stance
+            </Button>
+          )}
+        </Box>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
           Proper stances form the foundation of all Tang Soo Do techniques. They provide stability,
@@ -169,6 +170,13 @@ export default function StancesClient() {
             </Grid>
           </DashboardCard>
         </Box>
+        {canCreate && (
+          <StanceCreateModule
+            open={isCreateOpen}
+            handleCloseCreate={() => setIsCreateOpen(false)}
+            refetchStances={refetchStances}
+          />
+        )}
       </Box>
     </PageContainer>
   );

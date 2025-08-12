@@ -1,11 +1,14 @@
 'use client';
-import { Grid, Box, Typography, List, ListItem, ListItemText, Alert } from '@mui/material';
+import { Grid, Box, Typography, List, ListItem, ListItemText, Alert, Button } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import { OneStepDefinition } from '../../../models/OneSteps/OneSteps';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
 import OneStepCard from '../components/one-steps/OneStepCard';
+import { useAuth } from '../../../hooks/useAuth';
+import React, { useState } from 'react';
+import OneStepCreateModule from '../components/one-steps/oneStepCreateModule';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -25,6 +28,9 @@ const getDifficultyColor = (difficulty: string) => {
 };
 
 export default function OneStepsClient() {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
   const {
     data: oneStepDefinitions,
     isPending,
@@ -55,18 +61,25 @@ export default function OneStepsClient() {
       {isPending && <Loading />}
 
       <Box>
-        <Typography
-          variant='h2'
-          gutterBottom
-          sx={{
-            mb: 3,
-            fontSize: { xs: '1.75rem', sm: '2.125rem', md: '2.5rem' },
-            fontWeight: 600,
-            lineHeight: 1.2,
-          }}
-        >
-          Tang Soo Do One-Step Sparring
-        </Typography>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Typography
+            variant='h2'
+            gutterBottom
+            sx={{
+              mb: 3,
+              fontSize: { xs: '1.75rem', sm: '2.125rem', md: '2.5rem' },
+              fontWeight: 600,
+              lineHeight: 1.2,
+            }}
+          >
+            Tang Soo Do One-Step Sparring
+          </Typography>
+          {canCreate && (
+            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+              Add One-Step
+            </Button>
+          )}
+        </Box>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
           One-steps teaches timing, distance, and the application of basic techniques in controlled
@@ -167,6 +180,14 @@ export default function OneStepsClient() {
             </Grid>
           </DashboardCard>
         </Box>
+
+        {canCreate && (
+          <OneStepCreateModule
+            open={isCreateOpen}
+            handleCloseCreate={() => setIsCreateOpen(false)}
+            refetchOneSteps={refetchOneSteps}
+          />
+        )}
       </Box>
     </PageContainer>
   );
