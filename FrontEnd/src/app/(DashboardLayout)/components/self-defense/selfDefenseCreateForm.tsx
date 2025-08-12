@@ -66,7 +66,7 @@ const SelfDefenseCreateForm = ({
 }: SelfDefenseCreateFormProps) => {
   const onSubmit = async (values: typeof defaultValues) => {
     const { id, ...payload } = values;
-    await axiosInstance.post(`/selfdefense-definitions`, payload);
+    await axiosInstance.post(`/self-defense-definitions`, payload);
     await refetchSelfDefense();
     handleCloseCreate();
   };
