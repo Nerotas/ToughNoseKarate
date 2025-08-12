@@ -83,12 +83,6 @@ const OneStepCard = ({
                     border: oneStep.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
                   }}
                 />
-                <Chip
-                  icon={<IconFlag />}
-                  label={oneStep.difficulty}
-                  color={getDifficultyColor(oneStep.difficulty)}
-                  size='small'
-                />
               </Box>
             </Box>
 
@@ -115,27 +109,6 @@ const OneStepCard = ({
             </Box>
 
             <Divider sx={{ my: 2 }} />
-
-            <Box sx={{ mb: 3 }}>
-              <Typography
-                variant='subtitle2'
-                gutterBottom
-                sx={{ display: 'flex', alignItems: 'center' }}
-              >
-                <IconShield size={16} color='blue' style={{ marginRight: 8 }} />
-                Sequence:
-              </Typography>
-              <List dense sx={{ pl: 2 }}>
-                {oneStep.sequence?.map((step, index) => (
-                  <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
-                    <ListItemText
-                      primary={`${index + 1}. ${step}`}
-                      primaryTypographyProps={{ variant: 'body2' }}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
 
             <Box sx={{ mb: 3 }}>
               <Typography

@@ -27,13 +27,11 @@ const defaultValues: KickCreate = {
   description: '',
   belt: '',
   beltColor: '',
-  technique: '',
-  bodyMechanics: '',
+  target: '',
+  execution: [],
   keyPoints: [],
   commonMistakes: [],
   applications: [],
-  targetAreas: [],
-  difficulty: 'Beginner',
 };
 
 const validationSchema = Yup.object({
@@ -42,13 +40,11 @@ const validationSchema = Yup.object({
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   belt: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
-  technique: Yup.string().trim().max(200, 'Too long').optional(),
-  bodyMechanics: Yup.string().trim().max(2000, 'Too long').optional(),
+  target: Yup.string().trim().max(200, 'Too long').optional(),
+  execution: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  targetAreas: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  difficulty: Yup.string().oneOf(['Beginner', 'Intermediate', 'Advanced']).required('Required'),
 });
 
 interface KickCreateFormProps {
@@ -58,8 +54,7 @@ interface KickCreateFormProps {
 
 const KickCreateForm = ({ refetchKicks, handleCloseCreate }: KickCreateFormProps) => {
   const onSubmit = async (values: KickCreate) => {
-    const payload: Partial<KickDefinition> = { ...values };
-    if (!payload.id) delete (payload as any).id;
+    const { id, ...payload } = values;
     await axiosInstance.post(`/kicks-definitions`, payload);
     await refetchKicks();
     handleCloseCreate();
@@ -175,17 +170,22 @@ const KickCreateForm = ({ refetchKicks, handleCloseCreate }: KickCreateFormProps
                 </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='difficulty'>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <Field name='target'>
                   {({ field }: any) => (
-                    <FormControl fullWidth error={Boolean(errors.difficulty && touched.difficulty)}>
-                      <InputLabel>Difficulty</InputLabel>
-                      <Select {...field} label='Difficulty' required>
-                        <MenuItem value='Beginner'>Beginner</MenuItem>
-                        <MenuItem value='Intermediate'>Intermediate</MenuItem>
-                        <MenuItem value='Advanced'>Advanced</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Target'
+                      multiline
+                      rows={2}
+                      error={Boolean((errors as any).target && (touched as any).target)}
+                      helperText={
+                        (errors as any).target && (touched as any).target
+                          ? (errors as any).target
+                          : ''
+                      }
+                    />
                   )}
                 </Field>
               </Grid>
@@ -359,21 +359,21 @@ const KickCreateForm = ({ refetchKicks, handleCloseCreate }: KickCreateFormProps
               </Grid>
 
               <Grid size={12}>
-                <FieldArray name='targetAreas'>
+                <FieldArray name='execution'>
                   {({ push, remove }) => (
                     <Box>
                       <Typography variant='subtitle1' gutterBottom>
-                        Target Areas
+                        Execution Steps
                       </Typography>
                       <Stack spacing={2}>
-                        {values.targetAreas?.map((_, index) => (
-                          <Box key={`ta-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`targetAreas.${index}`}>
+                        {values.execution?.map((_, index) => (
+                          <Box key={`exec-${index}`} display='flex' alignItems='center' gap={1}>
+                            <Field name={`execution.${index}`}>
                               {({ field }: any) => (
                                 <TextField
                                   {...field}
                                   fullWidth
-                                  label={`Target Area #${index + 1}`}
+                                  label={`Execution Step #${index + 1}`}
                                   size='small'
                                 />
                               )}
@@ -390,7 +390,7 @@ const KickCreateForm = ({ refetchKicks, handleCloseCreate }: KickCreateFormProps
                           size='small'
                           sx={{ alignSelf: 'flex-start' }}
                         >
-                          Add Target Area
+                          Add Execution Step
                         </Button>
                       </Stack>
                     </Box>

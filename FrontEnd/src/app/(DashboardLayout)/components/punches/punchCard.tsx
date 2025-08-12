@@ -91,28 +91,6 @@ const PunchCard = ({
               {punch.description}
             </Typography>
 
-            {size(punch.technique) > 0 && (
-              <Box sx={{ mb: 3 }}>
-                <Typography variant='subtitle2' gutterBottom>
-                  Technique:
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {punch.technique}
-                </Typography>
-              </Box>
-            )}
-
-            {size(punch.bodyMechanics) > 0 && (
-              <Box sx={{ mb: 3 }}>
-                <Typography variant='subtitle2' gutterBottom>
-                  Body Mechanics:
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {punch.bodyMechanics}
-                </Typography>
-              </Box>
-            )}
-
             <Divider sx={{ my: 2 }} />
 
             <Box sx={{ mb: 3 }}>
@@ -158,29 +136,6 @@ const PunchCard = ({
                   </ListItem>
                 ))}
               </List>
-            </Box>
-
-            <Box sx={{ mb: 3 }}>
-              <Typography
-                variant='subtitle2'
-                gutterBottom
-                sx={{ display: 'flex', alignItems: 'center' }}
-              >
-                <IconTarget size={16} color='orange' style={{ marginRight: 8 }} />
-                Target Areas:
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {punch.targetAreas &&
-                  punch.targetAreas.map((target: string, index: number) => (
-                    <Chip
-                      key={index}
-                      label={target}
-                      size='small'
-                      variant='outlined'
-                      sx={{ color: 'orange' }}
-                    />
-                  ))}
-              </Box>
             </Box>
 
             <Box>

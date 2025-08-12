@@ -10,5 +10,4 @@ export interface OneStepDefinition {
   keyPoints: string[];
   commonMistakes: string[];
   applications: string[];
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
 }

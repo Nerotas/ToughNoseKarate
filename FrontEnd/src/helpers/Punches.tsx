@@ -6,10 +6,9 @@ export const validationSchema = Yup.object({
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   belt: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
-  technique: Yup.string().trim().max(200, 'Too long').optional(),
-  bodyMechanics: Yup.string().trim().max(2000, 'Too long').optional(),
+  target: Yup.string().trim().max(200, 'Too long').optional(),
+  execution: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  targetAreas: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
 });

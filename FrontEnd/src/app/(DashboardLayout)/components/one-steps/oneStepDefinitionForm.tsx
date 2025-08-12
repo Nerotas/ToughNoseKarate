@@ -30,7 +30,6 @@ const validationSchema = Yup.object({
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  difficulty: Yup.string().oneOf(['Beginner', 'Intermediate', 'Advanced']).required('Required'),
 });
 
 interface OneStepDefinitionFormProps {
@@ -56,7 +55,6 @@ const OneStepDefinitionForm = ({
     keyPoints: oneStep.keyPoints || [],
     commonMistakes: oneStep.commonMistakes || [],
     applications: oneStep.applications || [],
-    difficulty: oneStep.difficulty || 'Beginner',
   };
 
   const onSubmit = async (values: OneStepDefinition) => {
@@ -171,21 +169,6 @@ const OneStepDefinitionForm = ({
                       helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
                       required
                     />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='difficulty'>
-                  {({ field }: any) => (
-                    <FormControl fullWidth error={Boolean(errors.difficulty && touched.difficulty)}>
-                      <InputLabel>Difficulty</InputLabel>
-                      <Select {...field} label='Difficulty'>
-                        <MenuItem value='Beginner'>Beginner</MenuItem>
-                        <MenuItem value='Intermediate'>Intermediate</MenuItem>
-                        <MenuItem value='Advanced'>Advanced</MenuItem>
-                      </Select>
-                    </FormControl>
                   )}
                 </Field>
               </Grid>

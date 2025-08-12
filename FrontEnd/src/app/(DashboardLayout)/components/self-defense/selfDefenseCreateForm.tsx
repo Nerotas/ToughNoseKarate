@@ -34,9 +34,7 @@ const validationSchema = Yup.object({
   execution: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  safetyNotes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  counters: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
 });
 
 const defaultValues: Omit<SelfDefenseDefinition, 'id'> & { id?: string } = {
@@ -54,9 +52,7 @@ const defaultValues: Omit<SelfDefenseDefinition, 'id'> & { id?: string } = {
   execution: [],
   keyPoints: [],
   commonMistakes: [],
-  safetyNotes: [],
   applications: [],
-  counters: [],
 };
 
 interface SelfDefenseCreateFormProps {
@@ -69,9 +65,8 @@ const SelfDefenseCreateForm = ({
   handleCloseCreate,
 }: SelfDefenseCreateFormProps) => {
   const onSubmit = async (values: typeof defaultValues) => {
-    const payload: Partial<SelfDefenseDefinition> = { ...values };
-    if (!payload.id) delete (payload as any).id;
-    await axiosInstance.post(`/self-defense-definitions`, payload);
+    const { id, ...payload } = values;
+    await axiosInstance.post(`/selfdefense-definitions`, payload);
     await refetchSelfDefense();
     handleCloseCreate();
   };
@@ -415,46 +410,6 @@ const SelfDefenseCreateForm = ({
               </Grid>
 
               <Grid size={12}>
-                <FieldArray name='safetyNotes'>
-                  {({ push, remove }) => (
-                    <Box>
-                      <Typography variant='subtitle1' gutterBottom>
-                        Safety Notes
-                      </Typography>
-                      <Stack spacing={2}>
-                        {values.safetyNotes?.map((_, index) => (
-                          <Box key={`safety-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`safetyNotes.${index}`}>
-                              {({ field }: any) => (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  label={`Safety Note #${index + 1}`}
-                                  size='small'
-                                />
-                              )}
-                            </Field>
-                            <IconButton onClick={() => remove(index)} color='error' size='small'>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        ))}
-                        <Button
-                          startIcon={<AddIcon />}
-                          onClick={() => push('')}
-                          variant='outlined'
-                          size='small'
-                          sx={{ alignSelf: 'flex-start' }}
-                        >
-                          Add Safety Note
-                        </Button>
-                      </Stack>
-                    </Box>
-                  )}
-                </FieldArray>
-              </Grid>
-
-              <Grid size={12}>
                 <FieldArray name='applications'>
                   {({ push, remove }) => (
                     <Box>
@@ -487,46 +442,6 @@ const SelfDefenseCreateForm = ({
                           sx={{ alignSelf: 'flex-start' }}
                         >
                           Add Application
-                        </Button>
-                      </Stack>
-                    </Box>
-                  )}
-                </FieldArray>
-              </Grid>
-
-              <Grid size={12}>
-                <FieldArray name='counters'>
-                  {({ push, remove }) => (
-                    <Box>
-                      <Typography variant='subtitle1' gutterBottom>
-                        Counters (Optional)
-                      </Typography>
-                      <Stack spacing={2}>
-                        {values.counters?.map((_, index) => (
-                          <Box key={`counter-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`counters.${index}`}>
-                              {({ field }: any) => (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  label={`Counter #${index + 1}`}
-                                  size='small'
-                                />
-                              )}
-                            </Field>
-                            <IconButton onClick={() => remove(index)} color='error' size='small'>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        ))}
-                        <Button
-                          startIcon={<AddIcon />}
-                          onClick={() => push('')}
-                          variant='outlined'
-                          size='small'
-                          sx={{ alignSelf: 'flex-start' }}
-                        >
-                          Add Counter
                         </Button>
                       </Stack>
                     </Box>

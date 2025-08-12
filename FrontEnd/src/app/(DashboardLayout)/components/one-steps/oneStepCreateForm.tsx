@@ -28,12 +28,10 @@ const defaultValues: OneStepCreate = {
   belt: '',
   beltColor: '',
   attack: '',
-  defense: '',
-  sequence: [],
+  defense: [],
   keyPoints: [],
   commonMistakes: [],
   applications: [],
-  difficulty: 'Beginner',
 };
 
 const validationSchema = Yup.object({
@@ -43,12 +41,10 @@ const validationSchema = Yup.object({
   belt: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
   attack: Yup.string().trim().max(200, 'Too long').optional(),
-  defense: Yup.string().trim().max(200, 'Too long').optional(),
-  sequence: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  difficulty: Yup.string().oneOf(['Beginner', 'Intermediate', 'Advanced']).required('Required'),
 });
 
 interface OneStepCreateFormProps {
@@ -58,8 +54,7 @@ interface OneStepCreateFormProps {
 
 const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreateFormProps) => {
   const onSubmit = async (values: OneStepCreate) => {
-    const payload: Partial<OneStepDefinition> = { ...values };
-    if (!payload.id) delete (payload as any).id;
+    const { id, ...payload } = values;
     await axiosInstance.post(`/onestep-definitions`, payload);
     await refetchOneSteps();
     handleCloseCreate();
@@ -175,21 +170,6 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
                 </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='difficulty'>
-                  {({ field }: any) => (
-                    <FormControl fullWidth error={Boolean(errors.difficulty && touched.difficulty)}>
-                      <InputLabel>Difficulty</InputLabel>
-                      <Select {...field} label='Difficulty' required>
-                        <MenuItem value='Beginner'>Beginner</MenuItem>
-                        <MenuItem value='Intermediate'>Intermediate</MenuItem>
-                        <MenuItem value='Advanced'>Advanced</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
-                </Field>
-              </Grid>
-
               <Grid size={12}>
                 <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
                   Technical Details
@@ -229,21 +209,21 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
               </Grid>
 
               <Grid size={12}>
-                <FieldArray name='sequence'>
+                <FieldArray name='defense'>
                   {({ push, remove }) => (
                     <Box>
                       <Typography variant='subtitle1' gutterBottom>
-                        Sequence Steps
+                        Defense Steps
                       </Typography>
                       <Stack spacing={2}>
-                        {values.sequence?.map((_, index) => (
-                          <Box key={`seq-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`sequence.${index}`}>
+                        {values.defense?.map((_, index) => (
+                          <Box key={`def-${index}`} display='flex' alignItems='center' gap={1}>
+                            <Field name={`defense.${index}`}>
                               {({ field }: any) => (
                                 <TextField
                                   {...field}
                                   fullWidth
-                                  label={`Step #${index + 1}`}
+                                  label={`Defense Step #${index + 1}`}
                                   size='small'
                                 />
                               )}
@@ -260,7 +240,7 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
                           size='small'
                           sx={{ alignSelf: 'flex-start' }}
                         >
-                          Add Sequence Step
+                          Add Defense Step
                         </Button>
                       </Stack>
                     </Box>

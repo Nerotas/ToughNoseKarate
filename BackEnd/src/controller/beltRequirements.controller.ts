@@ -15,7 +15,7 @@ import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 
 @ApiTags('Belt Requirements')
-@Controller('belt-Requirements')
+@Controller({ path: 'belt-requirements', version: '1' })
 export class BeltRequirementsController {
   constructor(
     private readonly beltRequirementsService: BeltRequirementsService,

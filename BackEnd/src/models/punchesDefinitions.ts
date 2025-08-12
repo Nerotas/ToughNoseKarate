@@ -8,10 +8,10 @@ export interface PunchesDefinitionsAttributes {
   beltColor: string;
   description: string;
   target: string | null;
-  execution?: string | null; // text column (optional)
-  keyPoints: string[]; // CHANGED: array
-  commonMistakes: string[]; // CHANGED: array
-  applications: string[]; // CHANGED: array
+  execution: string[]; // PostgreSQL _text array
+  keyPoints: string[];
+  commonMistakes: string[];
+  applications: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -42,9 +42,13 @@ export class punchesDefinitions
   @Column({ type: DataType.STRING, allowNull: true })
   declare target: string | null;
 
-  // If your DB column is TEXT (not JSON), keep TEXT here
-  @Column({ type: DataType.TEXT, allowNull: true })
-  declare execution: string | null;
+  // FIXED: PostgreSQL _text array
+  @Column({
+    type: DataType.ARRAY(DataType.TEXT),
+    allowNull: false,
+    defaultValue: [],
+  })
+  declare execution: string[];
 
   // CHANGED: use ARRAY(TEXT) to match Postgres _text columns
   @Column({
@@ -77,3 +81,5 @@ export class punchesDefinitions
   @Column({ field: 'updated_at', type: DataType.DATE, allowNull: true })
   declare updatedAt?: Date;
 }
+
+export default punchesDefinitions;

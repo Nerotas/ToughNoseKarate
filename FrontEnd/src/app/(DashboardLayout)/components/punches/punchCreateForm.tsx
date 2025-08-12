@@ -15,12 +15,11 @@ const defaultValues: PunchCreate = {
   description: '',
   belt: '',
   beltColor: '',
-  technique: '',
-  bodyMechanics: '',
+  target: '',
+  execution: [],
   keyPoints: [],
   commonMistakes: [],
   applications: [],
-  targetAreas: [],
 };
 
 interface PunchCreateFormProps {
@@ -30,8 +29,7 @@ interface PunchCreateFormProps {
 
 const PunchCreateForm = ({ refetchPunches, handleCloseCreate }: PunchCreateFormProps) => {
   const onSubmit = async (values: PunchCreate) => {
-    const payload: Partial<PunchDefinition> = { ...values };
-    if (!payload.id) delete (payload as any).id;
+    const { id, ...payload } = values;
     await axiosInstance.post(`/punches-definitions`, payload);
     await refetchPunches();
     handleCloseCreate();
@@ -321,46 +319,7 @@ const PunchCreateForm = ({ refetchPunches, handleCloseCreate }: PunchCreateFormP
                 </FieldArray>
               </Grid>
 
-              {/* Target Areas */}
-              <Grid size={12}>
-                <FieldArray name='targetAreas'>
-                  {({ push, remove }) => (
-                    <Box>
-                      <Typography variant='subtitle1' gutterBottom>
-                        Target Areas
-                      </Typography>
-                      <Stack spacing={2}>
-                        {values.targetAreas?.map((_, index) => (
-                          <Box key={`ta-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`targetAreas.${index}`}>
-                              {({ field }: any) => (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  label={`Target Area #${index + 1}`}
-                                  size='small'
-                                />
-                              )}
-                            </Field>
-                            <IconButton onClick={() => remove(index)} color='error' size='small'>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        ))}
-                        <Button
-                          startIcon={<AddIcon />}
-                          onClick={() => push('')}
-                          variant='outlined'
-                          size='small'
-                          sx={{ alignSelf: 'flex-start' }}
-                        >
-                          Add Target Area
-                        </Button>
-                      </Stack>
-                    </Box>
-                  )}
-                </FieldArray>
-              </Grid>
+
 
               <Grid size={12}>
                 <Box display='flex' justifyContent='flex-end' gap={2} mt={3}>

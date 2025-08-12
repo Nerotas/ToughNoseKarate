@@ -78,12 +78,6 @@ const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: 
                     border: kick.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
                   }}
                 />
-                <Chip
-                  icon={<IconFlag />}
-                  label={kick.difficulty}
-                  color={getDifficultyColor(kick.difficulty)}
-                  size='small'
-                />
               </Box>
             </Box>
 
@@ -93,20 +87,27 @@ const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: 
 
             <Box sx={{ mb: 3 }}>
               <Typography variant='subtitle2' gutterBottom>
-                Technique:
+                Target:
               </Typography>
               <Typography variant='body2' color='text.secondary'>
-                {kick.technique}
+                {kick.target}
               </Typography>
             </Box>
 
             <Box sx={{ mb: 3 }}>
               <Typography variant='subtitle2' gutterBottom>
-                Body Mechanics:
+                Execution:
               </Typography>
-              <Typography variant='body2' color='text.secondary'>
-                {kick.bodyMechanics}
-              </Typography>
+              <List dense sx={{ pl: 2 }}>
+                {kick.execution?.map((step, index) => (
+                  <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
+                    <ListItemText
+                      primary={`• ${step}`}
+                      primaryTypographyProps={{ variant: 'body2' }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
             </Box>
 
             <Divider sx={{ my: 2 }} />
@@ -154,28 +155,6 @@ const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: 
                   </ListItem>
                 ))}
               </List>
-            </Box>
-
-            <Box sx={{ mb: 3 }}>
-              <Typography
-                variant='subtitle2'
-                gutterBottom
-                sx={{ display: 'flex', alignItems: 'center' }}
-              >
-                <IconTarget size={16} color='orange' style={{ marginRight: 8 }} />
-                Target Areas:
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {kick.targetAreas?.map((target, index) => (
-                  <Chip
-                    key={index}
-                    label={target}
-                    size='small'
-                    variant='outlined'
-                    sx={{ color: 'orange' }}
-                  />
-                ))}
-              </Box>
             </Box>
 
             <Box>

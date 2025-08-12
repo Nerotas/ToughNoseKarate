@@ -16,7 +16,7 @@ import { RolesGuard } from 'src/guards/roles.guard';
 import { PunchesDefinitionsAttributes } from 'src/models';
 
 @ApiTags('Techniques')
-@Controller('punches-definitions')
+@Controller({ path: 'punches-definitions', version: '1' })
 export class PunchesDefinitionsController {
   constructor(
     private readonly punchesDefinitionsService: PunchesDefinitionsService,
