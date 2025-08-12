@@ -26,8 +26,7 @@ const validationSchema = Yup.object({
   belt: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
   attack: Yup.string().trim().max(200, 'Too long').optional(),
-  defense: Yup.string().trim().max(200, 'Too long').optional(),
-  sequence: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
@@ -53,8 +52,7 @@ const OneStepDefinitionForm = ({
     belt: oneStep.belt || '',
     beltColor: oneStep.beltColor || '',
     attack: oneStep.attack || '',
-    defense: oneStep.defense || '',
-    sequence: oneStep.sequence || [],
+    defense: oneStep.defense || [],
     keyPoints: oneStep.keyPoints || [],
     commonMistakes: oneStep.commonMistakes || [],
     applications: oneStep.applications || [],
@@ -216,38 +214,21 @@ const OneStepDefinitionForm = ({
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='defense'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Defense'
-                      multiline
-                      rows={3}
-                      error={Boolean(errors.defense && touched.defense)}
-                      helperText={errors.defense && touched.defense ? errors.defense : ''}
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              {/* Sequence */}
-              <Grid size={12}>
-                <FieldArray name='sequence'>
+                <FieldArray name='defense'>
                   {({ push, remove }) => (
                     <Box>
                       <Typography variant='subtitle1' gutterBottom>
-                        Sequence Steps
+                        Defense Steps
                       </Typography>
                       <Stack spacing={2}>
-                        {values.sequence?.map((_, index) => (
-                          <Box key={`seq-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`sequence.${index}`}>
+                        {values.defense?.map((_, index) => (
+                          <Box key={`def-${index}`} display='flex' alignItems='center' gap={1}>
+                            <Field name={`defense.${index}`}>
                               {({ field }: any) => (
                                 <TextField
                                   {...field}
                                   fullWidth
-                                  label={`Step #${index + 1}`}
+                                  label={`Defense Step #${index + 1}`}
                                   size='small'
                                 />
                               )}
@@ -264,7 +245,7 @@ const OneStepDefinitionForm = ({
                           size='small'
                           sx={{ alignSelf: 'flex-start' }}
                         >
-                          Add Sequence Step
+                          Add Defense Step
                         </Button>
                       </Stack>
                     </Box>
