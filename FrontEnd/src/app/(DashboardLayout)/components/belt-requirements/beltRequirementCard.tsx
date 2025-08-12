@@ -5,6 +5,7 @@ import { useState } from 'react';
 import BeltRequirementsEditModule from './beltRequirementsEditModule';
 import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 import { useAuth } from 'hooks/useAuth';
+import BeltRequirementDeleteModule from './beltRequirementDeleteModule';
 
 interface BeltRequirementCardProps {
   belt: BeltRequirements;
@@ -15,6 +16,14 @@ const BeltRequirementCard = ({ belt, refetchBeltRequirements }: BeltRequirementC
   const { isAuthenticated, instructor } = useAuth();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   const openEditModal = () => {
     setIsEditModalOpen(true);
@@ -74,11 +83,30 @@ const BeltRequirementCard = ({ belt, refetchBeltRequirements }: BeltRequirementC
 
             {isAuthenticated &&
               (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button variant='outlined' size='small' color='primary' onClick={openEditModal}>
-                    Edit
-                  </Button>
-                </Box>
+                <Grid container spacing={2} sx={{ mt: 3 }}>
+                  <Grid size={{ xs: 6 }}>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='primary'
+                      onClick={openEditModal}
+                      fullWidth
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='error'
+                      onClick={openDeleteModal}
+                      fullWidth
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                </Grid>
               )}
           </CardContent>
         </Card>
@@ -91,6 +119,15 @@ const BeltRequirementCard = ({ belt, refetchBeltRequirements }: BeltRequirementC
           beltRequirement={belt}
           refetchBeltRequirements={refetchBeltRequirements}
           handleCloseEdit={closeEditModal}
+        />
+      )}
+      {/* Delete Modal */}
+      {isDeleteModalOpen && (
+        <BeltRequirementDeleteModule
+          open={isDeleteModalOpen}
+          handleClose={closeDeleteModal}
+          refetchBeltRequirements={refetchBeltRequirements}
+          beltRequirement={belt}
         />
       )}
     </>
