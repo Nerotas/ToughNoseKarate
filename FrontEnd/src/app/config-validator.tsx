@@ -30,6 +30,9 @@ export default function ConfigValidator({ children }: ConfigValidatorProps) {
     }
   }, []);
 
+  // Cycle loading snippets while validating
+
+
   if (!isValid && error) {
     return (
       <div
@@ -155,7 +158,6 @@ export default function ConfigValidator({ children }: ConfigValidatorProps) {
           }}
         >
           <Loading />
-          <p>Rolling out mats...</p>
         </div>
       </div>
     );

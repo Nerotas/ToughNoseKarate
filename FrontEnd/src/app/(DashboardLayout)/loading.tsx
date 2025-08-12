@@ -1,14 +1,8 @@
 'use client';
 
-import { Container, Box } from '@mui/material';
+import { Container, Box, Typography } from '@mui/material';
 import { IconKarate } from '@tabler/icons-react';
-import { keyframes } from '@mui/system';
-
-// Spinning animation
-const spin = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
+import { randomSnippet } from 'constants/data/LoadingSnippets';
 
 const Loading = () => {
   return (
@@ -21,12 +15,30 @@ const Loading = () => {
           minHeight: '200px',
         }}
       >
-        <IconKarate
-          size={48}
-          style={{
-            animation: `${spin} 2s linear infinite`,
+        <Box
+          sx={{
+            animation: 'spin 2s linear infinite',
+            '@keyframes spin': {
+              '0%': {
+                transform: 'rotate(0deg)',
+              },
+              '100%': {
+                transform: 'rotate(-360deg)',
+              },
+            },
           }}
-        />
+        >
+          <IconKarate size={48} />
+        </Box>
+        <Typography
+          variant='body2'
+          color='text.secondary'
+          sx={{ ml: 2 }}
+          aria-live='polite'
+          suppressHydrationWarning
+        >
+          {randomSnippet()}
+        </Typography>
       </Box>
     </Container>
   );
