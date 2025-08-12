@@ -16,6 +16,7 @@ import {
 import { IconMan, IconPlayerPlay, IconChevronDown } from '@tabler/icons-react';
 import { FormDefinitions } from 'models/Forms/FormDefinitions';
 import FormEditModule from './formEditModule';
+import FormDeleteModule from './formDeleteModule';
 import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
 
@@ -29,6 +30,7 @@ const FormsCard = ({ form, refetchForms }: FormsCardProps) => {
 
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const getKeyPoints = (keyPoints: any): string[] => {
     if (!keyPoints) return [];
@@ -50,6 +52,14 @@ const FormsCard = ({ form, refetchForms }: FormsCardProps) => {
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -139,11 +149,30 @@ const FormsCard = ({ form, refetchForms }: FormsCardProps) => {
 
             {isAuthenticated &&
               (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button variant='outlined' size='small' color='primary' onClick={openEditModal}>
-                    Edit
-                  </Button>
-                </Box>
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Grid size={{ xs: 6 }}>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='primary'
+                      onClick={openEditModal}
+                      fullWidth
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='error'
+                      onClick={openDeleteModal}
+                      fullWidth
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                </Grid>
               )}
           </CardContent>
         </Card>
@@ -155,6 +184,15 @@ const FormsCard = ({ form, refetchForms }: FormsCardProps) => {
           form={form}
           refetchForms={refetchForms}
           handleCloseEdit={closeEditModal}
+        />
+      )}
+      {/* Delete Modal */}
+      {isDeleteModalOpen && (
+        <FormDeleteModule
+          open={isDeleteModalOpen}
+          handleClose={closeDeleteModal}
+          form={form}
+          refetchForms={refetchForms}
         />
       )}
     </>

@@ -15,6 +15,7 @@ import { IconRun, IconFlag, IconCheckbox, IconX, IconTarget } from '@tabler/icon
 import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
 import KickEditModule from './kickEditModule';
+import KickDeleteModule from './kickDeleteModule';
 import { KickDefinition } from 'models/Kicks/Kicks';
 
 interface KickCardProps {
@@ -27,6 +28,7 @@ interface KickCardProps {
 const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: KickCardProps) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const openEditModal = () => {
     setIsEditModalOpen(true);
@@ -34,6 +36,14 @@ const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: 
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -181,9 +191,12 @@ const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: 
 
             {isAuthenticated &&
               (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Box sx={{ mt: 2, display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
                   <Button variant='outlined' size='small' color='primary' onClick={openEditModal}>
                     Edit
+                  </Button>
+                  <Button variant='outlined' size='small' color='error' onClick={openDeleteModal}>
+                    Delete
                   </Button>
                 </Box>
               )}
@@ -198,6 +211,15 @@ const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: 
           kick={kick}
           refetchKicks={refetchKicks}
           handleCloseEdit={closeEditModal}
+        />
+      )}
+      {/* Delete Modal */}
+      {isDeleteModalOpen && (
+        <KickDeleteModule
+          open={isDeleteModalOpen}
+          handleClose={closeDeleteModal}
+          kick={kick}
+          refetchKicks={refetchKicks}
         />
       )}
     </>

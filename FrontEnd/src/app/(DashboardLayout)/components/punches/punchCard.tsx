@@ -14,6 +14,7 @@ import { IconHandStop, IconCheckbox, IconX, IconTarget, IconEdit } from '@tabler
 import { size } from 'lodash';
 import { PunchDefinition } from 'models/Punches/Punches';
 import PunchEditModule from './punchEditModule';
+import PunchDeleteModule from './punchDeleteModule';
 import { useState } from 'react';
 import { useAuth } from '../../../../hooks/useAuth';
 
@@ -29,6 +30,7 @@ const PunchCard = ({
   const { isAuthenticated, instructor } = useAuth();
 
   const [open, setOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleOpenEdit = () => {
     setOpen(true);
@@ -36,6 +38,14 @@ const PunchCard = ({
 
   const handleCloseEdit = () => {
     setOpen(false);
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -70,7 +80,10 @@ const PunchCard = ({
                 }}
               />
               {isAuthenticated && instructor && (
-                <Chip label={'Edit'} icon={<IconEdit />} onClick={handleOpenEdit} />
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Chip label={'Edit'} icon={<IconEdit />} onClick={handleOpenEdit} />
+                  <Chip label={'Delete'} icon={<IconX />} color='error' onClick={openDeleteModal} />
+                </Box>
               )}
             </Box>
 
@@ -189,6 +202,14 @@ const PunchCard = ({
         open={open}
         handleCloseEdit={handleCloseEdit}
       />
+      {isDeleteModalOpen && (
+        <PunchDeleteModule
+          open={isDeleteModalOpen}
+          handleClose={closeDeleteModal}
+          punch={punch}
+          refetchPunches={refetchPunches}
+        />
+      )}
     </>
   );
 };
