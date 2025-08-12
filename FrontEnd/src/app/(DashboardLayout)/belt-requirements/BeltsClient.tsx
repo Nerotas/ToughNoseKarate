@@ -1,13 +1,20 @@
 'use client';
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box, Typography, Button } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import useGet from 'hooks/useGet';
 import { BeltRequirements as BeltRequirementsType } from 'models/BeltRequirements/BeltRequirements';
 import Loading from 'app/loading';
 import BeltRequirementCard from '../components/belt-requirements/beltRequirementCard';
+import { useAuth } from '../../../hooks/useAuth';
+import React, { useState } from 'react';
+import BeltRequirementsCreateModule from '../components/belt-requirements/beltRequirementsCreateModule';
 
 const BeltRequirements = () => {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
+
   // Use the custom useGet hook - will use SSR data if available, fallback if not
   const {
     data: beltRequirements,
@@ -40,9 +47,16 @@ const BeltRequirements = () => {
       description='Tang Soo Do Belt Progression Requirements'
     >
       <Box>
-        <Typography variant='h2' gutterBottom sx={{ mb: 3 }}>
-          Tang Soo Do Belt Requirements
-        </Typography>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Typography variant='h2' gutterBottom sx={{ mb: 3 }}>
+            Tang Soo Do Belt Requirements
+          </Typography>
+          {canCreate && (
+            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+              Add Requirement
+            </Button>
+          )}
+        </Box>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
           Progress through the traditional Tang Soo Do belt system. Each belt level builds upon the
@@ -72,6 +86,14 @@ const BeltRequirements = () => {
             </Typography>
           </DashboardCard>
         </Box>
+
+        {canCreate && (
+          <BeltRequirementsCreateModule
+            open={isCreateOpen}
+            handleCloseCreate={() => setIsCreateOpen(false)}
+            refetchBeltRequirements={refetchBeltRequirements}
+          />
+        )}
       </Box>
     </PageContainer>
   );

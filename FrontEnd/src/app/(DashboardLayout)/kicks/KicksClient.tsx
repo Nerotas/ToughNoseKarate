@@ -1,11 +1,14 @@
 'use client';
-import { Grid, Box, Typography, List, ListItem, ListItemText, Alert } from '@mui/material';
+import { Grid, Box, Typography, List, ListItem, ListItemText, Alert, Button } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import { KickDefinition } from '../../../models/Kicks/Kicks';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
 import KickCard from './kickCard';
+import { useAuth } from '../../../hooks/useAuth';
+import React, { useState } from 'react';
+import KickCreateModule from '../components/kicks/kickCreateModule';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -25,6 +28,9 @@ const getDifficultyColor = (difficulty: string) => {
 };
 
 export default function KicksClient() {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
   const {
     data: kickDefinitions,
     isPending,
@@ -53,18 +59,25 @@ export default function KicksClient() {
   return (
     <PageContainer title='Kicks' description='Tang Soo Do Kicking Techniques'>
       <Box>
-        <Typography
-          variant='h2'
-          gutterBottom
-          sx={{
-            mb: 3,
-            fontSize: { xs: '1.75rem', sm: '2.125rem', md: '2.5rem' },
-            fontWeight: 600,
-            lineHeight: 1.2,
-          }}
-        >
-          Tang Soo Do Kicking Techniques
-        </Typography>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Typography
+            variant='h2'
+            gutterBottom
+            sx={{
+              mb: 3,
+              fontSize: { xs: '1.75rem', sm: '2.125rem', md: '2.5rem' },
+              fontWeight: 600,
+              lineHeight: 1.2,
+            }}
+          >
+            Tang Soo Do Kicking Techniques
+          </Typography>
+          {canCreate && (
+            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+              Add Kick
+            </Button>
+          )}
+        </Box>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
           Master the powerful kicking techniques of Tang Soo Do. Kicks are the signature techniques
@@ -165,6 +178,14 @@ export default function KicksClient() {
             </Grid>
           </DashboardCard>
         </Box>
+
+        {canCreate && (
+          <KickCreateModule
+            open={isCreateOpen}
+            handleCloseCreate={() => setIsCreateOpen(false)}
+            refetchKicks={refetchKicks}
+          />
+        )}
       </Box>
     </PageContainer>
   );

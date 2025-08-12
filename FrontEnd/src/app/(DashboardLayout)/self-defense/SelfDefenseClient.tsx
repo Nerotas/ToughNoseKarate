@@ -11,18 +11,25 @@ import {
   MenuItem,
   TextField,
   Alert,
+  Button,
 } from '@mui/material';
 
 import { SelfDefenseDefinition } from '../../../models/SelfDefense/SelfDefense';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
 import SelfDefenseCard from '../components/self-defense/SelfDefenseCard';
+import SelfDefenseCreateModule from '../components/self-defense/selfDefenseCreateModule';
+import { useAuth } from 'hooks/useAuth';
 
 const SelfDefenseClient: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedBelt, setSelectedBelt] = useState<string>('All');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('All');
+  const [isCreateOpen, setIsCreateOpen] = useState<boolean>(false);
+
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
 
   const {
     data: selfDefenseDefinitions,
@@ -82,9 +89,16 @@ const SelfDefenseClient: React.FC = () => {
     <Box>
       {isPending && <Loading />}
 
-      <Typography variant='h4' component='h1' gutterBottom>
-        Self-Defense & Ground Work
-      </Typography>
+      <Box display='flex' alignItems='center' justifyContent='space-between' mb={1}>
+        <Typography variant='h4' component='h1'>
+          Self-Defense & Ground Work
+        </Typography>
+        {canCreate && (
+          <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+            Add Technique
+          </Button>
+        )}
+      </Box>
 
       <Typography variant='body1' paragraph color='text.secondary'>
         Learn essential self-defense techniques, escapes, and ground work for real-world situations.
@@ -180,6 +194,15 @@ const SelfDefenseClient: React.FC = () => {
             Try adjusting your filters or search term
           </Typography>
         </Box>
+      )}
+
+      {/* Create Modal (Admins only) */}
+      {canCreate && (
+        <SelfDefenseCreateModule
+          open={isCreateOpen}
+          handleCloseCreate={() => setIsCreateOpen(false)}
+          refetchSelfDefense={refetchSelfDefense}
+        />
       )}
     </Box>
   );

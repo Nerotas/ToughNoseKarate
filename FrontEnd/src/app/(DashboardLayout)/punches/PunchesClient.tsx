@@ -20,12 +20,19 @@ import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
 import PunchCard from '../components/punches/punchCard';
 import PunchGuideLines from '../components/punches/guidelines';
+import { Button } from '@mui/material';
+import { useAuth } from 'hooks/useAuth';
+import PunchCreateModule from '../components/punches/punchCreateModule';
+import React, { useState } from 'react';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
 };
 
 export default function PunchesClient() {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
   const {
     data: punchDefinitions,
     isPending,
@@ -51,18 +58,25 @@ export default function PunchesClient() {
   return (
     <PageContainer title='Punches' description='Tang Soo Do Punching Techniques'>
       <Box>
-        <Typography
-          variant='h2'
-          gutterBottom
-          sx={{
-            mb: 3,
-            fontSize: { xs: '1.75rem', sm: '2.125rem', md: '2.5rem' },
-            fontWeight: 600,
-            lineHeight: 1.2,
-          }}
-        >
-          Tang Soo Do Punching Techniques
-        </Typography>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Typography
+            variant='h2'
+            gutterBottom
+            sx={{
+              mb: 3,
+              fontSize: { xs: '1.75rem', sm: '2.125rem', md: '2.5rem' },
+              fontWeight: 600,
+              lineHeight: 1.2,
+            }}
+          >
+            Tang Soo Do Punching Techniques
+          </Typography>
+          {canCreate && (
+            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+              Add Punch
+            </Button>
+          )}
+        </Box>
 
         <Typography variant='body1' sx={{ mb: 4, color: 'text.secondary' }}>
           Master the fundamental punching techniques of Tang Soo Do. Each punch requires proper
@@ -103,6 +117,14 @@ export default function PunchesClient() {
         <Box sx={{ mt: 4 }}>
           <PunchGuideLines />
         </Box>
+
+        {canCreate && (
+          <PunchCreateModule
+            open={isCreateOpen}
+            handleCloseCreate={() => setIsCreateOpen(false)}
+            refetchPunches={refetchPunches}
+          />
+        )}
       </Box>
     </PageContainer>
   );
