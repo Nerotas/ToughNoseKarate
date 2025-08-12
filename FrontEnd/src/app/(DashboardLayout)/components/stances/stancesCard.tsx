@@ -16,6 +16,7 @@ import { useAuth } from 'hooks/useAuth';
 import { StanceDefinition } from 'models/Stances/Stances';
 import { useState } from 'react';
 import StanceEditModule from './stanceEditModule';
+import StanceDeleteModule from './stanceDeleteModule';
 
 interface StancesCardProps {
   stance: StanceDefinition;
@@ -26,6 +27,7 @@ interface StancesCardProps {
 const StancesCard = ({ stance, refetchStances, getBeltTextColor }: StancesCardProps) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const openEditModal = () => {
     setIsEditModalOpen(true);
@@ -33,6 +35,14 @@ const StancesCard = ({ stance, refetchStances, getBeltTextColor }: StancesCardPr
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -151,11 +161,30 @@ const StancesCard = ({ stance, refetchStances, getBeltTextColor }: StancesCardPr
 
             {isAuthenticated &&
               (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button variant='outlined' size='small' color='primary' onClick={openEditModal}>
-                    Edit
-                  </Button>
-                </Box>
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Grid size={{ xs: 6 }}>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='primary'
+                      onClick={openEditModal}
+                      fullWidth
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='error'
+                      onClick={openDeleteModal}
+                      fullWidth
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                </Grid>
               )}
           </CardContent>
         </Card>
@@ -167,6 +196,15 @@ const StancesCard = ({ stance, refetchStances, getBeltTextColor }: StancesCardPr
           stance={stance}
           refetchStances={refetchStances}
           handleCloseEdit={closeEditModal}
+        />
+      )}
+      {/* Delete Modal */}
+      {isDeleteModalOpen && (
+        <StanceDeleteModule
+          open={isDeleteModalOpen}
+          handleClose={closeDeleteModal}
+          stance={stance}
+          refetchStances={refetchStances}
         />
       )}
     </>

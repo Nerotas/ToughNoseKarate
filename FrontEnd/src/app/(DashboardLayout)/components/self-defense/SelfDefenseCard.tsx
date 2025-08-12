@@ -23,6 +23,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { SelfDefenseDefinition } from 'models/SelfDefense/SelfDefense';
 import { useState } from 'react';
 import SelfDefenseEditModule from './selfDefenseEditModule';
+import SelfDefenseDeleteModule from './selfDefenseDeleteModule';
 
 interface SelfDefenseCardProps {
   selfDefense: SelfDefenseDefinition;
@@ -32,6 +33,7 @@ interface SelfDefenseCardProps {
 const SelfDefenseCard = ({ selfDefense, refetchSelfDefense }: SelfDefenseCardProps) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -52,6 +54,14 @@ const SelfDefenseCard = ({ selfDefense, refetchSelfDefense }: SelfDefenseCardPro
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   const getCategoryIcon = (category: string) => {
@@ -248,9 +258,12 @@ const SelfDefenseCard = ({ selfDefense, refetchSelfDefense }: SelfDefenseCardPro
 
             {isAuthenticated &&
               (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Box sx={{ mt: 2, display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
                   <Button variant='outlined' size='small' color='primary' onClick={openEditModal}>
                     Edit
+                  </Button>
+                  <Button variant='outlined' size='small' color='error' onClick={openDeleteModal}>
+                    Delete
                   </Button>
                 </Box>
               )}
@@ -264,6 +277,15 @@ const SelfDefenseCard = ({ selfDefense, refetchSelfDefense }: SelfDefenseCardPro
           selfDefense={selfDefense}
           refetchSelfDefense={refetchSelfDefense}
           handleCloseEdit={closeEditModal}
+        />
+      )}
+      {/* Delete Modal */}
+      {isDeleteModalOpen && (
+        <SelfDefenseDeleteModule
+          open={isDeleteModalOpen}
+          handleClose={closeDeleteModal}
+          selfDefense={selfDefense}
+          refetchSelfDefense={refetchSelfDefense}
         />
       )}
     </>

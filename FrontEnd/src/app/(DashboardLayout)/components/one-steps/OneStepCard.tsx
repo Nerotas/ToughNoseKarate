@@ -16,6 +16,7 @@ import { getBeltTextColor } from 'helpers/BeltColors';
 import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
 import OneStepEditModule from './oneStepEditModule';
+import OneStepDeleteModule from './oneStepDeleteModule';
 import { OneStepDefinition } from 'models/OneSteps/OneSteps';
 
 interface OneStepCard {
@@ -32,6 +33,7 @@ const OneStepCard = ({
 }: OneStepCard) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const openEditModal = () => {
     setIsEditModalOpen(true);
@@ -39,6 +41,14 @@ const OneStepCard = ({
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -185,11 +195,30 @@ const OneStepCard = ({
 
             {isAuthenticated &&
               (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button variant='outlined' size='small' color='primary' onClick={openEditModal}>
-                    Edit
-                  </Button>
-                </Box>
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Grid size={{ xs: 6 }}>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='primary'
+                      onClick={openEditModal}
+                      fullWidth
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='error'
+                      onClick={openDeleteModal}
+                      fullWidth
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                </Grid>
               )}
           </CardContent>
         </Card>
@@ -201,6 +230,15 @@ const OneStepCard = ({
           oneStep={oneStep}
           refetchOneSteps={refetchOneSteps}
           handleCloseEdit={closeEditModal}
+        />
+      )}
+      {/* Delete Modal */}
+      {isDeleteModalOpen && (
+        <OneStepDeleteModule
+          open={isDeleteModalOpen}
+          handleClose={closeDeleteModal}
+          oneStep={oneStep}
+          refetchOneSteps={refetchOneSteps}
         />
       )}
     </>

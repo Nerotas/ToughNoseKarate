@@ -84,7 +84,7 @@ export const Menuitems = [
 export const AuthMenuItems = [
   {
     navlabel: true,
-    subheader: 'STUDENT MANAGEMENT',
+    subheader: 'MANAGEMENT',
   },
   {
     id: uniqueId(),
@@ -95,6 +95,10 @@ export const AuthMenuItems = [
 ];
 
 export const LoginMenuItems = [
+  {
+    navlabel: true,
+    subheader: 'MANAGEMENT',
+  },
   {
     id: uniqueId(),
     title: 'Instructor Login',

@@ -1,7 +1,8 @@
 'use client';
 
-import { Container, Box } from '@mui/material';
+import { Container, Box, Typography } from '@mui/material';
 import { IconKarate } from '@tabler/icons-react';
+import { randomSnippet } from 'constants/data/LoadingSnippets';
 
 const Loading = () => {
   return (
@@ -29,6 +30,15 @@ const Loading = () => {
         >
           <IconKarate size={48} />
         </Box>
+        <Typography
+          variant='body2'
+          color='text.secondary'
+          sx={{ ml: 2 }}
+          aria-live='polite'
+          suppressHydrationWarning
+        >
+          {randomSnippet()}
+        </Typography>
       </Box>
     </Container>
   );
