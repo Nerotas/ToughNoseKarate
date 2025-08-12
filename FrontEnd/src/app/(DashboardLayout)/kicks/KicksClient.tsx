@@ -5,10 +5,10 @@ import DashboardCard from '../components/shared/DashboardCard';
 import { KickDefinition } from '../../../models/Kicks/Kicks';
 import useGet from '../../../hooks/useGet';
 import Loading from '../../../app/loading';
-import KickCard from './kickCard';
 import { useAuth } from '../../../hooks/useAuth';
 import React, { useState } from 'react';
 import KickCreateModule from '../components/kicks/kickCreateModule';
+import KickCard from '../components/kicks/kickCard';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';

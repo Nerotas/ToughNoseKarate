@@ -14,7 +14,7 @@ import {
 import { IconRun, IconFlag, IconCheckbox, IconX, IconTarget } from '@tabler/icons-react';
 import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
-import KickEditModule from '../components/kicks/kickEditModule';
+import KickEditModule from './kickEditModule';
 import { KickDefinition } from 'models/Kicks/Kicks';
 
 interface KickCardProps {
