@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Drawer,
@@ -37,6 +37,18 @@ const SimpleSidebar = ({
 }: SimpleSidebarProps) => {
   const pathname = usePathname();
   const sidebarWidth = '270px';
+
+  useEffect(() => {
+    if (isMobileSidebarOpen) {
+      // Create a synthetic event for the onSidebarClose function
+      const syntheticEvent = {
+        currentTarget: document.body,
+        target: document.body,
+      } as unknown as React.MouseEvent<HTMLElement>;
+
+      onSidebarClose(syntheticEvent);
+    }
+  }, [pathname, isMobileSidebarOpen, onSidebarClose]);
 
   const renderMenuItems = () => {
     return Menuitems.map((item: MenuItemType) => {
