@@ -15,7 +15,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
 
 @ApiTags('Techniques')
-@Controller({ path: 'selfdefense-definitions', version: '1' })
+@Controller({ path: 'self-defense-definitions', version: '1' })
 export class SelfDefenseDefinitionsController {
   constructor(
     private readonly selfDefenseDefinitionsService: SelfDefenseDefinitionsService,
