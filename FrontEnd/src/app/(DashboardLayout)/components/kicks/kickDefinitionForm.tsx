@@ -25,13 +25,11 @@ const validationSchema = Yup.object({
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   belt: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
-  technique: Yup.string().trim().max(200, 'Too long').optional(),
-  bodyMechanics: Yup.string().trim().max(2000, 'Too long').optional(),
+  target: Yup.string().trim().max(200, 'Too long').optional(),
+  execution: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  targetAreas: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  difficulty: Yup.string().oneOf(['Beginner', 'Intermediate', 'Advanced']).required('Required'),
 });
 
 interface KickDefinitionFormProps {
@@ -48,13 +46,11 @@ const KickDefinitionForm = ({ kick, refetchKicks, handleCloseEdit }: KickDefinit
     description: kick.description || '',
     belt: kick.belt || '',
     beltColor: kick.beltColor || '',
-    technique: kick.technique || '',
-    bodyMechanics: kick.bodyMechanics || '',
+    target: kick.target || '',
+    execution: kick.execution || [],
     keyPoints: kick.keyPoints || [],
     commonMistakes: kick.commonMistakes || [],
     applications: kick.applications || [],
-    targetAreas: kick.targetAreas || [],
-    difficulty: kick.difficulty || 'Beginner',
   };
 
   const onSubmit = async (values: KickDefinition) => {
@@ -173,21 +169,6 @@ const KickDefinitionForm = ({ kick, refetchKicks, handleCloseEdit }: KickDefinit
                 </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='difficulty'>
-                  {({ field }: any) => (
-                    <FormControl fullWidth error={Boolean(errors.difficulty && touched.difficulty)}>
-                      <InputLabel>Difficulty</InputLabel>
-                      <Select {...field} label='Difficulty'>
-                        <MenuItem value='Beginner'>Beginner</MenuItem>
-                        <MenuItem value='Intermediate'>Intermediate</MenuItem>
-                        <MenuItem value='Advanced'>Advanced</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
-                </Field>
-              </Grid>
-
               {/* Technical Details */}
               <Grid size={12}>
                 <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
@@ -195,35 +176,15 @@ const KickDefinitionForm = ({ kick, refetchKicks, handleCloseEdit }: KickDefinit
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='technique'>
+              <Grid size={12}>
+                <Field name='target'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Technique'
-                      multiline
-                      rows={3}
-                      error={Boolean(errors.technique && touched.technique)}
-                      helperText={errors.technique && touched.technique ? errors.technique : ''}
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='bodyMechanics'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Body Mechanics'
-                      multiline
-                      rows={3}
-                      error={Boolean(errors.bodyMechanics && touched.bodyMechanics)}
-                      helperText={
-                        errors.bodyMechanics && touched.bodyMechanics ? errors.bodyMechanics : ''
-                      }
+                      label='Target'
+                      error={Boolean(errors.target && touched.target)}
+                      helperText={errors.target && touched.target ? errors.target : ''}
                     />
                   )}
                 </Field>
@@ -352,23 +313,23 @@ const KickDefinitionForm = ({ kick, refetchKicks, handleCloseEdit }: KickDefinit
                 </FieldArray>
               </Grid>
 
-              {/* Target Areas */}
+              {/* Execution Steps */}
               <Grid size={12}>
-                <FieldArray name='targetAreas'>
+                <FieldArray name='execution'>
                   {({ push, remove }) => (
                     <Box>
                       <Typography variant='subtitle1' gutterBottom>
-                        Target Areas
+                        Execution Steps
                       </Typography>
                       <Stack spacing={2}>
-                        {values.targetAreas?.map((_, index) => (
-                          <Box key={`ta-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`targetAreas.${index}`}>
+                        {values.execution?.map((_, index) => (
+                          <Box key={`exec-${index}`} display='flex' alignItems='center' gap={1}>
+                            <Field name={`execution.${index}`}>
                               {({ field }: any) => (
                                 <TextField
                                   {...field}
                                   fullWidth
-                                  label={`Target Area #${index + 1}`}
+                                  label={`Step #${index + 1}`}
                                   size='small'
                                 />
                               )}
@@ -385,7 +346,7 @@ const KickDefinitionForm = ({ kick, refetchKicks, handleCloseEdit }: KickDefinit
                           size='small'
                           sx={{ alignSelf: 'flex-start' }}
                         >
-                          Add Target Area
+                          Add Execution Step
                         </Button>
                       </Stack>
                     </Box>

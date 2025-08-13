@@ -74,7 +74,7 @@ const PunchCard = ({
                 label={punch.belt}
                 sx={{
                   backgroundColor: punch.beltColor,
-                  color: getBeltTextColor(punch.beltColor),
+                  color: getBeltTextColor(punch.beltColor as string),
                   fontWeight: 'bold',
                   border: punch.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
                 }}
@@ -91,29 +91,43 @@ const PunchCard = ({
               {punch.description}
             </Typography>
 
-            {size(punch.technique) > 0 && (
-              <Box sx={{ mb: 3 }}>
-                <Typography variant='subtitle2' gutterBottom>
-                  Technique:
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {punch.technique}
-                </Typography>
-              </Box>
-            )}
-
-            {size(punch.bodyMechanics) > 0 && (
-              <Box sx={{ mb: 3 }}>
-                <Typography variant='subtitle2' gutterBottom>
-                  Body Mechanics:
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {punch.bodyMechanics}
-                </Typography>
-              </Box>
-            )}
-
             <Divider sx={{ my: 2 }} />
+
+            {/* Add Target section */}
+            {punch.target && (
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  variant='subtitle2'
+                  gutterBottom
+                  sx={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <IconTarget size={16} color='blue' style={{ marginRight: 8 }} />
+                  Target:
+                </Typography>
+                <Typography variant='body2' sx={{ pl: 3 }}>
+                  {punch.target}
+                </Typography>
+              </Box>
+            )}
+
+            {/* Add Execution section */}
+            {punch.execution && punch.execution.length > 0 && (
+              <Box sx={{ mb: 3 }}>
+                <Typography variant='subtitle2' gutterBottom>
+                  Execution Steps:
+                </Typography>
+                <List dense sx={{ pl: 2 }}>
+                  {punch.execution.map((step, index) => (
+                    <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
+                      <ListItemText
+                        primary={`${index + 1}. ${step}`}
+                        primaryTypographyProps={{ variant: 'body2' }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
 
             <Box sx={{ mb: 3 }}>
               <Typography
@@ -125,7 +139,7 @@ const PunchCard = ({
                 Key Points:
               </Typography>
               <List dense sx={{ pl: 2 }}>
-                {punch.keyPoints.map((point, index) => (
+                {punch.keyPoints?.map((point, index) => (
                   <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                     <ListItemText
                       primary={`• ${point}`}
@@ -146,7 +160,7 @@ const PunchCard = ({
                 Common Mistakes:
               </Typography>
               <List dense sx={{ pl: 2 }}>
-                {punch.commonMistakes.map((mistake, index) => (
+                {punch.commonMistakes?.map((mistake, index) => (
                   <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
                     <ListItemText
                       primary={`• ${mistake}`}
@@ -160,35 +174,12 @@ const PunchCard = ({
               </List>
             </Box>
 
-            <Box sx={{ mb: 3 }}>
-              <Typography
-                variant='subtitle2'
-                gutterBottom
-                sx={{ display: 'flex', alignItems: 'center' }}
-              >
-                <IconTarget size={16} color='orange' style={{ marginRight: 8 }} />
-                Target Areas:
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {punch.targetAreas &&
-                  punch.targetAreas.map((target: string, index: number) => (
-                    <Chip
-                      key={index}
-                      label={target}
-                      size='small'
-                      variant='outlined'
-                      sx={{ color: 'orange' }}
-                    />
-                  ))}
-              </Box>
-            </Box>
-
             <Box>
               <Typography variant='subtitle2' gutterBottom>
                 Applications:
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {punch.applications.map((app, index) => (
+                {punch.applications?.map((app, index) => (
                   <Chip key={index} label={app} size='small' variant='outlined' color='primary' />
                 ))}
               </Box>

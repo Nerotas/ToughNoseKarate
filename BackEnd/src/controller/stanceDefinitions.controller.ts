@@ -15,7 +15,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
 
 @ApiTags('Techniques')
-@Controller('stance-definitions')
+@Controller({ path: 'stance-definitions', version: '1' })
 export class StanceDefinitionsController {
   constructor(
     private readonly stanceDefinitionsService: StanceDefinitionsService,

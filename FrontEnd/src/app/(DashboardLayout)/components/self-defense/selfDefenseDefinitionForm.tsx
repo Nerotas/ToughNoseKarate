@@ -35,9 +35,7 @@ const validationSchema = Yup.object({
   execution: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  safetyNotes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  counters: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
 });
 
 interface SelfDefenseDefinitionFormProps {
@@ -58,17 +56,15 @@ const SelfDefenseDefinitionForm = ({
     description: selfDefense.description || '',
     belt: selfDefense.belt || '',
     beltColor: selfDefense.beltColor || '',
-    category: selfDefense.category || 'Standing',
-    difficulty: selfDefense.difficulty || 'Beginner',
+    category: selfDefense.category || '',
+    difficulty: selfDefense.difficulty || '',
     scenario: selfDefense.scenario || '',
     technique: selfDefense.technique || '',
     setup: selfDefense.setup || [],
     execution: selfDefense.execution || [],
     keyPoints: selfDefense.keyPoints || [],
     commonMistakes: selfDefense.commonMistakes || [],
-    safetyNotes: selfDefense.safetyNotes || [],
     applications: selfDefense.applications || [],
-    counters: selfDefense.counters || [],
   };
 
   const onSubmit = async (values: SelfDefenseDefinition) => {
@@ -422,47 +418,6 @@ const SelfDefenseDefinitionForm = ({
                 </FieldArray>
               </Grid>
 
-              {/* Safety Notes */}
-              <Grid size={12}>
-                <FieldArray name='safetyNotes'>
-                  {({ push, remove }) => (
-                    <Box>
-                      <Typography variant='subtitle1' gutterBottom>
-                        Safety Notes
-                      </Typography>
-                      <Stack spacing={2}>
-                        {values.safetyNotes?.map((_, index) => (
-                          <Box key={`safety-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`safetyNotes.${index}`}>
-                              {({ field }: any) => (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  label={`Safety Note #${index + 1}`}
-                                  size='small'
-                                />
-                              )}
-                            </Field>
-                            <IconButton onClick={() => remove(index)} color='error' size='small'>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        ))}
-                        <Button
-                          startIcon={<AddIcon />}
-                          onClick={() => push('')}
-                          variant='outlined'
-                          size='small'
-                          sx={{ alignSelf: 'flex-start' }}
-                        >
-                          Add Safety Note
-                        </Button>
-                      </Stack>
-                    </Box>
-                  )}
-                </FieldArray>
-              </Grid>
-
               {/* Applications */}
               <Grid size={12}>
                 <FieldArray name='applications'>
@@ -497,47 +452,6 @@ const SelfDefenseDefinitionForm = ({
                           sx={{ alignSelf: 'flex-start' }}
                         >
                           Add Application
-                        </Button>
-                      </Stack>
-                    </Box>
-                  )}
-                </FieldArray>
-              </Grid>
-
-              {/* Counters */}
-              <Grid size={12}>
-                <FieldArray name='counters'>
-                  {({ push, remove }) => (
-                    <Box>
-                      <Typography variant='subtitle1' gutterBottom>
-                        Counters (Optional)
-                      </Typography>
-                      <Stack spacing={2}>
-                        {values.counters?.map((_, index) => (
-                          <Box key={`counter-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`counters.${index}`}>
-                              {({ field }: any) => (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  label={`Counter #${index + 1}`}
-                                  size='small'
-                                />
-                              )}
-                            </Field>
-                            <IconButton onClick={() => remove(index)} color='error' size='small'>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        ))}
-                        <Button
-                          startIcon={<AddIcon />}
-                          onClick={() => push('')}
-                          variant='outlined'
-                          size='small'
-                          sx={{ alignSelf: 'flex-start' }}
-                        >
-                          Add Counter
                         </Button>
                       </Stack>
                     </Box>

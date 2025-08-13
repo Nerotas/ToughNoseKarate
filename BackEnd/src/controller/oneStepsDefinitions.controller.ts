@@ -13,6 +13,7 @@ import { OneStepsDefinitionsService } from '../service/oneStepsDefinitions.servi
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { oneStepsDefinitionsAttributes } from 'src/models/oneStepsDefinitions';
 
 @ApiTags('onestep-definitions')
 @Controller({ path: 'onestep-definitions', version: '1' })
@@ -23,7 +24,7 @@ export class OneStepsDefinitionsController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['admin', 'instructor'])
-  create(@Body() createOneStepsDefinitionsDto: any) {
+  create(@Body() createOneStepsDefinitionsDto: oneStepsDefinitionsAttributes) {
     return this.oneStepsDefinitionsService.create(createOneStepsDefinitionsDto);
   }
   @Get()
@@ -46,7 +47,10 @@ export class OneStepsDefinitionsController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['admin', 'instructor'])
-  update(@Param('id') id: string, @Body() updateOneStepsDefinitionsDto: any) {
+  update(
+    @Param('id') id: string,
+    @Body() updateOneStepsDefinitionsDto: oneStepsDefinitionsAttributes,
+  ) {
     return this.oneStepsDefinitionsService.update(
       +id,
       updateOneStepsDefinitionsDto,

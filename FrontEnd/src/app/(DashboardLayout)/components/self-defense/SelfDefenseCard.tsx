@@ -197,33 +197,6 @@ const SelfDefenseCard = ({ selfDefense, refetchSelfDefense }: SelfDefenseCardPro
               </AccordionDetails>
             </Accordion>
 
-            {selfDefense.safetyNotes?.length > 0 && (
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Box display='flex' alignItems='center' gap={1}>
-                    <WarningIcon color='warning' />
-                    <Typography variant='subtitle2' color='warning.main'>
-                      Safety Notes
-                    </Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Alert severity='warning' sx={{ mb: 1 }}>
-                    <Typography variant='body2' fontWeight='bold'>
-                      IMPORTANT SAFETY INFORMATION
-                    </Typography>
-                  </Alert>
-                  <List dense>
-                    {selfDefense.safetyNotes.map((note, index) => (
-                      <ListItem key={index} disablePadding>
-                        <ListItemText primary={`• ${note}`} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </AccordionDetails>
-              </Accordion>
-            )}
-
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography variant='subtitle2'>Applications</Typography>
@@ -238,23 +211,6 @@ const SelfDefenseCard = ({ selfDefense, refetchSelfDefense }: SelfDefenseCardPro
                 </List>
               </AccordionDetails>
             </Accordion>
-
-            {selfDefense.counters && selfDefense.counters?.length > 0 && (
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant='subtitle2'>Counters</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <List dense>
-                    {selfDefense.counters.map((counter, index) => (
-                      <ListItem key={index} disablePadding>
-                        <ListItemText primary={`• ${counter}`} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </AccordionDetails>
-              </Accordion>
-            )}
 
             {isAuthenticated &&
               (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
