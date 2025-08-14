@@ -1,6 +1,10 @@
 ﻿import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { students, StudentsAttributes } from '../models/students';
+import {
+  CreateStudentDto,
+  students,
+  StudentsAttributes,
+} from '../models/students';
 
 @Injectable()
 export class StudentsService {
@@ -17,7 +21,7 @@ export class StudentsService {
     return this.studentsModel.findOne({ where: { studentid } });
   }
 
-  async create(createStudentsDto: students): Promise<students> {
+  async create(createStudentsDto: CreateStudentDto): Promise<students> {
     return this.studentsModel.create(createStudentsDto);
   }
 

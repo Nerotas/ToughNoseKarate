@@ -1,4 +1,5 @@
 import { Model, Table, Column, DataType } from 'sequelize-typescript';
+import { IsString, IsOptional, IsInt, Min, Max, IsEmail, IsBoolean } from 'class-validator';
 
 export interface StudentsAttributes {
   studentid?: number;
@@ -164,4 +165,20 @@ export class students
     defaultValue: false,
   })
   declare eligibleForTesting?: boolean;
+}
+
+export class CreateStudentDto {
+  @IsString() firstName: string;
+  @IsString() lastName: string;
+  @IsOptional() @IsString() preferredName?: string | null;
+  @IsOptional() @IsInt() @Min(1) @Max(120) age?: number | null;
+  @IsOptional() @IsString() beltRank?: string;
+  @IsString() startDateUTC: string;
+  @IsEmail() email: string;
+  @IsOptional() @IsString() phone?: string | null;
+  @IsOptional() @IsString() notes?: string | null;
+  @IsOptional() @IsBoolean() active?: boolean;
+  @IsOptional() @IsBoolean() child?: boolean;
+  @IsOptional() @IsBoolean() eligibleForTesting?: boolean;
+  @IsOptional() @IsString() lastTestUTC?: string | null;
 }
