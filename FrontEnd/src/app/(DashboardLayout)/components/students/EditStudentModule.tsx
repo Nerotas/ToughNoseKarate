@@ -156,14 +156,14 @@ const EditStudentModule = ({
               const submitData = {
                 ...values,
                 age: values.age === '' ? null : Number(values.age),
-                active: values.active ? 1 : 0,
-                child: values.child ? 1 : 0,
-                eligibleForTesting: values.eligibleForTesting ? 1 : 0,
+                active: !!values.active,
+                child: !!values.child,
+                eligibleForTesting: !!values.eligibleForTesting,
                 lastTestUTC: new Date(values.lastTestUTC).toISOString(),
               };
 
               const response = await axiosInstance.patch(
-                `/v1/students/${student.studentid}`,
+                `/students/${student.studentid}`,
                 submitData
               );
 

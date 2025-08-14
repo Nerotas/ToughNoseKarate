@@ -135,6 +135,7 @@ const StudentsClient = () => {
     const res = await axiosInstance.patch(`/students/${id}`, {
       beltRank: nextBeltRank,
       lastTestUTC: new Date().toISOString(),
+      eligibleForTesting: false,
     });
 
     if (!res.data?.updated) {
