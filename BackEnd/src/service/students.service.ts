@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { students } from '../models/students';
+import { students, studentsAttributes } from '../models/students';
 
 @Injectable()
 export class StudentsService {
@@ -23,12 +23,29 @@ export class StudentsService {
 
   async update(
     studentid: number,
-    updateStudentsDto: any,
-  ): Promise<[number, students[]]> {
-    return this.studentsModel.update(updateStudentsDto, {
-      where: { studentid },
-      returning: true,
-    });
+    updateStudentsDto: Partial<students>,
+  ): Promise<{ updated: boolean; student?: any }> {
+    const student = await this.studentsModel.findOne({ where: { studentid } });
+
+    console.log('student', student?.toJSON());
+
+    const [affectedCount, affectedRows] = await this.studentsModel.update(
+      updateStudentsDto,
+      {
+        where: { studentid },
+        returning: true,
+        logging: console.log,
+      },
+    );
+
+    if (!affectedCount) {
+      return { updated: false };
+    }
+
+    return {
+      updated: true,
+      student: affectedRows[0].get({ plain: true }),
+    };
   }
 
   async remove(studentid: number): Promise<number> {

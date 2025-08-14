@@ -17,7 +17,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { StudentsService } from '../service/students.service';
-import { students } from 'src/models/students';
+import { students, studentsAttributes } from 'src/models/students';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { InstructorOnly, Roles } from '../decorators/roles.decorator';
@@ -91,7 +91,7 @@ export class StudentsController {
   @ApiResponse({ status: 401, description: 'Unauthorized - Login required' })
   update(
     @Param('id') id: string,
-    @Body() updateStudentsDto: students,
+    @Body() updateStudentsDto: studentsAttributes,
     @User() instructor: InstructorPayload,
   ) {
     console.log(`Instructor ${instructor.email} is updating student ${id}`);

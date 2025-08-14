@@ -100,9 +100,10 @@ const StudentsClient = () => {
     },
   });
 
-  const promoteStudent = async (student: Student) => {
+  // Accept StudentDisplay (what DataGrid supplies)
+  const promoteStudent = async (student: StudentDisplay) => {
     // Sort belt requirements by beltOrder to ensure correct progression
-    const sortedBelts = (beltRequirements || []).sort((a, b) => a.beltOrder - b.beltOrder);
+    const sortedBelts = (beltRequirements || []).slice().sort((a, b) => a.beltOrder - b.beltOrder);
 
     const currentIndex = sortedBelts.findIndex(
       (belt) => belt.beltRank.toLowerCase() === (student.beltRank ?? '').toLowerCase()
@@ -112,31 +113,44 @@ const StudentsClient = () => {
     if (currentIndex !== -1 && currentIndex < sortedBelts.length - 1) {
       nextBeltRank = sortedBelts[currentIndex + 1].beltRank;
     } else {
-      // If not found or is the highest belt, keep current belt
       nextBeltRank =
-        currentIndex === -1 ? 'Black Belt' : sortedBelts[sortedBelts.length - 1].beltRank;
+        currentIndex === -1
+          ? sortedBelts[0]?.beltRank || student.beltRank || ''
+          : sortedBelts[sortedBelts.length - 1].beltRank;
     }
 
-    await axiosInstance.patch(`/students/${student.studentid}`, {
-      firstName: student.firstName,
-      lastName: student.lastName,
-      preferredName: student.preferredName,
-      age: student.age,
+    // Avoid sending same belt (no-op)
+    if (nextBeltRank === student.beltRank) {
+      console.info('No promotion needed (already highest or unknown).');
+      return;
+    }
+
+    const id = student.studentid ?? student.id;
+    if (id == null) {
+      console.error('Cannot promote: missing studentid');
+      return;
+    }
+
+    console.debug('Promoting student', { id, from: student.beltRank, to: nextBeltRank });
+
+    const res = await axiosInstance.patch(`/students/${id}`, {
       beltRank: nextBeltRank,
       lastTestUTC: new Date().toISOString(),
-      active: student.active,
-      child: student.child,
-      eligibleForTesting: student.eligibleForTesting,
     });
 
-    refetchStudents();
+    if (!res.data?.updated) {
+      console.warn('Promotion update reported not updated', res.data);
+    }
+
+    await refetchStudents();
   };
 
   // Function to transform API student data to display format
   const transformStudent = (student: Student): StudentDisplay => {
     return new StudentDisplay({
       ...student,
-      id: student.studentid ?? 0,
+      studentid: student.studentid, // preserve original id
+      id: student.studentid ?? 0, // DataGrid row id
       name: `${student.preferredName || student.firstName} ${student.lastName}`,
       currentBelt: `${student.beltRank} Belt`,
       beltColor: getBeltColor(student.beltRank ?? '', beltRequirements || []),
@@ -173,8 +187,8 @@ const StudentsClient = () => {
   };
 
   // Handler to promote a student to the next belt
-  const handlePromoteStudent = (student: Student) => {
-    setStudentToPromote(transformStudent(student));
+  const handlePromoteStudent = (student: StudentDisplay) => {
+    setStudentToPromote(student);
     setPromoteStudentOpen(true);
   };
 
@@ -506,7 +520,7 @@ const StudentsClient = () => {
           onClose={handlePromoteStudentClose}
           student={studentToPromote as StudentDisplay | null}
           beltRequirements={beltRequirements || []}
-          onConfirm={promoteStudent as (student: StudentDisplay) => Promise<void>}
+          onConfirm={promoteStudent}
         />
       </Box>
     </PageContainer>
