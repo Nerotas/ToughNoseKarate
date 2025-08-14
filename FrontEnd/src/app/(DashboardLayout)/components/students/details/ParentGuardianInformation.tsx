@@ -80,7 +80,7 @@ const ParentGuardianInformation: React.FC<ParentGuardianInformationProps> = ({
                   </Grid>
                 ))}
             </Grid>
-          ) : student.child === 1 && !familyLoading && !familyFetching ? (
+          ) : student.child && !familyLoading && !familyFetching ? (
             <Alert severity='info'>No parent/guardian information found for this student.</Alert>
           ) : null}
         </CardContent>

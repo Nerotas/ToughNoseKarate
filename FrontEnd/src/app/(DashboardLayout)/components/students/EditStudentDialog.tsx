@@ -59,9 +59,9 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     phone: student.phone || '',
     beltRank: student.beltRank || 'white',
     notes: student.notes || '',
-    active: student.active === 1,
-    child: student.child === 1,
-    eligibleForTesting: student.eligibleForTesting === 1,
+    active: !!student.active,
+    child: !!student.child,
+    eligibleForTesting: !!student.eligibleForTesting,
   };
 
   const handleSubmit = async (values: any) => {

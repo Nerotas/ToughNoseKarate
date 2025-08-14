@@ -21,6 +21,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import axiosInstance from 'utils/helpers/AxiosInstance';
+import { Student } from 'models/Students/Students';
 
 interface EditStudentModuleProps {
   open: boolean;
@@ -28,24 +29,6 @@ interface EditStudentModuleProps {
   student: Student | null;
   beltRequirements: BeltRequirements[];
   onStudentUpdated?: () => void;
-}
-
-interface Student {
-  studentid: number;
-  firstName: string;
-  lastName: string;
-  preferredName?: string;
-  age?: number;
-  beltRank: string;
-  startDateUTC: string;
-  endDateUTC?: string;
-  email: string;
-  phone?: string;
-  notes?: string;
-  active: number;
-  child: number;
-  lastTestUTC?: string;
-  eligibleForTesting: number;
 }
 
 interface StudentFormData {
@@ -127,9 +110,9 @@ const EditStudentModule = ({
       email: student.email || '',
       phone: student.phone || '',
       notes: student.notes || '',
-      active: student.active === 1,
-      child: student.child === 1,
-      eligibleForTesting: student.eligibleForTesting === 1,
+      active: !!student.active,
+      child: !!student.child,
+      eligibleForTesting: !!student.eligibleForTesting,
       lastTestUTC: student.lastTestUTC
         ? new Date(student.lastTestUTC).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0],

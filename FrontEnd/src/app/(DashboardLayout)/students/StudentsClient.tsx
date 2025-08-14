@@ -100,8 +100,7 @@ const StudentsClient = () => {
     },
   });
 
-  // Accept StudentDisplay (what DataGrid supplies)
-  const promoteStudent = async (student: StudentDisplay) => {
+  const promoteStudent = async (student: Student) => {
     // Sort belt requirements by beltOrder to ensure correct progression
     const sortedBelts = (beltRequirements || []).slice().sort((a, b) => a.beltOrder - b.beltOrder);
 
@@ -125,7 +124,7 @@ const StudentsClient = () => {
       return;
     }
 
-    const id = student.studentid ?? student.id;
+    const id = student.studentid || null;
     if (id == null) {
       console.error('Cannot promote: missing studentid');
       return;
@@ -159,7 +158,7 @@ const StudentsClient = () => {
       lastTest: student.lastTestUTC || null,
       isChild: !!student.child,
       isActive: !!student.active,
-      eligibleForTesting: student.eligibleForTesting ?? 0,
+      eligibleForTesting: !!student.eligibleForTesting,
     });
   };
 

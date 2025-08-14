@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { students, studentsAttributes } from '../models/students';
+import { students, StudentsAttributes } from '../models/students';
 
 @Injectable()
 export class StudentsService {
