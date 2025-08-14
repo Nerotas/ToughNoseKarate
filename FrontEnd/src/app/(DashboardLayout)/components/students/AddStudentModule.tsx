@@ -127,7 +127,7 @@ const AddStudentModule = ({
                 startDateUTC: new Date().toISOString(),
               };
 
-              const response = await axiosInstance.post('/v1/students', submitData);
+              const response = await axiosInstance.post('/students', submitData);
 
               if (response.status !== 201) {
                 throw new Error('Failed to add student');
