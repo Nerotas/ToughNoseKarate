@@ -2,18 +2,29 @@ export class Student {
   studentid: number = 0;
   firstName: string = '';
   lastName: string = '';
-  preferredName: string = '';
-  age: number = 0;
-  beltRank: string = '';
+  preferredName?: string | null;
+  age?: number | null;
+  dateOfBirth?: string | null; // maps date_of_birth
+  beltRank: string = 'White'; // default white
   startDateUTC: string = '';
-  endDateUTC?: string;
+  endDateUTC?: string | null;
   email: string = '';
-  phone?: string;
-  notes?: string;
-  active: number = 1;
-  child: number = 0;
-  lastTestUTC?: string;
-  eligibleForTesting: number = 0;
+  phone?: string | null;
+  emergencyContactName?: string | null;
+  emergencyContactPhone?: string | null;
+  emergencyContactRelationship?: string | null;
+  medicalConditions?: string | null;
+  allergies?: string | null;
+  medications?: string | null;
+  waiverSigned?: boolean | null;
+  waiverDate?: string | null; // date
+  insuranceProvider?: string | null;
+  insurancePolicyNumber?: string | null;
+  notes?: string | null;
+  active?: boolean = true; // DB default true
+  child?: boolean = false; // DB default false
+  lastTestUTC?: string | null;
+  eligibleForTesting?: boolean = false; // DB default false
 
   constructor(init?: Partial<Student>) {
     Object.assign(this, init);

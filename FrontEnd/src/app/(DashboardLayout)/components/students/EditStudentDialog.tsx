@@ -13,11 +13,9 @@ import {
   MenuItem,
   Switch,
   FormControlLabel,
-  Alert,
-  Box,
   Typography,
 } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import { Student, UpdateStudentRequest } from 'models/Students/Students';
@@ -59,9 +57,9 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     phone: student.phone || '',
     beltRank: student.beltRank || 'white',
     notes: student.notes || '',
-    active: student.active === 1,
-    child: student.child === 1,
-    eligibleForTesting: student.eligibleForTesting === 1,
+    active: !!student.active,
+    child: !!student.child,
+    eligibleForTesting: !!student.eligibleForTesting,
   };
 
   const handleSubmit = async (values: any) => {

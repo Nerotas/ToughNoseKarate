@@ -11,12 +11,8 @@ import {
   Button,
   Alert,
   Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
 } from '@mui/material';
-import { IconArrowLeft, IconEdit, IconX } from '@tabler/icons-react';
+import { IconArrowLeft, IconEdit } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '../../components/container/PageContainer';
 import useGet from '../../../../hooks/useGet';
@@ -213,7 +209,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     beltRequirementsLoading ||
     studentFetching ||
     assessmentLoading ||
-    (student?.child === 1 && (familyLoading || familyFetching))
+    (student?.child && (familyLoading || familyFetching))
   ) {
     return (
       <PageContainer title='Student Details' description='View student information and progress'>
@@ -278,7 +274,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
           {/* Training Information */}
           <TrainingInformation student={student} />
           {/* Parent/Guardian Information - Only show for child students */}
-          {student.child === 1 && family && (
+          {student.child && family && (
             <ParentGuardianInformation
               student={student}
               studentId={studentId}

@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   Alert,
   Card,
 } from '@mui/material';
@@ -120,14 +119,19 @@ const AddStudentModule = ({
               // Prepare the data for API submission
               const submitData = {
                 ...values,
+                // normalize optional strings
+                preferredName: values.preferredName.trim() || null,
+                phone: values.phone.trim() || null,
+                notes: values.notes.trim() || null,
                 age: values.age === '' ? null : Number(values.age),
-                active: values.active ? 1 : 0,
-                child: values.child ? 1 : 0,
-                eligibleForTesting: 0, // Default to not eligible for testing
+                // KEEP booleans as booleans (no 0/1)
+                active: values.active,
+                child: values.child,
+                eligibleForTesting: false,
                 startDateUTC: new Date().toISOString(),
               };
 
-              const response = await axiosInstance.post('/v1/students', submitData);
+              const response = await axiosInstance.post('/students', submitData);
 
               if (response.status !== 201) {
                 throw new Error('Failed to add student');
