@@ -20,7 +20,7 @@ import { StudentsService } from '../service/students.service';
 import { CreateStudentDto, students, StudentsAttributes } from 'src/models/students';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
-import { InstructorOnly, Roles } from '../decorators/roles.decorator';
+import { Roles } from '../decorators/roles.decorator';
 import { User } from '../decorators/user.decorator';
 import { InstructorPayload } from '../auth/jwt.strategy';
 

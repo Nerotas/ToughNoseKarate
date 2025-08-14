@@ -11,12 +11,8 @@ import {
   Button,
   Alert,
   Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
 } from '@mui/material';
-import { IconArrowLeft, IconEdit, IconX } from '@tabler/icons-react';
+import { IconArrowLeft, IconEdit } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '../../components/container/PageContainer';
 import useGet from '../../../../hooks/useGet';

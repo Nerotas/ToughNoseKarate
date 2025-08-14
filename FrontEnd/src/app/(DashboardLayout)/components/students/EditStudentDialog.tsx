@@ -13,11 +13,9 @@ import {
   MenuItem,
   Switch,
   FormControlLabel,
-  Alert,
-  Box,
   Typography,
 } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import { Student, UpdateStudentRequest } from 'models/Students/Students';

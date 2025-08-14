@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import {
   CreateStudentDto,
   students,
-  StudentsAttributes,
 } from '../models/students';
 
 @Injectable()
