@@ -24,28 +24,8 @@ import Loading from 'app/loading';
 import AddStudentModule from '../components/students/AddStudentModule';
 import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
-import axiosInstance from 'utils/helpers/AxiosInstance';
 import { Student, StudentDisplay } from 'models/Students/Students';
-
-// Import Student interface from shared models
-
-// Helper function to get belt color from belt requirements data
-const getBeltColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.color || '#757575'; // Default grey if not found
-};
-
-// Helper function to get belt text color from belt requirements data
-const getBeltTextColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.textColor || '#FFFFFF'; // Default white if not found
-};
-
-// Helper function to get promoted student with next belt and today's test date
+import { getBeltColor, getBeltTextColor } from 'helpers/Student';
 
 const StudentsClient = () => {
   const router = useRouter();
@@ -62,7 +42,6 @@ const StudentsClient = () => {
 
   // State for Promote Student dialog
   const [promoteStudentOpen, setPromoteStudentOpen] = useState(false);
-  const [studentToPromote, setStudentToPromote] = useState<StudentDisplay | null>(null);
 
   // Fetch belt requirements for colors and progression
   const {
@@ -88,7 +67,7 @@ const StudentsClient = () => {
     isFetching,
     error,
     isError,
-    refetch: refetchStudents,
+    refetch,
   } = useGet<Student[]>({
     apiLabel: 'students',
     url: '/students',
@@ -99,51 +78,6 @@ const StudentsClient = () => {
       refetchOnWindowFocus: false,
     },
   });
-
-  const promoteStudent = async (student: Student) => {
-    // Sort belt requirements by beltOrder to ensure correct progression
-    const sortedBelts = (beltRequirements || []).slice().sort((a, b) => a.beltOrder - b.beltOrder);
-
-    const currentIndex = sortedBelts.findIndex(
-      (belt) => belt.beltRank.toLowerCase() === (student.beltRank ?? '').toLowerCase()
-    );
-
-    let nextBeltRank: string;
-    if (currentIndex !== -1 && currentIndex < sortedBelts.length - 1) {
-      nextBeltRank = sortedBelts[currentIndex + 1].beltRank;
-    } else {
-      nextBeltRank =
-        currentIndex === -1
-          ? sortedBelts[0]?.beltRank || student.beltRank || ''
-          : sortedBelts[sortedBelts.length - 1].beltRank;
-    }
-
-    // Avoid sending same belt (no-op)
-    if (nextBeltRank === student.beltRank) {
-      console.info('No promotion needed (already highest or unknown).');
-      return;
-    }
-
-    const id = student.studentid || null;
-    if (id == null) {
-      console.error('Cannot promote: missing studentid');
-      return;
-    }
-
-    console.debug('Promoting student', { id, from: student.beltRank, to: nextBeltRank });
-
-    const res = await axiosInstance.patch(`/students/${id}`, {
-      beltRank: nextBeltRank,
-      lastTestUTC: new Date().toISOString(),
-      eligibleForTesting: false,
-    });
-
-    if (!res.data?.updated) {
-      console.warn('Promotion update reported not updated', res.data);
-    }
-
-    await refetchStudents();
-  };
 
   // Function to transform API student data to display format
   const transformStudent = (student: Student): StudentDisplay => {
@@ -171,6 +105,10 @@ const StudentsClient = () => {
     ? allStudents.filter((student) => student.isActive)
     : allStudents.filter((student) => !student.isActive);
 
+  const refetchStudents = async () => {
+    await refetch();
+  };
+
   // Handler for when a new student is added
   const handleStudentAdded = () => {
     refetchStudents(); // Refetch students to include the newly added student
@@ -188,14 +126,14 @@ const StudentsClient = () => {
 
   // Handler to promote a student to the next belt
   const handlePromoteStudent = (student: StudentDisplay) => {
-    setStudentToPromote(student);
+    setSelectedStudent(student);
     setPromoteStudentOpen(true);
   };
 
   // Handler to close promote student dialog
   const handlePromoteStudentClose = () => {
     setPromoteStudentOpen(false);
-    setStudentToPromote(null);
+    setSelectedStudent(null);
   };
 
   // Handler to open add student dialog
@@ -518,9 +456,9 @@ const StudentsClient = () => {
         <PromoteStudentDialog
           open={promoteStudentOpen}
           onClose={handlePromoteStudentClose}
-          student={studentToPromote as StudentDisplay | null}
+          student={selectedStudent as StudentDisplay | null}
           beltRequirements={beltRequirements || []}
-          onConfirm={promoteStudent}
+          refetchStudents={refetchStudents}
         />
       </Box>
     </PageContainer>

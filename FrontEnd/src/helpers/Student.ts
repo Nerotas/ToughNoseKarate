@@ -423,3 +423,40 @@ export const assessmentValidationSchema = Yup.object().shape({
     .max(100, 'Score must be 100 or lower'),
   examiner_notes: Yup.string().max(1000, 'Notes must be less than 1000 characters'),
 });
+
+// Helper function to get belt color from belt requirements data
+export const getBeltColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
+  const beltReq = beltRequirements.find(
+    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
+  );
+  return beltReq?.color || '#757575'; // Default grey if not found
+};
+
+// Helper function to get belt text color from belt requirements data
+export const getBeltTextColor = (
+  beltRank: string,
+  beltRequirements: BeltRequirements[]
+): string => {
+  const beltReq = beltRequirements.find(
+    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
+  );
+  return beltReq?.textColor || '#FFFFFF'; // Default white if not found
+};
+
+// Helper function to get next belt rank
+export const getNextBeltRank = (
+  currentBelt: string,
+  beltRequirements: BeltRequirements[]
+): string => {
+  const sortedBelts = beltRequirements.sort((a, b) => a.beltOrder - b.beltOrder);
+  const currentIndex = sortedBelts.findIndex(
+    (belt) => belt.beltRank.toLowerCase() === currentBelt.toLowerCase()
+  );
+
+  if (currentIndex !== -1 && currentIndex < sortedBelts.length - 1) {
+    return sortedBelts[currentIndex + 1].beltRank;
+  }
+
+  // If not found or is the highest belt, keep current belt
+  return currentIndex === -1 ? 'Black Belt' : sortedBelts[sortedBelts.length - 1].beltRank;
+};
