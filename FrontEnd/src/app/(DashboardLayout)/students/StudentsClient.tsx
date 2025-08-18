@@ -65,7 +65,6 @@ const StudentsClient = () => {
     data: apiStudents,
     isLoading,
     isFetching,
-    error,
     isError,
     refetch,
   } = useGet<Student[]>({
@@ -87,7 +86,7 @@ const StudentsClient = () => {
       id: student.studentid ?? 0, // DataGrid row id
       name: `${student.preferredName || student.firstName} ${student.lastName}`,
       currentBelt: `${student.beltRank} Belt`,
-      beltColor: getBeltColor(student.beltRank ?? '', beltRequirements || []),
+      beltColor: getBeltColor(student.beltRank ?? '', beltRequirements || []), //only true necessity of transform?
       age: student.age || 0,
       joinDate: student.startDateUTC,
       lastTest: student.lastTestUTC || null,
