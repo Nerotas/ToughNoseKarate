@@ -49,6 +49,7 @@ import { LocalHealthCheckService } from './health/health.service';
 
 // Models
 import { beltRequirements } from './models/beltRequirements';
+import { blocksDefinitions } from './models/blocksDefinitions';
 import { families } from './models/families';
 import { FormDefinitions } from './models/formDefinitions';
 import { kicksDefinitions } from './models/kicksDefinitions';
@@ -97,6 +98,7 @@ import { AppConfigService } from './config/app-config.service';
         },
         models: [
           beltRequirements,
+          blocksDefinitions,
           families,
           FormDefinitions,
           Instructors,
@@ -121,6 +123,7 @@ import { AppConfigService } from './config/app-config.service';
     }),
     SequelizeModule.forFeature([
       beltRequirements,
+      blocksDefinitions,
       families,
       FormDefinitions,
       Instructors,
