@@ -385,7 +385,7 @@ const StudentsClient = () => {
         >
           <Box sx={{ height: 700, width: '100%' }}>
             <DataGrid
-              rows={apiStudents || []}
+              rows={students}
               columns={columns}
               getRowId={(row) => row.studentid}
               initialState={{
