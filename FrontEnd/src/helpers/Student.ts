@@ -459,7 +459,7 @@ export const getNextBeltRank = (
   }
 
   // If not found or is the highest belt, keep current belt
-  return currentIndex === -1 ? 'Black Belt' : sortedBelts[sortedBelts.length - 1].beltRank;
+  return sortedBelts[sortedBelts.length - 1]?.beltRank || '';
 };
 
 export const editValidationSchema = Yup.object().shape({
