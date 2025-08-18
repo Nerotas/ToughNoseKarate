@@ -1,4 +1,5 @@
 export * from './beltRequirements';
+export * from './blocksDefinitions';
 export * from './families';
 export * from './formDefinitions';
 export * from './instructors';

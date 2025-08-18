@@ -14,6 +14,7 @@ import { MetricsModule } from 'metrics.module';
 // Controllers
 import { AboutController } from './controller/about.controller';
 import { BeltRequirementsController } from './controller/beltRequirements.controller';
+import { BlocksDefinitionsController } from './controller/blocksDefinitions.controller';
 import { FamiliesController } from './controller/families.controller';
 import { FormDefinitionsController } from './controller/formDefinitions.controller';
 import { KicksDefinitionsController } from './controller/kicksDefinitions.controller';
@@ -28,6 +29,7 @@ import { StudentAssessmentsController } from './controller/studentAssessments.co
 
 // Services
 import { AppService } from './service/app.service';
+import { BlocksDefinitionsService } from './service/blocksDefinitions.service';
 import { FormDefinitionsService } from './service/formDefinitions.service';
 import { KicksDefinitionsService } from './service/kicksDefinitions.service';
 import { OneStepsDefinitionsService } from './service/oneStepsDefinitions.service';
@@ -49,6 +51,7 @@ import { LocalHealthCheckService } from './health/health.service';
 
 // Models
 import { beltRequirements } from './models/beltRequirements';
+import { blocksDefinitions } from './models/blocksDefinitions';
 import { families } from './models/families';
 import { FormDefinitions } from './models/formDefinitions';
 import { kicksDefinitions } from './models/kicksDefinitions';
@@ -97,6 +100,7 @@ import { AppConfigService } from './config/app-config.service';
         },
         models: [
           beltRequirements,
+          blocksDefinitions,
           families,
           FormDefinitions,
           Instructors,
@@ -121,6 +125,7 @@ import { AppConfigService } from './config/app-config.service';
     }),
     SequelizeModule.forFeature([
       beltRequirements,
+      blocksDefinitions,
       families,
       FormDefinitions,
       Instructors,
@@ -182,6 +187,7 @@ import { AppConfigService } from './config/app-config.service';
   controllers: [
     AboutController,
     BeltRequirementsController,
+    BlocksDefinitionsController,
     FamiliesController,
     FormDefinitionsController,
     HealthController,
@@ -199,6 +205,7 @@ import { AppConfigService } from './config/app-config.service';
     AppConfigService,
     AppService,
     BeltRequirementsService,
+    BlocksDefinitionsService,
     FamiliesService,
     FormDefinitionsService,
     LocalHealthCheckService,

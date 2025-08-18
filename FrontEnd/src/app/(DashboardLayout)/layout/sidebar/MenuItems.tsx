@@ -1,20 +1,16 @@
 import {
   IconLayoutDashboard,
-  IconLogin,
-  IconUserPlus,
   IconAward,
   IconUsers,
   IconMan,
   IconBrandTorchain,
-  IconClipboardCheck,
   IconHandStop,
   IconRun,
   IconSwords,
   IconShield,
   IconSchool,
-  IconUsersGroup,
-  IconFileText,
   IconChalkboardTeacher,
+  IconBlocks,
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
@@ -54,6 +50,12 @@ export const Menuitems = [
     title: 'Stances',
     icon: IconBrandTorchain,
     href: '/stances',
+  },
+  {
+    id: uniqueId(),
+    title: 'Blocks',
+    icon: IconBlocks,
+    href: '/blocks',
   },
   {
     id: uniqueId(),
