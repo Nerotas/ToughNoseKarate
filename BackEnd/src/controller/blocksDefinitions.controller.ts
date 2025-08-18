@@ -46,8 +46,6 @@ export class BlocksDefinitionsController {
     @Param('id') id: string,
     @Body() updateBlocksDefinitionsDto: BlocksDefinitionsAttributes,
   ) {
-    console.log(updateBlocksDefinitionsDto);
-
     return this.blocksDefinitionsService.update(
       +id,
       updateBlocksDefinitionsDto,
