@@ -73,3 +73,5 @@ export interface Family {
 export interface StudentDetailClientProps {
   studentId: string;
 }
+
+export interface StudentFormData extends Partial<Student> {}
