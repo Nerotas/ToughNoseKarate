@@ -17,56 +17,70 @@ import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 
 // Student interface for API data
 import { Student } from 'models/Students/Students';
+import axiosInstance from 'utils/helpers/AxiosInstance';
+import { getBeltColor, getBeltTextColor, getNextBeltRank } from 'helpers/Student';
 
 interface PromoteStudentDialogProps {
   open: boolean;
   onClose: () => void;
   student: Student | null;
   beltRequirements: BeltRequirements[];
-  onConfirm: (student: Student) => Promise<void>;
+  refetchStudents: () => Promise<void>;
 }
-
-// Helper function to get belt color from belt requirements data
-const getBeltColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.color || '#757575'; // Default grey if not found
-};
-
-// Helper function to get belt text color from belt requirements data
-const getBeltTextColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.textColor || '#FFFFFF'; // Default white if not found
-};
-
-// Helper function to get next belt rank
-const getNextBeltRank = (currentBelt: string, beltRequirements: BeltRequirements[]): string => {
-  const sortedBelts = beltRequirements.sort((a, b) => a.beltOrder - b.beltOrder);
-  const currentIndex = sortedBelts.findIndex(
-    (belt) => belt.beltRank.toLowerCase() === currentBelt.toLowerCase()
-  );
-
-  if (currentIndex !== -1 && currentIndex < sortedBelts.length - 1) {
-    return sortedBelts[currentIndex + 1].beltRank;
-  }
-
-  // If not found or is the highest belt, keep current belt
-  return currentIndex === -1 ? 'Black Belt' : sortedBelts[sortedBelts.length - 1].beltRank;
-};
 
 const PromoteStudentDialog: React.FC<PromoteStudentDialogProps> = ({
   open,
   onClose,
   student,
   beltRequirements,
-  onConfirm,
+  refetchStudents,
 }) => {
   const [isPromoting, setIsPromoting] = useState(false);
 
   if (!student) return null;
+
+  const promoteStudent = async (student: Student) => {
+    // Sort belt requirements by beltOrder to ensure correct progression
+    const sortedBelts = (beltRequirements || []).slice().sort((a, b) => a.beltOrder - b.beltOrder);
+
+    const currentIndex = sortedBelts.findIndex(
+      (belt) => belt.beltRank.toLowerCase() === (student.beltRank ?? '').toLowerCase()
+    );
+
+    let nextBeltRank: string;
+    if (currentIndex !== -1 && currentIndex < sortedBelts.length - 1) {
+      nextBeltRank = sortedBelts[currentIndex + 1].beltRank;
+    } else {
+      nextBeltRank =
+        currentIndex === -1
+          ? sortedBelts[0]?.beltRank || student.beltRank || ''
+          : sortedBelts[sortedBelts.length - 1].beltRank;
+    }
+
+    // Avoid sending same belt (no-op)
+    if (nextBeltRank === student.beltRank) {
+      console.info('No promotion needed (already highest or unknown).');
+      return;
+    }
+
+    const id = student.studentid || null;
+    if (id == null) {
+      console.error('Cannot promote: missing studentid');
+      return;
+    }
+
+    const res = await axiosInstance.patch(`/students/${id}`, {
+      beltRank: nextBeltRank,
+      lastTestUTC: new Date().toISOString(),
+      eligibleForTesting: false,
+    });
+
+    if (!res.data?.updated) {
+      console.warn('Promotion update reported not updated', res.data);
+    }
+
+    await refetchStudents();
+  };
 
   const nextBeltRank = getNextBeltRank(student.beltRank, beltRequirements);
   const currentBeltColor = getBeltColor(student.beltRank, beltRequirements);
@@ -80,7 +94,7 @@ const PromoteStudentDialog: React.FC<PromoteStudentDialogProps> = ({
 
     setIsPromoting(true);
     try {
-      await onConfirm(student);
+      await promoteStudent(student);
       onClose();
     } catch (error) {
       console.error('Error promoting student:', error);

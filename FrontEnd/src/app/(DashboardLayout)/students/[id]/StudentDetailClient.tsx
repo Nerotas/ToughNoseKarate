@@ -4,14 +4,8 @@ import { StudentAssessment } from '../../../../models/Assessments/Assessments';
 import { studentsService } from '../../../../services/studentsService';
 import { studentAssessmentsService } from '../../../../services/studentAssessmentsService';
 import StudentAssessmentForm from '../../components/students/details/StudentAssessmentForm';
-import EditStudentDialog from '../../components/students/EditStudentDialog';
 import Loading from 'app/loading';
-import {
-  Box,
-  Button,
-  Alert,
-  Grid,
-} from '@mui/material';
+import { Box, Button, Alert, Grid } from '@mui/material';
 import { IconArrowLeft, IconEdit } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '../../components/container/PageContainer';
@@ -30,6 +24,7 @@ import PersonalInformation from 'app/(DashboardLayout)/components/students/detai
 import TrainingInformation from 'app/(DashboardLayout)/components/students/details/TrainingInformation';
 import ParentGuardianInformation from 'app/(DashboardLayout)/components/students/details/ParentGuardianInformation';
 import TestingHistory from 'app/(DashboardLayout)/components/students/details/TestingHistory';
+import EditStudentModule from 'app/(DashboardLayout)/components/students/EditStudentModule';
 
 const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) => {
   const router = useRouter();
@@ -113,17 +108,12 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     fallbackData: null,
   });
 
-  // Assessment state
-  const [assessmentDialogOpen, setAssessmentDialogOpen] = useState(false);
-  const [editingAssessment, setEditingAssessment] = useState<StudentAssessment | null>(null);
-
   // Edit student state
   const [editStudentDialogOpen, setEditStudentDialogOpen] = useState(false);
 
   // Handle student update
-  const handleStudentUpdate = async (studentId: number, updatedData: UpdateStudentRequest) => {
+  const handleStudentUpdate = async () => {
     try {
-      await studentsService.updateStudent(studentId, updatedData);
       await studentRefetch(); // Refetch updated student data
       setEditStudentDialogOpen(false);
     } catch (error) {
@@ -309,12 +299,12 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
       </Box>
 
       {/* Edit Student Dialog */}
-      <EditStudentDialog
+      <EditStudentModule
         open={editStudentDialogOpen}
         onClose={() => setEditStudentDialogOpen(false)}
         student={student}
         beltRequirements={beltRequirements || []}
-        onUpdate={handleStudentUpdate}
+        onStudentUpdated={handleStudentUpdate}
       />
     </PageContainer>
   );

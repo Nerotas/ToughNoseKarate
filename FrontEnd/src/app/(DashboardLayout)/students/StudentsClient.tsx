@@ -12,7 +12,7 @@ import {
   Switch,
   FormControlLabel,
 } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams, GridValueGetter } from '@mui/x-data-grid';
 import { IconUser, IconAward, IconEdit, IconEye, IconPlus, IconArrowUp } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '../components/container/PageContainer';
@@ -24,28 +24,9 @@ import Loading from 'app/loading';
 import AddStudentModule from '../components/students/AddStudentModule';
 import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
-import axiosInstance from 'utils/helpers/AxiosInstance';
-import { Student, StudentDisplay } from 'models/Students/Students';
-
-// Import Student interface from shared models
-
-// Helper function to get belt color from belt requirements data
-const getBeltColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.color || '#757575'; // Default grey if not found
-};
-
-// Helper function to get belt text color from belt requirements data
-const getBeltTextColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.textColor || '#FFFFFF'; // Default white if not found
-};
-
-// Helper function to get promoted student with next belt and today's test date
+import { Student } from 'models/Students/Students';
+import { getBeltColor, getBeltTextColor } from 'helpers/Student';
+import SummaryCard from '../components/students/SummaryCard';
 
 const StudentsClient = () => {
   const router = useRouter();
@@ -58,11 +39,10 @@ const StudentsClient = () => {
 
   // State for Edit Student dialog
   const [editStudentOpen, setEditStudentOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<StudentDisplay | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   // State for Promote Student dialog
   const [promoteStudentOpen, setPromoteStudentOpen] = useState(false);
-  const [studentToPromote, setStudentToPromote] = useState<StudentDisplay | null>(null);
 
   // Fetch belt requirements for colors and progression
   const {
@@ -86,9 +66,8 @@ const StudentsClient = () => {
     data: apiStudents,
     isLoading,
     isFetching,
-    error,
     isError,
-    refetch: refetchStudents,
+    refetch,
   } = useGet<Student[]>({
     apiLabel: 'students',
     url: '/students',
@@ -100,76 +79,17 @@ const StudentsClient = () => {
     },
   });
 
-  const promoteStudent = async (student: Student) => {
-    // Sort belt requirements by beltOrder to ensure correct progression
-    const sortedBelts = (beltRequirements || []).slice().sort((a, b) => a.beltOrder - b.beltOrder);
-
-    const currentIndex = sortedBelts.findIndex(
-      (belt) => belt.beltRank.toLowerCase() === (student.beltRank ?? '').toLowerCase()
-    );
-
-    let nextBeltRank: string;
-    if (currentIndex !== -1 && currentIndex < sortedBelts.length - 1) {
-      nextBeltRank = sortedBelts[currentIndex + 1].beltRank;
-    } else {
-      nextBeltRank =
-        currentIndex === -1
-          ? sortedBelts[0]?.beltRank || student.beltRank || ''
-          : sortedBelts[sortedBelts.length - 1].beltRank;
-    }
-
-    // Avoid sending same belt (no-op)
-    if (nextBeltRank === student.beltRank) {
-      console.info('No promotion needed (already highest or unknown).');
-      return;
-    }
-
-    const id = student.studentid || null;
-    if (id == null) {
-      console.error('Cannot promote: missing studentid');
-      return;
-    }
-
-    console.debug('Promoting student', { id, from: student.beltRank, to: nextBeltRank });
-
-    const res = await axiosInstance.patch(`/students/${id}`, {
-      beltRank: nextBeltRank,
-      lastTestUTC: new Date().toISOString(),
-      eligibleForTesting: false,
-    });
-
-    if (!res.data?.updated) {
-      console.warn('Promotion update reported not updated', res.data);
-    }
-
-    await refetchStudents();
-  };
-
-  // Function to transform API student data to display format
-  const transformStudent = (student: Student): StudentDisplay => {
-    return new StudentDisplay({
-      ...student,
-      studentid: student.studentid, // preserve original id
-      id: student.studentid ?? 0, // DataGrid row id
-      name: `${student.preferredName || student.firstName} ${student.lastName}`,
-      currentBelt: `${student.beltRank} Belt`,
-      beltColor: getBeltColor(student.beltRank ?? '', beltRequirements || []),
-      age: student.age || 0,
-      joinDate: student.startDateUTC,
-      lastTest: student.lastTestUTC || null,
-      isChild: !!student.child,
-      isActive: !!student.active,
-      eligibleForTesting: !!student.eligibleForTesting,
-    });
-  };
-
   // Transform API data to display format
-  const allStudents: StudentDisplay[] = (apiStudents || []).map(transformStudent);
+  const allStudents: Student[] = apiStudents || [];
 
   // Filter students based on active/inactive toggle
-  const students: StudentDisplay[] = showActiveOnly
-    ? allStudents.filter((student) => student.isActive)
-    : allStudents.filter((student) => !student.isActive);
+  const students: Student[] = showActiveOnly
+    ? allStudents.filter((student) => student.active)
+    : allStudents.filter((student) => !student.active);
+
+  const refetchStudents = async () => {
+    await refetch();
+  };
 
   // Handler for when a new student is added
   const handleStudentAdded = () => {
@@ -187,15 +107,15 @@ const StudentsClient = () => {
   };
 
   // Handler to promote a student to the next belt
-  const handlePromoteStudent = (student: StudentDisplay) => {
-    setStudentToPromote(student);
+  const handlePromoteStudent = (student: Student) => {
+    setSelectedStudent(student);
     setPromoteStudentOpen(true);
   };
 
   // Handler to close promote student dialog
   const handlePromoteStudentClose = () => {
     setPromoteStudentOpen(false);
-    setStudentToPromote(null);
+    setSelectedStudent(null);
   };
 
   // Handler to open add student dialog
@@ -205,7 +125,7 @@ const StudentsClient = () => {
 
   // Handler to open edit student dialog
   const handleEditStudentClick = (student: Student) => {
-    setSelectedStudent(transformStudent(student));
+    setSelectedStudent(student);
     setEditStudentOpen(true);
   };
 
@@ -225,7 +145,7 @@ const StudentsClient = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', py: 1.5 }}>
           <Box>
             <Typography variant='subtitle2' fontWeight='bold'>
-              {params.row.name}
+              {`${params.row.preferredName || params.row.firstName} ${params.row.lastName}`}
             </Typography>
             <Typography variant='caption' color='text.secondary'>
               Age: {params.row.age}
@@ -235,20 +155,23 @@ const StudentsClient = () => {
       ),
     },
     {
-      field: 'currentBelt',
+      field: 'beltRank',
       headerName: 'Current Belt',
       flex: 1,
-      renderCell: (params: GridRenderCellParams) => (
-        <Chip
-          label={params.row.currentBelt}
-          sx={{
-            backgroundColor: params.row.beltColor,
-            color: getBeltTextColor(params.row.beltRank, beltRequirements || []),
-            fontWeight: 'bold',
-            border: params.row.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
-          }}
-        />
-      ),
+      renderCell: (params: GridRenderCellParams) => {
+        const beltColor = getBeltColor(params.row.beltRank ?? '', beltRequirements || []);
+        return (
+          <Chip
+            label={`${params.row.beltRank} Belt`}
+            sx={{
+              backgroundColor: beltColor,
+              color: getBeltTextColor(params.row.beltRank, beltRequirements || []),
+              fontWeight: 'bold',
+              border: beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+            }}
+          />
+        );
+      },
     },
     {
       field: 'eligibleForTesting',
@@ -259,7 +182,7 @@ const StudentsClient = () => {
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ py: 0.5 }}>
           <Typography variant='body2' color='text.secondary' sx={{ mb: 0.5 }}>
-            Last Test: {new Date(params.row.lastTest).toLocaleDateString()}
+            Last Test: {new Date(params.row.lastTestUTC).toLocaleDateString()}
           </Typography>
           <Chip
             label={params.row.eligibleForTesting ? 'Ready for Testing' : 'Not Ready'}
@@ -270,30 +193,30 @@ const StudentsClient = () => {
       ),
     },
     {
-      field: 'isChild',
+      field: 'child',
       headerName: 'Child Student?',
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ py: 0.5 }}>
           <Chip
-            label={params.row.isChild ? 'Yes' : 'No'}
+            label={params.row.child ? 'Yes' : 'No'}
             size='small'
-            color={params.row.isChild ? 'success' : 'default'}
+            color={params.row.child ? 'success' : 'default'}
           />
         </Box>
       ),
     },
     {
-      field: 'isActive',
+      field: 'active',
       headerName: 'Status',
       width: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ py: 0.5 }}>
           <Chip
-            label={params.row.isActive ? 'Active' : 'Inactive'}
+            label={params.row.active ? 'Active' : 'Inactive'}
             size='small'
-            color={params.row.isActive ? 'success' : 'error'}
-            variant={params.row.isActive ? 'filled' : 'outlined'}
+            color={params.row.active ? 'success' : 'error'}
+            variant={params.row.active ? 'filled' : 'outlined'}
           />
         </Box>
       ),
@@ -334,16 +257,6 @@ const StudentsClient = () => {
       ),
     },
   ];
-
-  if (isLoading || beltRequirementsLoading || isFetching || beltRequirementsFetching) {
-    return (
-      <PageContainer title='Students' description='Student Management and Progress Tracking'>
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <Loading />
-        </Box>
-      </PageContainer>
-    );
-  }
 
   return (
     <PageContainer title='Students' description='Student Management and Progress Tracking'>
@@ -391,87 +304,32 @@ const StudentsClient = () => {
         </Typography>
 
         {/* Summary Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <IconUser size={24} />
-                  <Typography variant='h6' sx={{ ml: 1 }}>
-                    {showActiveOnly ? 'Active Students' : 'Inactive Students'}
-                  </Typography>
-                </Box>
-                <Typography variant='h3' color='primary'>
-                  {students.length}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+        <SummaryCard
+          students={students}
+          showActiveOnly={showActiveOnly}
+          allStudents={allStudents.length || 0}
+        />
 
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <IconAward size={24} />
-                  <Typography variant='h6' sx={{ ml: 1 }}>
-                    Ready for Testing
-                  </Typography>
-                </Box>
-                <Typography variant='h3' color='success.main'>
-                  {students.filter((student) => student.eligibleForTesting).length}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <IconUser size={24} />
-                  <Typography variant='h6' sx={{ ml: 1 }}>
-                    Total Students
-                  </Typography>
-                </Box>
-                <Typography variant='h3' color='info.main'>
-                  {allStudents.length}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <IconAward size={24} />
-                  <Typography variant='h6' sx={{ ml: 1 }}>
-                    Children
-                  </Typography>
-                </Box>
-                <Typography variant='h3' color='warning.main'>
-                  {students.filter((student) => student.isChild).length}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        {/* Loader */}
+        {(isLoading || beltRequirementsLoading || isFetching || beltRequirementsFetching) && (
+          <Loading />
+        )}
 
         {/* Student DataGrid */}
         <DashboardCard
           title={`Student Roster - ${showActiveOnly ? 'Active' : 'Inactive'} Students`}
         >
-          <Box sx={{ height: 700, width: '100%' }}>
+          <Box sx={{ height: 800, width: '100%' }}>
             <DataGrid
               rows={students}
               columns={columns}
+              getRowId={(row) => row.studentid}
               initialState={{
                 pagination: {
                   paginationModel: { page: 0, pageSize: 10 },
                 },
               }}
               pageSizeOptions={[5, 10, 25]}
-              checkboxSelection
               disableRowSelectionOnClick
               getRowHeight={() => 'auto'}
               sx={{
@@ -518,9 +376,9 @@ const StudentsClient = () => {
         <PromoteStudentDialog
           open={promoteStudentOpen}
           onClose={handlePromoteStudentClose}
-          student={studentToPromote as StudentDisplay | null}
+          student={selectedStudent as Student | null}
           beltRequirements={beltRequirements || []}
-          onConfirm={promoteStudent}
+          refetchStudents={refetchStudents}
         />
       </Box>
     </PageContainer>

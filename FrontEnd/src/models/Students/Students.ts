@@ -31,22 +31,6 @@ export class Student {
   }
 }
 
-export class StudentDisplay extends Student {
-  id: number = 0;
-  name: string = '';
-  currentBelt: string = '';
-  beltColor: string = '';
-  joinDate: string = '';
-  lastTest: string | null = null;
-  isChild: boolean = false;
-  isActive: boolean = true;
-
-  constructor(init?: Partial<StudentDisplay>) {
-    super(init);
-    Object.assign(this, init);
-  }
-}
-
 // DTO for updating a student
 export interface UpdateStudentRequest {
   firstName?: string;
@@ -89,3 +73,5 @@ export interface Family {
 export interface StudentDetailClientProps {
   studentId: string;
 }
+
+export interface StudentFormData extends Partial<Student> {}

@@ -16,12 +16,12 @@ import {
   Alert,
   Card,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import axiosInstance from 'utils/helpers/AxiosInstance';
-import { Student } from 'models/Students/Students';
+import { Student, StudentFormData } from 'models/Students/Students';
+import { editValidationSchema, getEditStudentInitialValues } from 'helpers/Student';
 
 interface EditStudentModuleProps {
   open: boolean;
@@ -30,48 +30,6 @@ interface EditStudentModuleProps {
   beltRequirements: BeltRequirements[];
   onStudentUpdated?: () => void;
 }
-
-interface StudentFormData {
-  firstName: string;
-  lastName: string;
-  preferredName: string;
-  age: number | '';
-  beltRank: string;
-  email: string;
-  phone: string;
-  notes: string;
-  active: boolean;
-  child: boolean;
-  eligibleForTesting: boolean;
-  lastTestUTC: string;
-}
-
-const validationSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .required('First name is required')
-    .min(2, 'First name must be at least 2 characters')
-    .max(50, 'First name must be less than 50 characters'),
-  lastName: Yup.string()
-    .required('Last name is required')
-    .min(2, 'Last name must be at least 2 characters')
-    .max(50, 'Last name must be less than 50 characters'),
-  preferredName: Yup.string().max(50, 'Preferred name must be less than 50 characters'),
-  age: Yup.number()
-    .nullable()
-    .min(1, 'Age must be at least 1')
-    .max(100, 'Age must be less than 100'),
-  beltRank: Yup.string().required('Belt rank is required'),
-  email: Yup.string().email('Invalid email format').required('Email is required'),
-  phone: Yup.string().matches(
-    /^[\+]?[1-9][\d]{0,15}$|^[(]?[\d]{3}[)]?[-.\s]?[\d]{3}[-.\s]?[\d]{4}$/,
-    'Invalid phone number format'
-  ),
-  notes: Yup.string().max(500, 'Notes must be less than 500 characters'),
-  active: Yup.boolean().required(),
-  child: Yup.boolean().required(),
-  eligibleForTesting: Yup.boolean().required(),
-  lastTestUTC: Yup.string().required('Last test date is required'),
-});
 
 const EditStudentModule = ({
   open,
@@ -83,41 +41,6 @@ const EditStudentModule = ({
   const [error, setError] = useState<string | null>(null);
 
   // Create initial values from student data
-  const getInitialValues = (): StudentFormData => {
-    if (!student) {
-      return {
-        firstName: '',
-        lastName: '',
-        preferredName: '',
-        age: '',
-        beltRank: 'white',
-        email: '',
-        phone: '',
-        notes: '',
-        active: true,
-        child: false,
-        eligibleForTesting: false,
-        lastTestUTC: new Date().toISOString().split('T')[0], // Default to today
-      };
-    }
-
-    return {
-      firstName: student.firstName || '',
-      lastName: student.lastName || '',
-      preferredName: student.preferredName || '',
-      age: student.age || '',
-      beltRank: student.beltRank || 'white',
-      email: student.email || '',
-      phone: student.phone || '',
-      notes: student.notes || '',
-      active: !!student.active,
-      child: !!student.child,
-      eligibleForTesting: !!student.eligibleForTesting,
-      lastTestUTC: student.lastTestUTC
-        ? new Date(student.lastTestUTC).toISOString().split('T')[0]
-        : new Date().toISOString().split('T')[0],
-    };
-  };
 
   const handleClose = () => {
     setError(null);
@@ -145,21 +68,21 @@ const EditStudentModule = ({
 
         <Formik
           key={student.studentid} // Force re-render when student changes
-          initialValues={getInitialValues()}
-          validationSchema={validationSchema}
+          initialValues={getEditStudentInitialValues(student)}
+          validationSchema={editValidationSchema}
           enableReinitialize={true}
           onSubmit={async (values, { setStatus, setSubmitting }): Promise<void> => {
             setError(null);
 
             try {
               // Prepare the data for API submission
-              const submitData = {
+              const submitData: StudentFormData = {
                 ...values,
-                age: values.age === '' ? null : Number(values.age),
+                age: values.age === 0 ? null : Number(values.age),
                 active: !!values.active,
                 child: !!values.child,
                 eligibleForTesting: !!values.eligibleForTesting,
-                lastTestUTC: new Date(values.lastTestUTC).toISOString(),
+                lastTestUTC: values.lastTestUTC ? new Date(values.lastTestUTC).toISOString() : null,
               };
 
               const response = await axiosInstance.patch(
