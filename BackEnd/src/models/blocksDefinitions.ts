@@ -13,9 +13,10 @@ import {
 export interface BlocksDefinitionsAttributes {
   id?: number;
   blockName: string;
-  description: string;
   technique: string;
   stance: string;
+  belt: string;
+  beltColor: string;
   execution: string[];
   keyPoints: string[];
   commonMistakes: string[];
@@ -44,12 +45,6 @@ export class blocksDefinitions extends Model<BlocksDefinitionsAttributes> {
   declare blockName: string;
 
   @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-  })
-  declare description: string;
-
-  @Column({
     type: DataType.STRING(200),
     allowNull: false,
   })
@@ -60,6 +55,19 @@ export class blocksDefinitions extends Model<BlocksDefinitionsAttributes> {
     allowNull: false,
   })
   declare stance: string;
+
+  @Column({
+    type: DataType.STRING(45),
+    allowNull: false,
+  })
+  declare belt: string;
+
+  @Column({
+    field: 'belt_color',
+    type: DataType.STRING(7),
+    allowNull: false,
+  })
+  declare beltColor: string;
 
   // FIXED: PostgreSQL _text array
   @Column({

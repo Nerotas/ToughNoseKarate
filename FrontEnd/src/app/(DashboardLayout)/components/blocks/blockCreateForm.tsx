@@ -13,9 +13,10 @@ interface BlockCreateFormProps {
 
 const validationSchema = Yup.object({
   blockName: Yup.string().required('Block name is required'),
-  description: Yup.string().required('Description is required'),
   technique: Yup.string().required('Technique is required'),
   stance: Yup.string().required('Stance is required'),
+  belt: Yup.string().required('Belt is required'),
+  beltColor: Yup.string().required('Belt color is required'),
   execution: Yup.array().of(Yup.string()),
   keyPoints: Yup.array().of(Yup.string()),
   commonMistakes: Yup.array().of(Yup.string()),
@@ -25,9 +26,10 @@ const validationSchema = Yup.object({
 const BlockCreateForm = ({ refetchBlocks, handleCloseCreate }: BlockCreateFormProps) => {
   const initialValues: CreateBlockDefinitionDto = {
     blockName: '',
-    description: '',
     technique: '',
     stance: '',
+    belt: '',
+    beltColor: '',
     execution: [''],
     keyPoints: [''],
     commonMistakes: [''],
@@ -117,19 +119,31 @@ const BlockCreateForm = ({ refetchBlocks, handleCloseCreate }: BlockCreateFormPr
                 </Field>
               </Grid>
 
-              <Grid size={12}>
-                <Field name='description'>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <Field name='belt'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
-                      multiline
-                      rows={3}
-                      label='Description'
-                      error={Boolean(errors.description && touched.description)}
-                      helperText={
-                        errors.description && touched.description ? errors.description : ''
-                      }
+                      label='Belt Rank'
+                      error={Boolean(errors.belt && touched.belt)}
+                      helperText={errors.belt && touched.belt ? errors.belt : ''}
+                      required
+                    />
+                  )}
+                </Field>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <Field name='beltColor'>
+                  {({ field }: any) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Belt Color (Hex)'
+                      error={Boolean(errors.beltColor && touched.beltColor)}
+                      helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
+                      placeholder='#FFFFFF'
                       required
                     />
                   )}

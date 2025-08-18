@@ -19,9 +19,11 @@ import BlockEditModule from './blockEditModule';
 
 const BlockCard = ({
   block,
+  getBeltTextColor,
   refetchBlocks,
 }: {
   block: BlockDefinition;
+  getBeltTextColor: (color: string) => string;
   refetchBlocks: () => Promise<void>;
 }) => {
   const { isAuthenticated, instructor } = useAuth();
@@ -68,11 +70,12 @@ const BlockCard = ({
               </Box>
               <Chip
                 icon={<IconShield />}
-                label={`${block.stance} stance`}
+                label={block.belt}
                 sx={{
-                  backgroundColor: '#1976d2',
-                  color: '#ffffff',
+                  backgroundColor: block.beltColor,
+                  color: getBeltTextColor(block.beltColor as string),
                   fontWeight: 'bold',
+                  border: block.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
                 }}
               />
               {isAuthenticated && instructor && (
@@ -83,11 +86,24 @@ const BlockCard = ({
               )}
             </Box>
 
-            <Typography variant='body2' paragraph>
-              {block.description}
-            </Typography>
-
             <Divider sx={{ my: 2 }} />
+
+            {/* Add Stance section */}
+            {block.stance && (
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  variant='subtitle2'
+                  gutterBottom
+                  sx={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <IconTarget size={16} color='blue' style={{ marginRight: 8 }} />
+                  Stance:
+                </Typography>
+                <Typography variant='body2' sx={{ pl: 3 }}>
+                  {block.stance}
+                </Typography>
+              </Box>
+            )}
 
             {/* Add Execution section */}
             {block.execution && block.execution.length > 0 && (

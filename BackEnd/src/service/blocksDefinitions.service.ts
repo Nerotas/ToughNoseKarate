@@ -49,9 +49,10 @@ export class BlocksDefinitionsService {
   async create(dto: BlocksDefinitionsAttributes): Promise<blocksDefinitions> {
     const payload: Partial<BlocksDefinitionsAttributes> = {
       blockName: dto.blockName,
-      description: dto.description,
       technique: dto.technique,
       stance: dto.stance,
+      belt: dto.belt,
+      beltColor: dto.beltColor,
       execution: this.toStringArray((dto as any).execution) ?? [],
       keyPoints: this.toStringArray((dto as any).keyPoints) ?? [],
       commonMistakes: this.toStringArray((dto as any).commonMistakes) ?? [],
@@ -71,9 +72,10 @@ export class BlocksDefinitionsService {
 
     const payload: Partial<BlocksDefinitionsAttributes> = {
       blockName: rest.blockName,
-      description: rest.description,
       technique: rest.technique,
       stance: rest.stance,
+      belt: rest.belt,
+      beltColor: rest.beltColor,
       execution: this.toStringArray(rest.execution),
       keyPoints: this.toStringArray(rest.keyPoints),
       commonMistakes: this.toStringArray(rest.commonMistakes),

@@ -12,6 +12,10 @@ import BlockCard from '../components/blocks/blockCard';
 import BlockCreateModule from '../components/blocks/blockCreateModule';
 import BlockGuideLines from '../components/blocks/guidelines';
 
+const getBeltTextColor = (beltColor: string) => {
+  return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
+};
+
 export default function BlocksClient() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const { isAuthenticated, instructor } = useAuth();
@@ -89,7 +93,12 @@ export default function BlocksClient() {
 
           {blockDefinitions &&
             blockDefinitions.map((block) => (
-              <BlockCard key={block.id} block={block} refetchBlocks={refetchBlocks} />
+              <BlockCard
+                key={block.id}
+                block={block}
+                getBeltTextColor={getBeltTextColor}
+                refetchBlocks={refetchBlocks}
+              />
             ))}
         </Grid>
 
