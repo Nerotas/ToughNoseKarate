@@ -12,7 +12,7 @@ import {
   Switch,
   FormControlLabel,
 } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams, GridValueGetter } from '@mui/x-data-grid';
 import { IconUser, IconAward, IconEdit, IconEye, IconPlus, IconArrowUp } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '../components/container/PageContainer';
@@ -24,7 +24,7 @@ import Loading from 'app/loading';
 import AddStudentModule from '../components/students/AddStudentModule';
 import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
-import { Student, StudentDisplay } from 'models/Students/Students';
+import { Student } from 'models/Students/Students';
 import { getBeltColor, getBeltTextColor } from 'helpers/Student';
 
 const StudentsClient = () => {
@@ -38,7 +38,7 @@ const StudentsClient = () => {
 
   // State for Edit Student dialog
   const [editStudentOpen, setEditStudentOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<StudentDisplay | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   // State for Promote Student dialog
   const [promoteStudentOpen, setPromoteStudentOpen] = useState(false);
@@ -78,31 +78,13 @@ const StudentsClient = () => {
     },
   });
 
-  // Function to transform API student data to display format
-  const transformStudent = (student: Student): StudentDisplay => {
-    return new StudentDisplay({
-      ...student,
-      studentid: student.studentid, // preserve original id
-      id: student.studentid ?? 0, // DataGrid row id
-      name: `${student.preferredName || student.firstName} ${student.lastName}`,
-      currentBelt: `${student.beltRank} Belt`,
-      beltColor: getBeltColor(student.beltRank ?? '', beltRequirements || []), //only true necessity of transform?
-      age: student.age || 0,
-      joinDate: student.startDateUTC,
-      lastTest: student.lastTestUTC || null,
-      isChild: !!student.child,
-      isActive: !!student.active,
-      eligibleForTesting: !!student.eligibleForTesting,
-    });
-  };
-
   // Transform API data to display format
-  const allStudents: StudentDisplay[] = (apiStudents || []).map(transformStudent);
+  const allStudents: Student[] = apiStudents || [];
 
   // Filter students based on active/inactive toggle
-  const students: StudentDisplay[] = showActiveOnly
-    ? allStudents.filter((student) => student.isActive)
-    : allStudents.filter((student) => !student.isActive);
+  const students: Student[] = showActiveOnly
+    ? allStudents.filter((student) => student.active)
+    : allStudents.filter((student) => !student.active);
 
   const refetchStudents = async () => {
     await refetch();
@@ -124,7 +106,7 @@ const StudentsClient = () => {
   };
 
   // Handler to promote a student to the next belt
-  const handlePromoteStudent = (student: StudentDisplay) => {
+  const handlePromoteStudent = (student: Student) => {
     setSelectedStudent(student);
     setPromoteStudentOpen(true);
   };
@@ -142,7 +124,7 @@ const StudentsClient = () => {
 
   // Handler to open edit student dialog
   const handleEditStudentClick = (student: Student) => {
-    setSelectedStudent(transformStudent(student));
+    setSelectedStudent(student);
     setEditStudentOpen(true);
   };
 
@@ -162,7 +144,7 @@ const StudentsClient = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', py: 1.5 }}>
           <Box>
             <Typography variant='subtitle2' fontWeight='bold'>
-              {params.row.name}
+              {`${params.row.preferredName || params.row.firstName} ${params.row.lastName}`}
             </Typography>
             <Typography variant='caption' color='text.secondary'>
               Age: {params.row.age}
@@ -172,20 +154,23 @@ const StudentsClient = () => {
       ),
     },
     {
-      field: 'currentBelt',
+      field: 'beltRank',
       headerName: 'Current Belt',
       flex: 1,
-      renderCell: (params: GridRenderCellParams) => (
-        <Chip
-          label={params.row.currentBelt}
-          sx={{
-            backgroundColor: params.row.beltColor,
-            color: getBeltTextColor(params.row.beltRank, beltRequirements || []),
-            fontWeight: 'bold',
-            border: params.row.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
-          }}
-        />
-      ),
+      renderCell: (params: GridRenderCellParams) => {
+        const beltColor = getBeltColor(params.row.beltRank ?? '', beltRequirements || []);
+        return (
+          <Chip
+            label={`${params.row.beltRank} Belt`}
+            sx={{
+              backgroundColor: beltColor,
+              color: getBeltTextColor(params.row.beltRank, beltRequirements || []),
+              fontWeight: 'bold',
+              border: beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+            }}
+          />
+        );
+      },
     },
     {
       field: 'eligibleForTesting',
@@ -196,7 +181,7 @@ const StudentsClient = () => {
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ py: 0.5 }}>
           <Typography variant='body2' color='text.secondary' sx={{ mb: 0.5 }}>
-            Last Test: {new Date(params.row.lastTest).toLocaleDateString()}
+            Last Test: {new Date(params.row.lastTestUTC).toLocaleDateString()}
           </Typography>
           <Chip
             label={params.row.eligibleForTesting ? 'Ready for Testing' : 'Not Ready'}
@@ -207,30 +192,30 @@ const StudentsClient = () => {
       ),
     },
     {
-      field: 'isChild',
+      field: 'child',
       headerName: 'Child Student?',
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ py: 0.5 }}>
           <Chip
-            label={params.row.isChild ? 'Yes' : 'No'}
+            label={params.row.child ? 'Yes' : 'No'}
             size='small'
-            color={params.row.isChild ? 'success' : 'default'}
+            color={params.row.child ? 'success' : 'default'}
           />
         </Box>
       ),
     },
     {
-      field: 'isActive',
+      field: 'active',
       headerName: 'Status',
       width: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ py: 0.5 }}>
           <Chip
-            label={params.row.isActive ? 'Active' : 'Inactive'}
+            label={params.row.active ? 'Active' : 'Inactive'}
             size='small'
-            color={params.row.isActive ? 'success' : 'error'}
-            variant={params.row.isActive ? 'filled' : 'outlined'}
+            color={params.row.active ? 'success' : 'error'}
+            variant={params.row.active ? 'filled' : 'outlined'}
           />
         </Box>
       ),
@@ -387,7 +372,7 @@ const StudentsClient = () => {
                   </Typography>
                 </Box>
                 <Typography variant='h3' color='warning.main'>
-                  {students.filter((student) => student.isChild).length}
+                  {students.filter((student) => student.child).length}
                 </Typography>
               </CardContent>
             </Card>
@@ -400,15 +385,15 @@ const StudentsClient = () => {
         >
           <Box sx={{ height: 700, width: '100%' }}>
             <DataGrid
-              rows={students}
+              rows={apiStudents || []}
               columns={columns}
+              getRowId={(row) => row.studentid}
               initialState={{
                 pagination: {
                   paginationModel: { page: 0, pageSize: 10 },
                 },
               }}
               pageSizeOptions={[5, 10, 25]}
-              checkboxSelection
               disableRowSelectionOnClick
               getRowHeight={() => 'auto'}
               sx={{
@@ -455,7 +440,7 @@ const StudentsClient = () => {
         <PromoteStudentDialog
           open={promoteStudentOpen}
           onClose={handlePromoteStudentClose}
-          student={selectedStudent as StudentDisplay | null}
+          student={selectedStudent as Student | null}
           beltRequirements={beltRequirements || []}
           refetchStudents={refetchStudents}
         />
