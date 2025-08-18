@@ -26,6 +26,7 @@ import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
 import { Student } from 'models/Students/Students';
 import { getBeltColor, getBeltTextColor } from 'helpers/Student';
+import SummaryCard from '../components/students/SummaryCard';
 
 const StudentsClient = () => {
   const router = useRouter();
@@ -257,16 +258,6 @@ const StudentsClient = () => {
     },
   ];
 
-  if (isLoading || beltRequirementsLoading || isFetching || beltRequirementsFetching) {
-    return (
-      <PageContainer title='Students' description='Student Management and Progress Tracking'>
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <Loading />
-        </Box>
-      </PageContainer>
-    );
-  }
-
   return (
     <PageContainer title='Students' description='Student Management and Progress Tracking'>
       <Box>
@@ -313,77 +304,22 @@ const StudentsClient = () => {
         </Typography>
 
         {/* Summary Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <IconUser size={24} />
-                  <Typography variant='h6' sx={{ ml: 1 }}>
-                    {showActiveOnly ? 'Active Students' : 'Inactive Students'}
-                  </Typography>
-                </Box>
-                <Typography variant='h3' color='primary'>
-                  {students.length}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+        <SummaryCard
+          students={students}
+          showActiveOnly={showActiveOnly}
+          allStudents={allStudents.length || 0}
+        />
 
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <IconAward size={24} />
-                  <Typography variant='h6' sx={{ ml: 1 }}>
-                    Ready for Testing
-                  </Typography>
-                </Box>
-                <Typography variant='h3' color='success.main'>
-                  {students.filter((student) => student.eligibleForTesting).length}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <IconUser size={24} />
-                  <Typography variant='h6' sx={{ ml: 1 }}>
-                    Total Students
-                  </Typography>
-                </Box>
-                <Typography variant='h3' color='info.main'>
-                  {allStudents.length}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <IconAward size={24} />
-                  <Typography variant='h6' sx={{ ml: 1 }}>
-                    Children
-                  </Typography>
-                </Box>
-                <Typography variant='h3' color='warning.main'>
-                  {students.filter((student) => student.child).length}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        {/* Loader */}
+        {(isLoading || beltRequirementsLoading || isFetching || beltRequirementsFetching) && (
+          <Loading />
+        )}
 
         {/* Student DataGrid */}
         <DashboardCard
           title={`Student Roster - ${showActiveOnly ? 'Active' : 'Inactive'} Students`}
         >
-          <Box sx={{ height: 700, width: '100%' }}>
+          <Box sx={{ height: 800, width: '100%' }}>
             <DataGrid
               rows={students}
               columns={columns}
