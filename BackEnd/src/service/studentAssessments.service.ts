@@ -129,8 +129,7 @@ export class StudentAssessmentsService {
       ],
       order: [['assessment_date', 'DESC']],
     });
-    console.log(result);
-    return result ? result.get({ plain: true }) : null;
+    return result;
   }
 
   async create(

@@ -114,12 +114,13 @@ export class StudentAssessmentsController {
     try {
       const assessment =
         await this.studentAssessmentsService.getCurrentAssessment(studentId);
-      if (!assessment) {
-        throw new HttpException(
-          'No current assessment found for this student',
-          HttpStatus.NOT_FOUND,
-        );
-      }
+      // console.log(assessment);
+      // if (!assessment) {
+      //   throw new HttpException(
+      //     'No current assessment found for this student',
+      //     HttpStatus.NOT_FOUND,
+      //   );
+      // }
       return assessment;
     } catch (error) {
       if (error instanceof HttpException) {
