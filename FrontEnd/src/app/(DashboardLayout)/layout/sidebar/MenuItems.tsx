@@ -11,6 +11,7 @@ import {
   IconSchool,
   IconChalkboardTeacher,
   IconBlocks,
+  IconClipboardTypographyFilled,
 } from '@tabler/icons-react';
 
 import { uniqueId } from 'lodash';
@@ -93,6 +94,12 @@ export const AuthMenuItems = [
     title: 'Students',
     icon: IconUsers,
     href: '/students',
+  },
+  {
+    id: uniqueId(),
+    title: 'Documents',
+    icon: IconClipboardTypographyFilled,
+    href: '/documents',
   },
 ];
 
