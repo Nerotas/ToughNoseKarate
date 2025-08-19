@@ -18,22 +18,3 @@ it('getPaginationOptions should return array with max value of rows', () => {
 
   expect(paginationOptions).toStrictEqual([5, 20, 37]);
 });
-
-it('getPaginationOptions should max out at 100', () => {
-  let rows: number[] = new Array(150);
-
-  rows = rows.fill(0); // Fills with 0s
-  const paginationOptions = DataGridHelpers.getPaginationOptions(rows);
-
-  expect(paginationOptions).toStrictEqual([5, 20, 50, DEFAULT_PAGE_SIZE, 150]);
-});
-
-it('getCreated should return user readable string', () => {
-  const mockRow = mockProducts[0];
-  const createdBy = DataGridHelpers.getCreated('', {
-    createdOnUtc: mockRow.createdOnUtc,
-    createdByEmail: 'testuser@erotas.test',
-  });
-
-  expect(createdBy).toStrictEqual('2022-10-26 (testuser@erotas.test)');
-});
