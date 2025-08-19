@@ -115,7 +115,7 @@ export class StudentAssessmentsService {
   async getCurrentAssessment(
     studentId: number,
   ): Promise<StudentAssessments | null> {
-    return this.studentAssessmentsModel.findOne({
+    const result = await this.studentAssessmentsModel.findOne({
       where: {
         student_id: studentId,
         assessment_status: 'in_progress',
@@ -129,6 +129,8 @@ export class StudentAssessmentsService {
       ],
       order: [['assessment_date', 'DESC']],
     });
+    console.log(result);
+    return result ? result.get({ plain: true }) : null;
   }
 
   async create(
