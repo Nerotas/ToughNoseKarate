@@ -45,7 +45,7 @@ const DocumentsClient = () => (
               </Typography>
               <Button
                 component='a'
-                href='/documents/Certificate_Preview.pdf'
+                href='/documents/Certificate.pdf'
                 download
                 variant='contained'
                 color='primary'

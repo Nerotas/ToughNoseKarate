@@ -8,7 +8,8 @@ import {
   Button,
 } from '@mui/material';
 import { useState } from 'react';
-import { PDFDocument, rgb } from 'pdf-lib';
+import { degrees, PDFDocument, rgb } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
 
 interface BuildDocumentDialogueProps {
   open: boolean;
@@ -21,31 +22,76 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
 
   async function addTextToCertificate() {
     // Fetch the blank PDF
-    const response = await fetch('/documents/Certificate_Preview.pdf');
+    const response = await fetch('/documents/Certificate.pdf');
     const existingPdfBytes = await response.arrayBuffer();
 
     // Load PDF
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    pdfDoc.registerFontkit(fontkit);
+
+    const fontBytes = await fetch('/fonts/samurai.ttf').then((res) => res.arrayBuffer());
+    const customFont = await pdfDoc.embedFont(fontBytes);
 
     // Get first page
     const page = pdfDoc.getPages()[0];
 
+    const now = new Date();
+    const month = now.toLocaleString('default', { month: 'long' });
+    const day = now.getDate();
+    const year = now.getFullYear();
+
+    const fontSize = 24;
+    const rangeStart = 200; // left boundary
+    const rangeEnd = 750; // right boundary
+
+    const textWidth = customFont.widthOfTextAtSize(studentName, fontSize);
+    const x = rangeStart + (rangeEnd - rangeStart - textWidth) / 2;
+
     // Add text at (x, y) coordinates
     page.drawText(`${studentName}`, {
-      x: 100, // adjust as needed
-      y: 500, // adjust as needed
+      x: x,
+      y: 325, // adjust as needed
       size: 24,
       color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
     });
 
     page.drawText(`${belt}`, {
-      x: 500, // adjust as needed
-      y: 500, // adjust as needed
+      x: 325, // adjust as needed
+      y: 700, // adjust as needed
       size: 24,
       color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
     });
 
-    // More text can be added similarly...
+    page.drawText(`${month}`, {
+      x: 500, // adjust as needed
+      y: 300, // adjust as needed
+      size: 12,
+      color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
+    });
+
+    page.drawText(`${day}`, {
+      x: 500, // adjust as needed
+      y: 300, // adjust as needed
+      size: 12,
+      color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
+    });
+
+    page.drawText(`${year}`, {
+      x: 500, // adjust as needed
+      y: 300, // adjust as needed
+      size: 12,
+      color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
+    });
 
     // Save the PDF
     const pdfBytes = await pdfDoc.save();
@@ -71,7 +117,7 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
         <TextField
           autoFocus
           margin='dense'
-          label='Document belt'
+          label='New Rank'
           type='text'
           fullWidth
           variant='outlined'
