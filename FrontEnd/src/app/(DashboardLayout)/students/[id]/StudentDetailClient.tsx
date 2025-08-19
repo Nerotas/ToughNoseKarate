@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { StudentAssessment } from '../../../../models/Assessments/Assessments';
-import { studentsService } from '../../../../services/studentsService';
 import { studentAssessmentsService } from '../../../../services/studentAssessmentsService';
 import StudentAssessmentForm from '../../components/students/details/StudentAssessmentForm';
 import Loading from 'app/loading';
@@ -11,19 +10,12 @@ import { useRouter } from 'next/navigation';
 import PageContainer from '../../components/container/PageContainer';
 import useGet from '../../../../hooks/useGet';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
-import { TestHistory } from '../../../../models/StudentTests/StudentTests';
-import {
-  StudentDetailClientProps,
-  Family,
-  Student,
-  UpdateStudentRequest,
-} from 'models/Students/Students';
+import { StudentDetailClientProps, Family, Student } from 'models/Students/Students';
 import StudentInformation from 'app/(DashboardLayout)/components/students/details/StudentInformation';
 import { getBeltColor, getBeltTextColor } from 'helpers/BeltColors';
 import PersonalInformation from 'app/(DashboardLayout)/components/students/details/PersonalInformation';
 import TrainingInformation from 'app/(DashboardLayout)/components/students/details/TrainingInformation';
 import ParentGuardianInformation from 'app/(DashboardLayout)/components/students/details/ParentGuardianInformation';
-import TestingHistory from 'app/(DashboardLayout)/components/students/details/TestingHistory';
 import EditStudentModule from 'app/(DashboardLayout)/components/students/EditStudentModule';
 
 const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) => {
@@ -75,24 +67,6 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     url: `/families/student/${studentId}`,
     id: `family-${studentId}`,
     fallbackData: [],
-  });
-
-  // Fetch test history
-  const {
-    data: testHistory,
-    isLoading: testHistoryLoading,
-    error: testHistoryError,
-  } = useGet<TestHistory>({
-    apiLabel: 'student-tests',
-    url: `/student-tests/student/${studentId}/history`,
-    id: `test-history-${studentId}`,
-    fallbackData: {
-      totalTests: 0,
-      passedTests: 0,
-      failedTests: 0,
-      averageScore: 0,
-      tests: [],
-    },
   });
 
   // Fetch current assessment (single assessment)
@@ -286,15 +260,6 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
             handleCancelAssessment={handleCancelAssessment}
             onAssessmentUpdate={handleAssessmentUpdate}
           />
-          {/* Test History */}
-          {testHistory && (
-            <TestingHistory
-              testHistory={testHistory}
-              testHistoryLoading={testHistoryLoading}
-              beltRequirements={beltRequirements || []}
-              testHistoryError={testHistoryError}
-            />
-          )}
         </Grid>
       </Box>
 
