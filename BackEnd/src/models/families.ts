@@ -19,8 +19,7 @@ export interface familiesAttributes {
   age?: number;
   beltRank?: string;
   startDate: string;
-  endDate?: string;
-  lastTest?: string;
+
   email: string;
   phone?: string;
   notes?: string;
@@ -66,12 +65,6 @@ export class families
 
   @Column({ type: DataType.STRING(45) })
   declare startDate: string;
-
-  @Column({ allowNull: true, type: DataType.STRING(45) })
-  declare endDate?: string;
-
-  @Column({ allowNull: true, type: DataType.STRING(45) })
-  declare lastTest?: string;
 
   @Column({ type: DataType.STRING(45) })
   declare email: string;
