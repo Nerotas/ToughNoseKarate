@@ -41,57 +41,56 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
     const year = now.getFullYear();
 
     const fontSize = 24;
-    const rangeStart = 200; // left boundary
-    const rangeEnd = 750; // right boundary
+    const rangeStartName = 200; // left boundary
+    const rangeEndName = 575; // right boundary
 
     const textWidth = customFont.widthOfTextAtSize(studentName, fontSize);
-    const x = rangeStart + (rangeEnd - rangeStart - textWidth) / 2;
+    const yName = rangeStartName + (rangeEndName - rangeStartName - textWidth) / 2;
 
-    // Add text at (x, y) coordinates
     page.drawText(`${studentName}`, {
-      x: x,
-      y: 325, // adjust as needed
-      size: 24,
+      x: 325,
+      y: yName,
+      size: fontSize,
       color: rgb(0, 0, 0),
       font: customFont,
       rotate: degrees(90),
     });
 
-    page.drawText(`${belt}`, {
-      x: 325, // adjust as needed
-      y: 700, // adjust as needed
-      size: 24,
-      color: rgb(0, 0, 0),
-      font: customFont,
-      rotate: degrees(90),
-    });
+    // page.drawText(`${belt}`, {
+    //   x: 325, // adjust as needed
+    //   y: 700, // adjust as needed
+    //   size: 24,
+    //   color: rgb(0, 0, 0),
+    //   font: customFont,
+    //   rotate: degrees(90),
+    // });
 
-    page.drawText(`${month}`, {
-      x: 500, // adjust as needed
-      y: 300, // adjust as needed
-      size: 12,
-      color: rgb(0, 0, 0),
-      font: customFont,
-      rotate: degrees(90),
-    });
+    // page.drawText(`${month}`, {
+    //   x: 500, // adjust as needed
+    //   y: 300, // adjust as needed
+    //   size: 12,
+    //   color: rgb(0, 0, 0),
+    //   font: customFont,
+    //   rotate: degrees(90),
+    // });
 
-    page.drawText(`${day}`, {
-      x: 500, // adjust as needed
-      y: 300, // adjust as needed
-      size: 12,
-      color: rgb(0, 0, 0),
-      font: customFont,
-      rotate: degrees(90),
-    });
+    // page.drawText(`${day}`, {
+    //   x: 500, // adjust as needed
+    //   y: 300, // adjust as needed
+    //   size: 12,
+    //   color: rgb(0, 0, 0),
+    //   font: customFont,
+    //   rotate: degrees(90),
+    // });
 
-    page.drawText(`${year}`, {
-      x: 500, // adjust as needed
-      y: 300, // adjust as needed
-      size: 12,
-      color: rgb(0, 0, 0),
-      font: customFont,
-      rotate: degrees(90),
-    });
+    // page.drawText(`${year}`, {
+    //   x: 500, // adjust as needed
+    //   y: 300, // adjust as needed
+    //   size: 12,
+    //   color: rgb(0, 0, 0),
+    //   font: customFont,
+    //   rotate: degrees(90),
+    // });
 
     // Save the PDF
     const pdfBytes = await pdfDoc.save();
