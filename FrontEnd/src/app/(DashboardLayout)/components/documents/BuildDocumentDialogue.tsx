@@ -16,6 +16,22 @@ interface BuildDocumentDialogueProps {
   handleClose: () => void;
 }
 
+function getDayWithSuffix(day: number) {
+  if (day >= 11 && day <= 13) return `${day}th`;
+  switch (day % 10) {
+    case 1:
+      return `${day}st`;
+    case 2:
+      return `${day}nd`;
+    case 3:
+      return `${day}rd`;
+    default:
+      return `${day}th`;
+  }
+}
+
+// Usage:
+
 const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps) => {
   const [belt, setBelt] = useState('');
   const [studentName, setStudentName] = useState('');
@@ -37,21 +53,14 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
 
     const now = new Date();
     const month = now.toLocaleString('default', { month: 'long' });
-    const day = now.getDate();
-    const year = now.getFullYear();
-
+    const day = getDayWithSuffix(now.getDate());
+    const year = now.getFullYear().toString().slice(-2);
     const fontSize = 24;
     const rangeStartName = 200; // left boundary
     const rangeEndName = 575; // right boundary
 
     const textWidth = customFont.widthOfTextAtSize(studentName, fontSize);
     const yName = rangeStartName + (rangeEndName - rangeStartName - textWidth) / 2;
-
-    const rangeStartBelt = 275; // left boundary
-    const rangeEndBelt = 500;
-
-    const beltWidth = customFont.widthOfTextAtSize(belt, 20);
-    const yBelt = rangeStartBelt + (rangeEndBelt - rangeStartBelt - beltWidth) / 2;
 
     page.drawText(`${studentName}`, {
       x: 325,
@@ -62,6 +71,12 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
       rotate: degrees(90),
     });
 
+    const rangeStartBelt = 275; // left boundary
+    const rangeEndBelt = 500;
+
+    const beltWidth = customFont.widthOfTextAtSize(belt, 20);
+    const yBelt = rangeStartBelt + (rangeEndBelt - rangeStartBelt - beltWidth) / 2;
+
     page.drawText(`${belt}`, {
       x: 505,
       y: yBelt,
@@ -71,32 +86,50 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
       rotate: degrees(90),
     });
 
-    // page.drawText(`${month}`, {
-    //   x: 500, // adjust as needed
-    //   y: 300, // adjust as needed
-    //   size: 12,
-    //   color: rgb(0, 0, 0),
-    //   font: customFont,
-    //   rotate: degrees(90),
-    // });
+    const rangeStartMonth = 300; // left boundary
+    const rangeEndMonth = 425;
 
-    // page.drawText(`${day}`, {
-    //   x: 500, // adjust as needed
-    //   y: 300, // adjust as needed
-    //   size: 12,
-    //   color: rgb(0, 0, 0),
-    //   font: customFont,
-    //   rotate: degrees(90),
-    // });
+    const monthWidth = customFont.widthOfTextAtSize(month, 16);
+    const yMonth = rangeStartMonth + (rangeEndMonth - rangeStartMonth - monthWidth) / 2;
 
-    // page.drawText(`${year}`, {
-    //   x: 500, // adjust as needed
-    //   y: 300, // adjust as needed
-    //   size: 12,
-    //   color: rgb(0, 0, 0),
-    //   font: customFont,
-    //   rotate: degrees(90),
-    // });
+    page.drawText(`${month}`, {
+      x: 460,
+      y: yMonth,
+      size: 16,
+      color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
+    });
+
+    const rangeStartYear = 500; // left boundary
+    const rangeEndYear = 505;
+
+    const monthYearWidth = customFont.widthOfTextAtSize(month, 16);
+    const yYear = rangeStartYear + (rangeEndYear - rangeStartYear - monthYearWidth) / 2;
+
+    page.drawText(`${year}`, {
+      x: 460,
+      y: yYear,
+      size: 16,
+      color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
+    });
+
+    const rangeStartDay = 195; // left boundary
+    const rangeEndDay = 200;
+
+    const dayWidth = customFont.widthOfTextAtSize(day, 12);
+    const yDay = rangeStartDay + (rangeEndDay - rangeStartDay - dayWidth) / 2;
+
+    page.drawText(`${day}`, {
+      x: 460,
+      y: yDay,
+      size: 12,
+      color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
+    });
 
     // Save the PDF
     const pdfBytes = await pdfDoc.save();
