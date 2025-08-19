@@ -2,6 +2,7 @@
 import { Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import PageContainer from '../components/container/PageContainer';
+import BuildCertificateButton from '../components/documents/BuildCertificateButton';
 
 const DocumentsClient = () => (
   <PageContainer title='Documents' description='Useful TNK Documents'>
@@ -56,30 +57,7 @@ const DocumentsClient = () => (
             </CardContent>
           </Card>
         </Grid>
-
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Card elevation={3}>
-            <CardContent>
-              <Typography variant='h6' gutterBottom>
-                Build Certificate
-              </Typography>
-              <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
-                Edit and create a TNK certificate for a specific student.
-              </Typography>
-              <Button
-                component='a'
-                href='/documents/Certificate_Preview.pdf'
-                download
-                variant='contained'
-                color='primary'
-                startIcon={<DownloadIcon />}
-                sx={{ mt: 1 }}
-              >
-                Download PDF
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
+        <BuildCertificateButton />
       </Grid>
       <Typography variant='body1' sx={{ mt: 4, color: 'text.secondary' }}>
         Manage and organize your TNK documents effectively.
