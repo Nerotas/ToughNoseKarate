@@ -47,6 +47,12 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
     const textWidth = customFont.widthOfTextAtSize(studentName, fontSize);
     const yName = rangeStartName + (rangeEndName - rangeStartName - textWidth) / 2;
 
+    const rangeStartBelt = 275; // left boundary
+    const rangeEndBelt = 500;
+
+    const beltWidth = customFont.widthOfTextAtSize(belt, 20);
+    const yBelt = rangeStartBelt + (rangeEndBelt - rangeStartBelt - beltWidth) / 2;
+
     page.drawText(`${studentName}`, {
       x: 325,
       y: yName,
@@ -56,14 +62,14 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
       rotate: degrees(90),
     });
 
-    // page.drawText(`${belt}`, {
-    //   x: 325, // adjust as needed
-    //   y: 700, // adjust as needed
-    //   size: 24,
-    //   color: rgb(0, 0, 0),
-    //   font: customFont,
-    //   rotate: degrees(90),
-    // });
+    page.drawText(`${belt}`, {
+      x: 505,
+      y: yBelt,
+      size: 20,
+      color: rgb(0, 0, 0),
+      font: customFont,
+      rotate: degrees(90),
+    });
 
     // page.drawText(`${month}`, {
     //   x: 500, // adjust as needed
