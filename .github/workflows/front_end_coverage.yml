@@ -62,7 +62,6 @@ jobs:
           path: FrontEnd/coverage/**
 
       - name: Check coverage threshold
-        if: always()
         working-directory: ./FrontEnd
         run: |
           THRESHOLD=30
