@@ -12,7 +12,8 @@ export const getJwtTokenStatus = (token: string): JWT_TOKEN_STATUS => {
   const payload = JSON.parse(atob(token.split('.')[1]));
   const currentTime = Math.floor(Date.now() / 1000);
 
-  if (payload.exp < currentTime) {
+  // If exp field is missing or expired, return EXPIRED
+  if (!payload.exp || payload.exp < currentTime) {
     return JWT_TOKEN_STATUS.EXPIRED;
   }
 

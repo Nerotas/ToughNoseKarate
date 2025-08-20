@@ -32,9 +32,9 @@ jobs:
 
         # TBD after tests are built
 
-        # - name: Run tests
-      #   working-directory: ./FrontEnd
-      #   run: npm run test -- --passWithNoTests
+      - name: Run tests
+        working-directory: ./FrontEnd
+        run: npm run test -- --passWithNoTests
 
       - name: Build application
         working-directory: ./FrontEnd

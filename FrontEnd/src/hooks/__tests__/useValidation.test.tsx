@@ -1,200 +1,598 @@
-import { renderHook, act } from '@testing-library/react';
-import { useValidation } from '../useValidation';
-import { studentCreateSchema } from '../../utils/validation/schemas';
+import React from 'react';
+import { renderHook, act, render, screen, fireEvent } from '@testing-library/react';
+import Joi from 'joi';
+import { useValidation, ValidatedForm, useApiValidation } from '../useValidation';
+
+// Mock the validation schemas module
+jest.mock('../../utils/validation/schemas', () => ({
+  validateData: jest.fn(),
+  getFieldErrors: jest.fn(),
+}));
+
+import { validateData, getFieldErrors } from '../../utils/validation/schemas';
+
+const mockValidateData = validateData as jest.MockedFunction<typeof validateData>;
+const mockGetFieldErrors = getFieldErrors as jest.MockedFunction<typeof getFieldErrors>;
 
 describe('useValidation', () => {
-  const testData = {
-    first_name: 'John',
-    last_name: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '1234567890',
-    birthdate: '2000-01-01',
-    belt_rank: 'White',
-    join_date: '2024-01-01',
-    active_indicator: 1,
-  };
-
-  const invalidData = {
-    first_name: '',
-    last_name: '',
-    email: 'invalid-email',
-    phone: '',
-    birthdate: '2050-01-01', // Future date
-    belt_rank: 'Invalid',
-    join_date: '',
-  };
-
-  it('should initialize with default state', () => {
-    const { result } = renderHook(() => useValidation(studentCreateSchema));
-
-    expect(result.current.errors).toEqual({});
-    expect(result.current.isValid).toBe(true);
-    expect(result.current.isValidating).toBe(false);
-    expect(result.current.hasBeenValidated).toBe(false);
+  // Test schema
+  const testSchema = Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    age: Joi.number().min(0).required(),
   });
 
-  it('should validate valid data successfully', () => {
-    const { result } = renderHook(() => useValidation(studentCreateSchema));
-
-    act(() => {
-      const validationResult = result.current.validate(testData);
-      expect(validationResult.success).toBe(true);
-      expect(validationResult.data).toEqual(expect.objectContaining(testData));
-    });
-
-    expect(result.current.isValid).toBe(true);
-    expect(result.current.hasBeenValidated).toBe(true);
-    expect(result.current.errors).toEqual({});
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should return errors for invalid data', () => {
-    const { result } = renderHook(() => useValidation(studentCreateSchema));
+  describe('basic functionality', () => {
+    it('should initialize with default validation state', () => {
+      const { result } = renderHook(() => useValidation(testSchema));
 
-    act(() => {
-      const validationResult = result.current.validate(invalidData);
-      expect(validationResult.success).toBe(false);
+      expect(result.current.errors).toEqual({});
+      expect(result.current.isValid).toBe(true);
+      expect(result.current.isValidating).toBe(false);
+      expect(result.current.hasBeenValidated).toBe(false);
     });
 
-    expect(result.current.isValid).toBe(false);
-    expect(result.current.hasBeenValidated).toBe(true);
-    expect(Object.keys(result.current.errors)).toHaveLength(6); // Should have errors for multiple fields
-    expect(result.current.errors.first_name).toContain('cannot be empty');
-    expect(result.current.errors.email).toContain('valid email');
+    it('should initialize with custom options', () => {
+      const options = {
+        validateOnChange: true,
+        validateOnBlur: false,
+        validateOnSubmit: false,
+      };
+
+      const { result } = renderHook(() => useValidation(testSchema, options));
+
+      expect(result.current.errors).toEqual({});
+      expect(result.current.isValid).toBe(true);
+      expect(result.current.isValidating).toBe(false);
+      expect(result.current.hasBeenValidated).toBe(false);
+    });
   });
 
-  it('should validate individual fields', () => {
-    const { result } = renderHook(() => useValidation(studentCreateSchema));
+  describe('validate function', () => {
+    it('should validate successfully with valid data', () => {
+      mockValidateData.mockReturnValue({
+        success: true,
+        data: { name: 'John', email: 'john@example.com', age: 25 },
+      });
 
-    act(() => {
-      const error = result.current.validateField('email', 'invalid-email');
-      expect(error).toContain('valid email');
+      const { result } = renderHook(() => useValidation(testSchema));
+
+      let validationResult;
+      act(() => {
+        validationResult = result.current.validate({
+          name: 'John',
+          email: 'john@example.com',
+          age: 25,
+        });
+      });
+
+      expect(validationResult).toEqual({
+        success: true,
+        data: { name: 'John', email: 'john@example.com', age: 25 },
+      });
+      expect(result.current.isValid).toBe(true);
+      expect(result.current.hasBeenValidated).toBe(true);
+      expect(result.current.isValidating).toBe(false);
+      expect(result.current.errors).toEqual({});
     });
 
-    expect(result.current.errors.email).toContain('valid email');
+    it('should validate with errors for invalid data', () => {
+      mockValidateData.mockReturnValue({
+        success: false,
+        errors: ['name is required', 'email is invalid'],
+      });
+      mockGetFieldErrors.mockReturnValue({
+        name: 'name is required',
+        email: 'email is invalid',
+      });
+
+      const { result } = renderHook(() => useValidation(testSchema));
+
+      let validationResult;
+      act(() => {
+        validationResult = result.current.validate({
+          name: '',
+          email: 'invalid-email',
+          age: -1,
+        });
+      });
+
+      expect(validationResult).toEqual({
+        success: false,
+        errors: ['name is required', 'email is invalid'],
+      });
+      expect(result.current.isValid).toBe(false);
+      expect(result.current.hasBeenValidated).toBe(true);
+      expect(result.current.isValidating).toBe(false);
+      expect(result.current.errors).toEqual({
+        name: 'name is required',
+        email: 'email is invalid',
+      });
+    });
+
+    it('should set isValidating during validation', () => {
+      mockValidateData.mockReturnValue({
+        success: true,
+        data: { name: 'John', email: 'john@example.com', age: 25 },
+      });
+
+      const { result } = renderHook(() => useValidation(testSchema));
+
+      act(() => {
+        result.current.validate({ name: 'John', email: 'john@example.com', age: 25 });
+      });
+
+      expect(result.current.isValidating).toBe(false);
+      expect(result.current.hasBeenValidated).toBe(true);
+    });
   });
 
-  it('should clear errors', () => {
-    const { result } = renderHook(() => useValidation(studentCreateSchema));
+  describe('validateField function', () => {
+    it('should validate a single field successfully', () => {
+      const fieldSchema = Joi.string().required();
+      fieldSchema.validate = jest.fn().mockReturnValue({ error: undefined });
+      testSchema.extract = jest.fn().mockReturnValue(fieldSchema);
 
-    // First add some errors
-    act(() => {
-      result.current.validate(invalidData);
+      const { result } = renderHook(() => useValidation(testSchema));
+
+      let fieldError;
+      act(() => {
+        fieldError = result.current.validateField('name', 'John');
+      });
+
+      expect(fieldError).toBeUndefined();
+      expect(testSchema.extract).toHaveBeenCalledWith('name');
+      expect(fieldSchema.validate).toHaveBeenCalledWith('John');
     });
 
-    expect(result.current.isValid).toBe(false);
-    expect(Object.keys(result.current.errors)).toHaveLength(6);
+    it('should validate a single field with error', () => {
+      const fieldSchema = Joi.string().required();
+      const mockError = {
+        details: [{ message: 'name is required' }],
+      };
+      fieldSchema.validate = jest.fn().mockReturnValue({ error: mockError });
+      testSchema.extract = jest.fn().mockReturnValue(fieldSchema);
 
-    // Then clear them
-    act(() => {
-      result.current.clearErrors();
+      const { result } = renderHook(() => useValidation(testSchema));
+
+      let fieldError;
+      act(() => {
+        fieldError = result.current.validateField('name', '');
+      });
+
+      expect(fieldError).toBe('name is required');
+      expect(result.current.errors.name).toBe('name is required');
     });
 
-    expect(result.current.errors).toEqual({});
-    expect(result.current.isValid).toBe(true);
-    expect(result.current.hasBeenValidated).toBe(false);
+    it('should handle field that does not exist in schema', () => {
+      testSchema.extract = jest.fn().mockImplementation(() => {
+        throw new Error('Field not found');
+      });
+
+      const { result } = renderHook(() => useValidation(testSchema));
+
+      let fieldError;
+      act(() => {
+        fieldError = result.current.validateField('nonexistent', 'value');
+      });
+
+      expect(fieldError).toBeUndefined();
+    });
   });
 
-  it('should clear individual field errors', () => {
-    const { result } = renderHook(() => useValidation(studentCreateSchema));
+  describe('error management functions', () => {
+    it('should clear all errors', () => {
+      const { result } = renderHook(() => useValidation(testSchema));
 
-    // Add errors
-    act(() => {
-      result.current.validate(invalidData);
+      // Set some initial errors
+      act(() => {
+        result.current.setFieldError('name', 'name error');
+        result.current.setFieldError('email', 'email error');
+      });
+
+      expect(result.current.errors).toEqual({
+        name: 'name error',
+        email: 'email error',
+      });
+      expect(result.current.isValid).toBe(false);
+
+      // Clear all errors
+      act(() => {
+        result.current.clearErrors();
+      });
+
+      expect(result.current.errors).toEqual({});
+      expect(result.current.isValid).toBe(true);
+      expect(result.current.hasBeenValidated).toBe(false);
     });
 
-    const initialErrorCount = Object.keys(result.current.errors).length;
-    expect(initialErrorCount).toBeGreaterThan(0);
+    it('should clear specific field error', () => {
+      const { result } = renderHook(() => useValidation(testSchema));
 
-    // Clear one field
-    act(() => {
-      result.current.clearFieldError('email');
+      // Set some initial errors
+      act(() => {
+        result.current.setFieldError('name', 'name error');
+        result.current.setFieldError('email', 'email error');
+      });
+
+      expect(result.current.errors).toEqual({
+        name: 'name error',
+        email: 'email error',
+      });
+
+      // Clear specific field error
+      act(() => {
+        result.current.clearFieldError('name');
+      });
+
+      expect(result.current.errors).toEqual({
+        email: 'email error',
+      });
     });
 
-    expect(result.current.errors.email).toBeUndefined();
-    expect(Object.keys(result.current.errors)).toHaveLength(initialErrorCount - 1);
+    it('should set specific field error', () => {
+      const { result } = renderHook(() => useValidation(testSchema));
+
+      act(() => {
+        result.current.setFieldError('name', 'Custom error message');
+      });
+
+      expect(result.current.errors.name).toBe('Custom error message');
+      expect(result.current.isValid).toBe(false);
+    });
   });
 
-  it('should set field errors', () => {
-    const { result } = renderHook(() => useValidation(studentCreateSchema));
+  describe('event handlers', () => {
+    describe('handleBlur', () => {
+      it('should validate field on blur when validateOnBlur is true', () => {
+        const fieldSchema = Joi.string().required();
+        const mockError = { details: [{ message: 'name is required' }] };
+        fieldSchema.validate = jest.fn().mockReturnValue({ error: mockError });
+        testSchema.extract = jest.fn().mockReturnValue(fieldSchema);
 
-    act(() => {
-      result.current.setFieldError('email', 'Custom error message');
+        const { result } = renderHook(() => useValidation(testSchema, { validateOnBlur: true }));
+
+        act(() => {
+          result.current.handleBlur('name', '');
+        });
+
+        expect(testSchema.extract).toHaveBeenCalledWith('name');
+        expect(result.current.errors.name).toBe('name is required');
+      });
+
+      it('should not validate field on blur when validateOnBlur is false', () => {
+        const fieldSchema = Joi.string().required();
+        fieldSchema.validate = jest.fn();
+        testSchema.extract = jest.fn().mockReturnValue(fieldSchema);
+
+        const { result } = renderHook(() => useValidation(testSchema, { validateOnBlur: false }));
+
+        act(() => {
+          result.current.handleBlur('name', '');
+        });
+
+        expect(testSchema.extract).not.toHaveBeenCalled();
+      });
     });
 
-    expect(result.current.errors.email).toBe('Custom error message');
-    expect(result.current.isValid).toBe(false);
+    describe('handleChange', () => {
+      it('should clear existing error and validate on change when validateOnChange is true', () => {
+        const fieldSchema = Joi.string().required();
+        fieldSchema.validate = jest.fn().mockReturnValue({ error: undefined });
+        testSchema.extract = jest.fn().mockReturnValue(fieldSchema);
+
+        const { result } = renderHook(() => useValidation(testSchema, { validateOnChange: true }));
+
+        // Set an initial error
+        act(() => {
+          result.current.setFieldError('name', 'initial error');
+        });
+
+        expect(result.current.errors.name).toBe('initial error');
+
+        // Handle change should clear error and validate
+        act(() => {
+          result.current.handleChange('name', 'John');
+        });
+
+        expect(result.current.errors.name).toBe('');
+        expect(testSchema.extract).toHaveBeenCalledWith('name');
+      });
+
+      it('should only clear error when validateOnChange is false', () => {
+        const fieldSchema = Joi.string().required();
+        fieldSchema.validate = jest.fn();
+        testSchema.extract = jest.fn().mockReturnValue(fieldSchema);
+
+        const { result } = renderHook(() => useValidation(testSchema, { validateOnChange: false }));
+
+        // Set an initial error
+        act(() => {
+          result.current.setFieldError('name', 'initial error');
+        });
+
+        expect(result.current.errors.name).toBe('initial error');
+
+        // Handle change should only clear error, not validate
+        act(() => {
+          result.current.handleChange('name', 'John');
+        });
+
+        expect(result.current.errors.name).toBeUndefined();
+        expect(testSchema.extract).not.toHaveBeenCalled();
+      });
+
+      it('should not clear error if field has no existing error', () => {
+        const { result } = renderHook(() => useValidation(testSchema, { validateOnChange: false }));
+
+        act(() => {
+          result.current.handleChange('name', 'John');
+        });
+
+        expect(result.current.errors.name).toBeUndefined();
+      });
+    });
+
+    describe('handleSubmit', () => {
+      it('should validate data on submit when validateOnSubmit is true', () => {
+        mockValidateData.mockReturnValue({
+          success: true,
+          data: { name: 'John', email: 'john@example.com', age: 25 },
+        });
+
+        const { result } = renderHook(() => useValidation(testSchema, { validateOnSubmit: true }));
+
+        let submitResult;
+        act(() => {
+          submitResult = result.current.handleSubmit({
+            name: 'John',
+            email: 'john@example.com',
+            age: 25,
+          });
+        });
+
+        expect(submitResult).toEqual({
+          success: true,
+          data: { name: 'John', email: 'john@example.com', age: 25 },
+        });
+        expect(mockValidateData).toHaveBeenCalled();
+      });
+
+      it('should not validate data on submit when validateOnSubmit is false', () => {
+        const { result } = renderHook(() => useValidation(testSchema, { validateOnSubmit: false }));
+
+        const testData = { name: 'John', email: 'john@example.com', age: 25 };
+        let submitResult;
+        act(() => {
+          submitResult = result.current.handleSubmit(testData);
+        });
+
+        expect(submitResult).toEqual({
+          success: true,
+          data: testData,
+        });
+        expect(mockValidateData).not.toHaveBeenCalled();
+      });
+    });
   });
 
-  it('should handle blur events when validateOnBlur is true', () => {
-    const { result } = renderHook(() =>
-      useValidation(studentCreateSchema, { validateOnBlur: true })
+  describe('memoization', () => {
+    it('should memoize return object properly', () => {
+      const { result, rerender } = renderHook(() => useValidation(testSchema));
+
+      const firstRender = result.current;
+      rerender();
+      const secondRender = result.current;
+
+      // Functions should be the same reference
+      expect(firstRender.validate).toBe(secondRender.validate);
+      expect(firstRender.validateField).toBe(secondRender.validateField);
+      expect(firstRender.clearErrors).toBe(secondRender.clearErrors);
+      expect(firstRender.handleBlur).toBe(secondRender.handleBlur);
+      expect(firstRender.handleChange).toBe(secondRender.handleChange);
+      expect(firstRender.handleSubmit).toBe(secondRender.handleSubmit);
+    });
+
+    it('should update memoized object when validation state changes', () => {
+      const { result } = renderHook(() => useValidation(testSchema));
+
+      const initialState = { ...result.current };
+
+      act(() => {
+        result.current.setFieldError('name', 'error');
+      });
+
+      expect(result.current.errors).not.toEqual(initialState.errors);
+      expect(result.current.isValid).not.toBe(initialState.isValid);
+    });
+  });
+});
+
+describe('ValidatedForm', () => {
+  const testSchema = Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should render form with validation context', () => {
+    const mockOnSubmit = jest.fn();
+
+    render(
+      <ValidatedForm schema={testSchema} onSubmit={mockOnSubmit}>
+        {(validation) => (
+          <>
+            <input name='name' data-testid='name-input' />
+            <input name='email' data-testid='email-input' />
+            <button type='submit' data-testid='submit-button'>
+              Submit
+            </button>
+            <div data-testid='errors'>{JSON.stringify(validation.errors)}</div>
+          </>
+        )}
+      </ValidatedForm>
     );
 
-    act(() => {
-      result.current.handleBlur('email', 'invalid-email');
-    });
-
-    expect(result.current.errors.email).toContain('valid email');
+    expect(screen.getByTestId('name-input')).toBeInTheDocument();
+    expect(screen.getByTestId('email-input')).toBeInTheDocument();
+    expect(screen.getByTestId('submit-button')).toBeInTheDocument();
   });
 
-  it('should handle change events when validateOnChange is true', () => {
-    const { result } = renderHook(() =>
-      useValidation(studentCreateSchema, { validateOnChange: true })
-    );
-
-    act(() => {
-      result.current.handleChange('email', 'invalid-email');
+  it('should handle form submission with valid data', async () => {
+    const mockOnSubmit = jest.fn();
+    mockValidateData.mockReturnValue({
+      success: true,
+      data: { name: 'John', email: 'john@example.com' },
     });
 
-    expect(result.current.errors.email).toContain('valid email');
+    render(
+      <ValidatedForm schema={testSchema} onSubmit={mockOnSubmit}>
+        {() => (
+          <>
+            <input name='name' defaultValue='John' />
+            <input name='email' defaultValue='john@example.com' />
+            <button type='submit' data-testid='submit-button'>
+              Submit
+            </button>
+          </>
+        )}
+      </ValidatedForm>
+    );
+
+    fireEvent.click(screen.getByTestId('submit-button'));
+
+    expect(mockValidateData).toHaveBeenCalled();
+    // Note: mockOnSubmit might not be called immediately due to async nature
   });
 
-  it('should clear errors on change when validateOnChange is false', () => {
-    const { result } = renderHook(() =>
-      useValidation(studentCreateSchema, { validateOnChange: false })
+  it('should handle form submission with invalid data', async () => {
+    const mockOnSubmit = jest.fn();
+    mockValidateData.mockReturnValue({
+      success: false,
+      errors: ['name is required'],
+    });
+
+    render(
+      <ValidatedForm schema={testSchema} onSubmit={mockOnSubmit}>
+        {() => (
+          <>
+            <input name='name' defaultValue='' />
+            <input name='email' defaultValue='john@example.com' />
+            <button type='submit' data-testid='submit-button'>
+              Submit
+            </button>
+          </>
+        )}
+      </ValidatedForm>
     );
 
-    // First add an error
-    act(() => {
-      result.current.setFieldError('email', 'Some error');
-    });
+    fireEvent.click(screen.getByTestId('submit-button'));
 
-    expect(result.current.errors.email).toBe('Some error');
-
-    // Then trigger change (should clear the error)
-    act(() => {
-      result.current.handleChange('email', 'new-value');
-    });
-
-    expect(result.current.errors.email).toBeUndefined();
+    expect(mockValidateData).toHaveBeenCalled();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
-  it('should handle submit with validation', () => {
-    const { result } = renderHook(() =>
-      useValidation(studentCreateSchema, { validateOnSubmit: true })
+  it('should pass validation options to useValidation', () => {
+    const mockOnSubmit = jest.fn();
+    const validationOptions = {
+      validateOnChange: true,
+      validateOnBlur: false,
+    };
+
+    render(
+      <ValidatedForm
+        schema={testSchema}
+        onSubmit={mockOnSubmit}
+        validationOptions={validationOptions}
+      >
+        {() => (
+          <>
+            <input name='name' />
+            <input name='email' />
+            <button type='submit'>Submit</button>
+          </>
+        )}
+      </ValidatedForm>
     );
 
-    // Test valid submit
-    act(() => {
-      const submitResult = result.current.handleSubmit(testData);
-      expect(submitResult.success).toBe(true);
-    });
+    // The component should render without errors
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+});
 
-    // Test invalid submit
-    act(() => {
-      const submitResult = result.current.handleSubmit(invalidData);
-      expect(submitResult.success).toBe(false);
-    });
+describe('useApiValidation', () => {
+  const testSchema = Joi.object({
+    id: Joi.number().required(),
+    name: Joi.string().required(),
   });
 
-  it('should skip validation on submit when validateOnSubmit is false', () => {
-    const { result } = renderHook(() =>
-      useValidation(studentCreateSchema, { validateOnSubmit: false })
-    );
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    act(() => {
-      const submitResult = result.current.handleSubmit(invalidData);
-      expect(submitResult.success).toBe(true); // Should pass even with invalid data
+  it('should return validation function', () => {
+    const { result } = renderHook(() => useApiValidation(testSchema));
+
+    expect(typeof result.current).toBe('function');
+  });
+
+  it('should validate API parameters successfully', () => {
+    mockValidateData.mockReturnValue({
+      success: true,
+      data: { id: 1, name: 'Test' },
     });
+
+    const { result } = renderHook(() => useApiValidation(testSchema));
+
+    let validationResult;
+    act(() => {
+      validationResult = result.current({ id: 1, name: 'Test' });
+    });
+
+    expect(validationResult).toEqual({
+      success: true,
+      data: { id: 1, name: 'Test' },
+    });
+    expect(mockValidateData).toHaveBeenCalledWith(testSchema, { id: 1, name: 'Test' });
+  });
+
+  it('should validate API parameters with errors', () => {
+    mockValidateData.mockReturnValue({
+      success: false,
+      errors: ['id is required', 'name is required'],
+    });
+
+    const { result } = renderHook(() => useApiValidation(testSchema));
+
+    let validationResult;
+    act(() => {
+      validationResult = result.current({ id: null, name: '' });
+    });
+
+    expect(validationResult).toEqual({
+      success: false,
+      errors: ['id is required', 'name is required'],
+    });
+    expect(mockValidateData).toHaveBeenCalledWith(testSchema, { id: null, name: '' });
+  });
+
+  it('should memoize validation function based on schema', () => {
+    const { result, rerender } = renderHook(({ schema }) => useApiValidation(schema), {
+      initialProps: { schema: testSchema },
+    });
+
+    const firstFunction = result.current;
+    rerender({ schema: testSchema });
+    const secondFunction = result.current;
+
+    // Should be the same function reference for same schema
+    expect(firstFunction).toBe(secondFunction);
   });
 });

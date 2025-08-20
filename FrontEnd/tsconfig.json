@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "es6"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es6"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -21,14 +25,34 @@
     ],
     "baseUrl": "./src",
     "paths": {
-      "constants/*": ["./constants/*"],
-      "models/*": ["./models/*"],
-      "helpers/*": ["./helpers/*"],
-      "hooks/*": ["./hooks/*"],
-      "testingUtils/*": ["./testingUtils/*"],
-      "utils/*": ["./utils/*"]
+      "constants/*": [
+        "./constants/*"
+      ],
+      "models/*": [
+        "./models/*"
+      ],
+      "helpers/*": [
+        "./helpers/*"
+      ],
+      "hooks/*": [
+        "./hooks/*"
+      ],
+      "testingUtils/*": [
+        "./testingUtils/*"
+      ],
+      "utils/*": [
+        "./utils/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/jest-dom.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

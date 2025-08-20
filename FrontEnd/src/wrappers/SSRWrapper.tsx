@@ -61,10 +61,18 @@ export default async function SSRWrapper({
         const queryKey =
           query.queryKey.length === 1 ? [...query.queryKey, query.id ?? 'getAll'] : query.queryKey;
 
-        await queryClient.prefetchQuery({
-          queryKey,
-          queryFn: () => serverFetch(query.url),
-        });
+        if (fallbackOnError) {
+          await queryClient.prefetchQuery({
+            queryKey,
+            queryFn: () => serverFetch(query.url),
+          });
+        } else {
+          // fetchQuery rejects on error, allowing us to propagate it
+          await queryClient.fetchQuery({
+            queryKey,
+            queryFn: () => serverFetch(query.url),
+          });
+        }
       } catch (error) {
         if (!fallbackOnError) {
           throw error;
@@ -74,8 +82,17 @@ export default async function SSRWrapper({
       }
     });
 
-  // Wait for all prefetch operations to complete
-  await Promise.allSettled(prefetchPromises);
+  // Wait for prefetch operations using allSettled, then if fallbackOnError=false and any failed, throw first error
+  const results = await Promise.allSettled(prefetchPromises);
+  if (!fallbackOnError) {
+    const rejection = results.find((r) => r.status === 'rejected') as
+      | PromiseRejectedResult
+      | undefined;
+    if (rejection) {
+      throw rejection.reason;
+    }
+  }
 
-  return <HydrationBoundary state={dehydrate(queryClient)}>{children}</HydrationBoundary>;
+  const state = dehydrate(queryClient);
+  return <HydrationBoundary state={state}>{children}</HydrationBoundary>;
 }
