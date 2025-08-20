@@ -5,6 +5,15 @@ on:
     paths:
       - "FrontEnd/**"
 
+# Note: For PRs from forked repositories, the GITHUB_TOKEN has limited permissions
+# and cannot post comments. To allow comments for forked PRs, use a repo PAT
+# stored in a secret and pass it to the comment step, or use a separate
+# workflow triggered by pull_request_target with careful security checks.
+
+permissions:
+  contents: read
+  pull-requests: write
+
 env:
   NODE_VERSION: "18"
 
@@ -89,7 +98,8 @@ jobs:
           fi
 
       - name: Post coverage comment to PR
-        if: always()
+        # Skip posting comment for forked PRs because secrets/GITHUB_TOKEN are not available
+        if: always() && (github.event.pull_request.head.repo.fork == false)
         uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
