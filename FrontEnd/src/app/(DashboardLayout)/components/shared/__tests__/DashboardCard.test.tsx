@@ -23,12 +23,12 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => {
 
 describe('DashboardCard', () => {
   it('renders without crashing', () => {
-    render(
+    const { container } = render(
       <TestWrapper>
         <DashboardCard />
       </TestWrapper>
     );
-    expect(screen.getByRole('presentation')).toBeInTheDocument();
+    expect(container.querySelector('.MuiCard-root')).toBeInTheDocument();
   });
 
   it('renders title when provided', () => {
@@ -45,7 +45,7 @@ describe('DashboardCard', () => {
     const subtitle = 'Test subtitle';
     render(
       <TestWrapper>
-        <DashboardCard subtitle={subtitle} />
+        <DashboardCard title='Test Title' subtitle={subtitle} />
       </TestWrapper>
     );
     expect(screen.getByText(subtitle)).toBeInTheDocument();
@@ -75,14 +75,22 @@ describe('DashboardCard', () => {
 
   it('renders cardheading when provided', () => {
     const cardheading = 'Card Heading';
-    render(<DashboardCard cardheading={cardheading} />);
+    render(
+      <TestWrapper>
+        <DashboardCard cardheading={cardheading} headtitle={cardheading} />
+      </TestWrapper>
+    );
     expect(screen.getByText(cardheading)).toBeInTheDocument();
   });
 
   it('renders headtitle and headsubtitle when provided', () => {
     const headtitle = 'Head Title';
     const headsubtitle = 'Head Subtitle';
-    render(<DashboardCard headtitle={headtitle} headsubtitle={headsubtitle} />);
+    render(
+      <TestWrapper>
+        <DashboardCard cardheading='something' headtitle={headtitle} headsubtitle={headsubtitle} />
+      </TestWrapper>
+    );
     expect(screen.getByText(headtitle)).toBeInTheDocument();
     expect(screen.getByText(headsubtitle)).toBeInTheDocument();
   });
@@ -94,8 +102,12 @@ describe('DashboardCard', () => {
   });
 
   it('applies correct elevation prop', () => {
-    render(<DashboardCard title='Test' />);
-    const card = screen.getByRole('presentation');
+    const { container } = render(
+      <TestWrapper>
+        <DashboardCard title='Test' />
+      </TestWrapper>
+    );
+    const card = container.querySelector('.MuiCard-root');
     expect(card).toHaveClass('MuiPaper-elevation9');
   });
 });

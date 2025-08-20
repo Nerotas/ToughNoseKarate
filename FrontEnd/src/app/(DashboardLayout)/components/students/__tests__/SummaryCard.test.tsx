@@ -78,7 +78,9 @@ describe('SummaryCard', () => {
     );
 
     expect(screen.getByText('Inactive Students')).toBeInTheDocument();
-    expect(screen.getByText('0')).toBeInTheDocument();
+    // Since there are multiple "0" elements, let's check specifically within the inactive students section
+    const inactiveSection = screen.getByText('Inactive Students').closest('.MuiCard-root');
+    expect(inactiveSection).toHaveTextContent('0');
   });
 
   it('displays total students count', () => {

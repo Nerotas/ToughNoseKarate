@@ -1,5 +1,10 @@
 import '@testing-library/jest-dom';
 
+// Mock TextEncoder/TextDecoder for MUI DataGrid
+import { TextEncoder, TextDecoder } from 'text-encoding';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter() {
@@ -57,6 +62,10 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+// Mock TextEncoder/TextDecoder for MUI DataGrid
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
