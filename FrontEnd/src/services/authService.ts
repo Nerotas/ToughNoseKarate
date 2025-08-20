@@ -24,13 +24,18 @@ export const authService = {
     }
   },
 
-  logout: async (): Promise<void> => {
+  logout: async (): Promise<string | void> => {
+    let errorString: string | undefined;
     try {
       await axiosInstance.post('/auth/logout');
+    } catch (err: any) {
+      // Capture error as string but do not rethrow so callers can always proceed
+      errorString = err instanceof Error ? err.toString() : 'Logout failed';
     } finally {
       authService.sessionReady = false;
       authService.profile = null;
     }
+    return errorString;
   },
 
   getProfile: async () => {

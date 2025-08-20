@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import BeltsClient from '../../belt-requirements/BeltsClient';
+import BeltsClient from '../BeltsClient';
 import { mockBeltRequirements } from 'testingUtils/MockData/mockBeltRequirements';
 
 // Mock Next.js router
