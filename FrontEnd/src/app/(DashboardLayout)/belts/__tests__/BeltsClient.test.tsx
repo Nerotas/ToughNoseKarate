@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
 import BeltsClient from '../../belt-requirements/BeltsClient';
+import { mockBeltRequirements } from 'testingUtils/MockData/mockBeltRequirements';
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
@@ -51,57 +52,6 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => {
 const mockUseAuth = require('../../../../hooks/useAuth').useAuth;
 const mockUseGet = require('../../../../hooks/useGet').default;
 
-const mockBelts = [
-  {
-    beltOrder: 1,
-    beltRank: 'White Belt',
-    forms: [],
-    stances: [],
-    blocks: [],
-    punches: [],
-    kicks: [],
-    jumps: [],
-    falling: [],
-    oneSteps: [],
-    selfDefense: [],
-    comments: null,
-    color: '#FFFFFF',
-    textColor: '#000000',
-  },
-  {
-    beltOrder: 2,
-    beltRank: 'Yellow Belt',
-    forms: [],
-    stances: [],
-    blocks: [],
-    punches: [],
-    kicks: [],
-    jumps: [],
-    falling: [],
-    oneSteps: [],
-    selfDefense: [],
-    comments: null,
-    color: '#FFFF00',
-    textColor: '#000000',
-  },
-  {
-    beltOrder: 3,
-    beltRank: 'Orange Belt',
-    forms: [],
-    stances: [],
-    blocks: [],
-    punches: [],
-    kicks: [],
-    jumps: [],
-    falling: [],
-    oneSteps: [],
-    selfDefense: [],
-    comments: null,
-    color: '#FFA500',
-    textColor: '#000000',
-  },
-];
-
 describe('BeltsClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -135,7 +85,7 @@ describe('BeltsClient', () => {
     });
 
     mockUseGet.mockReturnValue({
-      data: mockBelts,
+      data: mockBeltRequirements,
       isPending: false,
       refetch: jest.fn(),
     });
@@ -158,7 +108,7 @@ describe('BeltsClient', () => {
     });
 
     mockUseGet.mockReturnValue({
-      data: mockBelts,
+      data: mockBeltRequirements,
       isPending: false,
       refetch: jest.fn(),
     });
@@ -181,7 +131,7 @@ describe('BeltsClient', () => {
     });
 
     mockUseGet.mockReturnValue({
-      data: mockBelts,
+      data: mockBeltRequirements,
       isPending: false,
       refetch: jest.fn(),
     });
@@ -193,9 +143,9 @@ describe('BeltsClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('White Belt')).toBeInTheDocument();
-      expect(screen.getByText('Yellow Belt')).toBeInTheDocument();
-      expect(screen.getByText('Orange Belt')).toBeInTheDocument();
+      expect(screen.getByText('White')).toBeInTheDocument();
+      expect(screen.getByText('Gold')).toBeInTheDocument();
+      expect(screen.getByText('Gold White')).toBeInTheDocument();
     });
   });
 
@@ -206,7 +156,7 @@ describe('BeltsClient', () => {
     });
 
     mockUseGet.mockReturnValue({
-      data: mockBelts,
+      data: mockBeltRequirements,
       isPending: false,
       refetch: jest.fn(),
     });
@@ -229,7 +179,7 @@ describe('BeltsClient', () => {
     });
 
     mockUseGet.mockReturnValue({
-      data: mockBelts,
+      data: mockBeltRequirements,
       isPending: false,
       refetch: jest.fn(),
     });
@@ -250,7 +200,7 @@ describe('BeltsClient', () => {
     });
 
     mockUseGet.mockReturnValue({
-      data: mockBelts,
+      data: mockBeltRequirements,
       isPending: false,
       refetch: jest.fn(),
     });

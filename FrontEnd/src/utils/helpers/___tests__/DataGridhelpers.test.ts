@@ -1,7 +1,7 @@
 import { DEFAULT_PAGE_SIZE } from 'constants/DataGridDefaults';
 import * as DataGridHelpers from '../DataGrid';
 import { cleanup } from '@testing-library/react';
-import { mockProducts } from 'testingUtils/MockData/mockProducts';
+import { mockProducts } from 'testingUtils/MockData/mockBeltRequirements';
 afterEach(cleanup);
 
 it('getPaginationOptions should return default', () => {

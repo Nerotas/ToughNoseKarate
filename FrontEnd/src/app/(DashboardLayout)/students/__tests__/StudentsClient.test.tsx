@@ -4,6 +4,7 @@ import StudentsClient from '../StudentsClient';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
+import {mockBeltRequirements} from 'testingUtils/MockData/mockBeltRequirements';
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
@@ -110,14 +111,7 @@ const mockStudents = [
   },
 ];
 
-const mockBeltRequirements = [
-  {
-    id: 1,
-    beltColor: 'White',
-    beltName: 'White Belt',
-    requirements: 'Basic stances and punches',
-  },
-];
+
 
 describe('StudentsClient', () => {
   beforeEach(() => {
