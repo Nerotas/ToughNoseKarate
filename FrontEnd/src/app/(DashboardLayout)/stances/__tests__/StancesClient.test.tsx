@@ -176,7 +176,7 @@ describe('StancesClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Total Stances')).toBeInTheDocument();
+      expect(screen.getAllByText('White Belt')).toHaveLength(2);
     });
   });
 
@@ -199,9 +199,8 @@ describe('StancesClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Front Stance')).toBeInTheDocument();
-      expect(screen.getByText('Horse Stance')).toBeInTheDocument();
-      expect(screen.getByText('Cat Stance')).toBeInTheDocument();
+      expect(screen.getByText('Ready Stance')).toBeInTheDocument();
+      expect(screen.getByText('At Attention')).toBeInTheDocument();
     });
   });
 
