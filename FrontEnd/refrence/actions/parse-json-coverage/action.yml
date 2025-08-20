@@ -1,0 +1,14 @@
+name: 'Parse JSON coverage'
+description: 'Will parse the JSON coverage from the input if specified, otherwise from coverage folder'
+inputs:
+  coverageSummary:
+    description: 'JSON coverage summary'
+    required: false
+outputs:
+  coverageResult:
+    description: 'Parsed coverage'
+  coverageResultTable:
+    description: 'Parsed coverage in markdown table format'
+runs:
+  using: 'node16'
+  main: 'index.js'

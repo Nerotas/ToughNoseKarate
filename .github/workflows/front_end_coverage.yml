@@ -1,0 +1,100 @@
+name: Frontend Tests with Coverage
+
+on:
+  pull_request:
+    paths:
+      - "FrontEnd/**"
+
+env:
+  NODE_VERSION: "18"
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: FrontEnd/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./FrontEnd
+        run: npm ci
+
+      - name: Run tests with coverage
+        working-directory: ./FrontEnd
+        # Use project's test:ci script which runs jest with --ci and coverage
+        run: npm run test:ci
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: front-end-coverage
+          path: FrontEnd/coverage
+
+      - name: Upload coverage summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: front-end-coverage-summary
+          path: FrontEnd/coverage/coverage-summary.txt
+
+      - name: Check coverage threshold
+        if: always()
+        working-directory: ./FrontEnd
+        run: |
+          THRESHOLD=30
+          SUMMARY=coverage/coverage-summary.json
+          if [ ! -f "$SUMMARY" ]; then
+            echo "Coverage summary not found at $SUMMARY" >&2
+            exit 1
+          fi
+          node -e "const fs=require('fs');const t=${THRESHOLD};const s=JSON.parse(fs.readFileSync('coverage/coverage-summary.json','utf8'));const total=s.total||s;const metrics=['statements','branches','functions','lines'];let ok=true;metrics.forEach(m=>{const pct=total[m]&&total[m].pct?total[m].pct:0; if(pct < t){console.error(m+' coverage '+pct+'% < '+t+'%'); ok=false}}); if(!ok){process.exit(1);} else {console.log('Coverage threshold met');}"
+
+      - name: Create coverage markdown
+        if: always()
+        working-directory: ./FrontEnd
+        run: |
+          echo "# Frontend Coverage Report" > coverage_report.md || true
+          SUMMARY_JSON=coverage/coverage-summary.json
+          if [ -f "$SUMMARY_JSON" ]; then
+            node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('$SUMMARY_JSON'));const rows=Object.entries(s).map(([k,v])=>`| ${k} | ${v.statements.pct}% | ${v.branches.pct}% | ${v.functions.pct}% | ${v.lines.pct}% |`);const header='| File | Stmts | Branch | Funcs | Lines |\n|---|---:|---:|---:|---:';fs.writeFileSync('coverage_report.md', '# Frontend Coverage Report\n\n'+header+'\n'+rows.join('\n'));"
+          elif [ -f coverage/coverage-summary.txt ]; then
+            echo "\n\n<details><summary>Coverage summary</summary>" >> coverage_report.md || true
+            cat coverage/coverage-summary.txt >> coverage_report.md || true
+            echo "</details>" >> coverage_report.md || true
+          else
+            echo "No coverage summary found" >> coverage_report.md || true
+          fi
+
+      - name: Read coverage report
+        id: read_coverage
+        if: always()
+        working-directory: ./FrontEnd
+        run: |
+          if [ -f coverage_report.md ]; then
+            echo "comment<<EOF" >> $GITHUB_OUTPUT
+            cat coverage_report.md >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "comment<<EOF" >> $GITHUB_OUTPUT
+            echo "No coverage report generated." >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post coverage comment to PR
+        if: always()
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Coverage results for this PR:
+
+            ${{ steps.read_coverage.outputs.comment }}

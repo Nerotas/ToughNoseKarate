@@ -1,0 +1,95 @@
+name: Portal Coverage reporter
+on:
+    pull_request:
+        branches: [main]
+
+permissions: write-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+    front_end_check_coverage:
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./FrontEnd
+        steps:
+            - name: Checkout current branch
+              uses: actions/checkout@v4
+              with:
+                  repository: ${{ github.event.pull_request.head.repo.full_name }}
+                  ref: ${{ github.event.pull_request.head.ref }}
+                  
+            - name: Set Node.js 20.x
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+                cache: 'npm'
+                cache-dependency-path: '**/package-lock.json'
+        
+            - name: Install node modules
+              run: npm ci
+
+            - name: 🐞 Run Unit Tests
+              run: npm run test:ci
+
+            - name: 📃 Generate current branch coverage
+              continue-on-error: true
+              run: npm run test:coverage:ci
+
+            - name: 🤔 Get current branch coverage result
+              id: getNewCoverage
+              uses: ./FrontEnd/.github/actions/parse-json-coverage/
+              with:
+                  coverageSummary: ./FrontEnd/coverage/coverage-summary.json
+            
+            - name: Checkout base branch
+              uses: actions/checkout@v4
+              with:
+                  ref: main
+                  
+            - name: Install node modules
+              run: npm ci
+
+            - name: 📃 Generate base branch coverage
+              continue-on-error: true
+              run: npm run test:coverage:ci
+
+            - name: 🤔 Get base branch coverage result
+              id: getPreviousCoverage
+              uses: ./FrontEnd/.github/actions/parse-json-coverage/
+              with:
+                  coverageSummary: ./FrontEnd/coverage/coverage-summary.json
+
+            - name: 📈 Compare coverage
+              id: compareCoverage
+              uses: ./FrontEnd/.github/actions/compare-coverage/
+              with:
+                  prevCoverage: ${{ steps.getPreviousCoverage.outputs.coverageResult }}
+                  currCoverage: ${{ steps.getNewCoverage.outputs.coverageResult }}
+
+            - name: ✏️ Add coverage comment
+              uses: actions/github-script@v5
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: 
+                      `### ${{ steps.compareCoverage.outputs.coverageResultIcon }} Portal Coverage report:
+                      - **Result:** <code>${{ steps.compareCoverage.outputs.currCoverageValue }}% (${{ steps.compareCoverage.outputs.coverageDiff }}%)</code>
+                      - **Current coverage:**
+                          ${{ steps.getNewCoverage.outputs.coverageResultTable }}
+                      - **Previous coverage:**
+                          ${{ steps.getPreviousCoverage.outputs.coverageResultTable }}`
+                      })
+
+            - name: Compare Job Result
+              id: compareJobResult
+              uses: ./FrontEnd/.github/actions/coverage-job-result
+              with:
+                  compareResult: ${{ steps.compareCoverage.outputs.coverageResult }}

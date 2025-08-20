@@ -1,0 +1,9 @@
+name: 'Coverage Reporter job result'
+description: 'Will decide to pass or to fail the job'
+inputs:
+  compareResult:
+    description: 'result of coverage comparison'
+    required: true
+runs:
+  using: 'node16'
+  main: 'index.js'

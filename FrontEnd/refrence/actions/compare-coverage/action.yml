@@ -1,0 +1,29 @@
+name: 'Compare coverage results'
+description: 'Will compare 2 coverage results provided in object format'
+inputs:
+  prevCoverage:
+    description: 'previous coverage result'
+    required: true
+  currCoverage:
+    description: 'current coverage result'
+    required: true
+  deviation:
+    description: 'deviation to make a decision on negative result'
+    required: true
+    default: '5'
+  diffBy:
+    description: 'compare by'
+    required: false
+    default: 'statements'
+outputs:
+  coverageDiff:
+    description: 'Coverage difference in %'
+  coverageResult:
+    description: 'action result'
+  coverageResultIcon:
+    description: 'action result icon'
+  currCoverageValue:
+    description: 'value of current coverage key defined by diffBy'
+runs:
+  using: 'node16'
+  main: 'index.js'
