@@ -81,7 +81,6 @@ jobs:
         if: always()
         working-directory: ./FrontEnd
         run: |
-          echo "# Frontend Coverage Report" > coverage_report.md || true
           SUMMARY_JSON=coverage/coverage-summary.json
           FINAL_JSON=coverage/coverage-final.json
           if [ -f "$SUMMARY_JSON" ]; then
@@ -89,7 +88,6 @@ jobs:
           elif [ -f "$FINAL_JSON" ]; then
             # Prefer the repository script which produces a nicer table and totals
             node ./scripts/coverage-to-md.js "$FINAL_JSON" > coverage_table.md || true
-            echo "# Frontend Coverage Report" > coverage_report.md || true
             cat coverage_table.md >> coverage_report.md || true
           elif [ -f coverage/coverage-summary.txt ]; then
             echo "\n\n<details><summary>Coverage summary</summary>" >> coverage_report.md || true
