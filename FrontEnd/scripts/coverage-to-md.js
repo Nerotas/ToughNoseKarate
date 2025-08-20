@@ -38,8 +38,6 @@ const rows = [];
 let totals = {
   stmts: 0,
   stmtsCov: 0,
-  branches: 0,
-  branchesCov: 0,
   funcs: 0,
   funcsCov: 0,
   lines: 0,
@@ -60,12 +58,6 @@ Object.keys(cov)
     const funcsTotal = Object.keys(fMap).length;
     const funcsCovered = Object.values(fMap).filter((v) => v > 0).length;
 
-    const branchesTotal = Object.values(bMap).reduce((acc, arr) => acc + (arr ? arr.length : 0), 0);
-    const branchesCovered = Object.values(bMap).reduce(
-      (acc, arr) => acc + (arr ? arr.filter((x) => x > 0).length : 0),
-      0
-    );
-
     const linesTotal = entry.l ? Object.keys(entry.l).length : stmtsTotal;
     const linesCovered = entry.l
       ? Object.values(entry.l).filter((v) => v > 0).length
@@ -75,8 +67,7 @@ Object.keys(cov)
     totals.stmtsCov += stmtsCovered;
     totals.funcs += funcsTotal;
     totals.funcsCov += funcsCovered;
-    totals.branches += branchesTotal;
-    totals.branchesCov += branchesCovered;
+    // branch coverage intentionally omitted from totals
     totals.lines += linesTotal;
     totals.linesCov += linesCovered;
 
@@ -86,18 +77,61 @@ Object.keys(cov)
     rows.push({
       file: short || key,
       stmts: `${pct(stmtsCovered, stmtsTotal)} (${stmtsCovered}/${stmtsTotal})`,
-      branch: `${pct(branchesCovered, branchesTotal)} (${branchesCovered}/${branchesTotal})`,
       funcs: `${pct(funcsCovered, funcsTotal)} (${funcsCovered}/${funcsTotal})`,
       lines: `${pct(linesCovered, linesTotal)} (${linesCovered}/${linesTotal})`,
     });
   });
 
-// Output Markdown table
-console.log('| File | Stmts | Branch | Funcs | Lines |');
-console.log('| --- | ---: | ---: | ---: | ---: |');
-rows.forEach((r) => {
-  console.log(`| ${r.file} | ${r.stmts} | ${r.branch} | ${r.funcs} | ${r.lines} |`);
-});
+// Determine threshold: arg[3] or env COVERAGE_THRESHOLD or default 30
+const rawThreshold = process.argv[3] || process.env.COVERAGE_THRESHOLD || '30';
+const THRESHOLD = Number(rawThreshold);
+
+function numPct(covered, total) {
+  if (!total) return 100.0;
+  return Number(((covered / total) * 100).toFixed(1));
+}
+
+const stats = {
+  statements: {
+    covered: totals.stmtsCov,
+    total: totals.stmts,
+    pct: numPct(totals.stmtsCov, totals.stmts),
+  },
+  functions: {
+    covered: totals.funcsCov,
+    total: totals.funcs,
+    pct: numPct(totals.funcsCov, totals.funcs),
+  },
+  lines: {
+    covered: totals.linesCov,
+    total: totals.lines,
+    pct: numPct(totals.linesCov, totals.lines),
+  },
+};
+
+// Pass only requires statements, functions, and lines to meet threshold (branches omitted)
+const pass =
+  stats.statements.pct >= THRESHOLD &&
+  stats.functions.pct >= THRESHOLD &&
+  stats.lines.pct >= THRESHOLD;
+
+// Output compact Markdown summary
+console.log('# Frontend Coverage Report');
+console.log('');
+console.log('| Metric | % | Covered/Total |');
+console.log('| --- | ---: | ---: |');
 console.log(
-  `| **Total** | ${pct(totals.stmtsCov, totals.stmts)} (${totals.stmtsCov}/${totals.stmts}) | ${pct(totals.branchesCov, totals.branches)} (${totals.branchesCov}/${totals.branches}) | ${pct(totals.funcsCov, totals.funcs)} (${totals.funcsCov}/${totals.funcs}) | ${pct(totals.linesCov, totals.lines)} (${totals.linesCov}/${totals.lines}) |`
+  `| Statements | ${stats.statements.pct}% | ${stats.statements.covered}/${stats.statements.total} |`
 );
+// branches intentionally omitted from report and threshold
+console.log(
+  `| Functions  | ${stats.functions.pct}% | ${stats.functions.covered}/${stats.functions.total} |`
+);
+console.log(`| Lines      | ${stats.lines.pct}% | ${stats.lines.covered}/${stats.lines.total} |`);
+console.log('');
+console.log(`**Threshold:** ${THRESHOLD}%`);
+console.log(`**Status:** ${pass ? 'Pass ✅' : 'Fail ❌'}`);
+
+// Also return exit code 0 even on fail so workflow's separate threshold check controls job failure; but
+// print numeric result for programmatic checks if needed.
+process.exit(0);
