@@ -165,7 +165,7 @@ describe('PunchesClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Punches')).toBeInTheDocument();
+      expect(screen.getByText('Jab Punch')).toBeInTheDocument();
     });
   });
 
@@ -188,7 +188,7 @@ describe('PunchesClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Total Punches')).toBeInTheDocument();
+      expect(screen.getAllByText('(Jab Ji Ru Gi)')).toHaveLength(1);
     });
   });
 
@@ -211,9 +211,8 @@ describe('PunchesClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Jab')).toBeInTheDocument();
-      expect(screen.getByText('Cross')).toBeInTheDocument();
-      expect(screen.getByText('Hook')).toBeInTheDocument();
+      expect(screen.getByText('Jab Punch')).toBeInTheDocument();
+      expect(screen.getByText('Side Punch')).toBeInTheDocument();
     });
   });
 
@@ -278,7 +277,7 @@ describe('PunchesClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Punches')).toBeInTheDocument();
+      expect(screen.getByText('Tang Soo Do Punching Techniques')).toBeInTheDocument();
     });
   });
 });
