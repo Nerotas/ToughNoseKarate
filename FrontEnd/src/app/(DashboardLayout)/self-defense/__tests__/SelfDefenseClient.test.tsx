@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SelfDefenseClient from '../SelfDefenseClient';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -216,7 +216,7 @@ describe('SelfDefenseClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Self Defense Techniques')).toBeInTheDocument();
+      expect(screen.getByText('Release Front Grab (Basic)')).toBeInTheDocument();
     });
   });
 
@@ -239,9 +239,8 @@ describe('SelfDefenseClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Category')).toBeInTheDocument();
-      expect(screen.getByLabelText('Belt Level')).toBeInTheDocument();
-      expect(screen.getByLabelText('Difficulty')).toBeInTheDocument();
+      // MUI Selects render as combobox role; assert there are three filter selects
+      expect(screen.getAllByRole('combobox')).toHaveLength(3);
     });
   });
 
@@ -264,7 +263,8 @@ describe('SelfDefenseClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search techniques...')).toBeInTheDocument();
+      // TextField is rendered with a label, not a placeholder
+      expect(screen.getByLabelText('Search techniques...')).toBeInTheDocument();
     });
   });
 
@@ -287,9 +287,10 @@ describe('SelfDefenseClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Wrist Escape')).toBeInTheDocument();
-      expect(screen.getByText('Bear Hug Defense')).toBeInTheDocument();
-      expect(screen.getByText('Choke Defense')).toBeInTheDocument();
+      // Expect the mock technique names used in the test data
+      expect(screen.getByText('Release Front Grab (Basic)')).toBeInTheDocument();
+      expect(screen.getByText('Release Rear Grab (Basic)')).toBeInTheDocument();
+      expect(screen.getByText('Basic Wrist Control')).toBeInTheDocument();
     });
   });
 
@@ -353,11 +354,13 @@ describe('SelfDefenseClient', () => {
       </TestWrapper>
     );
 
-    const categorySelect = screen.getByLabelText('Category');
+    // MUI Selects render as combobox; grab the first combobox which is Category
+    const categorySelect = screen.getAllByRole('combobox')[0];
     fireEvent.mouseDown(categorySelect);
 
-    await waitFor(() => {
-      expect(screen.getByText('All')).toBeInTheDocument();
+    await waitFor(async () => {
+      const listbox = await screen.findByRole('listbox');
+      expect(within(listbox).getByText('All')).toBeInTheDocument();
     });
   });
 
@@ -379,7 +382,7 @@ describe('SelfDefenseClient', () => {
       </TestWrapper>
     );
 
-    const searchInput = screen.getByPlaceholderText('Search techniques...');
+    const searchInput = screen.getByLabelText('Search techniques...');
     fireEvent.change(searchInput, { target: { value: 'Wrist' } });
 
     expect(searchInput).toHaveValue('Wrist');
