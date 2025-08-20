@@ -67,6 +67,17 @@ Object.defineProperty(window, 'matchMedia', {
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+// Polyfill TextEncoder.encodeInto if missing (some TextEncoder implementations used in Jest lack encodeInto)
+if (typeof global.TextEncoder === 'function' && !global.TextEncoder.prototype.encodeInto) {
+  // implement encodeInto using encode
+  global.TextEncoder.prototype.encodeInto = function (str, dest) {
+    const encoded = new TextEncoder().encode(str);
+    const written = Math.min(encoded.length, dest.length);
+    dest.set(encoded.subarray(0, written));
+    return { read: str.length, written };
+  };
+}
+
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
