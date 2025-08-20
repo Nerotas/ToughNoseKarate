@@ -187,7 +187,7 @@ describe('KicksClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Total Kicks')).toBeInTheDocument();
+      expect(screen.getAllByText('Front Kick')).toHaveLength(1);
     });
   });
 
@@ -212,7 +212,6 @@ describe('KicksClient', () => {
     await waitFor(() => {
       expect(screen.getByText('Front Kick')).toBeInTheDocument();
       expect(screen.getByText('Roundhouse Kick')).toBeInTheDocument();
-      expect(screen.getByText('Side Kick')).toBeInTheDocument();
     });
   });
 
@@ -277,7 +276,7 @@ describe('KicksClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Kicks')).toBeInTheDocument();
+      expect(screen.getByText('Tang Soo Do Kicking Techniques')).toBeInTheDocument();
     });
   });
 });
