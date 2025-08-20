@@ -53,25 +53,70 @@ const mockUseGet = require('../../../../hooks/useGet').default;
 
 const mockPunches = [
   {
-    id: 1,
-    name: 'Jab',
-    description: 'Quick straight punch',
-    level: 'Beginner',
-    type: 'Linear',
-  },
-  {
-    id: 2,
-    name: 'Cross',
-    description: 'Power punch with rear hand',
-    level: 'Beginner',
-    type: 'Linear',
-  },
-  {
     id: 3,
-    name: 'Hook',
-    description: 'Circular punch',
-    level: 'Intermediate',
-    type: 'Circular',
+    name: 'Jab Punch',
+    korean: 'Jab Ji Ru Gi',
+    belt: 'White Belt',
+    beltColor: '#FFFFFF',
+    description:
+      'A quick, snapping punch with the lead hand used for timing, distance, and setting up combinations.',
+    target: 'Face, Nose, Solar plexus',
+    execution: [
+      'Quick extension from chamber',
+      'Minimal body movement',
+      'Fast retraction after impact',
+      'Keep rear hand in guard position',
+    ],
+    keyPoints: [
+      'Speed over power',
+      'Minimal telegraphing',
+      'Quick retraction after impact',
+      'Use for timing and distance',
+      'Keep rear hand in guard position',
+    ],
+    commonMistakes: [
+      'Using too much power, losing speed',
+      'Dropping guard after punch',
+      'Overextending the arm',
+      'Poor timing and distance',
+      'Not retracting quickly enough',
+    ],
+    applications: ['Timing tool', 'Distance measurement', 'Combination setup'],
+    createdAt: null,
+    updatedAt: null,
+  },
+  {
+    id: 4,
+    name: 'Side Punch',
+    korean: 'Yup Ji Ru Gi',
+    belt: 'Purple Belt',
+    beltColor: '#800080',
+    description:
+      'A punch delivered to the side while in a side stance, using the knuckles to strike lateral targets.',
+    target: 'Ribs, Kidneys, Side targets',
+    execution: [
+      'Maintain side stance throughout',
+      'Full body rotation for power',
+      'Strike with first two knuckles',
+      'Follow through completely',
+    ],
+    keyPoints: [
+      'Maintain side stance throughout',
+      'Full body rotation for power',
+      'Strike with first two knuckles',
+      'Follow through completely',
+      'Keep opposite hand chambered',
+    ],
+    commonMistakes: [
+      'Losing side stance position',
+      'Insufficient body rotation',
+      'Poor targeting',
+      'Weak follow through',
+      'Dropping guard hand',
+    ],
+    applications: ['Side attack', 'Lateral striking', 'Close range combat'],
+    createdAt: null,
+    updatedAt: null,
   },
 ];
 

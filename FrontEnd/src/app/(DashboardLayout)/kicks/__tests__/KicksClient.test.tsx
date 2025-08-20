@@ -55,26 +55,67 @@ const mockKicks = [
   {
     id: 1,
     name: 'Front Kick',
-    description: 'Basic forward kick',
-    difficulty: 'Beginner',
-    type: 'Linear',
+    korean: 'Ahp Cha Gi',
+    belt: 'White Belt',
     beltColor: '#FFFFFF',
+    description: 'A straight, linear kick using the ball of the foot or heel to strike forward.',
+    target: 'Solar plexus, Ribs, Knee, Groin',
+    execution: [
+      'Chamber knee to chest level',
+      'Extend leg straight forward',
+      'Strike with ball of foot',
+      'Snap leg back after impact',
+    ],
+    keyPoints: [
+      'Chamber knee to chest level',
+      'Keep supporting leg slightly bent',
+      'Strike with ball of foot',
+      'Snap leg back after impact',
+      'Maintain balance throughout',
+    ],
+    commonMistakes: [
+      'Not chambering knee high enough',
+      'Kicking with toes instead of ball of foot',
+      'Leaning back during kick',
+      'Not snapping leg back',
+      'Poor balance on supporting leg',
+    ],
+    applications: ['Distance keeping', 'Solar plexus attack', 'Knee strike'],
+    createdAt: null,
+    updatedAt: null,
   },
   {
     id: 2,
     name: 'Roundhouse Kick',
-    description: 'Circular kick to the side',
-    difficulty: 'Intermediate',
-    type: 'Circular',
-    beltColor: '#FFD700',
-  },
-  {
-    id: 3,
-    name: 'Side Kick',
-    description: 'Power kick to the side',
-    difficulty: 'Advanced',
-    type: 'Linear',
-    beltColor: '#FF8C00',
+    korean: 'Dol Lyeo Cha Gi',
+    belt: 'White Belt',
+    beltColor: '#FFFFFF',
+    description:
+      'A circular kick using the top of the foot or shin to strike the side of the target.',
+    target: 'Ribs, Liver, Head, Thigh',
+    execution: [
+      'Chamber knee to side',
+      'Rotate hips completely',
+      'Whip leg in circular motion',
+      'Strike with top of foot',
+    ],
+    keyPoints: [
+      'Chamber knee to side',
+      'Rotate hips completely',
+      'Strike with top of foot',
+      'Keep supporting leg stable',
+      'Follow through with hip rotation',
+    ],
+    commonMistakes: [
+      'Not rotating hips enough',
+      'Kicking in straight line instead of arc',
+      'Poor chamber position',
+      'Striking with shin instead of foot',
+      'Losing balance on pivot foot',
+    ],
+    applications: ['Side attack', 'Liver shot', 'Head kick'],
+    createdAt: null,
+    updatedAt: null,
   },
 ];
 
@@ -123,7 +164,7 @@ describe('KicksClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Kicks')).toBeInTheDocument();
+      expect(screen.getByText('Tang Soo Do Kicking Techniques')).toBeInTheDocument();
     });
   });
 
