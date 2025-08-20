@@ -149,7 +149,7 @@ describe('OneStepsClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('One Steps')).toBeInTheDocument();
+      expect(screen.getByText('Step 1 (Left)')).toBeInTheDocument();
     });
   });
 
@@ -172,7 +172,9 @@ describe('OneStepsClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Total One Steps')).toBeInTheDocument();
+      expect(
+        screen.getAllByText('First basic one-step sequence for Purple White belt students.')
+      ).toHaveLength(1);
     });
   });
 
@@ -195,9 +197,8 @@ describe('OneStepsClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Basic One Step #1')).toBeInTheDocument();
-      expect(screen.getByText('Basic One Step #2')).toBeInTheDocument();
-      expect(screen.getByText('Advanced One Step #1')).toBeInTheDocument();
+      expect(screen.getByText('Step 1 (Left)')).toBeInTheDocument();
+      expect(screen.getByText('Step 1 (Right)')).toBeInTheDocument();
     });
   });
 
@@ -219,7 +220,7 @@ describe('OneStepsClient', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByText('Add One Step')).toBeInTheDocument();
+    expect(screen.getByText('Add One-Step')).toBeInTheDocument();
   });
 
   it('hides add one step button for non-admin users', () => {
@@ -240,7 +241,7 @@ describe('OneStepsClient', () => {
       </TestWrapper>
     );
 
-    expect(screen.queryByText('Add One Step')).not.toBeInTheDocument();
+    expect(screen.queryByText('Add One-Step')).not.toBeInTheDocument();
   });
 
   it('renders page container with correct title', async () => {
@@ -262,7 +263,7 @@ describe('OneStepsClient', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('One Steps')).toBeInTheDocument();
+      expect(screen.getByText('Tang Soo Do One-Step Sparring')).toBeInTheDocument();
     });
   });
 });
