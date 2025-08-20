@@ -36,9 +36,9 @@ describe('useAuth hook', () => {
   const mockProfile = {
     id: 1,
     email: 'test@example.com',
+    firstName: 'John',
+    lastName: 'Doe',
     role: 'instructor' as const,
-    isActive: true,
-    createdAt: new Date(),
   };
 
   beforeEach(() => {
@@ -62,7 +62,7 @@ describe('useAuth hook', () => {
   });
 
   it('handles successful login', async () => {
-    const loginResponse = { instructor: mockProfile, accessToken: 'token123' };
+    const loginResponse = { success: true, instructor: mockProfile };
     mockAuthService.login.mockResolvedValueOnce(loginResponse);
     mockAuthService.getProfile.mockResolvedValueOnce(mockProfile);
 
@@ -104,7 +104,7 @@ describe('useAuth hook', () => {
 
   it('handles logout', async () => {
     // First login
-    const loginResponse = { instructor: mockProfile, accessToken: 'token123' };
+    const loginResponse = { success: true, instructor: mockProfile };
     mockAuthService.login.mockResolvedValueOnce(loginResponse);
     mockAuthService.getProfile.mockResolvedValueOnce(mockProfile);
 
@@ -134,7 +134,7 @@ describe('useAuth hook', () => {
 
   it('handles logout with service error', async () => {
     // Setup authenticated state
-    const loginResponse = { instructor: mockProfile, accessToken: 'token123' };
+    const loginResponse = { success: true, instructor: mockProfile };
     mockAuthService.login.mockResolvedValueOnce(loginResponse);
     mockAuthService.getProfile.mockResolvedValueOnce(mockProfile);
 
@@ -159,7 +159,7 @@ describe('useAuth hook', () => {
   });
 
   it('handles refresh token success', async () => {
-    const refreshResponse = { accessToken: 'newToken123' };
+    const refreshResponse = { success: true, message: 'Token refreshed successfully' };
     mockAuthService.refreshToken.mockResolvedValueOnce(refreshResponse);
 
     const { result } = renderHook(() => useAuth(), { wrapper: createWrapper() });
@@ -245,7 +245,7 @@ describe('useAuth hook', () => {
     process.env.NEXT_PUBLIC_ENABLE_DEBUG = 'true';
     const consoleSpy = jest.spyOn(console, 'log');
 
-    const loginResponse = { instructor: mockProfile, accessToken: 'token123' };
+    const loginResponse = { success: true, instructor: mockProfile };
     mockAuthService.login.mockResolvedValueOnce(loginResponse);
     mockAuthService.getProfile.mockResolvedValueOnce(mockProfile);
 
