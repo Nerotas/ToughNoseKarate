@@ -57,9 +57,11 @@ describe('Providers wrapper', () => {
     // Check if data is still loading or resolved
     const dataElement = screen.getByTestId('data');
     const loadingElement = screen.getByTestId('loading');
-    
+
     // Either should show data or still be loading (async behavior)
-    expect(dataElement.textContent === 'test-data' || loadingElement.textContent === 'loading').toBe(true);
+    expect(
+      dataElement.textContent === 'test-data' || loadingElement.textContent === 'loading'
+    ).toBe(true);
   });
 
   it('configures QueryClient with correct default options', async () => {
@@ -182,9 +184,12 @@ describe('Providers wrapper', () => {
     // Check if error state is reached or still processing
     const errorElement = screen.getByTestId('is-error');
     const errorMessageElement = screen.getByTestId('error-message');
-    
+
     // Either should show error or be in progress (async behavior)
     expect(errorElement.textContent === 'true' || errorElement.textContent === 'false').toBe(true);
-    expect(errorMessageElement.textContent === 'Test error' || errorMessageElement.textContent === 'no-error').toBe(true);
+    expect(
+      errorMessageElement.textContent === 'Test error' ||
+        errorMessageElement.textContent === 'no-error'
+    ).toBe(true);
   });
 });

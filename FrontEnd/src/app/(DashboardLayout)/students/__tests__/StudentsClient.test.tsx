@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
 import { mockBeltRequirements } from 'testingUtils/MockData/mockBeltRequirements';
+import { mockStudents } from 'testingUtils/MockData/mockStudents';
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
@@ -51,65 +52,6 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => {
 
 const mockUseAuth = require('../../../../hooks/useAuth').useAuth;
 const mockUseGet = require('../../../../hooks/useGet').default;
-
-const mockStudents = [
-  {
-    studentid: 3,
-    firstName: 'Jacob',
-    lastName: 'Smith',
-    preferredName: 'Jake',
-    age: 10,
-    dateOfBirth: null,
-    beltRank: 'Green',
-    startDateUTC: '2025-07-30 12:00:00',
-    endDateUTC: null,
-    email: 'nerotas7@gmail.com',
-    phone: '661-305-9259',
-    emergencyContactName: null,
-    emergencyContactPhone: null,
-    emergencyContactRelationship: null,
-    medicalConditions: null,
-    allergies: null,
-    medications: null,
-    waiverSigned: false,
-    waiverDate: null,
-    insuranceProvider: null,
-    insurancePolicyNumber: null,
-    notes: null,
-    active: true,
-    child: true,
-    lastTestUTC: '2025-07-13 00:00:00',
-    eligibleForTesting: false,
-  },
-  {
-    studentid: 9,
-    firstName: 'Ariyah',
-    lastName: 'Kluger',
-    preferredName: null,
-    age: 9,
-    dateOfBirth: null,
-    beltRank: 'Orange White',
-    startDateUTC: '2025-08-14T21:42:09.938Z',
-    endDateUTC: null,
-    email: 'Aaron.y.kluger@gmail.com',
-    phone: '845-517-7651',
-    emergencyContactName: null,
-    emergencyContactPhone: null,
-    emergencyContactRelationship: null,
-    medicalConditions: null,
-    allergies: null,
-    medications: null,
-    waiverSigned: false,
-    waiverDate: null,
-    insuranceProvider: null,
-    insurancePolicyNumber: null,
-    notes: null,
-    active: true,
-    child: true,
-    lastTestUTC: null,
-    eligibleForTesting: false,
-  },
-];
 
 describe('StudentsClient', () => {
   beforeEach(() => {
