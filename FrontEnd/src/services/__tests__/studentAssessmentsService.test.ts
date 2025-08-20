@@ -20,7 +20,7 @@ describe('studentAssessmentsService', () => {
     axiosInstance.get.mockResolvedValueOnce({ data: [{ id: 1 }] });
     const res = await studentAssessmentsService.getAssessmentsByStudent(5);
     expect(res).toEqual([{ id: 1 }]);
-    expect(axiosInstance.get).toHaveBeenCalledWith('/v1/student-assessments/student/5');
+    expect(axiosInstance.get).toHaveBeenCalledWith('/student-assessments/student/5');
   });
 
   test('getAssessmentSummary', async () => {
@@ -81,7 +81,7 @@ describe('studentAssessmentsService', () => {
   test('deleteAssessment', async () => {
     axiosInstance.delete.mockResolvedValueOnce({});
     await studentAssessmentsService.deleteAssessment(16);
-    expect(axiosInstance.delete).toHaveBeenCalledWith('/v1/student-assessments/16');
+    expect(axiosInstance.delete).toHaveBeenCalledWith('/student-assessments/16');
   });
 
   test('getAssessmentsByStatus', async () => {
