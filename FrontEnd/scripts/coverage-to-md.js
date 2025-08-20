@@ -132,6 +132,5 @@ console.log('');
 console.log(`**Threshold:** ${THRESHOLD}%`);
 console.log(`**Status:** ${pass ? 'Pass ✅' : 'Fail ❌'}`);
 
-// Also return exit code 0 even on fail so workflow's separate threshold check controls job failure; but
-// print numeric result for programmatic checks if needed.
-process.exit(0);
+// Exit non-zero when coverage fails so the script enforces the threshold when invoked directly.
+process.exit(pass ? 0 : 1);
