@@ -40,6 +40,13 @@ jobs:
         # Use project's test:ci script which runs jest with --ci and coverage
         run: npm run test:ci
 
+      - name: Show coverage output (debug)
+        if: always()
+        working-directory: ./FrontEnd
+        run: |
+          echo "Coverage directory listing:" || true
+          ls -al coverage || true
+
       - name: Upload coverage artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -52,19 +59,23 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: front-end-coverage-summary
-          path: FrontEnd/coverage/coverage-summary.txt
+          path: FrontEnd/coverage/**
 
       - name: Check coverage threshold
         if: always()
         working-directory: ./FrontEnd
         run: |
           THRESHOLD=30
-          SUMMARY=coverage/coverage-summary.json
-          if [ ! -f "$SUMMARY" ]; then
-            echo "Coverage summary not found at $SUMMARY" >&2
+          SUMMARY_JSON=coverage/coverage-summary.json
+          FINAL_JSON=coverage/coverage-final.json
+          if [ -f "$SUMMARY_JSON" ]; then
+            node -e "const fs=require('fs');const t=${THRESHOLD};const s=JSON.parse(fs.readFileSync('$SUMMARY_JSON'));const total=s.total||s;const metrics=['statements','branches','functions','lines'];let ok=true;metrics.forEach(m=>{const pct=total[m]&&total[m].pct?total[m].pct:0; if(pct < t){console.error(m+' coverage '+pct+'% < '+t+'%'); ok=false}}); if(!ok){process.exit(1);} else {console.log('Coverage threshold met');}"
+          elif [ -f "$FINAL_JSON" ]; then
+            node -e "const fs=require('fs');const t=${THRESHOLD};const s=JSON.parse(fs.readFileSync('$FINAL_JSON'));let totals={statements:{total:0,covered:0},branches:{total:0,covered:0},functions:{total:0,covered:0},lines:{total:0,covered:0}};Object.values(s).forEach(f=>{if(f.statements){totals.statements.total+=f.statements.total||0;totals.statements.covered+=f.statements.covered||0;} if(f.branches){totals.branches.total+=f.branches.total||0;totals.branches.covered+=f.branches.covered||0;} if(f.functions){totals.functions.total+=f.functions.total||0;totals.functions.covered+=f.functions.covered||0;} if(f.lines){totals.lines.total+=f.lines.total||0;totals.lines.covered+=f.lines.covered||0;}});let ok=true;['statements','branches','functions','lines'].forEach(m=>{const tot=totals[m].total;const cov=totals[m].covered;const pct=tot>0?Math.round((cov/tot)*100*100)/100:100; if(pct < t){console.error(m+' coverage '+pct+'% < '+t+'%'); ok=false}}); if(!ok){process.exit(1);} else {console.log('Coverage threshold met');}"
+          else
+            echo "No coverage JSON found (coverage-summary.json or coverage-final.json)" >&2
             exit 1
           fi
-          node -e "const fs=require('fs');const t=${THRESHOLD};const s=JSON.parse(fs.readFileSync('coverage/coverage-summary.json','utf8'));const total=s.total||s;const metrics=['statements','branches','functions','lines'];let ok=true;metrics.forEach(m=>{const pct=total[m]&&total[m].pct?total[m].pct:0; if(pct < t){console.error(m+' coverage '+pct+'% < '+t+'%'); ok=false}}); if(!ok){process.exit(1);} else {console.log('Coverage threshold met');}"
 
       - name: Create coverage markdown
         if: always()
@@ -72,8 +83,11 @@ jobs:
         run: |
           echo "# Frontend Coverage Report" > coverage_report.md || true
           SUMMARY_JSON=coverage/coverage-summary.json
+          FINAL_JSON=coverage/coverage-final.json
           if [ -f "$SUMMARY_JSON" ]; then
             node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('$SUMMARY_JSON'));const rows=Object.entries(s).map(([k,v])=>`| ${k} | ${v.statements.pct}% | ${v.branches.pct}% | ${v.functions.pct}% | ${v.lines.pct}% |`);const header='| File | Stmts | Branch | Funcs | Lines |\n|---|---:|---:|---:|---:';fs.writeFileSync('coverage_report.md', '# Frontend Coverage Report\n\n'+header+'\n'+rows.join('\n'));"
+          elif [ -f "$FINAL_JSON" ]; then
+            node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('$FINAL_JSON'));const files=Object.entries(s);const header='| File | Stmts | Branch | Funcs | Lines |\n|---|---:|---:|---:|---:';const rows=files.map(([k,v])=>{const st=v.statements||{};const br=v.branches||{};const fn=v.functions||{};const ln=v.lines||{};const sp=(st.total?Math.round((st.covered/st.total)*100*100)/100:100);const bp=(br.total?Math.round((br.covered/br.total)*100*100)/100:100);const fp=(fn.total?Math.round((fn.covered/fn.total)*100*100)/100:100);const lp=(ln.total?Math.round((ln.covered/ln.total)*100*100)/100:100);return `| ${k} | ${sp}% | ${bp}% | ${fp}% | ${lp}% |`});fs.writeFileSync('coverage_report.md', '# Frontend Coverage Report\n\n'+header+'\n'+rows.join('\n'));"
           elif [ -f coverage/coverage-summary.txt ]; then
             echo "\n\n<details><summary>Coverage summary</summary>" >> coverage_report.md || true
             cat coverage/coverage-summary.txt >> coverage_report.md || true
