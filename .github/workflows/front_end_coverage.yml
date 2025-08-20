@@ -87,7 +87,10 @@ jobs:
           if [ -f "$SUMMARY_JSON" ]; then
             node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('$SUMMARY_JSON'));const rows=Object.entries(s).map(([k,v])=>`| ${k} | ${v.statements.pct}% | ${v.branches.pct}% | ${v.functions.pct}% | ${v.lines.pct}% |`);const header='| File | Stmts | Branch | Funcs | Lines |\n|---|---:|---:|---:|---:';fs.writeFileSync('coverage_report.md', '# Frontend Coverage Report\n\n'+header+'\n'+rows.join('\n'));"
           elif [ -f "$FINAL_JSON" ]; then
-            node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('$FINAL_JSON'));const files=Object.entries(s);const header='| File | Stmts | Branch | Funcs | Lines |\n|---|---:|---:|---:|---:';const rows=files.map(([k,v])=>{const st=v.statements||{};const br=v.branches||{};const fn=v.functions||{};const ln=v.lines||{};const sp=(st.total?Math.round((st.covered/st.total)*100*100)/100:100);const bp=(br.total?Math.round((br.covered/br.total)*100*100)/100:100);const fp=(fn.total?Math.round((fn.covered/fn.total)*100*100)/100:100);const lp=(ln.total?Math.round((ln.covered/ln.total)*100*100)/100:100);return `| ${k} | ${sp}% | ${bp}% | ${fp}% | ${lp}% |`});fs.writeFileSync('coverage_report.md', '# Frontend Coverage Report\n\n'+header+'\n'+rows.join('\n'));"
+            # Prefer the repository script which produces a nicer table and totals
+            node ./scripts/coverage-to-md.js "$FINAL_JSON" > coverage_table.md || true
+            echo "# Frontend Coverage Report" > coverage_report.md || true
+            cat coverage_table.md >> coverage_report.md || true
           elif [ -f coverage/coverage-summary.txt ]; then
             echo "\n\n<details><summary>Coverage summary</summary>" >> coverage_report.md || true
             cat coverage/coverage-summary.txt >> coverage_report.md || true
