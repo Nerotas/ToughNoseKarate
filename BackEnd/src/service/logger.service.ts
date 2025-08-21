@@ -3,7 +3,7 @@ import { Injectable, ConsoleLogger } from '@nestjs/common';
 @Injectable()
 export class LoggerService extends ConsoleLogger {
   private logger: ConsoleLogger;
-  private appName = `${process.env.APP_NAME}` || 'ToghNoseKarateAPI';
+  private appName = process.env.APP_NAME || 'ToghNoseKarateAPI';
   constructor() {
     super();
     this.logger = new ConsoleLogger(this.appName);
