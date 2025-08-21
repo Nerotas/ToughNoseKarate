@@ -3,7 +3,7 @@ import { FormDefinitionsService } from '../formDefinitions.service';
 import { FormDefinitions } from '../../models/formDefinitions';
 
 // Mock the FormDefinitions model
-jest.mock('../models/formDefinitions');
+jest.mock('../../models/formDefinitions');
 
 const MockedFormDefinitions = FormDefinitions as jest.Mocked<
   typeof FormDefinitions
