@@ -84,9 +84,8 @@ jobs:
             echo "# Backend Coverage Report" > coverage_report.md
             echo "" >> coverage_report.md
 
-            # Extract total coverage
+            # Extract total coverage (excluding branches due to NestJS decorators)
             STMT_PCT=$(node -e "const s=JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json'));console.log(s.total.statements.pct)")
-            BRANCH_PCT=$(node -e "const s=JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json'));console.log(s.total.branches.pct)")
             FUNC_PCT=$(node -e "const s=JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json'));console.log(s.total.functions.pct)")
             LINE_PCT=$(node -e "const s=JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json'));console.log(s.total.lines.pct)")
 
@@ -95,7 +94,6 @@ jobs:
             echo "| Metric | Coverage |" >> coverage_report.md
             echo "|--------|----------|" >> coverage_report.md
             echo "| Statements | ${STMT_PCT}% |" >> coverage_report.md
-            echo "| Branches | ${BRANCH_PCT}% |" >> coverage_report.md
             echo "| Functions | ${FUNC_PCT}% |" >> coverage_report.md
             echo "| Lines | ${LINE_PCT}% |" >> coverage_report.md
             echo "" >> coverage_report.md
