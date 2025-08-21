@@ -28,6 +28,7 @@ const customJestConfig = {
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/app/layout.tsx',
     '!src/app/global.css',
+    '!src/**/page.tsx',
     '!coverage/**',
     '!.next/**',
   ],

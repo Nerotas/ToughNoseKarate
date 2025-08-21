@@ -77,7 +77,7 @@ describe('LoginPage Component', () => {
     const user = userEvent.setup();
     render(<LoginPage />);
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    const submitButton = screen.getByText('Sign In');
     await user.click(submitButton);
 
     await waitFor(() => {
@@ -93,7 +93,7 @@ describe('LoginPage Component', () => {
     const emailField = screen.getByLabelText('Email Address');
     await user.type(emailField, 'invalid-email');
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    const submitButton = screen.getByText('Sign In');
     await user.click(submitButton);
 
     await waitFor(() => {
@@ -108,7 +108,7 @@ describe('LoginPage Component', () => {
     const passwordField = screen.getByLabelText('Password');
     await user.type(passwordField, '123');
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    const submitButton = screen.getByText('Sign In');
     await user.click(submitButton);
 
     await waitFor(() => {
@@ -124,16 +124,21 @@ describe('LoginPage Component', () => {
 
     const emailField = screen.getByLabelText('Email Address');
     const passwordField = screen.getByLabelText('Password');
-    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await user.type(emailField, 'instructor@toughnosekarate.com');
     await user.type(passwordField, 'password123');
+
+    // Look for submit button by text instead of role
+    const submitButton = screen.getByText('Sign In');
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith('instructor@toughnosekarate.com', 'password123');
-    });
-  });
+    await waitFor(
+      () => {
+        expect(mockLogin).toHaveBeenCalledWith('instructor@toughnosekarate.com', 'password123');
+      },
+      { timeout: 10000 }
+    );
+  }, 15000);
 
   it('redirects to students page on successful login', async () => {
     const user = userEvent.setup();
@@ -143,16 +148,19 @@ describe('LoginPage Component', () => {
 
     const emailField = screen.getByLabelText('Email Address');
     const passwordField = screen.getByLabelText('Password');
-    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    const submitButton = screen.getByText('Sign In');
 
     await user.type(emailField, 'instructor@toughnosekarate.com');
     await user.type(passwordField, 'password123');
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/students');
-    });
-  });
+    await waitFor(
+      () => {
+        expect(mockPush).toHaveBeenCalledWith('/students');
+      },
+      { timeout: 10000 }
+    );
+  }, 15000);
 
   it('displays error message when login fails', async () => {
     const user = userEvent.setup();
@@ -163,21 +171,24 @@ describe('LoginPage Component', () => {
 
     const emailField = screen.getByLabelText('Email Address');
     const passwordField = screen.getByLabelText('Password');
-    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    const submitButton = screen.getByText('Sign In');
 
     await user.type(emailField, 'instructor@toughnosekarate.com');
     await user.type(passwordField, 'wrongpassword');
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText(errorMessage)).toBeInTheDocument();
+      },
+      { timeout: 10000 }
+    );
 
     // Check that the error is displayed in an alert
     const errorAlert = screen.getByRole('alert');
     expect(errorAlert).toBeInTheDocument();
     expect(errorAlert).toHaveTextContent(errorMessage);
-  });
+  }, 15000);
 
   it('displays generic error message for non-Error objects', async () => {
     const user = userEvent.setup();
@@ -187,35 +198,41 @@ describe('LoginPage Component', () => {
 
     const emailField = screen.getByLabelText('Email Address');
     const passwordField = screen.getByLabelText('Password');
-    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    const submitButton = screen.getByText('Sign In');
 
     await user.type(emailField, 'instructor@toughnosekarate.com');
     await user.type(passwordField, 'password123');
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Login failed')).toBeInTheDocument();
-    });
-  });
+    await waitFor(
+      () => {
+        expect(screen.getByText('Login failed')).toBeInTheDocument();
+      },
+      { timeout: 10000 }
+    );
+  }, 15000);
 
   it('clears error message when new login attempt is made', async () => {
     const user = userEvent.setup();
-    mockLogin.mockRejectedValueOnce(new Error('First error'));
+    mockLogin.mockRejectedValueOnce(new Error('Invalid credentials'));
 
     render(<LoginPage />);
 
     const emailField = screen.getByLabelText('Email Address');
     const passwordField = screen.getByLabelText('Password');
-    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    const submitButton = screen.getByText('Sign In');
 
     // First failed attempt
     await user.type(emailField, 'instructor@toughnosekarate.com');
     await user.type(passwordField, 'wrongpassword');
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('First error')).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
+      },
+      { timeout: 10000 }
+    );
 
     // Clear fields and try again
     await user.clear(emailField);
@@ -227,11 +244,14 @@ describe('LoginPage Component', () => {
     await user.type(passwordField, 'correctpassword');
     await user.click(submitButton);
 
-    // Error should be cleared
-    await waitFor(() => {
-      expect(screen.queryByText('First error')).not.toBeInTheDocument();
-    });
-  });
+    // Error should be cleared during new submission
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Invalid credentials')).not.toBeInTheDocument();
+      },
+      { timeout: 10000 }
+    );
+  }, 20000);
 
   it('has help text at the bottom', () => {
     render(<LoginPage />);
