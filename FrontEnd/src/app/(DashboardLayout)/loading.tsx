@@ -6,7 +6,7 @@ import { randomSnippet } from 'constants/data/LoadingSnippets';
 
 const Loading = () => {
   return (
-    <Container>
+    <Container data-testid='loading-spinner'>
       <Box
         sx={{
           display: 'flex',
