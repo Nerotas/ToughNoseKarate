@@ -107,7 +107,8 @@
       "src/lib",
       "src/types",
       "src/constants",
-      "src/services/testingUtils"
+      "src/services/testingUtils",
+      "src/models"
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
