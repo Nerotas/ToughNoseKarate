@@ -1,13 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import BlockCard from '../../components/blocks/blockCard';
+import BlockCard from '../../../app/(DashboardLayout)/components/blocks/blockCard';
 import React from 'react';
 
-jest.mock('../../../../hooks/useAuth', () => ({
+jest.mock('../../../hooks/useAuth', () => ({
   useAuth: jest.fn(),
 }));
 
-const mockUseAuth = require('../../../../hooks/useAuth').useAuth;
+const mockUseAuth = require('../../../hooks/useAuth').useAuth;
 
 const baseBlock = {
   id: 1,

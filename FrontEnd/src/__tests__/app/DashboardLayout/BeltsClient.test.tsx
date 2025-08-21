@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import BeltsClient from '../BeltsClient';
+import BeltsClient from '../../../app/(DashboardLayout)/belt-requirements/BeltsClient';
 import { mockBeltRequirements } from 'testingUtils/MockData/mockBeltRequirements';
 
 // Mock Next.js router
@@ -16,18 +16,18 @@ jest.mock('next/navigation', () => ({
 }));
 
 // Mock useAuth hook
-jest.mock('../../../../hooks/useAuth', () => ({
+jest.mock('../../../hooks/useAuth', () => ({
   useAuth: jest.fn(),
 }));
 
 // Mock useGet hook
-jest.mock('../../../../hooks/useGet', () => ({
+jest.mock('../../../hooks/useGet', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
 
 // Mock loading component
-jest.mock('../../../../app/loading', () => {
+jest.mock('../../../app/loading', () => {
   return function Loading() {
     return <div data-testid='loading'>Loading...</div>;
   };
@@ -49,8 +49,8 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const mockUseAuth = require('../../../../hooks/useAuth').useAuth;
-const mockUseGet = require('../../../../hooks/useGet').default;
+const mockUseAuth = require('../../../hooks/useAuth').useAuth;
+const mockUseGet = require('../../../hooks/useGet').default;
 
 describe('BeltsClient', () => {
   beforeEach(() => {

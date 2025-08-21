@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import BlocksClient from '../BlocksClient';
+import BlocksClient from '../../../app/(DashboardLayout)/blocks/BlocksClient';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -8,23 +8,23 @@ jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
-jest.mock('../../../../hooks/useAuth', () => ({
+jest.mock('../../../hooks/useAuth', () => ({
   useAuth: jest.fn(),
 }));
 
-jest.mock('../../../../hooks/useGet', () => ({
+jest.mock('../../../hooks/useGet', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
 
-jest.mock('../../../../app/loading', () => () => <div data-testid='loading'>Loading...</div>);
+jest.mock('../../../app/loading', () => () => <div data-testid='loading'>Loading...</div>);
 // Mock the heavy create form to avoid unrelated complexity
-jest.mock('../../components/blocks/blockCreateForm', () => () => (
+jest.mock('../../../app/(DashboardLayout)/components/blocks/blockCreateForm', () => () => (
   <div data-testid='mock-create-form'>Create Form</div>
 ));
 
-const mockUseAuth = require('../../../../hooks/useAuth').useAuth;
-const mockUseGet = require('../../../../hooks/useGet').default;
+const mockUseAuth = require('../../../hooks/useAuth').useAuth;
+const mockUseGet = require('../../../hooks/useGet').default;
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
