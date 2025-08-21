@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PunchesDefinitionsService } from '../service/punchesDefinitions.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/decorators/roles.decorator';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { PunchesDefinitionsAttributes } from 'src/models';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../decorators/roles.decorator';
+import { RolesGuard } from '../guards/roles.guard';
+import { PunchesDefinitionsAttributes } from '../models';
 
 @ApiTags('Techniques')
 @Controller({ path: 'punches-definitions', version: '1' })

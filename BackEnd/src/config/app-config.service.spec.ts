@@ -10,7 +10,6 @@ describe('AppConfigService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
-          validationSchema: configValidationSchema,
           validationOptions: {
             allowUnknown: true,
             abortEarly: false,
@@ -27,6 +26,7 @@ describe('AppConfigService', () => {
               DB_NAME: 'test_db',
               DB_SSL: false,
               API_PREFIX: 'api',
+              JWT_SECRET: 'this_is_a_test_secret_key_that_is_32_chars_long',
               JWT_EXPIRATION: '1d',
               THROTTLE_TTL: 60,
               THROTTLE_LIMIT: 10,
@@ -127,7 +127,6 @@ describe('Environment Validation', () => {
     const module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
-          validationSchema: configValidationSchema,
           validationOptions: {
             allowUnknown: true,
             abortEarly: false,
@@ -141,6 +140,7 @@ describe('Environment Validation', () => {
               DB_USERNAME: 'test',
               DB_PASSWORD: 'test',
               DB_NAME: 'test_db',
+              JWT_SECRET: 'this_is_a_test_secret_key_that_is_32_chars_long',
             }),
           ],
         }),

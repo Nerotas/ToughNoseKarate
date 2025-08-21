@@ -1,0 +1,89 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "name": "FrontEnd",
+      "path": "FrontEnd"
+    },
+    {
+      "name": "types",
+      "path": "FrontEnd/.next/types"
+    },
+    {
+      "name": "standalone",
+      "path": "FrontEnd/.next/standalone"
+    },
+    {
+      "name": ".next",
+      "path": "FrontEnd/.next/standalone/.next"
+    },
+    {
+      "name": ".next",
+      "path": "FrontEnd/.next"
+    },
+    {
+      "name": "BackEnd",
+      "path": "BackEnd"
+    }
+  ],
+  "settings": {
+    "vs-code-prettier-eslint.prettierLast": false,
+    "files.associations": {
+      "*.mjs": "javascript"
+    },
+    // Jest Extension Configuration for Monorepo
+    "jest.disabledWorkspaceFolders": [
+      "ToughNoseKarate",
+      "types",
+      "standalone",
+      ".next",
+      ".next"
+    ],
+    "jest.jestCommandLine": "npm test --",
+    "jest.rootPath": "",
+    "jest.runMode": "on-demand",
+    "jest.showCoverageOnLoad": false,
+    "jest.autoRun": {
+      "watch": false,
+      "onStartup": [
+        "all-tests"
+      ]
+    },
+    // Configure Jest for multiple projects
+    "jest.projects": [
+      {
+        "name": "FrontEnd",
+        "rootPath": "FrontEnd",
+        "jestCommandLine": "npm test --",
+        "coverageFormatter": "DefaultFormatter"
+      },
+      {
+        "name": "BackEnd",
+        "rootPath": "BackEnd",
+        "jestCommandLine": "npm run test --",
+        "coverageFormatter": "DefaultFormatter"
+      }
+    ],
+    // Test explorer settings
+    "testExplorer.useNativeTesting": true,
+    "testExplorer.showCollapseButton": true,
+    "testExplorer.showExpandButton": true,
+    "testExplorer.showOnRun": true,
+    // Terminal settings for better test output
+    "terminal.integrated.env.windows": {
+      "NODE_OPTIONS": "--max-old-space-size=4096"
+    }
+  },
+  // Extensions recommendations for the workspace
+  "extensions": {
+    "recommendations": [
+      "orta.vscode-jest",
+      "ms-vscode.vscode-typescript-next",
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "ms-vscode.vscode-eslint"
+    ]
+  }
+}

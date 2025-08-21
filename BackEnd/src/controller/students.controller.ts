@@ -17,7 +17,11 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { StudentsService } from '../service/students.service';
-import { CreateStudentDto, students, StudentsAttributes } from 'src/models/students';
+import {
+  CreateStudentDto,
+  students,
+  StudentsAttributes,
+} from '../models/students';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
