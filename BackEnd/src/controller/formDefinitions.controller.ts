@@ -22,7 +22,7 @@ import {
 import { FormDefinitionsService } from '../service/formDefinitions.service';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('form-definitions')
 @Controller({ path: 'form-definitions', version: '1' })

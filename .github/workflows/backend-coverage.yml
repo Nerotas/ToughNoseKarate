@@ -1,12 +1,9 @@
-name: Backend CI for Railway
+name: Backend Tests with Coverage
 
 on:
-  push:
-    branches: [main, staging]
-    paths: ["BackEnd/**"]
   pull_request:
-    branches: [main]
-    paths: ["BackEnd/**"]
+    paths:
+      - "BackEnd/**"
 
 permissions:
   contents: read
@@ -16,17 +13,16 @@ env:
   NODE_VERSION: "20"
 
 jobs:
-  test-and-build:
+  test-coverage:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
           cache-dependency-path: BackEnd/package-lock.json
 
@@ -121,7 +117,7 @@ jobs:
 
       - name: Post coverage comment to PR
         # Skip posting comment for forked PRs because secrets/GITHUB_TOKEN are not available
-        if: always() && github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork == false)
+        if: always() && (github.event.pull_request.head.repo.fork == false)
         uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -130,16 +126,3 @@ jobs:
             Backend coverage results for this PR:
 
             ${{ steps.read_coverage.outputs.comment }}
-
-      - name: Build application
-        working-directory: ./BackEnd
-        run: npm run build
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-build
-          path: |
-            BackEnd/dist/
-            BackEnd/package.json
-            BackEnd/package-lock.json

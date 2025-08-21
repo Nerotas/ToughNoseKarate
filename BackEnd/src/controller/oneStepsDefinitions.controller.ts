@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OneStepsDefinitionsService } from '../service/oneStepsDefinitions.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/decorators/roles.decorator';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { oneStepsDefinitionsAttributes } from 'src/models/oneStepsDefinitions';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../decorators/roles.decorator';
+import { RolesGuard } from '../guards/roles.guard';
+import { oneStepsDefinitionsAttributes } from '../models/oneStepsDefinitions';
 
 @ApiTags('onestep-definitions')
 @Controller({ path: 'onestep-definitions', version: '1' })
