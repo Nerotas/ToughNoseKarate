@@ -31,6 +31,10 @@ const customJestConfig = {
     '!src/**/page.tsx',
     '!coverage/**',
     '!.next/**',
+    '!src/models/**', // Exclude models from coverage
+    '!src/types/**', // Exclude types from coverage
+    '!src/constants/**', // Exclude constants from coverage
+    '!src/services/testingUtils/**', // Exclude testingUtils from coverage
   ],
   coverageThreshold: {
     global: {

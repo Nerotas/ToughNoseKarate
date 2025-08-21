@@ -37,6 +37,36 @@ const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 
 const theme = createTheme();
 
+const mockUser = {
+  isAuthenticated: false, // Changed to false so login items show
+  instructor: null,
+  isAuthLoading: false,
+  login: jest.fn(),
+  logout: jest.fn(),
+  refreshToken: jest.fn(),
+  ensureProfile: jest.fn(),
+  loginError: null,
+  profileError: null,
+};
+
+const mockUserInstructor = {
+  isAuthenticated: true,
+  instructor: {
+    id: 1,
+    role: 'instructor',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+  },
+  isAuthLoading: false,
+  login: jest.fn(),
+  logout: jest.fn(),
+  refreshToken: jest.fn(),
+  ensureProfile: jest.fn(),
+  loginError: null,
+  profileError: null,
+};
+
 const renderWithTheme = (component: React.ReactElement) => {
   return render(<ThemeProvider theme={theme}>{component}</ThemeProvider>);
 };
@@ -44,17 +74,7 @@ const renderWithTheme = (component: React.ReactElement) => {
 describe('SidebarItems Component', () => {
   beforeEach(() => {
     mockUsePathname.mockReturnValue('/');
-    mockUseAuth.mockReturnValue({
-      isAuthenticated: false,
-      instructor: null,
-      isAuthLoading: false,
-      login: jest.fn(),
-      logout: jest.fn(),
-      refreshToken: jest.fn(),
-      ensureProfile: jest.fn(),
-      loginError: null,
-      profileError: null,
-    });
+    mockUseAuth.mockReturnValue(mockUser); // Default to unauthenticated
   });
 
   afterEach(() => {
@@ -86,12 +106,7 @@ describe('SidebarItems Component', () => {
 
   describe('Authentication States', () => {
     it('shows login menu items when unauthenticated', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: false,
-        instructor: null,
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      mockUseAuth.mockReturnValue(mockUser); // unauthenticated user
 
       renderWithTheme(<SidebarItems />);
 
@@ -99,18 +114,7 @@ describe('SidebarItems Component', () => {
     });
 
     it('shows auth menu items when authenticated', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: true,
-        instructor: {
-          id: 1,
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john@example.com',
-          role: 'instructor',
-        },
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      mockUseAuth.mockReturnValue(mockUserInstructor);
 
       renderWithTheme(<SidebarItems />);
 
@@ -120,18 +124,7 @@ describe('SidebarItems Component', () => {
     });
 
     it('shows user info when authenticated with instructor details', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: true,
-        instructor: {
-          id: 1,
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john@example.com',
-          role: 'instructor',
-        },
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      mockUseAuth.mockReturnValue(mockUserInstructor);
 
       renderWithTheme(<SidebarItems />);
 
@@ -141,12 +134,7 @@ describe('SidebarItems Component', () => {
     });
 
     it('does not show user info when authenticated but no instructor details', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: true,
-        instructor: null,
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      mockUseAuth.mockReturnValue({ ...mockUserInstructor, instructor: null });
 
       renderWithTheme(<SidebarItems />);
 
@@ -176,18 +164,7 @@ describe('SidebarItems Component', () => {
     });
 
     it('renders authenticated menu items correctly', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: true,
-        instructor: {
-          id: 1,
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john@example.com',
-          role: 'instructor',
-        },
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      mockUseAuth.mockReturnValue(mockUserInstructor);
       mockUsePathname.mockReturnValue('/students');
 
       renderWithTheme(<SidebarItems />);
@@ -232,6 +209,7 @@ describe('SidebarItems Component', () => {
     });
 
     it('has correct href for login when unauthenticated', () => {
+      mockUseAuth.mockReturnValue(mockUser); // Use unauthenticated user
       renderWithTheme(<SidebarItems />);
 
       expect(screen.getByRole('link', { name: /instructor login/i })).toHaveAttribute(
@@ -241,18 +219,7 @@ describe('SidebarItems Component', () => {
     });
 
     it('has correct href attributes for auth menu items', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: true,
-        instructor: {
-          id: 1,
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john@example.com',
-          role: 'instructor',
-        },
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      mockUseAuth.mockReturnValue(mockUserInstructor);
 
       renderWithTheme(<SidebarItems />);
 
@@ -277,18 +244,7 @@ describe('SidebarItems Component', () => {
     });
 
     it('shows management section when authenticated', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: true,
-        instructor: {
-          id: 1,
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john@example.com',
-          role: 'instructor',
-        },
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      mockUseAuth.mockReturnValue(mockUserInstructor);
 
       renderWithTheme(<SidebarItems />);
 
@@ -296,6 +252,7 @@ describe('SidebarItems Component', () => {
     });
 
     it('shows management section in login items when unauthenticated', () => {
+      mockUseAuth.mockReturnValue(mockUser); // Use unauthenticated user
       renderWithTheme(<SidebarItems />);
 
       // There should be a MANAGEMENT section for login items
@@ -305,18 +262,17 @@ describe('SidebarItems Component', () => {
 
   describe('User Information Display', () => {
     it('displays user role in uppercase', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: true,
+      const mockAdminUser = {
+        ...mockUserInstructor,
         instructor: {
-          id: 1,
+          ...mockUserInstructor.instructor,
           firstName: 'Jane',
           lastName: 'Smith',
-          email: 'jane@example.com',
           role: 'admin',
+          email: 'jane@example.com',
         },
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      };
+      mockUseAuth.mockReturnValue(mockAdminUser);
 
       renderWithTheme(<SidebarItems />);
 
@@ -324,18 +280,17 @@ describe('SidebarItems Component', () => {
     });
 
     it('handles different user roles correctly', () => {
-      mockUseAuth.mockReturnValue({
-        isAuthenticated: true,
+      const mockStudentUser = {
+        ...mockUserInstructor,
         instructor: {
-          id: 1,
+          ...mockUserInstructor.instructor,
           firstName: 'Student',
-          lastName: 'User',
-          email: 'student@example.com',
+          lastName: 'Test',
           role: 'student',
+          email: 'student@example.com',
         },
-        login: jest.fn(),
-        logout: jest.fn(),
-      });
+      };
+      mockUseAuth.mockReturnValue(mockStudentUser);
 
       renderWithTheme(<SidebarItems />);
 
