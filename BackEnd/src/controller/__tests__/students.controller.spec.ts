@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { StudentsController } from './students.controller';
-import { StudentsService } from '../service/students.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
-import { CreateStudentDto, StudentsAttributes } from '../models/students';
-import { InstructorPayload } from '../auth/jwt.strategy';
+import { StudentsController } from '../students.controller';
+import { StudentsService } from '../../service/students.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
+import { CreateStudentDto, StudentsAttributes } from '../../models/students';
+import { InstructorPayload } from '../../auth/jwt.strategy';
 
 describe('StudentsController', () => {
   let controller: StudentsController;

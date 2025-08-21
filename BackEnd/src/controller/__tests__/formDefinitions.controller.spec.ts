@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FormDefinitionsController } from './formDefinitions.controller';
-import { FormDefinitionsService } from '../service/formDefinitions.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { FormDefinitionsController } from '../formDefinitions.controller';
+import { FormDefinitionsService } from '../../service/formDefinitions.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
 describe('FormDefinitionsController', () => {
   let controller: FormDefinitionsController;

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PunchesDefinitionsController } from './punchesDefinitions.controller';
-import { PunchesDefinitionsService } from '../service/punchesDefinitions.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { PunchesDefinitionsController } from '../punchesDefinitions.controller';
+import { PunchesDefinitionsService } from '../../service/punchesDefinitions.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
 describe('PunchesDefinitionsController', () => {
   let controller: PunchesDefinitionsController;

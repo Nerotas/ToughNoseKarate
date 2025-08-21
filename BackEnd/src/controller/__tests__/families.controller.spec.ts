@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FamiliesController } from './families.controller';
-import { FamiliesService } from '../service/families.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { FamiliesController } from '../families.controller';
+import { FamiliesService } from '../../service/families.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
 describe('FamiliesController', () => {
   let controller: FamiliesController;

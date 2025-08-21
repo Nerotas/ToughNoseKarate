@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OneStepsDefinitionsController } from './oneStepsDefinitions.controller';
-import { OneStepsDefinitionsService } from '../service/oneStepsDefinitions.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { OneStepsDefinitionsController } from '../oneStepsDefinitions.controller';
+import { OneStepsDefinitionsService } from '../../service/oneStepsDefinitions.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
 describe('OneStepsDefinitionsController', () => {
   let controller: OneStepsDefinitionsController;

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BeltRequirementsController } from './beltRequirements.controller';
-import { BeltRequirementsService } from '../service/beltRequirements.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { BeltRequirementsController } from '../beltRequirements.controller';
+import { BeltRequirementsService } from '../../service/beltRequirements.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
 describe('BeltRequirementsController', () => {
   let controller: BeltRequirementsController;

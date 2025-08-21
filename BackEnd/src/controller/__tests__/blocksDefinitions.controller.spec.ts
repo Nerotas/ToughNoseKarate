@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BlocksDefinitionsController } from './blocksDefinitions.controller';
-import { BlocksDefinitionsService } from '../service/blocksDefinitions.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { BlocksDefinitionsController } from '../blocksDefinitions.controller';
+import { BlocksDefinitionsService } from '../../service/blocksDefinitions.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
 describe('BlocksDefinitionsController', () => {
   let controller: BlocksDefinitionsController;

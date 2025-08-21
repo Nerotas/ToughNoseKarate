@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SelfDefenseDefinitionsController } from './selfDefenseDefinitions.controller';
-import { SelfDefenseDefinitionsService } from '../service/selfDefenseDefinitions.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { KicksDefinitionsController } from '../kicksDefinitions.controller';
+import { KicksDefinitionsService } from '../../service/kicksDefinitions.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
-describe('SelfDefenseDefinitionsController', () => {
-  let controller: SelfDefenseDefinitionsController;
-  let service: jest.Mocked<SelfDefenseDefinitionsService>;
+describe('KicksDefinitionsController', () => {
+  let controller: KicksDefinitionsController;
+  let service: jest.Mocked<KicksDefinitionsService>;
 
-  const mockSelfDefenseDefinitionsService = {
+  const mockKicksDefinitionsService = {
     create: jest.fn(),
     findAll: jest.fn(),
     findOne: jest.fn(),
@@ -16,10 +16,10 @@ describe('SelfDefenseDefinitionsController', () => {
     remove: jest.fn(),
   };
 
-  const mockSelfDefense = {
+  const mockKick = {
     id: 1,
-    name: 'Wrist Grab Defense',
-    description: 'Defense against wrist grab',
+    name: 'Front Kick',
+    description: 'Basic front kick technique',
     belt_rank: 'white',
     difficulty_level: 1,
     created_at: new Date(),
@@ -28,11 +28,11 @@ describe('SelfDefenseDefinitionsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [SelfDefenseDefinitionsController],
+      controllers: [KicksDefinitionsController],
       providers: [
         {
-          provide: SelfDefenseDefinitionsService,
-          useValue: mockSelfDefenseDefinitionsService,
+          provide: KicksDefinitionsService,
+          useValue: mockKicksDefinitionsService,
         },
       ],
     })
@@ -42,10 +42,10 @@ describe('SelfDefenseDefinitionsController', () => {
       .useValue({ canActivate: jest.fn(() => true) })
       .compile();
 
-    controller = module.get<SelfDefenseDefinitionsController>(
-      SelfDefenseDefinitionsController,
+    controller = module.get<KicksDefinitionsController>(
+      KicksDefinitionsController,
     );
-    service = module.get(SelfDefenseDefinitionsService);
+    service = module.get(KicksDefinitionsService);
   });
 
   afterEach(() => {
@@ -57,63 +57,63 @@ describe('SelfDefenseDefinitionsController', () => {
   });
 
   describe('create', () => {
-    it('should create a new self defense definition', async () => {
+    it('should create a new kick definition', async () => {
       const createDto = {
-        name: 'Wrist Grab Defense',
-        description: 'Defense against wrist grab',
+        name: 'Front Kick',
+        description: 'Basic front kick',
         belt_rank: 'white',
       };
 
-      service.create.mockResolvedValue(mockSelfDefense as any);
+      service.create.mockResolvedValue(mockKick as any);
 
       const result = await controller.create(createDto);
 
       expect(service.create).toHaveBeenCalledWith(createDto);
-      expect(result).toEqual(mockSelfDefense);
+      expect(result).toEqual(mockKick);
     });
   });
 
   describe('findAll', () => {
-    it('should return all self defense definitions', async () => {
-      const mockSelfDefenses = [mockSelfDefense];
-      service.findAll.mockResolvedValue(mockSelfDefenses as any);
+    it('should return all kick definitions', async () => {
+      const mockKicks = [mockKick];
+      service.findAll.mockResolvedValue(mockKicks as any);
 
       const result = await controller.findAll();
 
       expect(service.findAll).toHaveBeenCalled();
-      expect(result).toEqual(mockSelfDefenses);
+      expect(result).toEqual(mockKicks);
     });
   });
 
   describe('findOne', () => {
-    it('should return a specific self defense definition', async () => {
+    it('should return a specific kick definition', async () => {
       const id = '1';
-      service.findOne.mockResolvedValue(mockSelfDefense as any);
+      service.findOne.mockResolvedValue(mockKick as any);
 
       const result = await controller.findOne(id);
 
       expect(service.findOne).toHaveBeenCalledWith(1);
-      expect(result).toEqual(mockSelfDefense);
+      expect(result).toEqual(mockKick);
     });
   });
 
   describe('update', () => {
-    it('should update a self defense definition', async () => {
+    it('should update a kick definition', async () => {
       const id = '1';
       const updateDto = { description: 'Updated description' };
-      const updatedSelfDefense = { ...mockSelfDefense, ...updateDto };
+      const updatedKick = { ...mockKick, ...updateDto };
 
-      service.update.mockResolvedValue(updatedSelfDefense as any);
+      service.update.mockResolvedValue(updatedKick as any);
 
       const result = await controller.update(id, updateDto);
 
       expect(service.update).toHaveBeenCalledWith(1, updateDto);
-      expect(result).toEqual(updatedSelfDefense);
+      expect(result).toEqual(updatedKick);
     });
   });
 
   describe('remove', () => {
-    it('should delete a self defense definition', async () => {
+    it('should delete a kick definition', async () => {
       const id = '1';
       const deleteResult = { deleted: true };
 

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ParentMappingController } from './parentMapping.controller';
-import { ParentMappingService } from '../service/parentMapping.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { ParentMappingController } from '../parentMapping.controller';
+import { ParentMappingService } from '../../service/parentMapping.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
 describe('ParentMappingController', () => {
   let controller: ParentMappingController;

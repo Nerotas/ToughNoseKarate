@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { StudentAssessmentsController } from './studentAssessments.controller';
+import { StudentAssessmentsController } from '../studentAssessments.controller';
 import {
   StudentAssessmentsService,
   CreateStudentAssessmentDto,
   UpdateStudentAssessmentDto,
-} from '../service/studentAssessments.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+} from '../../service/studentAssessments.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 
 describe('StudentAssessmentsController', () => {
   let controller: StudentAssessmentsController;
