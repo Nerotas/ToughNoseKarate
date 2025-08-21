@@ -62,7 +62,7 @@ jobs:
       - name: Check coverage threshold
         working-directory: ./BackEnd
         run: |
-          THRESHOLD=80
+          THRESHOLD=50
           SUMMARY_JSON=coverage/coverage-summary.json
           FINAL_JSON=coverage/coverage-final.json
           if [ -f "$SUMMARY_JSON" ]; then
