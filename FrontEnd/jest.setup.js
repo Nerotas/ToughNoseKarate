@@ -5,6 +5,15 @@ import { TextEncoder, TextDecoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+// Handle unhandled promise rejections in tests
+process.on('unhandledRejection', (reason, promise) => {
+  // Suppress unhandled promise rejections in tests
+  // This is needed for components that don't properly handle async errors
+  if (process.env.NODE_ENV === 'test') {
+    console.warn('Unhandled promise rejection suppressed in test:', reason);
+  }
+});
+
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter() {

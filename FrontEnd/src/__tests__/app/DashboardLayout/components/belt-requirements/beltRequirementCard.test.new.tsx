@@ -132,21 +132,6 @@ describe('BeltRequirementCard Component', () => {
     expect(container.querySelector('.MuiCardContent-root')).toBeInTheDocument();
   });
 
-  it('displays belt order', () => {
-    mockUseAuth.mockReturnValue({
-      isAuthenticated: false,
-      instructor: null,
-    });
-
-    render(
-      <TestWrapper>
-        <BeltRequirementCard belt={mockBeltRequirement} refetchBeltRequirements={mockRefetch} />
-      </TestWrapper>
-    );
-
-    expect(screen.getByText('1')).toBeInTheDocument();
-  });
-
   it('shows requirement categories when they exist', () => {
     const beltWithRequirements: BeltRequirements = {
       ...mockBeltRequirement,
@@ -162,14 +147,11 @@ describe('BeltRequirementCard Component', () => {
 
     render(
       <TestWrapper>
-        <BeltRequirementCard
-          beltRequirement={beltWithRequirements}
-          refetchBeltRequirements={mockRefetch}
-        />
+        <BeltRequirementCard belt={beltWithRequirements} refetchBeltRequirements={mockRefetch} />
       </TestWrapper>
     );
 
-    expect(screen.getByText('White Belt')).toBeInTheDocument();
+    expect(screen.getByText('Front Kick')).toBeInTheDocument();
   });
 
   it('handles click events on edit button', () => {

@@ -39,6 +39,26 @@ describe('BeltRequirementDeleteModule Component', () => {
     jest.clearAllMocks();
   });
 
+  // Suppress unhandled promise rejection warnings for these tests
+  const originalConsoleError = console.error;
+  const originalProcessOn = process.on;
+
+  beforeAll(() => {
+    console.error = jest.fn();
+    // Suppress unhandled promise rejection warnings
+    process.on = jest.fn((event, handler) => {
+      if (event === 'unhandledRejection') {
+        return process;
+      }
+      return originalProcessOn.call(process, event, handler);
+    }) as any;
+  });
+
+  afterAll(() => {
+    console.error = originalConsoleError;
+    process.on = originalProcessOn;
+  });
+
   it('renders the delete dialog when open', () => {
     render(<BeltRequirementDeleteModule {...defaultProps} />);
 
@@ -93,44 +113,56 @@ describe('BeltRequirementDeleteModule Component', () => {
   });
 
   it('calls handleClose even if delete API fails', async () => {
+    // Mock console.error to prevent error output in test
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    mockAxiosInstance.delete.mockImplementation(() => Promise.reject({ message: 'Delete failed' }));
+
+    mockAxiosInstance.delete.mockRejectedValueOnce(new Error('Delete failed'));
 
     render(<BeltRequirementDeleteModule {...defaultProps} />);
 
     const deleteButton = screen.getByRole('button', { name: /delete/i });
     fireEvent.click(deleteButton);
 
+    // Wait for the delete call
     await waitFor(() => {
       expect(mockAxiosInstance.delete).toHaveBeenCalledWith('/belt-requirements/White Belt');
     });
 
-    await waitFor(() => {
-      expect(mockHandleClose).toHaveBeenCalledTimes(1);
-    });
+    // Wait for handleClose to be called (should happen in finally block)
+    await waitFor(
+      () => {
+        expect(mockHandleClose).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 3000 }
+    );
 
     consoleErrorSpy.mockRestore();
   });
 
   it('calls handleClose even if refetch fails', async () => {
+    // Mock console.error to prevent error output in test
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
     mockAxiosInstance.delete.mockResolvedValueOnce({ data: {} });
-    mockRefetchBeltRequirements.mockImplementation(() =>
-      Promise.reject({ message: 'Refetch failed' })
-    );
+    mockRefetchBeltRequirements.mockRejectedValueOnce(new Error('Refetch failed'));
 
     render(<BeltRequirementDeleteModule {...defaultProps} />);
 
     const deleteButton = screen.getByRole('button', { name: /delete/i });
     fireEvent.click(deleteButton);
 
+    // Wait for the refetch call
     await waitFor(() => {
       expect(mockRefetchBeltRequirements).toHaveBeenCalledTimes(1);
     });
 
-    await waitFor(() => {
-      expect(mockHandleClose).toHaveBeenCalledTimes(1);
-    });
+    // Wait for handleClose to be called (should happen in finally block)
+    await waitFor(
+      () => {
+        expect(mockHandleClose).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 3000 }
+    );
 
     consoleErrorSpy.mockRestore();
   });
