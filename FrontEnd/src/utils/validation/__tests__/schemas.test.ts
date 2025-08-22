@@ -5,17 +5,7 @@ import { mockStudents } from 'testingUtils/MockData/mockStudents';
 
 describe('Validation Schemas', () => {
   describe('studentCreateSchema', () => {
-    const validStudentData = {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phone: '(555) 123-4567',
-      beltRank: 'White',
-      dateOfBirth: '2010-01-01',
-      startDateUTC: '2020-01-01',
-      active: true,
-      child: true,
-    };
+    const validStudentData: Student = mockStudents[0];
 
     it('should validate valid student data', () => {
       const { error } = studentCreateSchema.validate(validStudentData);
@@ -31,8 +21,7 @@ describe('Validation Schemas', () => {
     });
 
     it('should require lastName', () => {
-      const invalidData = { ...validStudentData };
-      delete (invalidData as any).lastName;
+      const invalidData = { ...validStudentData, lastName: null };
 
       const { error } = studentCreateSchema.validate(invalidData);
       expect(error).toBeDefined();
@@ -56,12 +45,10 @@ describe('Validation Schemas', () => {
     });
 
     it('should validate belt rank', () => {
-      const invalidData = { ...validStudentData, beltRank: 'Purple' };
+      const invalidData = { ...validStudentData, belt_rank: 'Purple' };
 
       const { error } = studentCreateSchema.validate(invalidData);
       expect(error).toBeDefined();
-      expect(error?.details[0].message).toBe('Please select a valid belt rank');
-    });
       expect(error?.details[0].message).toBe('Please select a valid belt rank');
     });
 

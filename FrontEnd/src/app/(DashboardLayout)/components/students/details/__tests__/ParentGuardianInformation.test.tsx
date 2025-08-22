@@ -106,6 +106,13 @@ describe('ParentGuardianInformation', () => {
     ).toBeInTheDocument();
   });
 
+  it('should display parent ID', () => {
+    render(<ParentGuardianInformation {...defaultProps} />);
+
+    expect(screen.getAllByText(/Parent ID:/)).toHaveLength(2); // Two parents, two IDs
+    expect(screen.getByText(/1/)).toBeInTheDocument();
+  });
+
   it('should show contact information note', () => {
     render(<ParentGuardianInformation {...defaultProps} />);
 
