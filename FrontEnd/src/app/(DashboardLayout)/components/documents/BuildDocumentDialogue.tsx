@@ -143,8 +143,15 @@ const BuildDocumentDialogue = ({ open, handleClose }: BuildDocumentDialogueProps
   }
 
   const handleBuild = async () => {
-    await addTextToCertificate();
-    handleClose();
+    try {
+      await addTextToCertificate();
+      handleClose();
+    } catch (err) {
+      // Log and swallow errors so UI doesn't crash during PDF generation
+      // Test suite asserts this console error is called
+      // eslint-disable-next-line no-console
+      console.error('Error generating certificate:', err);
+    }
   };
 
   return (

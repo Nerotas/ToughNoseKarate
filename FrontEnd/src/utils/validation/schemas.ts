@@ -5,14 +5,16 @@ import Joi from 'joi';
 // =============================================
 
 export const studentCreateSchema = Joi.object({
-  first_name: Joi.string().min(1).max(50).required().trim().messages({
+  firstName: Joi.string().min(1).max(50).required().trim().messages({
     'any.required': 'First name is required',
+    'string.base': 'First name is required',
     'string.min': 'First name cannot be empty',
     'string.max': 'First name cannot exceed 50 characters',
   }),
 
-  last_name: Joi.string().min(1).max(50).required().trim().messages({
+  lastName: Joi.string().min(1).max(50).required().trim().messages({
     'any.required': 'Last name is required',
+    'string.base': 'Last name is required',
     'string.min': 'Last name cannot be empty',
     'string.max': 'Last name cannot exceed 50 characters',
   }),
@@ -27,21 +29,22 @@ export const studentCreateSchema = Joi.object({
       'string.email': 'Please enter a valid email address',
     }),
 
+  // Accept common phone formats (digits, spaces, dashes, parentheses, plus)
   phone: Joi.string()
-    .pattern(/^[\+]?[1-9][\d]{0,15}$/)
+    .pattern(/^[0-9\-\s\(\)\+]+$/)
     .required()
     .messages({
       'any.required': 'Phone number is required',
       'string.pattern.base': 'Please enter a valid phone number',
     }),
 
-  birthdate: Joi.date().iso().max('now').required().messages({
-    'any.required': 'Birth date is required',
+  // Birthdate is optional on the frontend; if present it must not be in the future
+  birthdate: Joi.date().iso().max('now').optional().messages({
     'date.max': 'Birth date cannot be in the future',
     'date.iso': 'Please enter a valid date',
   }),
 
-  belt_rank: Joi.string()
+  beltRank: Joi.string()
     .valid('White', 'Yellow', 'Orange', 'Green', 'Blue', 'Brown', 'Black')
     .required()
     .messages({
@@ -49,16 +52,15 @@ export const studentCreateSchema = Joi.object({
       'any.only': 'Please select a valid belt rank',
     }),
 
-  join_date: Joi.date().iso().max('now').required().messages({
-    'any.required': 'Join date is required',
+  joinDate: Joi.date().iso().max('now').optional().messages({
     'date.max': 'Join date cannot be in the future',
     'date.iso': 'Please enter a valid date',
   }),
 
-  active_indicator: Joi.number().valid(0, 1).default(1).messages({
+  activeIndicator: Joi.number().valid(0, 1).default(1).messages({
     'any.only': 'Active indicator must be 0 or 1',
   }),
-});
+}).unknown(true);
 
 export const studentUpdateSchema = studentCreateSchema
   .keys({
@@ -68,7 +70,7 @@ export const studentUpdateSchema = studentCreateSchema
     }),
   })
   .fork(
-    ['first_name', 'last_name', 'email', 'phone', 'birthdate', 'belt_rank', 'join_date'],
+    ['firstName', 'lastName', 'email', 'phone', 'birthdate', 'beltRank', 'joinDate'],
     (schema) => schema.optional()
   );
 

@@ -38,15 +38,15 @@ describe('BuildDocumentDialogue', () => {
   it('should render dialog when open is true', () => {
     render(<BuildDocumentDialogue {...defaultProps} />);
 
-    expect(screen.getByText('Build Certificate')).toBeInTheDocument();
+    expect(screen.getAllByText('Build Document')).toHaveLength(2);
     expect(screen.getByLabelText('Student Name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Belt')).toBeInTheDocument();
+    expect(screen.getByLabelText('New Rank')).toBeInTheDocument();
   });
 
   it('should not render dialog when open is false', () => {
     render(<BuildDocumentDialogue {...defaultProps} open={false} />);
 
-    expect(screen.queryByText('Build Certificate')).not.toBeInTheDocument();
+    expect(screen.queryByText('Build Document')).not.toBeInTheDocument();
   });
 
   it('should call handleClose when cancel button is clicked', () => {
@@ -73,7 +73,7 @@ describe('BuildDocumentDialogue', () => {
     const user = userEvent.setup();
     render(<BuildDocumentDialogue {...defaultProps} />);
 
-    const beltInput = screen.getByLabelText('Belt');
+    const beltInput = screen.getByLabelText('New Rank');
     await user.type(beltInput, 'Black Belt');
 
     expect(beltInput).toHaveValue('Black Belt');
@@ -82,8 +82,8 @@ describe('BuildDocumentDialogue', () => {
   it('should have build button initially disabled when fields are empty', () => {
     render(<BuildDocumentDialogue {...defaultProps} />);
 
-    const buildButton = screen.getByText('Build');
-    expect(buildButton).toBeDisabled();
+    const buildButton = screen.getAllByText('Build Document');
+    expect(buildButton[1]).toBeDisabled();
   });
 
   it('should enable build button when both fields are filled', async () => {
@@ -91,13 +91,13 @@ describe('BuildDocumentDialogue', () => {
     render(<BuildDocumentDialogue {...defaultProps} />);
 
     const studentNameInput = screen.getByLabelText('Student Name');
-    const beltInput = screen.getByLabelText('Belt');
+    const beltInput = screen.getByLabelText('New Rank');
 
     await user.type(studentNameInput, 'John Doe');
     await user.type(beltInput, 'Black Belt');
 
-    const buildButton = screen.getByText('Build');
-    expect(buildButton).toBeEnabled();
+    const buildButton = screen.getAllByText('Build Document');
+    expect(buildButton[1]).toBeEnabled();
   });
 
   it('should handle PDF generation and download', async () => {
@@ -136,14 +136,14 @@ describe('BuildDocumentDialogue', () => {
 
     // Fill in the form
     const studentNameInput = screen.getByLabelText('Student Name');
-    const beltInput = screen.getByLabelText('Belt');
+    const beltInput = screen.getByLabelText('New Rank');
 
     await user.type(studentNameInput, 'John Doe');
     await user.type(beltInput, 'Black Belt');
 
     // Click build button
-    const buildButton = screen.getByText('Build');
-    fireEvent.click(buildButton);
+    const buildButton = screen.getAllByText('Build Document');
+    fireEvent.click(buildButton[1]);
 
     // Wait for PDF generation to complete
     await waitFor(() => {
@@ -156,7 +156,7 @@ describe('BuildDocumentDialogue', () => {
     expect(PDFDocument.load).toHaveBeenCalled();
     expect(mockPdfDoc.registerFontkit).toHaveBeenCalled();
     expect(mockPdfDoc.embedFont).toHaveBeenCalled();
-    expect(mockPage.drawText).toHaveBeenCalledTimes(4); // Name, belt, month, day
+    expect(mockPage.drawText).toHaveBeenCalledTimes(5); // Name, belt, month, year, day
   });
 
   it('should handle errors during PDF generation', async () => {
@@ -170,14 +170,14 @@ describe('BuildDocumentDialogue', () => {
 
     // Fill in the form
     const studentNameInput = screen.getByLabelText('Student Name');
-    const beltInput = screen.getByLabelText('Belt');
+    const beltInput = screen.getByLabelText('New Rank');
 
     await user.type(studentNameInput, 'John Doe');
     await user.type(beltInput, 'Black Belt');
 
     // Click build button
-    const buildButton = screen.getByText('Build');
-    fireEvent.click(buildButton);
+    const buildButton = screen.getAllByText('Build Document');
+    fireEvent.click(buildButton[1]);
 
     // Wait for error to be handled
     await waitFor(() => {
@@ -210,14 +210,14 @@ describe('BuildDocumentDialogue', () => {
 
     // Fill in the form
     const studentNameInput = screen.getByLabelText('Student Name');
-    const beltInput = screen.getByLabelText('Belt');
+    const beltInput = screen.getByLabelText('New Rank');
 
     await user.type(studentNameInput, 'John Doe');
     await user.type(beltInput, 'Black Belt');
 
     // Click build button
-    const buildButton = screen.getByText('Build');
-    fireEvent.click(buildButton);
+    const buildButton = screen.getAllByText('Build Document');
+    fireEvent.click(buildButton[1]);
 
     // Wait for completion and dialog close
     await waitFor(() => {
