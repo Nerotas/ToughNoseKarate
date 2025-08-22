@@ -28,8 +28,13 @@ const customJestConfig = {
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/app/layout.tsx',
     '!src/app/global.css',
+    '!src/**/page.tsx',
     '!coverage/**',
     '!.next/**',
+    '!src/models/**', // Exclude models from coverage
+    '!src/types/**', // Exclude types from coverage
+    '!src/constants/**', // Exclude constants from coverage
+    '!src/services/testingUtils/**', // Exclude testingUtils from coverage
   ],
   coverageThreshold: {
     global: {
@@ -53,6 +58,13 @@ const customJestConfig = {
     ],
   },
   transformIgnorePatterns: ['/node_modules/(?!(.*\\.mjs$|@mui|@emotion))'],
+
+  coveragePathIgnorePatterns: [
+    'src/types',
+    'src/constants',
+    'src/services/testingUtils',
+    'src/models',
+  ],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

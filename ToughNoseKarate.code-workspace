@@ -74,7 +74,8 @@
     // Terminal settings for better test output
     "terminal.integrated.env.windows": {
       "NODE_OPTIONS": "--max-old-space-size=4096"
-    }
+    },
+    "powershell.cwd": "FrontEnd"
   },
   // Extensions recommendations for the workspace
   "extensions": {

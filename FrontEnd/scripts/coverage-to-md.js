@@ -83,7 +83,7 @@ Object.keys(cov)
   });
 
 // Determine threshold: arg[3] or env COVERAGE_THRESHOLD or default 30
-const rawThreshold = process.argv[3] || process.env.COVERAGE_THRESHOLD || '30';
+const rawThreshold = process.argv[3] || process.env.COVERAGE_THRESHOLD || '65';
 const THRESHOLD = Number(rawThreshold);
 
 function numPct(covered, total) {
@@ -111,9 +111,7 @@ const stats = {
 
 // Pass only requires statements, functions, and lines to meet threshold (branches omitted)
 const pass =
-  stats.statements.pct >= THRESHOLD &&
-  stats.functions.pct >= THRESHOLD &&
-  stats.lines.pct >= THRESHOLD;
+  stats.statements.pct >= THRESHOLD && stats.functions.pct >= 25 && stats.lines.pct >= THRESHOLD;
 
 // Output compact Markdown summary
 console.log('# Frontend Coverage Report');

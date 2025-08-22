@@ -15,7 +15,7 @@ const spin = keyframes`
 
 const Loader = () => {
   return (
-    <Container>
+    <Container data-testid='loading-spinner'>
       <Box display='flex' justifyContent='center' alignItems='center' minHeight='200px'>
         <Box
           sx={{

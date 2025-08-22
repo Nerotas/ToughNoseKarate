@@ -26,6 +26,8 @@ const BeltRequirementDeleteModule = ({
     try {
       await axiosInstance.delete(`/belt-requirements/${beltRequirement.beltRank}`);
       await refetchBeltRequirements();
+    } catch (error) {
+      console.error('Error during belt requirement deletion:', error);
     } finally {
       handleClose();
     }

@@ -1,8 +1,6 @@
 import { MetricsMiddleware } from './metrics.middleware';
 import { MetricsService } from '../service/metrics.service';
-import { Logger } from '@nestjs/common';
 import { expect, describe, it, jest } from '@jest/globals';
-import type { SpyInstance } from 'jest-mock';
 
 describe('Middleware', () => {
   describe('MetricsMiddleware', () => {
