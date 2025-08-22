@@ -83,7 +83,7 @@ Object.keys(cov)
   });
 
 // Determine threshold: arg[3] or env COVERAGE_THRESHOLD or default 30
-const rawThreshold = process.argv[3] || process.env.COVERAGE_THRESHOLD || '30';
+const rawThreshold = process.argv[3] || process.env.COVERAGE_THRESHOLD || '65';
 const THRESHOLD = Number(rawThreshold);
 
 function numPct(covered, total) {
