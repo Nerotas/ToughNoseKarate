@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import { KickDefinition } from 'models/Kicks/Kicks';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import {
@@ -10,11 +10,6 @@ import {
   Grid,
   IconButton,
   Stack,
-  Chip,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import * as Yup from 'yup';

@@ -50,16 +50,16 @@ export class kicksDefinitions
   @Column({ type: DataType.STRING })
   declare target: string;
 
-  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  @Column({ type: DataType.JSONB })
   declare execution: string[];
 
-  @Column({ field: 'key_points', type: DataType.ARRAY(DataType.TEXT) })
+  @Column({ field: 'key_points', type: DataType.JSONB })
   declare keyPoints: string[];
 
-  @Column({ field: 'common_mistakes', type: DataType.ARRAY(DataType.TEXT) })
+  @Column({ field: 'common_mistakes', type: DataType.JSONB })
   declare commonMistakes: string[];
 
-  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  @Column({ type: DataType.JSONB })
   declare applications: string[];
 
   @Column({ field: 'created_at', type: DataType.DATE, allowNull: true })

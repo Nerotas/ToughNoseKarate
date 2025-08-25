@@ -93,7 +93,9 @@ export const useAuth = () => {
   const isAuthenticated = !!instructor && profileStatus !== 'error' && !logoutMutation.isPending;
 
   useEffect(() => {
-    console.log('Profile query result:', instructor, profileStatus, profileError);
+    if (process.env.NEXT_PUBLIC_ENABLE_DEBUG === 'true') {
+      console.log('Profile query result:', instructor, profileStatus, profileError);
+    }
   }, [instructor, profileStatus, profileError]);
 
   useEffect(() => {

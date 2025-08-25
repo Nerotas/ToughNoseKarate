@@ -76,7 +76,9 @@ export const getInitialValues = (assessment: StudentAssessment | null) => {
   }
 
   return {
-    assessment_date: new Date(assessment.assessment_date).toISOString().split('T')[0],
+    assessment_date: assessment.assessment_date
+      ? new Date(assessment.assessment_date).toISOString().split('T')[0]
+      : new Date().toISOString().split('T')[0],
     target_belt_rank: assessment.target_belt_rank || '',
     geocho_hyung_il_bu: assessment.geocho_hyung_il_bu || null,
     geocho_hyung_il_bu_sahm_gup: assessment.geocho_hyung_il_bu_sahm_gup || null,

@@ -107,7 +107,9 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                         Assessment Date
                       </Typography>
                       <Typography variant='body1' sx={{ fontWeight: 'medium' }}>
-                        {new Date(currentAssessment.assessment_date).toLocaleDateString()}
+                        {currentAssessment.assessment_date
+                          ? new Date(currentAssessment.assessment_date).toLocaleDateString()
+                          : 'Not specified'}
                       </Typography>
                     </Box>
                   </Grid>
@@ -171,15 +173,25 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                       </Typography>
                       {currentAssessment.overall_score !== null &&
                       currentAssessment.overall_score !== undefined ? (
-                        <Typography
-                          variant='h6'
-                          color={
-                            currentAssessment.overall_score >= 70 ? 'success.main' : 'error.main'
+                        (() => {
+                          const score = Number(currentAssessment.overall_score);
+                          if (Number.isNaN(score)) {
+                            return (
+                              <Typography variant='body1' color='text.secondary'>
+                                Invalid score
+                              </Typography>
+                            );
                           }
-                          sx={{ fontWeight: 'bold' }}
-                        >
-                          {currentAssessment.overall_score.toFixed(1)}%
-                        </Typography>
+                          return (
+                            <Typography
+                              variant='h6'
+                              color={score >= 70 ? 'success.main' : 'error.main'}
+                              sx={{ fontWeight: 'bold' }}
+                            >
+                              {score.toFixed(1)}%
+                            </Typography>
+                          );
+                        })()
                       ) : (
                         <Typography variant='body1' color='text.secondary'>
                           Not scored
