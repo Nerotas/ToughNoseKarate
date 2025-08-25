@@ -3,7 +3,7 @@ export interface KickDefinition {
   name: string;
   korean: string;
   description: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   target: string;
   execution: string[];

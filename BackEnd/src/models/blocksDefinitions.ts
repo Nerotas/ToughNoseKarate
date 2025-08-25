@@ -15,7 +15,7 @@ export interface BlocksDefinitionsAttributes {
   blockName: string;
   technique: string;
   stance: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   execution: string[];
   keyPoints: string[];
@@ -57,10 +57,11 @@ export class blocksDefinitions extends Model<BlocksDefinitionsAttributes> {
   declare stance: string;
 
   @Column({
+    field: 'belt_rank',
     type: DataType.STRING(45),
     allowNull: false,
   })
-  declare belt: string;
+  declare beltRank: string;
 
   @Column({
     field: 'belt_color',

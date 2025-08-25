@@ -70,7 +70,7 @@ const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: 
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Chip
                   icon={<IconRun />}
-                  label={kick.belt}
+                  label={kick.beltRank}
                   sx={{
                     backgroundColor: kick.beltColor,
                     color: getBeltTextColor(kick.beltColor),

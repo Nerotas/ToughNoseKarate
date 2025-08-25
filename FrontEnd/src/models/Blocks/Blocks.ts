@@ -3,7 +3,7 @@ export interface BlockDefinition {
   blockName: string;
   technique: string;
   stance: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   execution: string[];
   keyPoints: string[];
@@ -17,7 +17,7 @@ export interface CreateBlockDefinitionDto {
   blockName: string;
   technique: string;
   stance: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   execution: string[];
   keyPoints: string[];
@@ -30,7 +30,7 @@ export interface UpdateBlockDefinitionDto {
   blockName?: string;
   technique?: string;
   stance?: string;
-  belt?: string;
+  beltRank?: string;
   beltColor?: string;
   execution?: string[];
   keyPoints?: string[];

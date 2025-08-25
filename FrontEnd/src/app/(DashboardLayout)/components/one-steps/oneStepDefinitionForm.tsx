@@ -23,7 +23,7 @@ const validationSchema = Yup.object({
   name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
-  belt: Yup.string().trim().required('Required'),
+  beltRank: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
   attack: Yup.string().trim().max(200, 'Too long').optional(),
   defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
@@ -48,7 +48,7 @@ const OneStepDefinitionForm = ({
     name: oneStep.name || '',
     korean: oneStep.korean || '',
     description: oneStep.description || '',
-    belt: oneStep.belt || '',
+    beltRank: oneStep.beltRank || '',
     beltColor: oneStep.beltColor || '',
     attack: oneStep.attack || '',
     defense: oneStep.defense || [],
@@ -142,15 +142,15 @@ const OneStepDefinitionForm = ({
               </Grid>
 
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='belt'>
+                <Field name='beltRank'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
                       label='Belt'
                       placeholder='e.g., 8th Gup'
-                      error={Boolean(errors.belt && touched.belt)}
-                      helperText={errors.belt && touched.belt ? errors.belt : ''}
+                      error={Boolean(errors.beltRank && touched.beltRank)}
+                      helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
                       required
                     />
                   )}

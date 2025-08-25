@@ -104,7 +104,10 @@ describe('SectionErrorBoundary', () => {
 
   it('should show error details in development mode', () => {
     const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'development';
+    Object.defineProperty(process, 'env', {
+      value: { ...process.env, NODE_ENV: 'development' },
+      configurable: true,
+    });
 
     render(
       <SectionErrorBoundary>
@@ -114,12 +117,18 @@ describe('SectionErrorBoundary', () => {
 
     expect(screen.getByText('Test error')).toBeInTheDocument();
 
-    process.env.NODE_ENV = originalEnv;
+    Object.defineProperty(process, 'env', {
+      value: { ...process.env, NODE_ENV: originalEnv },
+      configurable: true,
+    });
   });
 
   it('should not show error details in production mode', () => {
     const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'production';
+    Object.defineProperty(process, 'env', {
+      value: { ...process.env, NODE_ENV: 'production' },
+      configurable: true,
+    });
 
     render(
       <SectionErrorBoundary>
@@ -129,6 +138,9 @@ describe('SectionErrorBoundary', () => {
 
     expect(screen.queryByText('Test error')).not.toBeInTheDocument();
 
-    process.env.NODE_ENV = originalEnv;
+    Object.defineProperty(process, 'env', {
+      value: { ...process.env, NODE_ENV: originalEnv },
+      configurable: true,
+    });
   });
 });

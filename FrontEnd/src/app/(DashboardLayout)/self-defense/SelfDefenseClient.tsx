@@ -20,6 +20,7 @@ import Loading from '../../../app/loading';
 import SelfDefenseCard from '../components/self-defense/SelfDefenseCard';
 import SelfDefenseCreateModule from '../components/self-defense/selfDefenseCreateModule';
 import { useAuth } from 'hooks/useAuth';
+import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 
 const SelfDefenseClient: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -49,9 +50,7 @@ const SelfDefenseClient: React.FC = () => {
   });
 
   // Use API data if available, otherwise use static data
-  const displaySelfDefense =
-    selfDefenseDefinitions && selfDefenseDefinitions?.length > 0 ? selfDefenseDefinitions : [];
-
+  const displaySelfDefense = orderByBeltRank(selfDefenseDefinitions || [], (item) => item.beltRank);
   // Get unique values for filters
   const categories = [
     'All',
@@ -59,7 +58,7 @@ const SelfDefenseClient: React.FC = () => {
   ];
   const belts = [
     'All',
-    ...Array.from(new Set(displaySelfDefense.map((technique) => technique.belt))),
+    ...Array.from(new Set(displaySelfDefense.map((technique) => technique.beltRank))),
   ];
   const difficulties = [
     'All',
@@ -69,7 +68,7 @@ const SelfDefenseClient: React.FC = () => {
   // Filter techniques based on selected criteria
   const filteredTechniques = displaySelfDefense.filter((technique) => {
     const matchesCategory = selectedCategory === 'All' || technique.category === selectedCategory;
-    const matchesBelt = selectedBelt === 'All' || technique.belt === selectedBelt;
+    const matchesBelt = selectedBelt === 'All' || technique.beltRank === selectedBelt;
     const matchesDifficulty =
       selectedDifficulty === 'All' || technique.difficulty === selectedDifficulty;
     const matchesSearch =
@@ -102,7 +101,7 @@ const SelfDefenseClient: React.FC = () => {
 
       <Typography variant='body1' paragraph color='text.secondary'>
         Learn essential self-defense techniques, escapes, and ground work for real-world situations.
-        These techniques are taught progressively through the Tang Soo Do belt system.
+        These techniques are taught progressively through the Tang Soo Do beltRank system.
       </Typography>
 
       <Alert severity='error' sx={{ mb: 3 }}>
@@ -137,9 +136,9 @@ const SelfDefenseClient: React.FC = () => {
             onChange={(e) => setSelectedBelt(e.target.value)}
             label='Belt Level'
           >
-            {belts.map((belt) => (
-              <MenuItem key={belt} value={belt}>
-                {belt}
+            {belts.map((beltRank) => (
+              <MenuItem key={beltRank} value={beltRank}>
+                {beltRank}
               </MenuItem>
             ))}
           </Select>

@@ -19,18 +19,14 @@ import FormsCard from '../components/forms/formsCard';
 import { useAuth } from '../../../hooks/useAuth';
 import React, { useState } from 'react';
 import FormCreateModule from '../components/forms/formCreateModule';
+import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 
 const FormsClient = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const { isAuthenticated, instructor } = useAuth();
   const canCreate = isAuthenticated && instructor?.role === 'admin';
 
-  const {
-    data: forms,
-    isPending,
-    isError,
-    refetch,
-  } = useGet<FormDefinitions[]>({
+  const { data, isPending, isError, refetch } = useGet<FormDefinitions[]>({
     url: '/form-definitions',
     apiLabel: 'form-definitions',
     id: 'getAll',
@@ -46,6 +42,8 @@ const FormsClient = () => {
   const refetchForms = async () => {
     await refetch();
   };
+
+  const forms = orderByBeltRank(data || [], (item) => item.beltRank);
 
   return (
     <PageContainer title='Forms (Kata)' description='Tang Soo Do Forms and Patterns'>

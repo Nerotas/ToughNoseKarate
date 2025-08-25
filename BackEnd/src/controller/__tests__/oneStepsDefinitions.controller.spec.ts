@@ -20,7 +20,7 @@ describe('OneStepsDefinitionsController', () => {
     id: 1,
     name: 'One Step 1',
     korean: 'Il Soo Sik',
-    belt: 'white',
+    beltRank: 'white',
     beltColor: 'white',
     description: 'Basic one step technique',
     attack: 'straight punch',
@@ -67,7 +67,7 @@ describe('OneStepsDefinitionsController', () => {
       const createDto = {
         name: 'One Step 1',
         korean: 'Il Soo Sik',
-        belt: 'white',
+        beltRank: 'white',
         beltColor: 'white',
         description: 'Basic one step',
         attack: 'straight punch',
@@ -116,7 +116,7 @@ describe('OneStepsDefinitionsController', () => {
       const updateDto = {
         name: 'One Step 1',
         korean: 'Il Soo Sik',
-        belt: 'white',
+        beltRank: 'white',
         beltColor: 'white',
         description: 'Updated description',
         attack: 'straight punch',

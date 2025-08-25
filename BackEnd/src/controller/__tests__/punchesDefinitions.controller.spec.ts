@@ -22,7 +22,7 @@ describe('PunchesDefinitionsController', () => {
     korean: 'Jireugi',
     technique: 'Straight punch with lead hand',
     stance: 'fighting stance',
-    belt: 'white',
+    beltRank: 'white',
     beltColor: 'white',
     description: 'Basic straight punch',
     target: 'head',
@@ -69,7 +69,7 @@ describe('PunchesDefinitionsController', () => {
       const createDto = {
         name: 'Jab',
         korean: 'Jireugi',
-        belt: 'white',
+        beltRank: 'white',
         beltColor: 'white',
         description: 'Straight punch',
         target: 'head',
@@ -118,7 +118,7 @@ describe('PunchesDefinitionsController', () => {
       const updateDto = {
         name: 'Jab',
         korean: 'Jireugi',
-        belt: 'white',
+        beltRank: 'white',
         beltColor: 'white',
         description: 'Updated technique',
         target: 'head',

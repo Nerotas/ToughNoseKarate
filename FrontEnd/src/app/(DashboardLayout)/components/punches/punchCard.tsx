@@ -71,7 +71,7 @@ const PunchCard = ({
               </Box>
               <Chip
                 icon={<IconHandStop />}
-                label={punch.belt}
+                label={punch.beltRank}
                 sx={{
                   backgroundColor: punch.beltColor,
                   color: getBeltTextColor(punch.beltColor as string),

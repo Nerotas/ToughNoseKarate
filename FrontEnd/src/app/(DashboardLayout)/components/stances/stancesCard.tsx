@@ -69,7 +69,7 @@ const StancesCard = ({ stance, refetchStances, getBeltTextColor }: StancesCardPr
               </Box>
               <Chip
                 icon={<IconBrandTorchain />}
-                label={stance.belt}
+                label={stance.beltRank}
                 sx={{
                   backgroundColor: stance.beltColor,
                   color: getBeltTextColor(stance.beltColor),

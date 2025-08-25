@@ -11,7 +11,7 @@ describe('OneStepsDefinitionsService', () => {
     id: 1,
     name: 'Straight Punch Defense',
     korean: '직권 방어',
-    belt: '8th Gup',
+    beltRank: '8th Gup',
     beltColor: '#FFFF00',
     description: 'Defense against a straight punch',
     attack: 'Straight punch to the face',
@@ -107,7 +107,7 @@ describe('OneStepsDefinitionsService', () => {
       const createDto = {
         name: 'New Defense',
         korean: '새로운 방어',
-        belt: '9th Gup',
+        beltRank: '9th Gup',
         beltColor: '#FFFFFF',
         description: 'New defense technique',
         attack: 'New attack',
@@ -130,7 +130,7 @@ describe('OneStepsDefinitionsService', () => {
       const createDto = {
         name: 'Test Defense',
         korean: '테스트 방어',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test defense',
         attack: 'Test attack',
@@ -161,7 +161,7 @@ describe('OneStepsDefinitionsService', () => {
       const createDto = {
         name: 'Test Defense',
         korean: '테스트 방어',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test defense',
         attack: 'Test attack',
@@ -174,7 +174,7 @@ describe('OneStepsDefinitionsService', () => {
       const normalizedDto = {
         name: 'Test Defense',
         korean: '테스트 방어',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test defense',
         attack: 'Test attack',
@@ -286,7 +286,7 @@ describe('OneStepsDefinitionsService', () => {
       const createDto = {
         name: 'Test Defense',
         korean: '테스트 방어',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test defense',
         attack: 'Test attack',
@@ -300,7 +300,7 @@ describe('OneStepsDefinitionsService', () => {
       const expectedNormalizedDto = {
         name: 'Test Defense',
         korean: '테스트 방어',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test defense',
         attack: 'Test attack',
@@ -320,7 +320,7 @@ describe('OneStepsDefinitionsService', () => {
       const createDto = {
         name: 'Test Defense',
         korean: '테스트 방어',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test defense',
         attack: 'Test attack',

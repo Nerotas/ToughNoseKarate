@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import { SelfDefenseDefinition } from 'models/SelfDefense/SelfDefense';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import {
@@ -10,7 +10,6 @@ import {
   Grid,
   IconButton,
   Stack,
-  Chip,
   Select,
   MenuItem,
   FormControl,
@@ -23,7 +22,7 @@ const validationSchema = Yup.object({
   name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
-  belt: Yup.string().trim().required('Required'),
+  beltRank: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
   category: Yup.string()
     .oneOf(['Releases', 'Escapes', 'Submissions', 'Ground Control', 'Standing'])
@@ -54,7 +53,7 @@ const SelfDefenseDefinitionForm = ({
     name: selfDefense.name || '',
     korean: selfDefense.korean || '',
     description: selfDefense.description || '',
-    belt: selfDefense.belt || '',
+    beltRank: selfDefense.beltRank || '',
     beltColor: selfDefense.beltColor || '',
     category: selfDefense.category || '',
     difficulty: selfDefense.difficulty || '',
@@ -152,15 +151,15 @@ const SelfDefenseDefinitionForm = ({
               </Grid>
 
               <Grid size={{ xs: 12, sm: 3 }}>
-                <Field name='belt'>
+                <Field name='beltRank'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
                       label='Belt'
                       placeholder='e.g., 8th Gup'
-                      error={Boolean(errors.belt && touched.belt)}
-                      helperText={errors.belt && touched.belt ? errors.belt : ''}
+                      error={Boolean(errors.beltRank && touched.beltRank)}
+                      helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
                       required
                     />
                   )}

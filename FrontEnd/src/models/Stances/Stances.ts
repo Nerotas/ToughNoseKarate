@@ -2,7 +2,7 @@ export interface StanceDefinition {
   id?: number;
   name: string;
   korean: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   description: string;
   position: string;

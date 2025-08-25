@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import BlockCard from '../components/blocks/blockCard';
 import BlockCreateModule from '../components/blocks/blockCreateModule';
 import BlockGuideLines from '../components/blocks/guidelines';
+import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -20,12 +21,7 @@ export default function BlocksClient() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const { isAuthenticated, instructor } = useAuth();
   const canCreate = isAuthenticated && instructor?.role === 'admin';
-  const {
-    data: blockDefinitions,
-    isPending,
-    isError,
-    refetch,
-  } = useGet<BlockDefinition[]>({
+  const { data, isPending, isError, refetch } = useGet<BlockDefinition[]>({
     apiLabel: 'blocks-definitions',
     url: '/blocks-definitions',
     id: 'getAll',
@@ -41,6 +37,8 @@ export default function BlocksClient() {
   const refetchBlocks = async () => {
     await refetch();
   };
+
+  const blockDefinitions = orderByBeltRank(data || [], (item) => item.beltRank);
 
   return (
     <PageContainer title='Blocks' description='Tang Soo Do Blocking Techniques'>

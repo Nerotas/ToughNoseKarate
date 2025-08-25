@@ -12,7 +12,7 @@ export interface stanceDefinitionsAttributes {
   id?: number;
   name: string;
   korean: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   description: string;
   position: string;
@@ -35,8 +35,8 @@ export class stanceDefinitions
   declare name: string;
   @Column({ type: DataType.STRING(100) })
   declare korean: string;
-  @Column({ type: DataType.STRING(45) })
-  declare belt: string;
+  @Column({ field: 'belt_rank', type: DataType.STRING(45) })
+  declare beltRank: string;
   @Column({ field: 'belt_color', type: DataType.STRING(7) })
   declare beltColor: string;
   @Column({ type: DataType.STRING })

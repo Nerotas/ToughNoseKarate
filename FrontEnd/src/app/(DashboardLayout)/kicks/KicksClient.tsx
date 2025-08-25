@@ -9,6 +9,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import React, { useState } from 'react';
 import KickCreateModule from '../components/kicks/kickCreateModule';
 import KickCard from '../components/kicks/kickCard';
+import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -50,7 +51,7 @@ export default function KicksClient() {
   });
 
   // Use API data only
-  const displayKicks = kickDefinitions || [];
+  const displayKicks = orderByBeltRank(kickDefinitions || [], (item) => item.beltRank);
 
   const refetchKicks = async () => {
     await refetch();
