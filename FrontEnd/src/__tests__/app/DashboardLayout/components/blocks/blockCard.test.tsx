@@ -48,7 +48,10 @@ describe('BlockCard Component', () => {
       isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -68,10 +71,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -87,14 +93,17 @@ describe('BlockCard Component', () => {
   });
 
   it('does not render stance section when stance is not provided', () => {
-    const blockWithoutStance = { ...mockBlock, stance: undefined };
+    const blockWithoutStance = { ...mockBlock, stance: undefined } as any;
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -112,10 +121,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -137,10 +149,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -158,10 +173,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -182,10 +200,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -206,10 +227,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -233,7 +257,10 @@ describe('BlockCard Component', () => {
       isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -252,10 +279,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -274,10 +304,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: true,
       instructor: { role: 'instructor' as const, id: 1, name: 'Test Instructor' },
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -298,10 +331,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: true,
       instructor: { role: 'instructor' as const, id: 1, name: 'Test Instructor' },
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -322,10 +358,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     render(
@@ -343,10 +382,13 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
-      profile: null,
+      refreshToken: jest.fn(),
+      ensureProfile: jest.fn(),
+      loginError: null,
+      profileError: null,
     });
 
     const { container } = render(

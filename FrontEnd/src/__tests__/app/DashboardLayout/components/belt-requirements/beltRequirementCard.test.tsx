@@ -100,10 +100,11 @@ describe('BeltRequirementCard Component', () => {
     render(<BeltRequirementCard belt={mockBelt} refetchBeltRequirements={mockRefetch} />);
 
     expect(
-      screen.getByText((content, element) =>
-        typeof content === 'string' &&
-        mockBelt.comments?.[0] &&
-        content.includes(mockBelt.comments[0])
+      screen.getByText(
+        ((content: string, element?: Element | null) =>
+          typeof content === 'string' &&
+          !!mockBelt.comments?.[0] &&
+          content.includes(mockBelt.comments![0])) as any
       )
     ).toBeInTheDocument();
   });
