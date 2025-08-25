@@ -9,6 +9,7 @@ import OneStepCard from '../components/one-steps/OneStepCard';
 import { useAuth } from '../../../hooks/useAuth';
 import React, { useState } from 'react';
 import OneStepCreateModule from '../components/one-steps/oneStepCreateModule';
+import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -50,7 +51,7 @@ export default function OneStepsClient() {
   });
 
   // Use API data only
-  const displayOneSteps = oneStepDefinitions || [];
+  const displayOneSteps = orderByBeltRank(oneStepDefinitions || [], (item) => item.beltRank);
 
   const refetchOneSteps = async () => {
     await refetch();
