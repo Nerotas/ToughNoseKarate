@@ -23,7 +23,7 @@ describe('BlockCard Component', () => {
     id: 1,
     blockName: 'High Block',
     technique: 'Defensive Block',
-    belt: 'White Belt',
+    beltRank: 'White Belt',
     beltColor: '#FFFFFF',
     stance: 'Front stance',
     execution: ['Step 1: Prepare position', 'Step 2: Execute block', 'Step 3: Return to ready'],
@@ -45,7 +45,7 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
       profile: null,
@@ -230,7 +230,7 @@ describe('BlockCard Component', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: true,
       instructor: { role: 'instructor' as const, id: 1, name: 'Test Instructor' },
-      isLoading: false,
+      isAuthLoading: false,
       login: jest.fn(),
       logout: jest.fn(),
       profile: null,
@@ -339,7 +339,7 @@ describe('BlockCard Component', () => {
     expect(mockGetBeltTextColor).toHaveBeenCalledWith('#FFFFFF');
   });
 
-  it('applies correct styling for white belt', () => {
+  it('applies correct styling for white beltRank', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       instructor: null,

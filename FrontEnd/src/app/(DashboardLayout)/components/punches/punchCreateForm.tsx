@@ -10,7 +10,7 @@ const defaultValues: PunchCreate = {
   name: '',
   korean: '',
   description: '',
-  belt: '',
+  beltRank: '',
   beltColor: '',
   target: '',
   execution: [],
@@ -111,15 +111,15 @@ const PunchCreateForm = ({ refetchPunches, handleCloseCreate }: PunchCreateFormP
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='belt'>
+                <Field name='beltRank'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
                       label='Belt'
                       placeholder='e.g., 8th Gup'
-                      error={Boolean(errors.belt && touched.belt)}
-                      helperText={errors.belt && touched.belt ? (errors as any).belt : ''}
+                      error={Boolean(errors.beltRank && touched.beltRank)}
+                      helperText={errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''}
                       required
                     />
                   )}

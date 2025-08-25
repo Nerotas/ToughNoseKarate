@@ -11,7 +11,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Alert,
   Button,
 } from '@mui/material';
 import { useAuth } from 'hooks/useAuth';
@@ -19,7 +18,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SecurityIcon from '@mui/icons-material/Security';
 import FitnessCenter from '@mui/icons-material/FitnessCenter';
 import PsychologyIcon from '@mui/icons-material/Psychology';
-import WarningIcon from '@mui/icons-material/Warning';
 import { SelfDefenseDefinition } from 'models/SelfDefense/SelfDefense';
 import { useState } from 'react';
 import SelfDefenseEditModule from './selfDefenseEditModule';
@@ -103,7 +101,7 @@ const SelfDefenseCard = ({ selfDefense, refetchSelfDefense }: SelfDefenseCardPro
 
             <Box display='flex' gap={1} mb={2} flexWrap='wrap'>
               <Chip
-                label={selfDefense.belt}
+                label={selfDefense.beltRank}
                 sx={{
                   backgroundColor: selfDefense.beltColor,
                   color:

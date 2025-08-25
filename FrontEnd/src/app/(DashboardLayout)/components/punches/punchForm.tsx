@@ -18,7 +18,7 @@ const PunchForm = ({ punch, refetchPunches, handleCloseEdit }: PunchFormProps) =
     name: punch.name || '',
     korean: punch.korean || '',
     description: punch.description || '',
-    belt: punch.belt || '',
+    beltRank: punch.beltRank || '',
     beltColor: punch.beltColor || '',
     target: punch.target || '',
     execution: punch.execution || [],
@@ -112,15 +112,15 @@ const PunchForm = ({ punch, refetchPunches, handleCloseEdit }: PunchFormProps) =
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='belt'>
+                <Field name='beltRank'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
                       label='Belt'
                       placeholder='e.g., 8th Gup'
-                      error={Boolean(errors.belt && touched.belt)}
-                      helperText={errors.belt && touched.belt ? errors.belt : ''}
+                      error={Boolean(errors.beltRank && touched.beltRank)}
+                      helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
                       required
                     />
                   )}

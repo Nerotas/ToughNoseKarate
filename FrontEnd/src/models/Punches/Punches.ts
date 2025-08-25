@@ -3,7 +3,7 @@ export interface PunchDefinition {
   name: string | null;
   korean: string | null;
   description: string | null;
-  belt: string | null;
+  beltRank: string | null;
   beltColor: string | null;
   target: string | null;
   execution: string[] | null;

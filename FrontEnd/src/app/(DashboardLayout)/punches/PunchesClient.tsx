@@ -24,6 +24,7 @@ import { Button } from '@mui/material';
 import { useAuth } from 'hooks/useAuth';
 import PunchCreateModule from '../components/punches/punchCreateModule';
 import React, { useState } from 'react';
+import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 
 const getBeltTextColor = (beltColor: string) => {
   return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
@@ -33,12 +34,7 @@ export default function PunchesClient() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const { isAuthenticated, instructor } = useAuth();
   const canCreate = isAuthenticated && instructor?.role === 'admin';
-  const {
-    data: punchDefinitions,
-    isPending,
-    isError,
-    refetch,
-  } = useGet<PunchDefinition[]>({
+  const { data, isPending, isError, refetch } = useGet<PunchDefinition[]>({
     apiLabel: 'punches-definitions',
     url: '/punches-definitions',
     id: 'getAll',
@@ -54,6 +50,8 @@ export default function PunchesClient() {
   const refetchPunches = async () => {
     await refetch();
   };
+
+  const punchDefinitions = orderByBeltRank(data || [], (item) => item.beltRank);
 
   return (
     <PageContainer title='Punches' description='Tang Soo Do Punching Techniques'>
