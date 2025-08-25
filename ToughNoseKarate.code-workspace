@@ -8,22 +8,6 @@
       "path": "FrontEnd"
     },
     {
-      "name": "types",
-      "path": "FrontEnd/.next/types"
-    },
-    {
-      "name": "standalone",
-      "path": "FrontEnd/.next/standalone"
-    },
-    {
-      "name": ".next",
-      "path": "FrontEnd/.next/standalone/.next"
-    },
-    {
-      "name": ".next",
-      "path": "FrontEnd/.next"
-    },
-    {
       "name": "BackEnd",
       "path": "BackEnd"
     }
