@@ -12,7 +12,7 @@ export interface kicksDefinitionsAttributes {
   id?: number;
   name: string;
   korean: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   description: string;
   target: string;
@@ -38,8 +38,8 @@ export class kicksDefinitions
   @Column({ type: DataType.STRING(100) })
   declare korean: string;
 
-  @Column({ type: DataType.STRING(45) })
-  declare belt: string;
+  @Column({ field: 'belt_rank', type: DataType.STRING(45) })
+  declare beltRank: string;
 
   @Column({ field: 'belt_color', type: DataType.STRING(7) })
   declare beltColor: string;

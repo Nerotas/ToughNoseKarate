@@ -3,7 +3,7 @@ export interface SelfDefenseDefinition {
   name: string;
   korean: string;
   description: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   category: string;
   difficulty: string;

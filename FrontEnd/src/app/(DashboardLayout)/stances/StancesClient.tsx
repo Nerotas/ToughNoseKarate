@@ -1,29 +1,15 @@
 'use client';
 import { useState } from 'react';
-import {
-  Grid,
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  Alert,
-  Divider,
-  Button,
-} from '@mui/material';
-import { IconBrandTorchain, IconCheckbox, IconX } from '@tabler/icons-react';
+import { Grid, Box, Typography, List, ListItem, ListItemText, Alert, Button } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import { StanceDefinition } from 'models/Stances/Stances';
 import useGet from '../../../hooks/useGet';
 import Loading from 'app/loading';
 import { useAuth } from '../../../hooks/useAuth';
-import StanceEditModule from '../components/stances/stanceEditModule';
 import StanceCreateModule from '../components/stances/stanceCreateModule';
 import StancesCard from '../components/stances/stancesCard';
+import { orderByBeltRank } from 'utils/helpers/orderByBeltRank';
 
 export default function StancesClient() {
   // Use the custom useGet hook - will use SSR data if available, fallback if not
@@ -49,7 +35,7 @@ export default function StancesClient() {
   const canCreate = isAuthenticated && instructor?.role === 'admin';
 
   // Use API data only
-  const displayStances = stancesDefinitions || [];
+  const displayStances = orderByBeltRank(stancesDefinitions || [], (item) => item.beltRank);
 
   const getBeltTextColor = (beltColor: string) => {
     return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';

@@ -25,7 +25,7 @@ const defaultValues: KickCreate = {
   name: '',
   korean: '',
   description: '',
-  belt: '',
+  beltRank: '',
   beltColor: '',
   target: '',
   execution: [],
@@ -38,7 +38,7 @@ const validationSchema = Yup.object({
   name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
-  belt: Yup.string().trim().required('Required'),
+  beltRank: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
   target: Yup.string().trim().max(200, 'Too long').optional(),
   execution: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
@@ -137,7 +137,7 @@ const KickCreateForm = ({ refetchKicks, handleCloseCreate }: KickCreateFormProps
               </Grid>
 
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='belt'>
+                <Field name='beltRank'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
@@ -145,8 +145,8 @@ const KickCreateForm = ({ refetchKicks, handleCloseCreate }: KickCreateFormProps
                       label='Belt'
                       placeholder='e.g., 8th Gup'
                       required
-                      error={Boolean(errors.belt && touched.belt)}
-                      helperText={errors.belt && touched.belt ? (errors as any).belt : ''}
+                      error={Boolean(errors.beltRank && touched.beltRank)}
+                      helperText={errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''}
                     />
                   )}
                 </Field>

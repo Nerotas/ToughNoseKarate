@@ -3,7 +3,7 @@ export interface OneStepDefinition {
   name: string;
   korean: string;
   description: string;
-  belt: string;
+  beltRank: string;
   beltColor: string;
   attack: string;
   defense: string[];

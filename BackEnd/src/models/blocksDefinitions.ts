@@ -57,7 +57,7 @@ export class blocksDefinitions extends Model<BlocksDefinitionsAttributes> {
   declare stance: string;
 
   @Column({
-    field: 'belt',
+    field: 'belt_rank',
     type: DataType.STRING(45),
     allowNull: false,
   })

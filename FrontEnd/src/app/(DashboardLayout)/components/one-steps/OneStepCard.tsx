@@ -75,7 +75,7 @@ const OneStepCard = ({
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Chip
                   icon={<IconSwords />}
-                  label={oneStep.belt}
+                  label={oneStep.beltRank}
                   sx={{
                     backgroundColor: oneStep.beltColor,
                     color: getBeltTextColor(oneStep.beltColor),
