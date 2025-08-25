@@ -76,6 +76,7 @@ export const BELT_RANKS: Partial<BeltRequirements>[] = [
   },
   {
     beltOrder: 19,
+    beltRank: 'Red',
   },
   {
     beltOrder: 20,
