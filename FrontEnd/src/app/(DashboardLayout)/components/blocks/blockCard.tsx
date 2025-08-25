@@ -70,7 +70,7 @@ const BlockCard = ({
               </Box>
               <Chip
                 icon={<IconShield />}
-                label={block.belt}
+                label={block.beltRank}
                 sx={{
                   backgroundColor: block.beltColor,
                   color: getBeltTextColor(block.beltColor as string),

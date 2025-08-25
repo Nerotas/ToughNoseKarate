@@ -15,7 +15,7 @@ const validationSchema = Yup.object({
   blockName: Yup.string().required('Block name is required'),
   technique: Yup.string().required('Technique is required'),
   stance: Yup.string().required('Stance is required'),
-  belt: Yup.string().required('Belt is required'),
+  beltRank: Yup.string().required('Belt is required'),
   beltColor: Yup.string().required('Belt color is required'),
   execution: Yup.array().of(Yup.string()),
   keyPoints: Yup.array().of(Yup.string()),
@@ -28,7 +28,7 @@ const BlockCreateForm = ({ refetchBlocks, handleCloseCreate }: BlockCreateFormPr
     blockName: '',
     technique: '',
     stance: '',
-    belt: '',
+    beltRank: '',
     beltColor: '',
     execution: [''],
     keyPoints: [''],
@@ -120,14 +120,14 @@ const BlockCreateForm = ({ refetchBlocks, handleCloseCreate }: BlockCreateFormPr
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='belt'>
+                <Field name='beltRank'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
                       label='Belt Rank'
-                      error={Boolean(errors.belt && touched.belt)}
-                      helperText={errors.belt && touched.belt ? errors.belt : ''}
+                      error={Boolean(errors.beltRank && touched.beltRank)}
+                      helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
                       required
                     />
                   )}
