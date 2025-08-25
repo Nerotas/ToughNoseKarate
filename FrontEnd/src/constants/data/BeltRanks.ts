@@ -1,6 +1,6 @@
 import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 
-//order VERY unlikley to change
+//order VERY unlikely to change
 export const BELT_RANKS: Partial<BeltRequirements>[] = [
   {
     beltOrder: 1,
