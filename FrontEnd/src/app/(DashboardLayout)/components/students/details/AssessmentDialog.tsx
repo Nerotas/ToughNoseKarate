@@ -116,7 +116,12 @@ const AssessmentDialog: React.FC<AssessmentDialogProps> = ({
               center_punch: values.center_punch || undefined,
               reverse_punch: values.reverse_punch || undefined,
               jab: values.jab || undefined,
-              overall_score: values.overall_score || undefined,
+              overall_score:
+                values.overall_score !== null &&
+                values.overall_score !== undefined &&
+                values.overall_score !== ''
+                  ? Number(values.overall_score)
+                  : undefined,
             };
 
             // Update the assessment
@@ -192,7 +197,8 @@ const AssessmentDialog: React.FC<AssessmentDialogProps> = ({
                 center_punch: updateData.center_punch || undefined,
                 reverse_punch: updateData.reverse_punch || undefined,
                 jab: updateData.jab || undefined,
-                overall_score: updateData.overall_score || undefined,
+                overall_score:
+                  updateData.overall_score !== undefined ? updateData.overall_score : undefined,
               };
               await onAssessmentUpdate(updatedAssessment);
             }

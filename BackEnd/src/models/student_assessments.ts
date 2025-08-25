@@ -543,14 +543,17 @@ export class StudentAssessments extends Model {
 
   // Status and metadata
   @Column({
-    type: DataType.ENUM('in_progress', 'completed', 'cancelled'),
+    type: DataType.STRING(20),
+    allowNull: true,
     defaultValue: 'in_progress',
   })
   declare assessment_status: 'in_progress' | 'completed' | 'cancelled';
 
+  @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
   @CreatedAt
   declare created_at: Date;
 
+  @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
   @UpdatedAt
   declare updated_at: Date;
 

@@ -3,7 +3,7 @@ export interface StudentAssessment {
   assessment_id: number;
   student_id: number;
   instructor_id?: number;
-  assessment_date: string;
+  assessment_date?: string | Date;
   target_belt_rank?: string;
 
   // Header Information
@@ -106,14 +106,14 @@ export interface StudentAssessment {
   butterfly_kick?: number;
 
   // Overall Assessment
-  overall_score?: number;
+  overall_score?: number | string;
   passed?: boolean;
   examiner_notes?: string;
 
   // Status and metadata
-  assessment_status: 'in_progress' | 'completed' | 'cancelled';
-  created_at: string;
-  updated_at: string;
+  assessment_status?: 'in_progress' | 'completed' | 'cancelled';
+  created_at?: string | Date;
+  updated_at?: string | Date;
 }
 
 export interface StudentTestHistory {
@@ -188,7 +188,7 @@ export interface StudentTestHistory {
   examiner_notes?: string;
   new_rank?: string;
 
-  created_at: string;
+  created_at?: string | Date;
 }
 
 export interface AssessmentOverview {
@@ -197,10 +197,10 @@ export interface AssessmentOverview {
   student_name: string;
   current_belt: string;
   target_belt_rank?: string;
-  assessment_date: string;
+  assessment_date?: string | Date;
   overall_score?: number;
   passed?: boolean;
-  assessment_status: 'in_progress' | 'completed' | 'cancelled';
+  assessment_status?: 'in_progress' | 'completed' | 'cancelled';
   examiner_notes?: string;
   forms_completion_pct: number;
   avg_forms_score: number;
