@@ -41,7 +41,6 @@ export function orderByBeltRank<T extends { beltRank?: string | null }>(
     })
     .map((x) => x.item);
 
-  console.log(orderedList);
   return orderedList;
 }
 
