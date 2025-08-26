@@ -35,7 +35,9 @@ const BeltRequirements = () => {
 
   // Use API data if available, otherwise use static data
   const displayBeltRequirements =
-    beltRequirements && beltRequirements.length > 0 ? beltRequirements : [];
+    beltRequirements && beltRequirements.length > 0
+      ? beltRequirements.sort((a, b) => a.beltOrder - b.beltOrder)
+      : [];
 
   const refetchBeltRequirements = async () => {
     await refetch();
