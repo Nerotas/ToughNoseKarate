@@ -9,26 +9,26 @@ export class StanceDefinitionsService {
     private stanceDefinitionsModel: typeof stanceDefinitions,
   ) {}
 
+  // Normalize incoming payload into the model's attribute shape (camelCase),
+  // accept either camelCase or snake_case from clients.
   private normalizePayload(payload: any): any {
-    const normalized = { ...payload };
-
-    // Ensure array fields are properly formatted for PostgreSQL
-    ['keyPoints', 'commonMistakes', 'applications'].forEach((field) => {
-      if (normalized[field] !== undefined && normalized[field] !== null) {
-        // Coerce to array if it's not already
-        if (!Array.isArray(normalized[field])) {
-          normalized[field] = [normalized[field]];
+    // Normalize array fields if they are strings
+    const arrayFields = ['keyPoints', 'commonMistakes', 'applications'];
+    const normalized: any = {};
+    for (const key of Object.keys(payload)) {
+      const value = payload[key];
+      if (value !== undefined) {
+        if (arrayFields.includes(key)) {
+          if (typeof value === 'string') {
+            normalized[key] = [value];
+          } else {
+            normalized[key] = value;
+          }
+        } else {
+          normalized[key] = value;
         }
       }
-    });
-
-    // Remove undefined fields to avoid database issues
-    Object.keys(normalized).forEach((key) => {
-      if (normalized[key] === undefined) {
-        delete normalized[key];
-      }
-    });
-
+    }
     return normalized;
   }
 
@@ -41,8 +41,18 @@ export class StanceDefinitionsService {
   }
 
   async create(createStanceDefinitionsDto: any): Promise<stanceDefinitions> {
+    // DO NOT convert keys to snake_case here — model attributes are camelCase.
     const normalized = this.normalizePayload(createStanceDefinitionsDto);
-    return this.stanceDefinitionsModel.create(normalized);
+    try {
+      return await this.stanceDefinitionsModel.create(normalized);
+    } catch (err) {
+      console.error(
+        'Failed creating stance, payload:',
+        JSON.stringify(normalized),
+      );
+      console.error('Stance create error:', err);
+      throw err;
+    }
   }
 
   async update(
@@ -50,10 +60,21 @@ export class StanceDefinitionsService {
     updateStanceDefinitionsDto: any,
   ): Promise<[number, stanceDefinitions[]]> {
     const normalized = this.normalizePayload(updateStanceDefinitionsDto);
-    return this.stanceDefinitionsModel.update(normalized, {
-      where: { id },
-      returning: true,
-    });
+    try {
+      return await this.stanceDefinitionsModel.update(normalized, {
+        where: { id },
+        returning: true,
+      });
+    } catch (err) {
+      console.error(
+        'Failed updating stance id:',
+        id,
+        'payload:',
+        JSON.stringify(normalized),
+      );
+      console.error('Stance update error:', err);
+      throw err;
+    }
   }
 
   async remove(id: number): Promise<number> {

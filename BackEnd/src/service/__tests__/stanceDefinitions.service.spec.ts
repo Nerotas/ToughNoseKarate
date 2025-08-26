@@ -11,7 +11,7 @@ describe('StanceDefinitionsService', () => {
     id: 1,
     name: 'Front Stance',
     korean: '앞굽이',
-    belt: '9th Gup',
+    beltRank: '9th Gup',
     beltColor: '#FFFFFF',
     description: 'Basic front stance for stability',
     keyPoints: ['Keep back straight', 'Weight distribution'],
@@ -103,7 +103,7 @@ describe('StanceDefinitionsService', () => {
       const createDto = {
         name: 'Back Stance',
         korean: '뒷굽이',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Defensive stance with weight on back leg',
         keyPoints: ['Light front foot', 'Mobile stance'],
@@ -117,14 +117,23 @@ describe('StanceDefinitionsService', () => {
       const result = await service.create(createDto);
 
       expect(result).toEqual(expectedResult);
-      expect(mockModel.create).toHaveBeenCalledWith(createDto);
+      expect(mockModel.create).toHaveBeenCalledWith({
+        name: 'Back Stance',
+        korean: '뒷굽이',
+        beltRank: '8th Gup',
+        beltColor: '#FFFF00',
+        description: 'Defensive stance with weight on back leg',
+        keyPoints: ['Light front foot', 'Mobile stance'],
+        commonMistakes: ['Too much weight forward', 'Rigid stance'],
+        applications: ['Defensive techniques', 'Quick escapes'],
+      });
     });
 
     it('should normalize array fields correctly', async () => {
       const createDto = {
         name: 'Test Stance',
         korean: '테스트 자세',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test stance',
         keyPoints: 'Single key point', // String instead of array
@@ -152,7 +161,7 @@ describe('StanceDefinitionsService', () => {
       const createDto = {
         name: 'Test Stance',
         korean: '테스트 자세',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test stance',
         keyPoints: null,
@@ -163,7 +172,7 @@ describe('StanceDefinitionsService', () => {
       const normalizedDto = {
         name: 'Test Stance',
         korean: '테스트 자세',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Test stance',
         keyPoints: null,
@@ -326,7 +335,7 @@ describe('StanceDefinitionsService', () => {
       const createDto = {
         name: 'Complete Test',
         korean: '완전한 테스트',
-        belt: '8th Gup',
+        beltRank: '8th Gup',
         beltColor: '#FFFF00',
         description: 'Complete test',
         keyPoints: 'Single key point',
