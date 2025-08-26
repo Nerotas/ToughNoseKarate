@@ -2,7 +2,7 @@
  * Convert a camelCase string to snake_case
  */
 export function toSnake(key: string): string {
-  return key.replace(/([A-Z])/g, '_$1').toLowerCase();
+  return key.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
