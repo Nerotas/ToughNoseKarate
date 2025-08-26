@@ -1,7 +1,6 @@
 ﻿import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { stanceDefinitions } from '../models/stanceDefinitions';
-import { camelToSnake } from 'src/utils/CamelToSnake';
 
 @Injectable()
 export class StanceDefinitionsService {
