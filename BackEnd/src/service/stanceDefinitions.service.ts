@@ -13,62 +13,23 @@ export class StanceDefinitionsService {
   // Normalize incoming payload into the model's attribute shape (camelCase),
   // accept either camelCase or snake_case from clients.
   private normalizePayload(payload: any): any {
-    if (!payload || typeof payload !== 'object') return payload;
-
-    // helper: snake_case -> camelCase for a single key
-    const snakeToCamelKey = (k: string) =>
-      k.replace(/_([a-z0-9])/g, (_, c) => c.toUpperCase());
-
-    // recursively convert object/array keys from snake_case -> camelCase
-    const convertKeys = (input: any): any => {
-      if (input === null || input === undefined) return input;
-      if (Array.isArray(input)) return input.map(convertKeys);
-      if (typeof input === 'object' && input.constructor === Object) {
-        const out: Record<string, any> = {};
-        for (const [k, v] of Object.entries(input)) {
-          out[snakeToCamelKey(k)] = convertKeys(v);
+    // Normalize array fields if they are strings
+    const arrayFields = ['keyPoints', 'commonMistakes', 'applications'];
+    const normalized: any = {};
+    for (const key of Object.keys(payload)) {
+      const value = payload[key];
+      if (value !== undefined) {
+        if (arrayFields.includes(key)) {
+          if (typeof value === 'string') {
+            normalized[key] = [value];
+          } else {
+            normalized[key] = value;
+          }
+        } else {
+          normalized[key] = value;
         }
-        return out;
       }
-      return input;
-    };
-
-    const converted = convertKeys(payload);
-
-    // whitelist of model attributes (camelCase) to accept -- extend as model grows
-    const allowed = new Set([
-      'id',
-      'name',
-      'korean',
-      'description',
-      'beltRank',
-      'beltColor',
-      'position',
-      'bodyPosition',
-      'keyPoints',
-      'commonMistakes',
-      'applications',
-      'createdAt',
-      'updatedAt',
-    ]);
-
-    const normalized: Record<string, any> = {};
-    for (const [k, v] of Object.entries(converted)) {
-      if (allowed.has(k)) normalized[k] = v;
     }
-
-    // Coerce known array fields to arrays if a single value was provided
-    ['keyPoints', 'commonMistakes', 'applications'].forEach((f) => {
-      if (normalized[f] !== undefined && normalized[f] !== null) {
-        if (!Array.isArray(normalized[f])) normalized[f] = [normalized[f]];
-      }
-    });
-
-    // Remove undefined so Sequelize won't write them
-    Object.keys(normalized).forEach((k) => {
-      if (normalized[k] === undefined) delete normalized[k];
-    });
-
     return normalized;
   }
 
