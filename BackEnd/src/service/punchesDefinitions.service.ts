@@ -75,7 +75,6 @@ export class PunchesDefinitionsService {
       ...(applications && { applications }),
       ...(execution && { execution }),
       target: this.toStringOrUndefined(rest.target ?? rest.targetAreas),
-      execution: execution,
     });
 
     return this.punchesDefinitionsModel.create(
