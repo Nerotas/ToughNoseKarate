@@ -57,25 +57,24 @@ export class PunchesDefinitionsService {
     // Defensive: do not pass through an `id` even if the caller included it.
     const { id: _ignore, ...rest } = dto as any;
 
-    // Normalize arrays; prefer undefined when empty so DB defaults (like [] or sequence) apply
-    const keyPoints = this.toStringArray(rest.keyPoints);
-    const commonMistakes = this.toStringArray(rest.commonMistakes);
-    const applications = this.toStringArray(rest.applications);
-    const execution = this.toStringArray(rest.execution);
+    // Normalize arrays; tests expect explicit keys with [] or null defaults
+    const keyPoints = this.toStringArray(rest.keyPoints) ?? [];
+    const commonMistakes = this.toStringArray(rest.commonMistakes) ?? [];
+    const applications = this.toStringArray(rest.applications) ?? [];
+    const execution = this.toStringArray(rest.execution) ?? null;
 
-    const payload: Partial<PunchesDefinitionsAttributes> = this.clean({
+    const payload: Partial<PunchesDefinitionsAttributes> = {
       name: rest.name,
       korean: rest.korean,
       description: rest.description,
       beltRank: rest.beltRank,
       beltColor: rest.beltColor,
-      // only include arrays when present (non-empty)
-      ...(keyPoints && { keyPoints }),
-      ...(commonMistakes && { commonMistakes }),
-      ...(applications && { applications }),
-      ...(execution && { execution }),
-      target: this.toStringOrUndefined(rest.target ?? rest.targetAreas),
-    });
+      keyPoints,
+      commonMistakes,
+      applications,
+      target: this.toStringOrUndefined(rest.target ?? rest.targetAreas) ?? null,
+      execution,
+    };
 
     return this.punchesDefinitionsModel.create(
       payload as PunchesDefinitionsAttributes,
