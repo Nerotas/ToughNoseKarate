@@ -54,20 +54,26 @@ export class PunchesDefinitionsService {
   }
 
   async create(dto: PunchesDefinitionsAttributes): Promise<punchesDefinitions> {
+    // Defensive: do not pass through an `id` even if the caller included it.
+    const { id: _ignore, ...rest } = dto as any;
+
+    // Normalize arrays; tests expect explicit keys with [] or null defaults
+    const keyPoints = this.toStringArray(rest.keyPoints) ?? [];
+    const commonMistakes = this.toStringArray(rest.commonMistakes) ?? [];
+    const applications = this.toStringArray(rest.applications) ?? [];
+    const execution = this.toStringArray(rest.execution) ?? null;
+
     const payload: Partial<PunchesDefinitionsAttributes> = {
-      name: dto.name,
-      korean: dto.korean,
-      description: dto.description,
-      beltRank: dto.beltRank,
-      beltColor: dto.beltColor,
-      keyPoints: this.toStringArray((dto as any).keyPoints) ?? [],
-      commonMistakes: this.toStringArray((dto as any).commonMistakes) ?? [],
-      applications: this.toStringArray((dto as any).applications) ?? [],
-      target:
-        this.toStringOrUndefined(
-          (dto as any).target ?? (dto as any).targetAreas,
-        ) ?? null,
-      execution: (dto as any).execution ?? null,
+      name: rest.name,
+      korean: rest.korean,
+      description: rest.description,
+      beltRank: rest.beltRank,
+      beltColor: rest.beltColor,
+      keyPoints,
+      commonMistakes,
+      applications,
+      target: this.toStringOrUndefined(rest.target ?? rest.targetAreas) ?? null,
+      execution,
     };
 
     return this.punchesDefinitionsModel.create(

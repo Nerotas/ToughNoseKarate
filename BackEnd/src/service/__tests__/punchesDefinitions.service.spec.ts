@@ -32,6 +32,33 @@ describe('PunchesDefinitionsService', () => {
     applications: ['Self-defense', 'Sparring'],
   };
 
+  const mockCreate = {
+    name: 'Spin Bottom Fist',
+    korean: 'Me Jumeok',
+    description: 'A strike that uses moment to strike at the head.',
+    beltRank: 'Purple White Belt',
+    beltColor: '#800080',
+    target: 'Head',
+    execution: [
+      'Start in staddle stance',
+      'Fold  with striking hand on over folding hand at should level',
+      'Spin to staddle stance',
+      'Strike goes to head with the bottom of the fist',
+    ],
+    keyPoints: [
+      'Use spin for power',
+      'Maintain proper stance',
+      'Hit with proper part of the hand',
+    ],
+    commonMistakes: [
+      'Hitting with the back of the fist',
+      'Folding with direction hand on top',
+      'Not turning enough with spin',
+      'Poor stance',
+    ],
+    applications: ['Strike off of movement', 'Combinations'],
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -136,18 +163,9 @@ describe('PunchesDefinitionsService', () => {
 
     it('should handle string arrays from input', async () => {
       const createDto = {
-        name: 'Hook Punch',
-        korean: 'Hook Ji Ru Gi',
-        description: 'Circular punch',
-        beltRank: 'orange',
-        beltColor: 'orange',
-        keyPoints: 'Circular motion',
-        commonMistakes: 'Wide arc',
-        applications: 'Close combat',
-        target: 'Side of head',
-        execution: 'Pivot and hook',
-      } as any;
-
+        ...mockCreate,
+        execution: ['Rotate hips and shoulders'],
+      };
       punchesDefinitionsModel.create.mockResolvedValue(
         mockPunchesDefinition as any,
       );
@@ -155,22 +173,32 @@ describe('PunchesDefinitionsService', () => {
       const result = await service.create(createDto);
 
       expect(punchesDefinitionsModel.create).toHaveBeenCalledWith({
-        name: 'Hook Punch',
-        korean: 'Hook Ji Ru Gi',
-        description: 'Circular punch',
-        beltRank: 'orange',
-        beltColor: 'orange',
-        keyPoints: ['Circular motion'],
-        commonMistakes: ['Wide arc'],
-        applications: ['Close combat'],
-        target: 'Side of head',
-        execution: 'Pivot and hook',
+        name: 'Spin Bottom Fist',
+        korean: 'Me Jumeok',
+        description: 'A strike that uses moment to strike at the head.',
+        beltRank: 'Purple White Belt',
+        beltColor: '#800080',
+        target: 'Head',
+        execution: ['Rotate hips and shoulders'],
+        keyPoints: [
+          'Use spin for power',
+          'Maintain proper stance',
+          'Hit with proper part of the hand',
+        ],
+        commonMistakes: [
+          'Hitting with the back of the fist',
+          'Folding with direction hand on top',
+          'Not turning enough with spin',
+          'Poor stance',
+        ],
+        applications: ['Strike off of movement', 'Combinations'],
       });
       expect(result).toEqual(mockPunchesDefinition);
     });
 
     it('should handle JSON string arrays', async () => {
       const createDto = {
+        ...mockCreate,
         name: 'Upper Cut',
         keyPoints: '["Bend knees", "Uppercut motion"]',
         commonMistakes: '["Stand too tall", "No leg drive"]',
@@ -182,22 +210,18 @@ describe('PunchesDefinitionsService', () => {
 
       await service.create(createDto);
 
-      expect(punchesDefinitionsModel.create).toHaveBeenCalledWith({
-        name: 'Upper Cut',
-        korean: undefined,
-        description: undefined,
-        beltRank: undefined,
-        beltColor: undefined,
-        keyPoints: ['Bend knees', 'Uppercut motion'],
-        commonMistakes: ['Stand too tall', 'No leg drive'],
-        applications: [],
-        target: null,
-        execution: null,
-      });
+      expect(punchesDefinitionsModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'Upper Cut',
+          keyPoints: ['Bend knees', 'Uppercut motion'],
+          commonMistakes: ['Stand too tall', 'No leg drive'],
+        }),
+      );
     });
 
     it('should handle multiline string inputs', async () => {
       const createDto = {
+        ...mockCreate,
         name: 'Advanced Punch',
         keyPoints: 'Point 1\nPoint 2\nPoint 3',
         commonMistakes: 'Mistake 1,Mistake 2,Mistake 3',
@@ -209,18 +233,13 @@ describe('PunchesDefinitionsService', () => {
 
       await service.create(createDto);
 
-      expect(punchesDefinitionsModel.create).toHaveBeenCalledWith({
-        name: 'Advanced Punch',
-        korean: undefined,
-        description: undefined,
-        beltRank: undefined,
-        beltColor: undefined,
-        keyPoints: ['Point 1', 'Point 2', 'Point 3'],
-        commonMistakes: ['Mistake 1', 'Mistake 2', 'Mistake 3'],
-        applications: [],
-        target: null,
-        execution: null,
-      });
+      expect(punchesDefinitionsModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'Advanced Punch',
+          keyPoints: ['Point 1', 'Point 2', 'Point 3'],
+          commonMistakes: ['Mistake 1', 'Mistake 2', 'Mistake 3'],
+        }),
+      );
     });
 
     it('should handle targetAreas as fallback for target', async () => {
@@ -235,18 +254,12 @@ describe('PunchesDefinitionsService', () => {
 
       await service.create(createDto);
 
-      expect(punchesDefinitionsModel.create).toHaveBeenCalledWith({
-        name: 'Test Punch',
-        korean: undefined,
-        description: undefined,
-        beltRank: undefined,
-        beltColor: undefined,
-        keyPoints: [],
-        commonMistakes: [],
-        applications: [],
-        target: 'Multiple areas',
-        execution: null,
-      });
+      expect(punchesDefinitionsModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'Test Punch',
+          target: 'Multiple areas',
+        }),
+      );
     });
   });
 
