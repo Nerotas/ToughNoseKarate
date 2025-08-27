@@ -54,21 +54,29 @@ export class PunchesDefinitionsService {
   }
 
   async create(dto: PunchesDefinitionsAttributes): Promise<punchesDefinitions> {
-    const payload: Partial<PunchesDefinitionsAttributes> = {
-      name: dto.name,
-      korean: dto.korean,
-      description: dto.description,
-      beltRank: dto.beltRank,
-      beltColor: dto.beltColor,
-      keyPoints: this.toStringArray((dto as any).keyPoints) ?? [],
-      commonMistakes: this.toStringArray((dto as any).commonMistakes) ?? [],
-      applications: this.toStringArray((dto as any).applications) ?? [],
-      target:
-        this.toStringOrUndefined(
-          (dto as any).target ?? (dto as any).targetAreas,
-        ) ?? null,
-      execution: (dto as any).execution ?? null,
-    };
+    // Defensive: do not pass through an `id` even if the caller included it.
+    const { id: _ignore, ...rest } = dto as any;
+
+    // Normalize arrays; prefer undefined when empty so DB defaults (like [] or sequence) apply
+    const keyPoints = this.toStringArray(rest.keyPoints);
+    const commonMistakes = this.toStringArray(rest.commonMistakes);
+    const applications = this.toStringArray(rest.applications);
+    const execution = this.toStringArray(rest.execution);
+
+    const payload: Partial<PunchesDefinitionsAttributes> = this.clean({
+      name: rest.name,
+      korean: rest.korean,
+      description: rest.description,
+      beltRank: rest.beltRank,
+      beltColor: rest.beltColor,
+      // only include arrays when present (non-empty)
+      ...(keyPoints && { keyPoints }),
+      ...(commonMistakes && { commonMistakes }),
+      ...(applications && { applications }),
+      ...(execution && { execution }),
+      target: this.toStringOrUndefined(rest.target ?? rest.targetAreas),
+      execution: execution,
+    });
 
     return this.punchesDefinitionsModel.create(
       payload as PunchesDefinitionsAttributes,
