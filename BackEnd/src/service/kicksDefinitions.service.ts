@@ -1,3 +1,4 @@
+
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { kicksDefinitions } from '../models/kicksDefinitions';
@@ -45,6 +46,11 @@ export class KicksDefinitionsService {
   async create(createKicksDefinitionsDto: any): Promise<kicksDefinitions> {
     const normalized = this.normalizePayload(createKicksDefinitionsDto);
     return this.kicksDefinitionsModel.create(normalized);
+  }
+
+  async bulkCreate(dtos: any[]): Promise<kicksDefinitions[]> {
+    const normalized = dtos.map((dto) => this.normalizePayload(dto));
+    return this.kicksDefinitionsModel.bulkCreate(normalized);
   }
 
   async update(
