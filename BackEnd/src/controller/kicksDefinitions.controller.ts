@@ -26,6 +26,13 @@ export class KicksDefinitionsController {
   create(@Body() createKicksDefinitionsDto: any) {
     return this.kicksDefinitionsService.create(createKicksDefinitionsDto);
   }
+
+  @Post('bulk')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['admin', 'instructor'])
+  bulkCreate(@Body() dtos: any[]) {
+    return this.kicksDefinitionsService.bulkCreate(dtos);
+  }
   @Get()
   findAll() {
     return this.kicksDefinitionsService.findAll();
