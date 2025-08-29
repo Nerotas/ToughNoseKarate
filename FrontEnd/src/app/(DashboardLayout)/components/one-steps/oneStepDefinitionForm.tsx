@@ -18,19 +18,8 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import * as Yup from 'yup';
-
-const validationSchema = Yup.object({
-  name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
-  korean: Yup.string().trim().max(100, 'Too long').optional(),
-  description: Yup.string().trim().max(2000, 'Too long').optional(),
-  beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
-  attack: Yup.string().trim().max(200, 'Too long').optional(),
-  defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-});
+import { BELT_RANKS } from 'constants/data/BeltRanks';
+import { oneStepUpdateValidationSchema } from 'utils/validation/schemas';
 
 interface OneStepDefinitionFormProps {
   oneStep: OneStepDefinition;
@@ -46,19 +35,43 @@ const OneStepDefinitionForm = ({
   const initialValues: OneStepDefinition = {
     id: oneStep.id,
     name: oneStep.name || '',
-    korean: oneStep.korean || '',
     description: oneStep.description || '',
     beltRank: oneStep.beltRank || '',
     beltColor: oneStep.beltColor || '',
-    attack: oneStep.attack || '',
+    followUpBeltRank: oneStep.followUpBeltRank || '',
+    followUpBeltColor: oneStep.followUpBeltColor || '',
+    secondFollowUpBeltRank: oneStep.secondFollowUpBeltRank || '',
+    secondFollowUpBeltColor: oneStep.secondFollowUpBeltColor || '',
     defense: oneStep.defense || [],
     keyPoints: oneStep.keyPoints || [],
     commonMistakes: oneStep.commonMistakes || [],
-    applications: oneStep.applications || [],
+    firstFollowUp: oneStep.firstFollowUp || [],
+    secondFollowUp: oneStep.secondFollowUp || [],
+    comment: oneStep.comment || '',
   };
 
   const onSubmit = async (values: OneStepDefinition) => {
-    await axiosInstance.patch(`/onestep-definitions/${values.id}`, values);
+    // Normalize array fields to ensure empty arrays are properly handled
+    const normalizedValues = {
+      ...values,
+      defense: Array.isArray(values.defense)
+        ? values.defense.filter((item) => item && item.trim())
+        : [],
+      keyPoints: Array.isArray(values.keyPoints)
+        ? values.keyPoints.filter((item) => item && item.trim())
+        : [],
+      commonMistakes: Array.isArray(values.commonMistakes)
+        ? values.commonMistakes.filter((item) => item && item.trim())
+        : [],
+      firstFollowUp: Array.isArray(values.firstFollowUp)
+        ? values.firstFollowUp.filter((item) => item && item.trim())
+        : [],
+      secondFollowUp: Array.isArray(values.secondFollowUp)
+        ? values.secondFollowUp.filter((item) => item && item.trim())
+        : [],
+    };
+
+    await axiosInstance.patch(`/onestep-definitions/${values.id}`, normalizedValues);
     await refetchOneSteps();
     handleCloseEdit();
   };
@@ -66,7 +79,7 @@ const OneStepDefinitionForm = ({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      oneStepUpdateValidationSchema={oneStepUpdateValidationSchema}
       enableReinitialize
       onSubmit={async (values, { setSubmitting }) => {
         try {
@@ -102,20 +115,6 @@ const OneStepDefinitionForm = ({
                 </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='korean'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Korean Name'
-                      error={Boolean(errors.korean && touched.korean)}
-                      helperText={errors.korean && touched.korean ? errors.korean : ''}
-                    />
-                  )}
-                </Field>
-              </Grid>
-
               <Grid size={12}>
                 <Field name='description'>
                   {({ field }: any) => (
@@ -144,15 +143,16 @@ const OneStepDefinitionForm = ({
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Field name='beltRank'>
                   {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt'
-                      placeholder='e.g., 8th Gup'
-                      error={Boolean(errors.beltRank && touched.beltRank)}
-                      helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
-                      required
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>Belt Rank</InputLabel>
+                      <Select {...field} label='Belt Rank' value={field.value || ''}>
+                        {BELT_RANKS.map((belt) => (
+                          <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                            {belt.beltRank}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 </Field>
               </Grid>
@@ -172,31 +172,89 @@ const OneStepDefinitionForm = ({
                   )}
                 </Field>
               </Grid>
-
-              {/* Technical Details */}
-              <Grid size={12}>
-                <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                  Technical Details
-                </Typography>
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Field name='followUpBeltRank'>
+                  {({ field }: any) => (
+                    <FormControl fullWidth>
+                      <InputLabel>First Follow-Up Belt Rank</InputLabel>
+                      <Select
+                        {...field}
+                        label='First Follow-Up Belt Rank'
+                        value={field.value || ''}
+                      >
+                        {BELT_RANKS.map((belt) => (
+                          <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                            {belt.beltRank}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='attack'>
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Field name='followUpBeltColor'>
                   {({ field }: any) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label='Attack'
-                      multiline
-                      rows={3}
-                      error={Boolean(errors.attack && touched.attack)}
-                      helperText={errors.attack && touched.attack ? errors.attack : ''}
+                      label='Follow-Up Belt Color'
+                      placeholder='e.g., Orange'
+                      error={Boolean(errors.followUpBeltColor && touched.followUpBeltColor)}
+                      helperText={
+                        errors.followUpBeltColor && touched.followUpBeltColor
+                          ? errors.followUpBeltColor
+                          : ''
+                      }
                     />
                   )}
                 </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Field name='secondFollowUpBeltRank'>
+                  {({ field }: any) => (
+                    <FormControl fullWidth>
+                      <InputLabel>Second Follow-Up Belt Rank</InputLabel>
+                      <Select
+                        {...field}
+                        label='Second Follow-Up Belt Rank'
+                        value={field.value || ''}
+                      >
+                        {BELT_RANKS.map((belt) => (
+                          <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                            {belt.beltRank}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                </Field>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Field name='secondFollowUpBeltColor'>
+                  {({ field }: any) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Second Follow-Up Belt Color'
+                      placeholder='e.g., Green'
+                      error={Boolean(
+                        errors.secondFollowUpBeltColor && touched.secondFollowUpBeltColor
+                      )}
+                      helperText={
+                        errors.secondFollowUpBeltColor && touched.secondFollowUpBeltColor
+                          ? errors.secondFollowUpBeltColor
+                          : ''
+                      }
+                    />
+                  )}
+                </Field>
+              </Grid>
+
+              <Grid size={12}>
                 <FieldArray name='defense'>
                   {({ push, remove }) => (
                     <Box>
@@ -318,23 +376,23 @@ const OneStepDefinitionForm = ({
                 </FieldArray>
               </Grid>
 
-              {/* Applications */}
+              {/* First Follow-Up */}
               <Grid size={12}>
-                <FieldArray name='applications'>
+                <FieldArray name='firstFollowUp'>
                   {({ push, remove }) => (
                     <Box>
                       <Typography variant='subtitle1' gutterBottom>
-                        Applications
+                        First Follow-Up Steps
                       </Typography>
                       <Stack spacing={2}>
-                        {values.applications?.map((_, index) => (
-                          <Box key={`app-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`applications.${index}`}>
+                        {values.firstFollowUp?.map((_, index) => (
+                          <Box key={`ffu-${index}`} display='flex' alignItems='center' gap={1}>
+                            <Field name={`firstFollowUp.${index}`}>
                               {({ field }: any) => (
                                 <TextField
                                   {...field}
                                   fullWidth
-                                  label={`Application #${index + 1}`}
+                                  label={`First Follow-Up Step #${index + 1}`}
                                   size='small'
                                 />
                               )}
@@ -351,12 +409,70 @@ const OneStepDefinitionForm = ({
                           size='small'
                           sx={{ alignSelf: 'flex-start' }}
                         >
-                          Add Application
+                          Add First Follow-Up Step
                         </Button>
                       </Stack>
                     </Box>
                   )}
                 </FieldArray>
+              </Grid>
+
+              {/* Second Follow-Up */}
+              <Grid size={12}>
+                <FieldArray name='secondFollowUp'>
+                  {({ push, remove }) => (
+                    <Box>
+                      <Typography variant='subtitle1' gutterBottom>
+                        Second Follow-Up Steps
+                      </Typography>
+                      <Stack spacing={2}>
+                        {values.secondFollowUp?.map((_, index) => (
+                          <Box key={`sfu-${index}`} display='flex' alignItems='center' gap={1}>
+                            <Field name={`secondFollowUp.${index}`}>
+                              {({ field }: any) => (
+                                <TextField
+                                  {...field}
+                                  fullWidth
+                                  label={`Second Follow-Up Step #${index + 1}`}
+                                  size='small'
+                                />
+                              )}
+                            </Field>
+                            <IconButton onClick={() => remove(index)} color='error' size='small'>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        ))}
+                        <Button
+                          startIcon={<AddIcon />}
+                          onClick={() => push('')}
+                          variant='outlined'
+                          size='small'
+                          sx={{ alignSelf: 'flex-start' }}
+                        >
+                          Add Second Follow-Up Step
+                        </Button>
+                      </Stack>
+                    </Box>
+                  )}
+                </FieldArray>
+              </Grid>
+
+              {/* Comment */}
+              <Grid size={12}>
+                <Field name='comment'>
+                  {({ field }: any) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Additional Comments'
+                      multiline
+                      rows={3}
+                      error={Boolean(errors.comment && touched.comment)}
+                      helperText={errors.comment && touched.comment ? errors.comment : ''}
+                    />
+                  )}
+                </Field>
               </Grid>
 
               {/* Submit Buttons */}

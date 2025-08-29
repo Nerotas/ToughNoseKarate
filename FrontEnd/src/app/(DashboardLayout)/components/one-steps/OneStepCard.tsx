@@ -11,7 +11,14 @@ import {
   ListItemText,
   Button,
 } from '@mui/material';
-import { IconSwords, IconFlag, IconShield, IconCheckbox, IconX } from '@tabler/icons-react';
+import {
+  IconSwords,
+  IconFlag,
+  IconShield,
+  IconCheckbox,
+  IconX,
+  IconArrowRight,
+} from '@tabler/icons-react';
 import { getBeltTextColor } from 'helpers/BeltColors';
 import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
@@ -25,12 +32,7 @@ interface OneStepCard {
   getBeltTextColor: (beltColor: string) => string;
   getDifficultyColor: (difficulty: string) => 'success' | 'warning' | 'error' | 'default';
 }
-const OneStepCard = ({
-  oneStep,
-  refetchOneSteps,
-  getBeltTextColor,
-  getDifficultyColor,
-}: OneStepCard) => {
+const OneStepCard = ({ oneStep, refetchOneSteps, getBeltTextColor }: OneStepCard) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -68,9 +70,6 @@ const OneStepCard = ({
                 <Typography variant='h5' gutterBottom>
                   {oneStep.name}
                 </Typography>
-                <Typography variant='h6' color='text.secondary' gutterBottom>
-                  {`(${oneStep.korean})`}
-                </Typography>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Chip
@@ -90,25 +89,111 @@ const OneStepCard = ({
               {oneStep.description}
             </Typography>
 
-            <Box sx={{ mb: 3 }}>
-              <Typography variant='subtitle2' gutterBottom>
-                Attack:
-              </Typography>
-              <Typography variant='body2' color='error.main'>
-                {oneStep.attack}
-              </Typography>
-            </Box>
+            <Divider sx={{ my: 2 }} />
 
             <Box sx={{ mb: 3 }}>
-              <Typography variant='subtitle2' gutterBottom>
+              <Typography
+                variant='subtitle2'
+                gutterBottom
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                <IconShield size={16} color='green' style={{ marginRight: 8 }} />
                 Defense:
               </Typography>
-              <Typography variant='body2' color='primary.main'>
-                {oneStep.defense}
-              </Typography>
+              <List dense sx={{ pl: 2 }}>
+                {oneStep.defense?.map((point, index) => (
+                  <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
+                    <ListItemText
+                      primary={`• ${point}`}
+                      primaryTypographyProps={{ variant: 'body2' }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
             </Box>
 
-            <Divider sx={{ my: 2 }} />
+            {oneStep.firstFollowUp && oneStep.firstFollowUp.length > 0 && (
+              <Box sx={{ mb: 3 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant='subtitle2' sx={{ display: 'flex', alignItems: 'center' }}>
+                    <IconArrowRight size={16} color='blue' style={{ marginRight: 8 }} />
+                    First Follow-Up:
+                  </Typography>
+                  {oneStep.followUpBeltRank && (
+                    <Chip
+                      icon={<IconSwords />}
+                      label={oneStep.followUpBeltRank}
+                      size='small'
+                      sx={{
+                        backgroundColor: oneStep.followUpBeltColor,
+                        color: getBeltTextColor(oneStep.followUpBeltColor),
+                        fontWeight: 'bold',
+                        border: oneStep.followUpBeltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                      }}
+                    />
+                  )}
+                </Box>
+                <List dense sx={{ pl: 2 }}>
+                  {oneStep.firstFollowUp?.map((point, index) => (
+                    <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
+                      <ListItemText
+                        primary={`• ${point}`}
+                        primaryTypographyProps={{ variant: 'body2' }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
+
+            {oneStep.secondFollowUp && oneStep.secondFollowUp.length > 0 && (
+              <Box sx={{ mb: 3 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant='subtitle2' sx={{ display: 'flex', alignItems: 'center' }}>
+                    <IconArrowRight size={16} color='purple' style={{ marginRight: 8 }} />
+                    Second Follow-Up:
+                  </Typography>
+                  {oneStep.secondFollowUpBeltRank && (
+                    <Chip
+                      icon={<IconSwords />}
+                      label={oneStep.secondFollowUpBeltRank}
+                      size='small'
+                      sx={{
+                        backgroundColor: oneStep.secondFollowUpBeltColor,
+                        color: getBeltTextColor(oneStep.secondFollowUpBeltColor),
+                        fontWeight: 'bold',
+                        border:
+                          oneStep.secondFollowUpBeltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                      }}
+                    />
+                  )}
+                </Box>
+                <List dense sx={{ pl: 2 }}>
+                  {oneStep.secondFollowUp?.map((point, index) => (
+                    <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
+                      <ListItemText
+                        primary={`• ${point}`}
+                        primaryTypographyProps={{ variant: 'body2' }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
 
             <Box sx={{ mb: 3 }}>
               <Typography
@@ -155,17 +240,11 @@ const OneStepCard = ({
               </List>
             </Box>
 
-            <Box>
-              <Typography variant='subtitle2' gutterBottom>
-                Applications:
+            {oneStep.comment && (
+              <Typography variant='body2' color='text.secondary'>
+                {oneStep.comment}
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {oneStep.applications?.map((app, index) => (
-                  <Chip key={index} label={app} size='small' variant='outlined' color='primary' />
-                ))}
-              </Box>
-            </Box>
-
+            )}
             {isAuthenticated &&
               (instructor?.role === 'instructor' || instructor?.role === 'admin') && (
                 <Grid container spacing={2} sx={{ mt: 2 }}>

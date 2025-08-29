@@ -1,13 +1,17 @@
 export interface OneStepDefinition {
   id: number;
   name: string;
-  korean: string;
   description: string;
   beltRank: string;
   beltColor: string;
-  attack: string;
+  followUpBeltRank: string;
+  followUpBeltColor: string;
+  secondFollowUpBeltRank: string;
+  secondFollowUpBeltColor: string;
   defense: string[];
   keyPoints: string[];
   commonMistakes: string[];
-  applications: string[];
+  firstFollowUp: string[];
+  secondFollowUp: string[];
+  comment: string;
 }

@@ -11,15 +11,19 @@ import {
 export interface oneStepsDefinitionsAttributes {
   id?: number;
   name: string;
-  korean: string;
   beltRank: string;
   beltColor: string;
   description: string;
-  attack: string;
+  followUpBeltRank: string;
+  followUpBeltColor: string;
+  secondFollowUpBeltRank: string;
+  secondFollowUpBeltColor: string;
   defense: string[];
   keyPoints: string[];
   commonMistakes: string[];
-  applications: string[];
+  firstFollowUp: string[];
+  secondFollowUp: string[];
+  comment: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -35,9 +39,6 @@ export class oneStepsDefinitions
   @Column({ type: DataType.STRING(100) })
   declare name: string;
 
-  @Column({ type: DataType.STRING(100) })
-  declare korean: string;
-
   @Column({ field: 'belt_rank', type: DataType.STRING(45) })
   declare beltRank: string;
 
@@ -47,20 +48,51 @@ export class oneStepsDefinitions
   @Column({ type: DataType.STRING })
   declare description: string;
 
-  @Column({ type: DataType.STRING })
-  declare attack: string;
+  @Column({ field: 'follow_up_belt_rank', type: DataType.STRING(45) })
+  declare followUpBeltRank: string;
 
-  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  @Column({ field: 'follow_up_belt_color', type: DataType.STRING(7) })
+  declare followUpBeltColor: string;
+
+  @Column({ field: 'second_follow_up_belt_rank', type: DataType.STRING(45) })
+  declare secondFollowUpBeltRank: string;
+
+  @Column({ field: 'second_follow_up_belt_color', type: DataType.STRING(7) })
+  declare secondFollowUpBeltColor: string;
+
+  @Column({ type: DataType.ARRAY(DataType.TEXT), defaultValue: [] })
   declare defense: string[];
 
-  @Column({ field: 'key_points', type: DataType.ARRAY(DataType.TEXT) })
+  @Column({
+    field: 'key_points',
+    type: DataType.ARRAY(DataType.TEXT),
+    defaultValue: [],
+  })
   declare keyPoints: string[];
 
-  @Column({ field: 'common_mistakes', type: DataType.ARRAY(DataType.TEXT) })
+  @Column({
+    field: 'common_mistakes',
+    type: DataType.ARRAY(DataType.TEXT),
+    defaultValue: [],
+  })
   declare commonMistakes: string[];
 
-  @Column({ type: DataType.ARRAY(DataType.TEXT) })
-  declare applications: string[];
+  @Column({
+    field: 'first_follow_up',
+    type: DataType.ARRAY(DataType.TEXT),
+    defaultValue: [],
+  })
+  declare firstFollowUp: string[];
+
+  @Column({
+    field: 'second_follow_up',
+    type: DataType.ARRAY(DataType.TEXT),
+    defaultValue: [],
+  })
+  declare secondFollowUp: string[];
+
+  @Column({ type: DataType.TEXT, allowNull: true })
+  declare comment: string;
 
   @Column({ field: 'created_at', type: DataType.DATE, allowNull: true })
   declare createdAt?: Date;
