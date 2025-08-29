@@ -14,8 +14,10 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Chip,
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { IconSwords, IconArrowRight, IconMessage2 } from '@tabler/icons-react';
 import * as Yup from 'yup';
 
 type OneStepCreate = Omit<OneStepDefinition, 'id'> & { id?: string };
@@ -23,28 +25,36 @@ type OneStepCreate = Omit<OneStepDefinition, 'id'> & { id?: string };
 const defaultValues: OneStepCreate = {
   id: undefined,
   name: '',
-  korean: '',
   description: '',
   beltRank: '',
   beltColor: '',
-  attack: '',
+  followUpBeltRank: '',
+  followUpBeltColor: '',
+  secondFollowUpBeltRank: '',
+  secondFollowUpBeltColor: '',
   defense: [],
   keyPoints: [],
   commonMistakes: [],
-  applications: [],
+  firstFollowUp: [],
+  secondFollowUp: [],
+  comment: '',
 };
 
 const validationSchema = Yup.object({
   name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
-  korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
   beltColor: Yup.string().trim().required('Required'),
-  attack: Yup.string().trim().max(200, 'Too long').optional(),
+  followUpBeltRank: Yup.string().trim().optional(),
+  followUpBeltColor: Yup.string().trim().optional(),
+  secondFollowUpBeltRank: Yup.string().trim().optional(),
+  secondFollowUpBeltColor: Yup.string().trim().optional(),
   defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  applications: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  firstFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  secondFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  comment: Yup.string().trim().max(1000, 'Too long').optional(),
 });
 
 interface OneStepCreateFormProps {
@@ -93,20 +103,6 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
                       required
                       error={Boolean(errors.name && touched.name)}
                       helperText={errors.name && touched.name ? (errors as any).name : ''}
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='korean'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Korean Name'
-                      error={Boolean(errors.korean && touched.korean)}
-                      helperText={errors.korean && touched.korean ? (errors as any).korean : ''}
                     />
                   )}
                 </Field>
@@ -173,44 +169,10 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
               </Grid>
 
               <Grid size={12}>
-                <Typography variant='h6' gutterBottom color='primary' sx={{ mt: 2 }}>
-                  Technical Details
+                <Typography variant='h6' gutterBottom>
+                  <IconSwords size={24} style={{ marginRight: 8, verticalAlign: 'middle' }} />
+                  Defense Technique
                 </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='attack'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Attack'
-                      multiline
-                      rows={3}
-                      error={Boolean(errors.attack && touched.attack)}
-                      helperText={errors.attack && touched.attack ? (errors as any).attack : ''}
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='defense'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Defense'
-                      multiline
-                      rows={3}
-                      error={Boolean(errors.defense && touched.defense)}
-                      helperText={errors.defense && touched.defense ? (errors as any).defense : ''}
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={12}>
                 <FieldArray name='defense'>
                   {({ push, remove }) => (
                     <Box>
@@ -331,43 +293,228 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
               </Grid>
 
               <Grid size={12}>
-                <FieldArray name='applications'>
-                  {({ push, remove }) => (
-                    <Box>
-                      <Typography variant='subtitle1' gutterBottom>
-                        Applications
-                      </Typography>
-                      <Stack spacing={2}>
-                        {values.applications?.map((_, index) => (
-                          <Box key={`app-${index}`} display='flex' alignItems='center' gap={1}>
-                            <Field name={`applications.${index}`}>
-                              {({ field }: any) => (
-                                <TextField
-                                  {...field}
-                                  fullWidth
-                                  label={`Application #${index + 1}`}
+                <Typography variant='h6' gutterBottom>
+                  <IconArrowRight size={24} style={{ marginRight: 8, verticalAlign: 'middle' }} />
+                  Follow-Up Techniques
+                </Typography>
+
+                <Stack spacing={3}>
+                  {/* First Follow-up */}
+                  <Box>
+                    <Typography variant='subtitle1' gutterBottom>
+                      First Follow-Up
+                    </Typography>
+                    <Grid container spacing={2}>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <Field name='followUpBeltRank'>
+                          {({ field }: any) => (
+                            <FormControl fullWidth>
+                              <InputLabel>Belt Rank</InputLabel>
+                              <Select {...field} label='Belt Rank'>
+                                <MenuItem value='White'>White</MenuItem>
+                                <MenuItem value='Orange'>Orange</MenuItem>
+                                <MenuItem value='Yellow'>Yellow</MenuItem>
+                                <MenuItem value='Purple'>Purple</MenuItem>
+                                <MenuItem value='Blue'>Blue</MenuItem>
+                                <MenuItem value='Blue Senior'>Blue Senior</MenuItem>
+                                <MenuItem value='Green'>Green</MenuItem>
+                                <MenuItem value='Green Senior'>Green Senior</MenuItem>
+                                <MenuItem value='Brown'>Brown</MenuItem>
+                                <MenuItem value='Brown Senior'>Brown Senior</MenuItem>
+                                <MenuItem value='Black'>Black</MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                        </Field>
+                      </Grid>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <Field name='followUpBeltColor'>
+                          {({ field }: any) => (
+                            <FormControl fullWidth>
+                              <InputLabel>Belt Color</InputLabel>
+                              <Select {...field} label='Belt Color'>
+                                <MenuItem value='white'>White</MenuItem>
+                                <MenuItem value='orange'>Orange</MenuItem>
+                                <MenuItem value='yellow'>Yellow</MenuItem>
+                                <MenuItem value='purple'>Purple</MenuItem>
+                                <MenuItem value='blue'>Blue</MenuItem>
+                                <MenuItem value='green'>Green</MenuItem>
+                                <MenuItem value='brown'>Brown</MenuItem>
+                                <MenuItem value='black'>Black</MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                        </Field>
+                      </Grid>
+                      <Grid size={12}>
+                        <FieldArray name='firstFollowUp'>
+                          {({ push, remove }) => (
+                            <Box>
+                              <Typography variant='body2' gutterBottom>
+                                Follow-Up Steps
+                              </Typography>
+                              <Stack spacing={2}>
+                                {values.firstFollowUp?.map((_, index) => (
+                                  <Box
+                                    key={`first-follow-${index}`}
+                                    display='flex'
+                                    alignItems='center'
+                                    gap={1}
+                                  >
+                                    <Field name={`firstFollowUp.${index}`}>
+                                      {({ field }: any) => (
+                                        <TextField
+                                          {...field}
+                                          fullWidth
+                                          label={`Step #${index + 1}`}
+                                          size='small'
+                                        />
+                                      )}
+                                    </Field>
+                                    <IconButton
+                                      onClick={() => remove(index)}
+                                      color='error'
+                                      size='small'
+                                    >
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  </Box>
+                                ))}
+                                <Button
+                                  startIcon={<AddIcon />}
+                                  onClick={() => push('')}
+                                  variant='outlined'
                                   size='small'
-                                />
-                              )}
-                            </Field>
-                            <IconButton onClick={() => remove(index)} color='error' size='small'>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        ))}
-                        <Button
-                          startIcon={<AddIcon />}
-                          onClick={() => push('')}
-                          variant='outlined'
-                          size='small'
-                          sx={{ alignSelf: 'flex-start' }}
-                        >
-                          Add Application
-                        </Button>
-                      </Stack>
-                    </Box>
+                                  sx={{ alignSelf: 'flex-start' }}
+                                >
+                                  Add Step
+                                </Button>
+                              </Stack>
+                            </Box>
+                          )}
+                        </FieldArray>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  {/* Second Follow-up */}
+                  <Box>
+                    <Typography variant='subtitle1' gutterBottom>
+                      Second Follow-Up
+                    </Typography>
+                    <Grid container spacing={2}>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <Field name='secondFollowUpBeltRank'>
+                          {({ field }: any) => (
+                            <FormControl fullWidth>
+                              <InputLabel>Belt Rank</InputLabel>
+                              <Select {...field} label='Belt Rank'>
+                                <MenuItem value='White'>White</MenuItem>
+                                <MenuItem value='Orange'>Orange</MenuItem>
+                                <MenuItem value='Yellow'>Yellow</MenuItem>
+                                <MenuItem value='Purple'>Purple</MenuItem>
+                                <MenuItem value='Blue'>Blue</MenuItem>
+                                <MenuItem value='Blue Senior'>Blue Senior</MenuItem>
+                                <MenuItem value='Green'>Green</MenuItem>
+                                <MenuItem value='Green Senior'>Green Senior</MenuItem>
+                                <MenuItem value='Brown'>Brown</MenuItem>
+                                <MenuItem value='Brown Senior'>Brown Senior</MenuItem>
+                                <MenuItem value='Black'>Black</MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                        </Field>
+                      </Grid>
+                      <Grid size={{ xs: 12, sm: 6 }}>
+                        <Field name='secondFollowUpBeltColor'>
+                          {({ field }: any) => (
+                            <FormControl fullWidth>
+                              <InputLabel>Belt Color</InputLabel>
+                              <Select {...field} label='Belt Color'>
+                                <MenuItem value='white'>White</MenuItem>
+                                <MenuItem value='orange'>Orange</MenuItem>
+                                <MenuItem value='yellow'>Yellow</MenuItem>
+                                <MenuItem value='purple'>Purple</MenuItem>
+                                <MenuItem value='blue'>Blue</MenuItem>
+                                <MenuItem value='green'>Green</MenuItem>
+                                <MenuItem value='brown'>Brown</MenuItem>
+                                <MenuItem value='black'>Black</MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                        </Field>
+                      </Grid>
+                      <Grid size={12}>
+                        <FieldArray name='secondFollowUp'>
+                          {({ push, remove }) => (
+                            <Box>
+                              <Typography variant='body2' gutterBottom>
+                                Follow-Up Steps
+                              </Typography>
+                              <Stack spacing={2}>
+                                {values.secondFollowUp?.map((_, index) => (
+                                  <Box
+                                    key={`second-follow-${index}`}
+                                    display='flex'
+                                    alignItems='center'
+                                    gap={1}
+                                  >
+                                    <Field name={`secondFollowUp.${index}`}>
+                                      {({ field }: any) => (
+                                        <TextField
+                                          {...field}
+                                          fullWidth
+                                          label={`Step #${index + 1}`}
+                                          size='small'
+                                        />
+                                      )}
+                                    </Field>
+                                    <IconButton
+                                      onClick={() => remove(index)}
+                                      color='error'
+                                      size='small'
+                                    >
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  </Box>
+                                ))}
+                                <Button
+                                  startIcon={<AddIcon />}
+                                  onClick={() => push('')}
+                                  variant='outlined'
+                                  size='small'
+                                  sx={{ alignSelf: 'flex-start' }}
+                                >
+                                  Add Step
+                                </Button>
+                              </Stack>
+                            </Box>
+                          )}
+                        </FieldArray>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Stack>
+              </Grid>
+
+              <Grid size={12}>
+                <Typography variant='h6' gutterBottom>
+                  <IconMessage2 size={24} style={{ marginRight: 8, verticalAlign: 'middle' }} />
+                  Comments
+                </Typography>
+                <Field name='comment'>
+                  {({ field }: any) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Comments'
+                      multiline
+                      rows={3}
+                      error={Boolean(errors.comment && touched.comment)}
+                      helperText={errors.comment && touched.comment ? (errors as any).comment : ''}
+                    />
                   )}
-                </FieldArray>
+                </Field>
               </Grid>
 
               <Grid size={12}>
