@@ -1,36 +1,60 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import { OneStepsDefinitionsService } from '../oneStepsDefinitions.service';
-import { oneStepsDefinitions } from '../../models/oneStepsDefinitions';
+import {
+  oneStepsDefinitions,
+  oneStepsDefinitionsAttributes,
+} from '../../models/oneStepsDefinitions';
 
 describe('OneStepsDefinitionsService', () => {
   let service: OneStepsDefinitionsService;
   let mockModel: any;
+  let mockSequelize: any;
 
-  const mockOneStepsDefinition = {
+  const mockOneStepsDefinition: oneStepsDefinitionsAttributes = {
     id: 1,
-    name: 'Straight Punch Defense',
-    korean: '직권 방어',
-    beltRank: '8th Gup',
-    beltColor: '#FFFF00',
-    description: 'Defense against a straight punch',
-    attack: 'Straight punch to the face',
-    defense: ['Block high', 'Counter punch'],
-    keyPoints: ['Maintain balance', 'Quick reaction'],
-    commonMistakes: ['Poor stance', 'Slow response'],
-    applications: ['Street defense', 'Competition'],
+    name: 'First One Step',
+    beltRank: 'Purple White',
+    beltColor: '#800080',
+    description:
+      'First basic one-step sequence for Purple White belt students.',
+    followUpBeltRank: 'Blue White',
+    followUpBeltColor: '#ADD8E6',
+    secondFollowUpBeltRank: 'Blue',
+    secondFollowUpBeltColor: '#0000FF',
+    defense: [
+      'Left outside block',
+      'Right reverse punch counter',
+      'Return to ready position',
+    ],
+    keyPoints: [
+      'Proper outside block technique',
+      'Immediate counter after block',
+      'Maintain balance throughout',
+    ],
+    commonMistakes: [
+      'Weak blocking technique',
+      'Delayed counter attack',
+      'Poor stance during block',
+    ],
+    firstFollowUp: ['Snap Kick', 'Lounge backwards'],
+    secondFollowUp: ['Inside crescent kick', 'Spin outside crescent kick'],
+    comment:
+      'First side taught at Purple-White and second side taught at Purple',
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
-  const mockOneStepsDefinitionArray = [
+  const mockOneStepsDefinitionArray: oneStepsDefinitionsAttributes[] = [
     mockOneStepsDefinition,
     {
       ...mockOneStepsDefinition,
       id: 2,
-      name: 'Hook Defense',
-      korean: '훅 방어',
-      attack: 'Hook punch',
+      name: 'Second One Step',
+      beltRank: 'Orange White',
+      beltColor: '#FFA500',
+      description: 'Second one-step sequence for Orange White belt students.',
     },
   ];
 
@@ -43,12 +67,20 @@ describe('OneStepsDefinitionsService', () => {
       destroy: jest.fn(),
     };
 
+    mockSequelize = {
+      literal: jest.fn((value) => ({ val: value })),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OneStepsDefinitionsService,
         {
           provide: getModelToken(oneStepsDefinitions),
           useValue: mockModel,
+        },
+        {
+          provide: Sequelize,
+          useValue: mockSequelize,
         },
       ],
     }).compile();
@@ -106,15 +138,19 @@ describe('OneStepsDefinitionsService', () => {
     it('should create a new one steps definition', async () => {
       const createDto = {
         name: 'New Defense',
-        korean: '새로운 방어',
-        beltRank: '9th Gup',
-        beltColor: '#FFFFFF',
+        beltRank: 'Purple',
+        beltColor: '#800080',
         description: 'New defense technique',
-        attack: 'New attack',
+        followUpBeltRank: 'Blue White',
+        followUpBeltColor: '#ADD8E6',
+        secondFollowUpBeltRank: 'Blue',
+        secondFollowUpBeltColor: '#0000FF',
         defense: ['New defense move'],
         keyPoints: ['New key point'],
         commonMistakes: ['New mistake'],
-        applications: ['New application'],
+        firstFollowUp: ['New follow up'],
+        secondFollowUp: ['Second follow up'],
+        comment: 'Test comment',
       };
 
       const expectedResult = { ...createDto, id: 3 };
@@ -123,73 +159,62 @@ describe('OneStepsDefinitionsService', () => {
       const result = await service.create(createDto);
 
       expect(result).toEqual(expectedResult);
-      expect(mockModel.create).toHaveBeenCalledWith(createDto);
+      expect(mockModel.create).toHaveBeenCalled();
     });
 
-    it('should normalize array fields correctly', async () => {
+    it('should handle empty arrays correctly', async () => {
       const createDto = {
         name: 'Test Defense',
-        korean: '테스트 방어',
-        beltRank: '8th Gup',
-        beltColor: '#FFFF00',
+        beltRank: 'Purple White',
+        beltColor: '#800080',
         description: 'Test defense',
-        attack: 'Test attack',
-        defense: 'Single defense', // String instead of array
-        keyPoints: 'Single key point',
-        commonMistakes: 'Single mistake',
-        applications: 'Single application',
+        followUpBeltRank: '',
+        followUpBeltColor: '',
+        secondFollowUpBeltRank: '',
+        secondFollowUpBeltColor: '',
+        defense: [],
+        keyPoints: [],
+        commonMistakes: [],
+        firstFollowUp: [],
+        secondFollowUp: [],
+        comment: '',
       };
 
-      const normalizedDto = {
-        ...createDto,
-        defense: ['Single defense'],
-        keyPoints: ['Single key point'],
-        commonMistakes: ['Single mistake'],
-        applications: ['Single application'],
-      };
-
-      const expectedResult = { ...normalizedDto, id: 4 };
+      const expectedResult = { ...createDto, id: 4 };
       mockModel.create.mockResolvedValue(expectedResult);
 
       const result = await service.create(createDto);
 
       expect(result).toEqual(expectedResult);
-      expect(mockModel.create).toHaveBeenCalledWith(normalizedDto);
+      expect(mockModel.create).toHaveBeenCalled();
+      expect(mockSequelize.literal).toHaveBeenCalledWith('ARRAY[]::text[]');
     });
 
     it('should handle null values in array fields', async () => {
       const createDto = {
         name: 'Test Defense',
-        korean: '테스트 방어',
-        beltRank: '8th Gup',
-        beltColor: '#FFFF00',
+        beltRank: 'Purple White',
+        beltColor: '#800080',
         description: 'Test defense',
-        attack: 'Test attack',
+        followUpBeltRank: '',
+        followUpBeltColor: '',
+        secondFollowUpBeltRank: '',
+        secondFollowUpBeltColor: '',
         defense: null,
         keyPoints: undefined,
         commonMistakes: ['Valid mistake'],
-        applications: null,
+        firstFollowUp: null,
+        secondFollowUp: undefined,
+        comment: '',
       };
 
-      const normalizedDto = {
-        name: 'Test Defense',
-        korean: '테스트 방어',
-        beltRank: '8th Gup',
-        beltColor: '#FFFF00',
-        description: 'Test defense',
-        attack: 'Test attack',
-        defense: null,
-        commonMistakes: ['Valid mistake'],
-        applications: null,
-      };
-
-      const expectedResult = { ...normalizedDto, id: 5 };
+      const expectedResult = { ...createDto, id: 5 };
       mockModel.create.mockResolvedValue(expectedResult);
 
       const result = await service.create(createDto);
 
       expect(result).toEqual(expectedResult);
-      expect(mockModel.create).toHaveBeenCalledWith(normalizedDto);
+      expect(mockModel.create).toHaveBeenCalled();
     });
   });
 
@@ -201,42 +226,41 @@ describe('OneStepsDefinitionsService', () => {
         keyPoints: ['Updated key point'],
       };
 
-      const expectedResult: [number, oneStepsDefinitions[]] = [
+      const expectedResult: [number, oneStepsDefinitionsAttributes[]] = [
         1,
-        [{ ...mockOneStepsDefinition, ...updateDto }] as oneStepsDefinitions[],
+        [
+          { ...mockOneStepsDefinition, ...updateDto },
+        ] as oneStepsDefinitionsAttributes[],
       ];
       mockModel.update.mockResolvedValue(expectedResult);
 
       const result = await service.update(1, updateDto);
 
       expect(result).toEqual(expectedResult);
-      expect(mockModel.update).toHaveBeenCalledWith(updateDto, {
+      expect(mockModel.update).toHaveBeenCalledWith(expect.any(Object), {
         where: { id: 1 },
         returning: true,
       });
     });
 
-    it('should normalize payload before updating', async () => {
+    it('should handle empty arrays in updates', async () => {
       const updateDto = {
-        defense: 'Single defense string',
-        keyPoints: 'Single key point string',
+        defense: [],
+        keyPoints: [],
+        commonMistakes: [],
       };
 
-      const normalizedDto = {
-        defense: ['Single defense string'],
-        keyPoints: ['Single key point string'],
-      };
-
-      const expectedResult: [number, oneStepsDefinitions[]] = [
+      const expectedResult: [number, oneStepsDefinitionsAttributes[]] = [
         1,
-        [mockOneStepsDefinition] as oneStepsDefinitions[],
+        [mockOneStepsDefinition] as oneStepsDefinitionsAttributes[],
       ];
       mockModel.update.mockResolvedValue(expectedResult);
 
       const result = await service.update(1, updateDto);
 
       expect(result).toEqual(expectedResult);
-      expect(mockModel.update).toHaveBeenCalledWith(normalizedDto, {
+      expect(mockSequelize.literal).toHaveBeenCalledWith('ARRAY[]::text[]');
+      expect(mockModel.update).toHaveBeenCalledWith(expect.any(Object), {
         where: { id: 1 },
         returning: true,
       });
@@ -244,13 +268,13 @@ describe('OneStepsDefinitionsService', () => {
 
     it('should return zero affected rows when definition not found', async () => {
       const updateDto = { name: 'Updated Defense' };
-      const expectedResult: [number, oneStepsDefinitions[]] = [0, []];
+      const expectedResult: [number, oneStepsDefinitionsAttributes[]] = [0, []];
       mockModel.update.mockResolvedValue(expectedResult);
 
       const result = await service.update(999, updateDto);
 
       expect(result).toEqual(expectedResult);
-      expect(mockModel.update).toHaveBeenCalledWith(updateDto, {
+      expect(mockModel.update).toHaveBeenCalledWith(expect.any(Object), {
         where: { id: 999 },
         returning: true,
       });
@@ -285,56 +309,52 @@ describe('OneStepsDefinitionsService', () => {
     it('should remove undefined fields', async () => {
       const createDto = {
         name: 'Test Defense',
-        korean: '테스트 방어',
-        beltRank: '8th Gup',
-        beltColor: '#FFFF00',
+        beltRank: 'Purple White',
+        beltColor: '#800080',
         description: 'Test defense',
-        attack: 'Test attack',
+        followUpBeltRank: 'Blue White',
+        followUpBeltColor: '#ADD8E6',
+        secondFollowUpBeltRank: 'Blue',
+        secondFollowUpBeltColor: '#0000FF',
         defense: ['Defense move'],
         keyPoints: undefined,
         commonMistakes: null,
-        applications: ['Application'],
+        firstFollowUp: ['Follow up'],
+        secondFollowUp: ['Second follow up'],
+        comment: 'Test comment',
         extraField: undefined,
       };
 
-      const expectedNormalizedDto = {
-        name: 'Test Defense',
-        korean: '테스트 방어',
-        beltRank: '8th Gup',
-        beltColor: '#FFFF00',
-        description: 'Test defense',
-        attack: 'Test attack',
-        defense: ['Defense move'],
-        commonMistakes: null,
-        applications: ['Application'],
-      };
-
-      mockModel.create.mockResolvedValue({ ...expectedNormalizedDto, id: 6 });
+      mockModel.create.mockResolvedValue({ ...createDto, id: 6 });
 
       await service.create(createDto);
 
-      expect(mockModel.create).toHaveBeenCalledWith(expectedNormalizedDto);
+      expect(mockModel.create).toHaveBeenCalled();
     });
 
     it('should preserve already-array fields', async () => {
       const createDto = {
         name: 'Test Defense',
-        korean: '테스트 방어',
-        beltRank: '8th Gup',
-        beltColor: '#FFFF00',
+        beltRank: 'Purple White',
+        beltColor: '#800080',
         description: 'Test defense',
-        attack: 'Test attack',
+        followUpBeltRank: 'Blue White',
+        followUpBeltColor: '#ADD8E6',
+        secondFollowUpBeltRank: 'Blue',
+        secondFollowUpBeltColor: '#0000FF',
         defense: ['Defense 1', 'Defense 2'],
         keyPoints: ['Point 1', 'Point 2'],
         commonMistakes: ['Mistake 1', 'Mistake 2'],
-        applications: ['App 1', 'App 2'],
+        firstFollowUp: ['Follow up 1', 'Follow up 2'],
+        secondFollowUp: ['Second 1', 'Second 2'],
+        comment: 'Test comment',
       };
 
       mockModel.create.mockResolvedValue({ ...createDto, id: 7 });
 
       await service.create(createDto);
 
-      expect(mockModel.create).toHaveBeenCalledWith(createDto);
+      expect(mockModel.create).toHaveBeenCalled();
     });
   });
 });

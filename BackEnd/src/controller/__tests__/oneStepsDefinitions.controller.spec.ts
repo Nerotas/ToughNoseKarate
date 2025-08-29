@@ -3,6 +3,7 @@ import { OneStepsDefinitionsController } from '../oneStepsDefinitions.controller
 import { OneStepsDefinitionsService } from '../../service/oneStepsDefinitions.service';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
+import { oneStepsDefinitionsAttributes } from '../../models/oneStepsDefinitions';
 
 describe('OneStepsDefinitionsController', () => {
   let controller: OneStepsDefinitionsController;
@@ -16,20 +17,38 @@ describe('OneStepsDefinitionsController', () => {
     remove: jest.fn(),
   };
 
-  const mockOneStep = {
+  const mockOneStep: oneStepsDefinitionsAttributes = {
     id: 1,
-    name: 'One Step 1',
-    korean: 'Il Soo Sik',
-    beltRank: 'white',
-    beltColor: 'white',
-    description: 'Basic one step technique',
-    attack: 'straight punch',
-    defense: ['block', 'counter'],
-    keyPoints: ['timing', 'distance'],
-    commonMistakes: ['too slow'],
-    applications: ['self defense'],
-    created_at: new Date(),
-    updated_at: new Date(),
+    name: 'First One Step',
+    beltRank: 'Purple White',
+    beltColor: '#800080',
+    description:
+      'First basic one-step sequence for Purple White belt students.',
+    followUpBeltRank: 'Blue White',
+    followUpBeltColor: '#ADD8E6',
+    secondFollowUpBeltRank: 'Blue',
+    secondFollowUpBeltColor: '#0000FF',
+    defense: [
+      'Left outside block',
+      'Right reverse punch counter',
+      'Return to ready position',
+    ],
+    keyPoints: [
+      'Proper outside block technique',
+      'Immediate counter after block',
+      'Maintain balance throughout',
+    ],
+    commonMistakes: [
+      'Weak blocking technique',
+      'Delayed counter attack',
+      'Poor stance during block',
+    ],
+    firstFollowUp: ['Snap Kick', 'Lounge backwards'],
+    secondFollowUp: ['Inside crescent kick', 'Spin outside crescent kick'],
+    comment:
+      'First side taught at Purple-White and second side taught at Purple',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   beforeEach(async () => {
@@ -64,17 +83,25 @@ describe('OneStepsDefinitionsController', () => {
 
   describe('create', () => {
     it('should create a new one step definition', async () => {
-      const createDto = {
-        name: 'One Step 1',
-        korean: 'Il Soo Sik',
-        beltRank: 'white',
-        beltColor: 'white',
-        description: 'Basic one step',
-        attack: 'straight punch',
-        defense: ['block', 'counter'],
-        keyPoints: ['timing'],
-        commonMistakes: ['too slow'],
-        applications: ['self defense'],
+      const createDto: oneStepsDefinitionsAttributes = {
+        name: 'First One Step',
+        beltRank: 'Purple White',
+        beltColor: '#800080',
+        description:
+          'First basic one-step sequence for Purple White belt students.',
+        followUpBeltRank: 'Blue White',
+        followUpBeltColor: '#ADD8E6',
+        secondFollowUpBeltRank: 'Blue',
+        secondFollowUpBeltColor: '#0000FF',
+        defense: ['Left outside block', 'Right reverse punch counter'],
+        keyPoints: [
+          'Proper outside block technique',
+          'Immediate counter after block',
+        ],
+        commonMistakes: ['Weak blocking technique', 'Delayed counter attack'],
+        firstFollowUp: ['Snap Kick'],
+        secondFollowUp: ['Inside crescent kick'],
+        comment: 'Test comment',
       };
 
       service.create.mockResolvedValue(mockOneStep as any);
@@ -113,17 +140,24 @@ describe('OneStepsDefinitionsController', () => {
   describe('update', () => {
     it('should update a one step definition', async () => {
       const id = '1';
-      const updateDto = {
-        name: 'One Step 1',
-        korean: 'Il Soo Sik',
-        beltRank: 'white',
-        beltColor: 'white',
-        description: 'Updated description',
-        attack: 'straight punch',
-        defense: ['block', 'counter'],
-        keyPoints: ['timing'],
-        commonMistakes: ['too slow'],
-        applications: ['self defense'],
+      const updateDto: oneStepsDefinitionsAttributes = {
+        name: 'Updated One Step',
+        beltRank: 'Purple White',
+        beltColor: '#800080',
+        description: 'Updated description for one-step sequence.',
+        followUpBeltRank: 'Blue White',
+        followUpBeltColor: '#ADD8E6',
+        secondFollowUpBeltRank: 'Blue',
+        secondFollowUpBeltColor: '#0000FF',
+        defense: ['Left outside block', 'Right reverse punch counter'],
+        keyPoints: [
+          'Proper outside block technique',
+          'Immediate counter after block',
+        ],
+        commonMistakes: ['Weak blocking technique', 'Delayed counter attack'],
+        firstFollowUp: ['Snap Kick'],
+        secondFollowUp: ['Inside crescent kick'],
+        comment: 'Updated test comment',
       };
       const updatedOneStep = { ...mockOneStep, ...updateDto };
 
