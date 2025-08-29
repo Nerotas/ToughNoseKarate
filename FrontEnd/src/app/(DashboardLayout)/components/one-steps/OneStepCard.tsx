@@ -25,12 +25,7 @@ interface OneStepCard {
   getBeltTextColor: (beltColor: string) => string;
   getDifficultyColor: (difficulty: string) => 'success' | 'warning' | 'error' | 'default';
 }
-const OneStepCard = ({
-  oneStep,
-  refetchOneSteps,
-  getBeltTextColor,
-  getDifficultyColor,
-}: OneStepCard) => {
+const OneStepCard = ({ oneStep, refetchOneSteps, getBeltTextColor }: OneStepCard) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -68,9 +63,6 @@ const OneStepCard = ({
                 <Typography variant='h5' gutterBottom>
                   {oneStep.name}
                 </Typography>
-                <Typography variant='h6' color='text.secondary' gutterBottom>
-                  {`(${oneStep.korean})`}
-                </Typography>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Chip
@@ -90,25 +82,28 @@ const OneStepCard = ({
               {oneStep.description}
             </Typography>
 
-            <Box sx={{ mb: 3 }}>
-              <Typography variant='subtitle2' gutterBottom>
-                Attack:
-              </Typography>
-              <Typography variant='body2' color='error.main'>
-                {oneStep.attack}
-              </Typography>
-            </Box>
+            <Divider sx={{ my: 2 }} />
 
             <Box sx={{ mb: 3 }}>
-              <Typography variant='subtitle2' gutterBottom>
+              <Typography
+                variant='subtitle2'
+                gutterBottom
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                <IconShield size={16} color='green' style={{ marginRight: 8 }} />
                 Defense:
               </Typography>
-              <Typography variant='body2' color='primary.main'>
-                {oneStep.defense}
-              </Typography>
+              <List dense sx={{ pl: 2 }}>
+                {oneStep.defense?.map((point, index) => (
+                  <ListItem key={index} sx={{ pl: 0, py: 0.25 }}>
+                    <ListItemText
+                      primary={`• ${point}`}
+                      primaryTypographyProps={{ variant: 'body2' }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
             </Box>
-
-            <Divider sx={{ my: 2 }} />
 
             <Box sx={{ mb: 3 }}>
               <Typography
@@ -153,17 +148,6 @@ const OneStepCard = ({
                   </ListItem>
                 ))}
               </List>
-            </Box>
-
-            <Box>
-              <Typography variant='subtitle2' gutterBottom>
-                Applications:
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {oneStep.applications?.map((app, index) => (
-                  <Chip key={index} label={app} size='small' variant='outlined' color='primary' />
-                ))}
-              </Box>
             </Box>
 
             {isAuthenticated &&
