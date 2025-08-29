@@ -66,7 +66,27 @@ const OneStepDefinitionForm = ({
   };
 
   const onSubmit = async (values: OneStepDefinition) => {
-    await axiosInstance.patch(`/onestep-definitions/${values.id}`, values);
+    // Normalize array fields to ensure empty arrays are properly handled
+    const normalizedValues = {
+      ...values,
+      defense: Array.isArray(values.defense)
+        ? values.defense.filter((item) => item && item.trim())
+        : [],
+      keyPoints: Array.isArray(values.keyPoints)
+        ? values.keyPoints.filter((item) => item && item.trim())
+        : [],
+      commonMistakes: Array.isArray(values.commonMistakes)
+        ? values.commonMistakes.filter((item) => item && item.trim())
+        : [],
+      firstFollowUp: Array.isArray(values.firstFollowUp)
+        ? values.firstFollowUp.filter((item) => item && item.trim())
+        : [],
+      secondFollowUp: Array.isArray(values.secondFollowUp)
+        ? values.secondFollowUp.filter((item) => item && item.trim())
+        : [],
+    };
+
+    await axiosInstance.patch(`/onestep-definitions/${values.id}`, normalizedValues);
     await refetchOneSteps();
     handleCloseEdit();
   };

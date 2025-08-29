@@ -65,7 +65,28 @@ interface OneStepCreateFormProps {
 const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreateFormProps) => {
   const onSubmit = async (values: OneStepCreate) => {
     const { id, ...payload } = values;
-    await axiosInstance.post(`/onestep-definitions`, payload);
+
+    // Normalize array fields to ensure empty arrays are properly handled
+    const normalizedPayload = {
+      ...payload,
+      defense: Array.isArray(payload.defense)
+        ? payload.defense.filter((item) => item && item.trim())
+        : [],
+      keyPoints: Array.isArray(payload.keyPoints)
+        ? payload.keyPoints.filter((item) => item && item.trim())
+        : [],
+      commonMistakes: Array.isArray(payload.commonMistakes)
+        ? payload.commonMistakes.filter((item) => item && item.trim())
+        : [],
+      firstFollowUp: Array.isArray(payload.firstFollowUp)
+        ? payload.firstFollowUp.filter((item) => item && item.trim())
+        : [],
+      secondFollowUp: Array.isArray(payload.secondFollowUp)
+        ? payload.secondFollowUp.filter((item) => item && item.trim())
+        : [],
+    };
+
+    await axiosInstance.post(`/onestep-definitions`, normalizedPayload);
     await refetchOneSteps();
     handleCloseCreate();
   };
