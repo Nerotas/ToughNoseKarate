@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import StudentDetailClient from 'app/(DashboardLayout)/students/[id]/StudentDetailClient';
-import { getBeltColor, getBeltTextColor } from 'helpers/BeltColors';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import { studentAssessmentsService } from 'services/studentAssessmentsService';
 
 // Mock Next.js router
@@ -25,7 +25,7 @@ jest.mock('services/studentAssessmentsService', () => ({
 }));
 
 // Mock helper functions
-jest.mock('helpers/BeltColors', () => ({
+jest.mock('utils/helpers/BeltColors', () => ({
   getBeltColor: jest.fn(() => '#FFFFFF'),
   getBeltTextColor: jest.fn(() => '#000000'),
 }));
@@ -61,7 +61,7 @@ describe('StudentDetailClient', () => {
 jest.mock('services/studentAssessmentsService');
 
 // Mock helper functions
-jest.mock('helpers/BeltColors', () => ({
+jest.mock('utils/helpers/BeltColors', () => ({
   getBeltColor: jest.fn(),
   getBeltTextColor: jest.fn(),
 }));
@@ -609,8 +609,8 @@ describe('StudentDetailClient', () => {
     expect(studentInfo).toHaveAttribute('data-belt-color', '#FF0000');
     expect(studentInfo).toHaveAttribute('data-belt-text-color', '#FFFFFF');
 
-    expect(mockGetBeltColor).toHaveBeenCalledWith('White', mockBeltRequirements);
-    expect(mockGetBeltTextColor).toHaveBeenCalledWith('White', mockBeltRequirements);
+    expect(mockGetBeltColor).toHaveBeenCalledWith('White');
+    expect(mockGetBeltTextColor).toHaveBeenCalledWith('White');
   });
 
   it('shows loading when family data is being fetched for child student', () => {

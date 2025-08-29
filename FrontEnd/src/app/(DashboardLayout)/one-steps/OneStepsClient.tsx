@@ -110,7 +110,6 @@ export default function OneStepsClient() {
               key={oneStep.id}
               oneStep={oneStep}
               refetchOneSteps={refetchOneSteps}
-              getBeltTextColor={getBeltTextColor}
               getDifficultyColor={getDifficultyColor}
             />
           ))}

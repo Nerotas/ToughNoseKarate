@@ -19,10 +19,6 @@ export default async function StudentsPage() {
           queryKey: ['students', 'getAll'],
           url: '/students',
         },
-        {
-          queryKey: ['belt-requirements', 'getAll'],
-          url: '/belt-requirements',
-        },
       ]}
       fallbackOnError={true}
     >

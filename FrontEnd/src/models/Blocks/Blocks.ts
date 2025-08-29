@@ -4,7 +4,7 @@ export interface BlockDefinition {
   technique: string;
   stance: string;
   beltRank: string;
-  beltColor: string;
+
   execution: string[];
   keyPoints: string[];
   commonMistakes: string[];
@@ -18,7 +18,7 @@ export interface CreateBlockDefinitionDto {
   technique: string;
   stance: string;
   beltRank: string;
-  beltColor: string;
+
   execution: string[];
   keyPoints: string[];
   commonMistakes: string[];
@@ -31,7 +31,6 @@ export interface UpdateBlockDefinitionDto {
   technique?: string;
   stance?: string;
   beltRank?: string;
-  beltColor?: string;
   execution?: string[];
   keyPoints?: string[];
   commonMistakes?: string[];

@@ -22,6 +22,7 @@ import { SelfDefenseDefinition } from 'models/SelfDefense/SelfDefense';
 import { useState } from 'react';
 import SelfDefenseEditModule from './selfDefenseEditModule';
 import SelfDefenseDeleteModule from './selfDefenseDeleteModule';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 
 interface SelfDefenseCardProps {
   selfDefense: SelfDefenseDefinition;
@@ -103,13 +104,8 @@ const SelfDefenseCard = ({ selfDefense, refetchSelfDefense }: SelfDefenseCardPro
               <Chip
                 label={selfDefense.beltRank}
                 sx={{
-                  backgroundColor: selfDefense.beltColor,
-                  color:
-                    selfDefense.beltColor === '#FFFFFF' ||
-                    selfDefense.beltColor === '#FFD700' ||
-                    selfDefense.beltColor === '#FFA500'
-                      ? '#000000'
-                      : '#FFFFFF',
+                  backgroundColor: getBeltColor(selfDefense.beltRank),
+                  color: getBeltTextColor(selfDefense.beltRank),
                 }}
                 size='small'
               />

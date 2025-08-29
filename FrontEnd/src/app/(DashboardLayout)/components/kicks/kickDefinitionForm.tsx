@@ -2,15 +2,8 @@ import React from 'react';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { KickDefinition } from 'models/Kicks/Kicks';
 import axiosInstance from 'utils/helpers/AxiosInstance';
-import {
-  TextField,
-  Button,
-  Box,
-  Typography,
-  Grid,
-  IconButton,
-  Stack,
-} from '@mui/material';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
+import { TextField, Button, Box, Typography, Grid, IconButton, Stack } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import * as Yup from 'yup';
 
@@ -19,7 +12,6 @@ const validationSchema = Yup.object({
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
   target: Yup.string().trim().max(200, 'Too long').optional(),
   execution: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
@@ -40,7 +32,6 @@ const KickDefinitionForm = ({ kick, refetchKicks, handleCloseEdit }: KickDefinit
     korean: kick.korean || '',
     description: kick.description || '',
     beltRank: kick.beltRank || '',
-    beltColor: kick.beltColor || '',
     target: kick.target || '',
     execution: kick.execution || [],
     keyPoints: kick.keyPoints || [],
@@ -49,7 +40,12 @@ const KickDefinitionForm = ({ kick, refetchKicks, handleCloseEdit }: KickDefinit
   };
 
   const onSubmit = async (values: KickDefinition) => {
-    await axiosInstance.patch(`/kicks-definitions/${values.id}`, values);
+    const payload = {
+      ...values,
+      beltColor: getBeltColor(values.beltRank),
+      beltTextColor: getBeltTextColor(values.beltRank),
+    };
+    await axiosInstance.patch(`/kicks-definitions/${values.id}`, payload);
     await refetchKicks();
     handleCloseEdit();
   };
@@ -142,22 +138,6 @@ const KickDefinitionForm = ({ kick, refetchKicks, handleCloseEdit }: KickDefinit
                       placeholder='e.g., 8th Gup'
                       error={Boolean(errors.beltRank && touched.beltRank)}
                       helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
                       required
                     />
                   )}

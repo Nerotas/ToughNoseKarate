@@ -4,7 +4,6 @@ export interface PunchDefinition {
   korean: string | null;
   description: string | null;
   beltRank: string | null;
-  beltColor: string | null;
   target: string | null;
   execution: string[] | null;
   keyPoints: string[] | null;

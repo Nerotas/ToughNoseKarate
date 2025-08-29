@@ -37,11 +37,8 @@ const OneStepDefinitionForm = ({
     name: oneStep.name || '',
     description: oneStep.description || '',
     beltRank: oneStep.beltRank || '',
-    beltColor: oneStep.beltColor || '',
     followUpBeltRank: oneStep.followUpBeltRank || '',
-    followUpBeltColor: oneStep.followUpBeltColor || '',
     secondFollowUpBeltRank: oneStep.secondFollowUpBeltRank || '',
-    secondFollowUpBeltColor: oneStep.secondFollowUpBeltColor || '',
     defense: oneStep.defense || [],
     keyPoints: oneStep.keyPoints || [],
     commonMistakes: oneStep.commonMistakes || [],
@@ -158,21 +155,6 @@ const OneStepDefinitionForm = ({
               </Grid>
 
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
-              <Grid size={{ xs: 12, sm: 4 }}>
                 <Field name='followUpBeltRank'>
                   {({ field }: any) => (
                     <FormControl fullWidth>
@@ -194,25 +176,6 @@ const OneStepDefinitionForm = ({
               </Grid>
 
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='followUpBeltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Follow-Up Belt Color'
-                      placeholder='e.g., Orange'
-                      error={Boolean(errors.followUpBeltColor && touched.followUpBeltColor)}
-                      helperText={
-                        errors.followUpBeltColor && touched.followUpBeltColor
-                          ? errors.followUpBeltColor
-                          : ''
-                      }
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
                 <Field name='secondFollowUpBeltRank'>
                   {({ field }: any) => (
                     <FormControl fullWidth>
@@ -229,27 +192,6 @@ const OneStepDefinitionForm = ({
                         ))}
                       </Select>
                     </FormControl>
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='secondFollowUpBeltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Second Follow-Up Belt Color'
-                      placeholder='e.g., Green'
-                      error={Boolean(
-                        errors.secondFollowUpBeltColor && touched.secondFollowUpBeltColor
-                      )}
-                      helperText={
-                        errors.secondFollowUpBeltColor && touched.secondFollowUpBeltColor
-                          ? errors.secondFollowUpBeltColor
-                          : ''
-                      }
-                    />
                   )}
                 </Field>
               </Grid>

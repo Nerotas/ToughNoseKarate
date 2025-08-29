@@ -103,7 +103,7 @@ axiosInstance.interceptors.response.use(
       url.includes('/auth/refresh') ||
       url.includes('/auth/change-password');
 
-      //attempt auth refetch
+    //attempt auth refetch
     if (status === 401 && !isAuthEndpoint) {
       if ((originalRequest as any)._retry) {
         if (shouldEnableDebug()) console.warn('401 after retry, redirecting to login');

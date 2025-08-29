@@ -17,14 +17,14 @@ import { StanceDefinition } from 'models/Stances/Stances';
 import { useState } from 'react';
 import StanceEditModule from './stanceEditModule';
 import StanceDeleteModule from './stanceDeleteModule';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 
 interface StancesCardProps {
   stance: StanceDefinition;
   refetchStances: () => Promise<void>;
-  getBeltTextColor: (beltColor: string) => string;
 }
 
-const StancesCard = ({ stance, refetchStances, getBeltTextColor }: StancesCardProps) => {
+const StancesCard = ({ stance, refetchStances }: StancesCardProps) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -71,10 +71,10 @@ const StancesCard = ({ stance, refetchStances, getBeltTextColor }: StancesCardPr
                 icon={<IconBrandTorchain />}
                 label={stance.beltRank}
                 sx={{
-                  backgroundColor: stance.beltColor,
-                  color: getBeltTextColor(stance.beltColor),
+                  backgroundColor: getBeltColor(stance.beltRank),
+                  color: getBeltTextColor(stance.beltRank),
                   fontWeight: 'bold',
-                  border: stance.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                  border: getBeltTextColor(stance.beltRank),
                 }}
               />
             </Box>

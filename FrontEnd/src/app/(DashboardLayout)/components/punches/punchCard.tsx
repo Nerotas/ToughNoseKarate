@@ -13,6 +13,7 @@ import {
 import { IconHandStop, IconCheckbox, IconX, IconTarget, IconEdit } from '@tabler/icons-react';
 import { size } from 'lodash';
 import { PunchDefinition } from 'models/Punches/Punches';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import PunchEditModule from './punchEditModule';
 import PunchDeleteModule from './punchDeleteModule';
 import { useState } from 'react';
@@ -20,11 +21,9 @@ import { useAuth } from '../../../../hooks/useAuth';
 
 const PunchCard = ({
   punch,
-  getBeltTextColor,
   refetchPunches,
 }: {
   punch: PunchDefinition;
-  getBeltTextColor: (color: string) => string;
   refetchPunches: () => Promise<void>;
 }) => {
   const { isAuthenticated, instructor } = useAuth();
@@ -73,10 +72,10 @@ const PunchCard = ({
                 icon={<IconHandStop />}
                 label={punch.beltRank}
                 sx={{
-                  backgroundColor: punch.beltColor,
-                  color: getBeltTextColor(punch.beltColor as string),
+                  backgroundColor: getBeltColor(punch.beltRank),
+                  color: getBeltTextColor(punch.beltRank),
                   fontWeight: 'bold',
-                  border: punch.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                  border: getBeltColor(punch.beltRank) === '#FFFFFF' ? '1px solid #ccc' : 'none',
                 }}
               />
               {isAuthenticated && instructor && (

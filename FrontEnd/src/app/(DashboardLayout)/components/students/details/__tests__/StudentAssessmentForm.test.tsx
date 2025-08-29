@@ -5,7 +5,7 @@ import { StudentAssessment } from 'models/Assessments/Assessments';
 import { mockBeltRequirements } from 'testingUtils/MockData/mockBeltRequirements';
 
 // Mock helper functions
-jest.mock('helpers/BeltColors', () => ({
+jest.mock('utils/helpers/BeltColors', () => ({
   getBeltColor: jest.fn(() => '#fff'),
   getBeltTextColor: jest.fn(() => '#000'),
 }));

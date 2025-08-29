@@ -17,13 +17,13 @@ import {
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { SelfDefenseDefinition } from 'models/SelfDefense/SelfDefense';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 
 const validationSchema = Yup.object({
   name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
   category: Yup.string()
     .oneOf(['Releases', 'Escapes', 'Submissions', 'Ground Control', 'Standing'])
     .required('Required'),
@@ -43,7 +43,6 @@ const defaultValues: Omit<SelfDefenseDefinition, 'id'> & { id?: string } = {
   korean: '',
   description: '',
   beltRank: '',
-  beltColor: '',
   category: 'Standing',
   difficulty: 'Beginner',
   scenario: '',
@@ -66,7 +65,12 @@ const SelfDefenseCreateForm = ({
 }: SelfDefenseCreateFormProps) => {
   const onSubmit = async (values: typeof defaultValues) => {
     const { id, ...payload } = values;
-    await axiosInstance.post(`/self-defense-definitions`, payload);
+    const payloadWithColors = {
+      ...payload,
+      beltColor: getBeltColor(payload.beltRank),
+      beltTextColor: getBeltTextColor(payload.beltRank),
+    };
+    await axiosInstance.post(`/self-defense-definitions`, payloadWithColors);
     await refetchSelfDefense();
     handleCloseCreate();
   };
@@ -163,21 +167,7 @@ const SelfDefenseCreateForm = ({
                 </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
+
 
               <Grid size={{ xs: 12, sm: 3 }}>
                 <Field name='category'>

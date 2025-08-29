@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { PunchDefinition, PunchCreate } from 'models/Punches/Punches';
-import { validationSchema } from 'helpers/Punches';
+import { validationSchema } from 'utils/helpers/Punches';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { TextField, Button, Box, Typography, Grid, IconButton, Stack } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
@@ -11,7 +11,6 @@ const defaultValues: PunchCreate = {
   korean: '',
   description: '',
   beltRank: '',
-  beltColor: '',
   target: '',
   execution: [],
   keyPoints: [],
@@ -119,30 +118,15 @@ const PunchCreateForm = ({ refetchPunches, handleCloseCreate }: PunchCreateFormP
                       label='Belt'
                       placeholder='e.g., 8th Gup'
                       error={Boolean(errors.beltRank && touched.beltRank)}
-                      helperText={errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
                       helperText={
-                        errors.beltColor && touched.beltColor ? (errors as any).beltColor : ''
+                        errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''
                       }
                       required
                     />
                   )}
                 </Field>
               </Grid>
+
 
               {/* Technical Details */}
               <Grid size={12}>

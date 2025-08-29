@@ -13,7 +13,7 @@ jest.mock('services/studentAssessmentsService', () => ({
 }));
 
 // Mock the helper functions
-jest.mock('helpers/Student', () => ({
+jest.mock('utils/helpers/Student', () => ({
   assessmentValidationSchema: {
     validate: jest.fn().mockResolvedValue({}),
   },
@@ -27,8 +27,9 @@ jest.mock('helpers/Student', () => ({
     front_kick: assessment?.front_kick || null,
     upper_cut: assessment?.upper_cut || null,
   })),
-  getTargetBeltRequirements: jest.fn((targetBelt: string, beltRequirements: any[]) =>
-    beltRequirements.find((belt: any) => belt.beltRank === targetBelt) || null
+  getTargetBeltRequirements: jest.fn(
+    (targetBelt: string, beltRequirements: any[]) =>
+      beltRequirements.find((belt: any) => belt.beltRank === targetBelt) || null
   ),
 }));
 
@@ -157,9 +158,7 @@ describe('AssessmentDialog', () => {
     expect(studentAssessmentsService.updateAssessment).not.toHaveBeenCalled();
   });
 
-  it.skip(
-    'should update form values',
-    async () => {
+  it.skip('should update form values', async () => {
     const user = userEvent.setup();
     render(<AssessmentDialog {...defaultProps} />);
 
@@ -169,9 +168,7 @@ describe('AssessmentDialog', () => {
     await user.type(notesField, 'Updated notes');
 
     expect(notesField).toHaveValue('Updated notes');
-  },
-    10000,
-  );
+  }, 10000);
 
   it('should display belt requirement sections', () => {
     render(<AssessmentDialog {...defaultProps} />);
@@ -198,7 +195,7 @@ describe('AssessmentDialog', () => {
   });
 
   it('should initialize form with correct values', () => {
-    const { getInitialValues } = require('helpers/Student');
+    const { getInitialValues } = require('utils/helpers/Student');
 
     render(<AssessmentDialog {...defaultProps} />);
 
@@ -228,7 +225,7 @@ describe('AssessmentDialog', () => {
           pyong_an_cho_dan: mockAssessment.pyong_an_cho_dan,
           front_kick: mockAssessment.front_kick,
           upper_cut: mockAssessment.upper_cut,
-        }),
+        })
       );
     });
   });

@@ -23,7 +23,6 @@ const validationSchema = Yup.object({
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
   category: Yup.string()
     .oneOf(['Releases', 'Escapes', 'Submissions', 'Ground Control', 'Standing'])
     .required('Required'),
@@ -54,7 +53,6 @@ const SelfDefenseDefinitionForm = ({
     korean: selfDefense.korean || '',
     description: selfDefense.description || '',
     beltRank: selfDefense.beltRank || '',
-    beltColor: selfDefense.beltColor || '',
     category: selfDefense.category || '',
     difficulty: selfDefense.difficulty || '',
     scenario: selfDefense.scenario || '',
@@ -160,22 +158,6 @@ const SelfDefenseDefinitionForm = ({
                       placeholder='e.g., 8th Gup'
                       error={Boolean(errors.beltRank && touched.beltRank)}
                       helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
                       required
                     />
                   )}

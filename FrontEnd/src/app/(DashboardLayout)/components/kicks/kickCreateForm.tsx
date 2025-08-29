@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { KickDefinition } from 'models/Kicks/Kicks';
 import axiosInstance from 'utils/helpers/AxiosInstance';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import {
   TextField,
   Button,
@@ -26,7 +27,6 @@ const defaultValues: KickCreate = {
   korean: '',
   description: '',
   beltRank: '',
-  beltColor: '',
   target: '',
   execution: [],
   keyPoints: [],
@@ -39,7 +39,6 @@ const validationSchema = Yup.object({
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
   target: Yup.string().trim().max(200, 'Too long').optional(),
   execution: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
@@ -55,7 +54,12 @@ interface KickCreateFormProps {
 const KickCreateForm = ({ refetchKicks, handleCloseCreate }: KickCreateFormProps) => {
   const onSubmit = async (values: KickCreate) => {
     const { id, ...payload } = values;
-    await axiosInstance.post(`/kicks-definitions`, payload);
+    const payloadWithColors = {
+      ...payload,
+      beltColor: getBeltColor(values.beltRank),
+      beltTextColor: getBeltTextColor(values.beltRank),
+    };
+    await axiosInstance.post(`/kicks-definitions`, payloadWithColors);
     await refetchKicks();
     handleCloseCreate();
   };
@@ -146,24 +150,8 @@ const KickCreateForm = ({ refetchKicks, handleCloseCreate }: KickCreateFormProps
                       placeholder='e.g., 8th Gup'
                       required
                       error={Boolean(errors.beltRank && touched.beltRank)}
-                      helperText={errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''}
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      required
-                      error={Boolean(errors.beltColor && touched.beltColor)}
                       helperText={
-                        errors.beltColor && touched.beltColor ? (errors as any).beltColor : ''
+                        errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''
                       }
                     />
                   )}

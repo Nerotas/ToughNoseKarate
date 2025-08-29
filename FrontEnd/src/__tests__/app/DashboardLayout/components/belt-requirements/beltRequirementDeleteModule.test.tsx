@@ -1,10 +1,10 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import BeltRequirementDeleteModule from '../../../../../app/(DashboardLayout)/components/belt-requirements/beltRequirementDeleteModule';
 import { BeltRequirements } from '../../../../../models/BeltRequirements/BeltRequirements';
-import axiosInstance from '../../../../../helpers/AxiosInstance';
+import axiosInstance from 'utils/helpers/AxiosInstance';
 
 // Mock axios
-jest.mock('../../../../../helpers/AxiosInstance');
+jest.mock('utils/helpers/AxiosInstance');
 const mockAxiosInstance = axiosInstance as jest.Mocked<typeof axiosInstance>;
 
 const mockBeltRequirement: BeltRequirements = {

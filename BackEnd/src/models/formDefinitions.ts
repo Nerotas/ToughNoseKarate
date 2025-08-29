@@ -13,8 +13,6 @@ export interface FormDefinitionsAttributes {
   koreanName?: string;
   meaning?: string;
   beltRank: string;
-  beltColor: string;
-  beltTextColor: string;
   difficultyLevel: number;
   description?: string;
   videoLink?: string; // URL to a video demonstration
@@ -65,19 +63,6 @@ export class FormDefinitions extends Model<FormDefinitionsAttributes> {
   })
   declare beltRank: string;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    field: 'belt_color',
-  })
-  declare beltColor: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    field: 'belt_text_color',
-  })
-  declare beltTextColor: string;
 
   @Column({
     type: DataType.INTEGER,

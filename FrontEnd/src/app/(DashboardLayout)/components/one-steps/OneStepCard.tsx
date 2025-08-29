@@ -19,7 +19,7 @@ import {
   IconX,
   IconArrowRight,
 } from '@tabler/icons-react';
-import { getBeltTextColor } from 'helpers/BeltColors';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
 import OneStepEditModule from './oneStepEditModule';
@@ -29,10 +29,9 @@ import { OneStepDefinition } from 'models/OneSteps/OneSteps';
 interface OneStepCard {
   oneStep: OneStepDefinition;
   refetchOneSteps: () => Promise<void>;
-  getBeltTextColor: (beltColor: string) => string;
   getDifficultyColor: (difficulty: string) => 'success' | 'warning' | 'error' | 'default';
 }
-const OneStepCard = ({ oneStep, refetchOneSteps, getBeltTextColor }: OneStepCard) => {
+const OneStepCard = ({ oneStep, refetchOneSteps }: OneStepCard) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -76,10 +75,11 @@ const OneStepCard = ({ oneStep, refetchOneSteps, getBeltTextColor }: OneStepCard
                   icon={<IconSwords />}
                   label={oneStep.beltRank}
                   sx={{
-                    backgroundColor: oneStep.beltColor,
-                    color: getBeltTextColor(oneStep.beltColor),
+                    backgroundColor: getBeltColor(oneStep.beltRank),
+                    color: getBeltTextColor(oneStep.beltRank),
                     fontWeight: 'bold',
-                    border: oneStep.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                    border:
+                      getBeltColor(oneStep.beltRank) === '#FFFFFF' ? '1px solid #ccc' : 'none',
                   }}
                 />
               </Box>
@@ -132,10 +132,13 @@ const OneStepCard = ({ oneStep, refetchOneSteps, getBeltTextColor }: OneStepCard
                       label={oneStep.followUpBeltRank}
                       size='small'
                       sx={{
-                        backgroundColor: oneStep.followUpBeltColor,
-                        color: getBeltTextColor(oneStep.followUpBeltColor),
+                        backgroundColor: getBeltColor(oneStep.followUpBeltRank),
+                        color: getBeltTextColor(oneStep.followUpBeltRank),
                         fontWeight: 'bold',
-                        border: oneStep.followUpBeltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                        border:
+                          getBeltColor(oneStep.followUpBeltRank) === '#FFFFFF'
+                            ? '1px solid #ccc'
+                            : 'none',
                       }}
                     />
                   )}
@@ -173,11 +176,13 @@ const OneStepCard = ({ oneStep, refetchOneSteps, getBeltTextColor }: OneStepCard
                       label={oneStep.secondFollowUpBeltRank}
                       size='small'
                       sx={{
-                        backgroundColor: oneStep.secondFollowUpBeltColor,
-                        color: getBeltTextColor(oneStep.secondFollowUpBeltColor),
+                        backgroundColor: getBeltColor(oneStep.secondFollowUpBeltRank),
+                        color: getBeltTextColor(oneStep.secondFollowUpBeltRank),
                         fontWeight: 'bold',
                         border:
-                          oneStep.secondFollowUpBeltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                          getBeltColor(oneStep.secondFollowUpBeltRank) === '#FFFFFF'
+                            ? '1px solid #ccc'
+                            : 'none',
                       }}
                     />
                   )}

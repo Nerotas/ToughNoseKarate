@@ -1,6 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 import { FormDefinitions } from 'models/Forms/FormDefinitions';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { TextField, Button, Box, Typography, Grid, IconButton, Stack, Chip } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
@@ -12,8 +13,6 @@ const validationSchema = Yup.object({
   meaning: Yup.string().trim().max(500, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
-  beltTextColor: Yup.string().trim().required('Required'),
   difficultyLevel: Yup.number()
     .min(1, 'Must be at least 1')
     .max(10, 'Must be at most 10')
@@ -54,8 +53,6 @@ const FormDefinitionForm = ({ form, refetchForms, handleCloseEdit }: FormDefinit
     koreanName: form.koreanName || '',
     meaning: form.meaning || '',
     beltRank: form.beltRank || '',
-    beltColor: form.beltColor || '',
-    beltTextColor: form.beltTextColor || '',
     difficultyLevel: form.difficultyLevel || 1,
     description: form.description || '',
     keyPoints: toStringArray(form.keyPoints),
@@ -63,7 +60,12 @@ const FormDefinitionForm = ({ form, refetchForms, handleCloseEdit }: FormDefinit
   };
 
   const onSubmit = async (values: FormDefinitions) => {
-    await axiosInstance.patch(`/form-definitions/${values.id}`, values);
+    const payload = {
+      ...values,
+      beltColor: getBeltColor(values.beltRank),
+      beltTextColor: getBeltTextColor(values.beltRank),
+    };
+    await axiosInstance.patch(`/form-definitions/${values.id}`, payload);
     await refetchForms();
     handleCloseEdit();
   };
@@ -172,40 +174,6 @@ const FormDefinitionForm = ({ form, refetchForms, handleCloseEdit }: FormDefinit
                       placeholder='e.g., 8th Gup'
                       error={Boolean(errors.beltRank && touched.beltRank)}
                       helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='beltTextColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Text Color'
-                      placeholder='e.g., #000000'
-                      error={Boolean(errors.beltTextColor && touched.beltTextColor)}
-                      helperText={
-                        errors.beltTextColor && touched.beltTextColor ? errors.beltTextColor : ''
-                      }
                       required
                     />
                   )}

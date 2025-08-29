@@ -25,10 +25,7 @@ import { useAuth } from 'hooks/useAuth';
 import PunchCreateModule from '../components/punches/punchCreateModule';
 import React, { useState } from 'react';
 import orderByBeltRank from 'utils/helpers/orderByBeltRank';
-
-const getBeltTextColor = (beltColor: string) => {
-  return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
-};
+import { getBeltTextColor } from '../../../utils/helpers/BeltColors';
 
 export default function PunchesClient() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -103,12 +100,7 @@ export default function PunchesClient() {
 
           {punchDefinitions &&
             punchDefinitions.map((punch) => (
-              <PunchCard
-                key={punch.id}
-                punch={punch}
-                getBeltTextColor={getBeltTextColor}
-                refetchPunches={refetchPunches}
-              />
+              <PunchCard key={punch.id} punch={punch} refetchPunches={refetchPunches} />
             ))}
         </Grid>
 

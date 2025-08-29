@@ -12,12 +12,9 @@ export interface oneStepsDefinitionsAttributes {
   id?: number;
   name: string;
   beltRank: string;
-  beltColor: string;
   description: string;
   followUpBeltRank: string;
-  followUpBeltColor: string;
   secondFollowUpBeltRank: string;
-  secondFollowUpBeltColor: string;
   defense: string[];
   keyPoints: string[];
   commonMistakes: string[];
@@ -42,23 +39,15 @@ export class oneStepsDefinitions
   @Column({ field: 'belt_rank', type: DataType.STRING(45) })
   declare beltRank: string;
 
-  @Column({ field: 'belt_color', type: DataType.STRING(7) })
-  declare beltColor: string;
-
   @Column({ type: DataType.STRING })
   declare description: string;
 
   @Column({ field: 'follow_up_belt_rank', type: DataType.STRING(45) })
   declare followUpBeltRank: string;
 
-  @Column({ field: 'follow_up_belt_color', type: DataType.STRING(7) })
-  declare followUpBeltColor: string;
-
   @Column({ field: 'second_follow_up_belt_rank', type: DataType.STRING(45) })
   declare secondFollowUpBeltRank: string;
 
-  @Column({ field: 'second_follow_up_belt_color', type: DataType.STRING(7) })
-  declare secondFollowUpBeltColor: string;
 
   @Column({ type: DataType.ARRAY(DataType.TEXT), defaultValue: [] })
   declare defense: string[];

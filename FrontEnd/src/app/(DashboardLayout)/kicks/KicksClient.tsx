@@ -10,10 +10,7 @@ import React, { useState } from 'react';
 import KickCreateModule from '../components/kicks/kickCreateModule';
 import KickCard from '../components/kicks/kickCard';
 import orderByBeltRank from 'utils/helpers/orderByBeltRank';
-
-const getBeltTextColor = (beltColor: string) => {
-  return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
-};
+import { getBeltTextColor } from '../../../utils/helpers/BeltColors';
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
@@ -109,7 +106,6 @@ export default function KicksClient() {
               kick={kick}
               refetchKicks={refetchKicks}
               getDifficultyColor={getDifficultyColor}
-              getBeltTextColor={getBeltTextColor}
             />
           ))}
         </Grid>

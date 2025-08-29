@@ -20,7 +20,7 @@ import {
   assessmentValidationSchema,
   getInitialValues,
   getTargetBeltRequirements,
-} from 'helpers/Student';
+} from 'utils/helpers/Student';
 import { studentAssessmentsService } from 'services/studentAssessmentsService';
 
 interface AssessmentDialogProps {
@@ -222,7 +222,6 @@ const AssessmentDialog: React.FC<AssessmentDialogProps> = ({
           handleSubmit,
           isSubmitting,
           status,
-          setFieldValue,
         }) => {
           // Get target belt requirements for filtering fields
           const targetBelt = getTargetBeltRequirements(values.target_belt_rank, beltRequirements);

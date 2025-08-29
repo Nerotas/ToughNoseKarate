@@ -86,19 +86,12 @@ describe('StudentsClient', () => {
       instructor: { role: 'admin' },
     });
 
-    mockUseGet
-      .mockReturnValueOnce({
-        data: mockBeltRequirements,
-        isLoading: false,
-        isFetching: false,
-        refetch: jest.fn(),
-      })
-      .mockReturnValueOnce({
-        data: mockStudents,
-        isLoading: false,
-        isFetching: false,
-        refetch: jest.fn(),
-      });
+    mockUseGet.mockReturnValue({
+      data: mockStudents,
+      isLoading: false,
+      isFetching: false,
+      refetch: jest.fn(),
+    });
 
     render(
       <TestWrapper>
