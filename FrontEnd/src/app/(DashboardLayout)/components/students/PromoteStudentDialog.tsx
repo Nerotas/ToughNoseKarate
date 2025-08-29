@@ -18,7 +18,9 @@ import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 // Student interface for API data
 import { Student } from 'models/Students/Students';
 import axiosInstance from 'utils/helpers/AxiosInstance';
-import { getBeltColor, getBeltTextColor, getNextBeltRank } from 'utils/helpers/Student';
+import { getBeltColor, getBeltTextColor } from '../../../../utils/helpers/BeltColors';
+import { getNextBeltRank } from '../../../../utils/helpers/Student';
+import { BELT_RANKS } from '../../../../constants/data/BeltRanks';
 
 interface PromoteStudentDialogProps {
   open: boolean;
@@ -32,7 +34,6 @@ const PromoteStudentDialog: React.FC<PromoteStudentDialogProps> = ({
   open,
   onClose,
   student,
-  beltRequirements,
   refetchStudents,
 }) => {
   const [isPromoting, setIsPromoting] = useState(false);
@@ -40,22 +41,7 @@ const PromoteStudentDialog: React.FC<PromoteStudentDialogProps> = ({
   if (!student) return null;
 
   const promoteStudent = async (student: Student) => {
-    // Sort belt requirements by beltOrder to ensure correct progression
-    const sortedBelts = (beltRequirements || []).slice().sort((a, b) => a.beltOrder - b.beltOrder);
-
-    const currentIndex = sortedBelts.findIndex(
-      (belt) => belt.beltRank.toLowerCase() === (student.beltRank ?? '').toLowerCase()
-    );
-
-    let nextBeltRank: string;
-    if (currentIndex !== -1 && currentIndex < sortedBelts.length - 1) {
-      nextBeltRank = sortedBelts[currentIndex + 1].beltRank;
-    } else {
-      nextBeltRank =
-        currentIndex === -1
-          ? sortedBelts[0]?.beltRank || student.beltRank || ''
-          : sortedBelts[sortedBelts.length - 1].beltRank;
-    }
+    const nextBeltRank = getNextBeltRank(student.beltRank ?? '');
 
     // Avoid sending same belt (no-op)
     if (nextBeltRank === student.beltRank) {
@@ -82,11 +68,11 @@ const PromoteStudentDialog: React.FC<PromoteStudentDialogProps> = ({
     await refetchStudents();
   };
 
-  const nextBeltRank = getNextBeltRank(student.beltRank, beltRequirements);
-  const currentBeltColor = getBeltColor(student.beltRank, beltRequirements);
-  const currentBeltTextColor = getBeltTextColor(student.beltRank, beltRequirements);
-  const nextBeltColor = getBeltColor(nextBeltRank, beltRequirements);
-  const nextBeltTextColor = getBeltTextColor(nextBeltRank, beltRequirements);
+  const nextBeltRank = getNextBeltRank(student.beltRank);
+  const currentBeltColor = getBeltColor(student.beltRank);
+  const currentBeltTextColor = getBeltTextColor(student.beltRank);
+  const nextBeltColor = getBeltColor(nextBeltRank);
+  const nextBeltTextColor = getBeltTextColor(nextBeltRank);
   const isAtHighestBelt = nextBeltRank === student.beltRank;
 
   const handleConfirm = async () => {

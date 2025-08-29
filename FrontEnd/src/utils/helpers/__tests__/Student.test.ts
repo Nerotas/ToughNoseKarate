@@ -115,25 +115,25 @@ describe('Student helpers', () => {
 
   describe('getBeltColor', () => {
     it('should return correct color for existing belt rank', () => {
-      const result = getBeltColor('White', mockBeltRequirements);
+      const result = getBeltColor('White');
 
       expect(result).toBe('#FFFFFF');
     });
 
     it('should return default grey color for non-existing belt rank', () => {
-      const result = getBeltColor('Purple', mockBeltRequirements);
+      const result = getBeltColor('Silver');
 
       expect(result).toBe('#757575');
     });
 
     it('should handle case-insensitive belt rank matching', () => {
-      const result = getBeltColor('gold white', mockBeltRequirements);
+      const result = getBeltColor('gold');
 
       expect(result).toBe('#FFD700');
     });
 
     it('should return default color for empty belt rank', () => {
-      const result = getBeltColor('', mockBeltRequirements);
+      const result = getBeltColor('');
 
       expect(result).toBe('#757575');
     });
@@ -141,25 +141,25 @@ describe('Student helpers', () => {
 
   describe('getBeltTextColor', () => {
     it('should return correct text color for existing belt rank', () => {
-      const result = getBeltTextColor('Black', mockBeltRequirements);
+      const result = getBeltTextColor('1st Black');
 
       expect(result).toBe('#FFFFFF');
     });
 
     it('should return default white text color for non-existing belt rank', () => {
-      const result = getBeltTextColor('Purple', mockBeltRequirements);
+      const result = getBeltTextColor('Silver');
 
       expect(result).toBe('#FFFFFF');
     });
 
     it('should handle case-insensitive belt rank matching', () => {
-      const result = getBeltTextColor('white', mockBeltRequirements);
+      const result = getBeltTextColor('white');
 
       expect(result).toBe('#000000');
     });
 
     it('should return default text color for empty belt rank', () => {
-      const result = getBeltTextColor('', mockBeltRequirements);
+      const result = getBeltTextColor('');
 
       expect(result).toBe('#FFFFFF');
     });
@@ -167,45 +167,39 @@ describe('Student helpers', () => {
 
   describe('getNextBeltRank', () => {
     it('should return next belt rank in sequence', () => {
-      const result = getNextBeltRank('White', mockBeltRequirements);
+      const result = getNextBeltRank('White');
 
       expect(result).toBe('Gold White');
     });
 
     it('should return next belt rank for middle ranks', () => {
-      const result = getNextBeltRank('Gold White', mockBeltRequirements);
+      const result = getNextBeltRank('Gold White');
 
       expect(result).toBe('Gold');
     });
 
     it('should return highest belt rank for highest belt rank', () => {
-      const result = getNextBeltRank('Gold Black', mockBeltRequirements);
+      const result = getNextBeltRank('1st Black');
 
-      expect(result).toBe('Gold Black');
+      expect(result).toBe('1st Black');
     });
 
     it('should handle case-insensitive belt rank matching', () => {
-      const result = getNextBeltRank('white', mockBeltRequirements);
+      const result = getNextBeltRank('white');
 
       expect(result).toBe('Gold White');
     });
 
     it('should return highest belt rank for non-existing belt rank', () => {
-      const result = getNextBeltRank('Purple', mockBeltRequirements);
+      const result = getNextBeltRank('Silver');
 
-      expect(result).toBe('Gold Black');
+      expect(result).toBe('1st Black');
     });
 
     it('should return highest belt rank for empty belt rank', () => {
-      const result = getNextBeltRank('', mockBeltRequirements);
+      const result = getNextBeltRank('');
 
-      expect(result).toBe('Gold Black');
-    });
-
-    it('should handle empty belt requirements array', () => {
-      const result = getNextBeltRank('White', []);
-
-      expect(result).toBe('');
+      expect(result).toBe('1st Black');
     });
   });
 

@@ -1,7 +1,11 @@
+import {BELT_RANKS} from 'constants/data/BeltRanks';
 import { StudentAssessment } from 'models/Assessments/Assessments';
 import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 import { Student, StudentFormData } from 'models/Students/Students';
 import * as Yup from 'yup';
+
+// Re-export belt color functions from the centralized helper
+export { getBeltColor, getBeltTextColor } from './BeltColors';
 
 // Convert assessment to form values
 export const getInitialValues = (assessment: StudentAssessment | null) => {
@@ -427,41 +431,20 @@ export const assessmentValidationSchema = Yup.object().shape({
   examiner_notes: Yup.string().max(1000, 'Notes must be less than 1000 characters'),
 });
 
-// Helper function to get belt color from belt requirements data
-export const getBeltColor = (beltRank: string, beltRequirements: BeltRequirements[]): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.color || '#757575'; // Default grey if not found
-};
-
-// Helper function to get belt text color from belt requirements data
-export const getBeltTextColor = (
-  beltRank: string,
-  beltRequirements: BeltRequirements[]
-): string => {
-  const beltReq = beltRequirements.find(
-    (req) => req.beltRank.toLowerCase() === beltRank.toLowerCase()
-  );
-  return beltReq?.textColor || '#FFFFFF'; // Default white if not found
-};
-
 // Helper function to get next belt rank
 export const getNextBeltRank = (
-  currentBelt: string,
-  beltRequirements: BeltRequirements[]
+  currentBelt: string
 ): string => {
-  const sortedBelts = beltRequirements.sort((a, b) => a.beltOrder - b.beltOrder);
-  const currentIndex = sortedBelts.findIndex(
-    (belt) => belt.beltRank.toLowerCase() === currentBelt.toLowerCase()
+  const currentIndex = BELT_RANKS.findIndex(
+    (belt) => belt?.beltRank && belt.beltRank.toLowerCase() === currentBelt.toLowerCase()
   );
 
-  if (currentIndex !== -1 && currentIndex < sortedBelts.length - 1) {
-    return sortedBelts[currentIndex + 1].beltRank;
+  if (currentIndex !== -1 && currentIndex < BELT_RANKS.length - 1) {
+    return BELT_RANKS[currentIndex + 1].beltRank ?? '';
   }
 
   // If not found or is the highest belt, keep current belt
-  return sortedBelts[sortedBelts.length - 1]?.beltRank || '';
+  return BELT_RANKS[BELT_RANKS.length - 1]?.beltRank || '';
 };
 
 export const editValidationSchema = Yup.object().shape({

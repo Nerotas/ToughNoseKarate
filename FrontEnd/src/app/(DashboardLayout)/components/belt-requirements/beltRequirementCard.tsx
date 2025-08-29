@@ -6,6 +6,7 @@ import BeltRequirementsEditModule from './beltRequirementsEditModule';
 import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 import { useAuth } from 'hooks/useAuth';
 import BeltRequirementDeleteModule from './beltRequirementDeleteModule';
+import { getBeltColor, getBeltTextColor } from '../../../../utils/helpers/BeltColors';
 
 interface BeltRequirementCardProps {
   belt: BeltRequirements;
@@ -33,6 +34,9 @@ const BeltRequirementCard = ({ belt, refetchBeltRequirements }: BeltRequirementC
     setIsEditModalOpen(false);
   };
 
+  const beltColor = getBeltColor(belt.beltRank);
+  const beltTextColor = getBeltTextColor(belt.beltRank);
+
   return (
     <>
       <Grid size={{ xs: 12, md: 6, lg: 4 }} key={`${belt.beltOrder}_${belt.beltRank}`}>
@@ -43,10 +47,10 @@ const BeltRequirementCard = ({ belt, refetchBeltRequirements }: BeltRequirementC
                 icon={<IconAward />}
                 label={belt.beltRank}
                 sx={{
-                  backgroundColor: belt.color,
-                  color: belt.textColor,
+                  backgroundColor: beltColor,
+                  color: beltTextColor,
                   fontWeight: 'bold',
-                  border: belt.color === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                  border: beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
                 }}
               />
             </Box>

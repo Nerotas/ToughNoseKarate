@@ -25,7 +25,7 @@ import AddStudentModule from '../components/students/AddStudentModule';
 import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
 import { Student } from 'models/Students/Students';
-import { getBeltColor, getBeltTextColor } from 'utils/helpers/Student';
+import { getBeltColor, getBeltTextColor } from '../../../utils/helpers/BeltColors';
 import SummaryCard from '../components/students/SummaryCard';
 
 const StudentsClient = () => {
@@ -159,13 +159,13 @@ const StudentsClient = () => {
       headerName: 'Current Belt',
       flex: 1,
       renderCell: (params: GridRenderCellParams) => {
-        const beltColor = getBeltColor(params.row.beltRank ?? '', beltRequirements || []);
+        const beltColor = getBeltColor(params.row.beltRank ?? '');
         return (
           <Chip
             label={`${params.row.beltRank} Belt`}
             sx={{
               backgroundColor: beltColor,
-              color: getBeltTextColor(params.row.beltRank, beltRequirements || []),
+              color: getBeltTextColor(params.row.beltRank),
               fontWeight: 'bold',
               border: beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
             }}
