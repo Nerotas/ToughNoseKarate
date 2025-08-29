@@ -18,23 +18,8 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import * as Yup from 'yup';
-
-const validationSchema = Yup.object({
-  name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
-  description: Yup.string().trim().max(2000, 'Too long').optional(),
-  beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
-  followUpBeltRank: Yup.string().trim().optional(),
-  followUpBeltColor: Yup.string().trim().optional(),
-  secondFollowUpBeltRank: Yup.string().trim().optional(),
-  secondFollowUpBeltColor: Yup.string().trim().optional(),
-  defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  firstFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  secondFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  comment: Yup.string().trim().max(1000, 'Too long').optional(),
-});
+import { BELT_RANKS } from 'constants/data/BeltRanks';
+import { oneStepUpdateValidationSchema } from 'utils/validation/schemas';
 
 interface OneStepDefinitionFormProps {
   oneStep: OneStepDefinition;
@@ -94,7 +79,7 @@ const OneStepDefinitionForm = ({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      oneStepUpdateValidationSchema={oneStepUpdateValidationSchema}
       enableReinitialize
       onSubmit={async (values, { setSubmitting }) => {
         try {
@@ -158,15 +143,16 @@ const OneStepDefinitionForm = ({
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Field name='beltRank'>
                   {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt'
-                      placeholder='e.g., 8th Gup'
-                      error={Boolean(errors.beltRank && touched.beltRank)}
-                      helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
-                      required
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>Belt Rank</InputLabel>
+                      <Select {...field} label='Belt Rank' value={field.value || ''}>
+                        {BELT_RANKS.map((belt) => (
+                          <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                            {belt.beltRank}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 </Field>
               </Grid>
@@ -186,22 +172,23 @@ const OneStepDefinitionForm = ({
                   )}
                 </Field>
               </Grid>
-
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Field name='followUpBeltRank'>
                   {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Follow-Up Belt Rank'
-                      placeholder='e.g., 7th Gup'
-                      error={Boolean(errors.followUpBeltRank && touched.followUpBeltRank)}
-                      helperText={
-                        errors.followUpBeltRank && touched.followUpBeltRank
-                          ? errors.followUpBeltRank
-                          : ''
-                      }
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>First Follow-Up Belt Rank</InputLabel>
+                      <Select
+                        {...field}
+                        label='First Follow-Up Belt Rank'
+                        value={field.value || ''}
+                      >
+                        {BELT_RANKS.map((belt) => (
+                          <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                            {belt.beltRank}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 </Field>
               </Grid>
@@ -228,20 +215,20 @@ const OneStepDefinitionForm = ({
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Field name='secondFollowUpBeltRank'>
                   {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Second Follow-Up Belt Rank'
-                      placeholder='e.g., 6th Gup'
-                      error={Boolean(
-                        errors.secondFollowUpBeltRank && touched.secondFollowUpBeltRank
-                      )}
-                      helperText={
-                        errors.secondFollowUpBeltRank && touched.secondFollowUpBeltRank
-                          ? errors.secondFollowUpBeltRank
-                          : ''
-                      }
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>Second Follow-Up Belt Rank</InputLabel>
+                      <Select
+                        {...field}
+                        label='Second Follow-Up Belt Rank'
+                        value={field.value || ''}
+                      >
+                        {BELT_RANKS.map((belt) => (
+                          <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                            {belt.beltRank}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 </Field>
               </Grid>

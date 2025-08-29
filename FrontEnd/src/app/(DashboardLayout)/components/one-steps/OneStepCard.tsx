@@ -112,7 +112,7 @@ const OneStepCard = ({ oneStep, refetchOneSteps, getBeltTextColor }: OneStepCard
               </List>
             </Box>
 
-            {oneStep.firstFollowUp && (
+            {oneStep.firstFollowUp && oneStep.firstFollowUp.length > 0 && (
               <Box sx={{ mb: 3 }}>
                 <Box
                   sx={{
@@ -153,7 +153,7 @@ const OneStepCard = ({ oneStep, refetchOneSteps, getBeltTextColor }: OneStepCard
               </Box>
             )}
 
-            {oneStep.secondFollowUp && (
+            {oneStep.secondFollowUp && oneStep.secondFollowUp.length > 0 && (
               <Box sx={{ mb: 3 }}>
                 <Box
                   sx={{

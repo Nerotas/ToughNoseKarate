@@ -14,11 +14,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Chip,
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { IconSwords, IconArrowRight, IconMessage2 } from '@tabler/icons-react';
 import * as Yup from 'yup';
+import { BELT_RANKS } from 'constants/data/BeltRanks';
+import { oneStepCreationValidationSchema } from 'utils/validation/schemas';
 
 type OneStepCreate = Omit<OneStepDefinition, 'id'> & { id?: string };
 
@@ -39,23 +40,6 @@ const defaultValues: OneStepCreate = {
   secondFollowUp: [],
   comment: '',
 };
-
-const validationSchema = Yup.object({
-  name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
-  description: Yup.string().trim().max(2000, 'Too long').optional(),
-  beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
-  followUpBeltRank: Yup.string().trim().optional(),
-  followUpBeltColor: Yup.string().trim().optional(),
-  secondFollowUpBeltRank: Yup.string().trim().optional(),
-  secondFollowUpBeltColor: Yup.string().trim().optional(),
-  defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  firstFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  secondFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
-  comment: Yup.string().trim().max(1000, 'Too long').optional(),
-});
 
 interface OneStepCreateFormProps {
   refetchOneSteps: () => Promise<void>;
@@ -94,7 +78,7 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
   return (
     <Formik
       initialValues={defaultValues}
-      validationSchema={validationSchema}
+      oneStepCreationValidationSchema={oneStepCreationValidationSchema}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
         try {
           await onSubmit(values);
@@ -331,39 +315,31 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
                           {({ field }: any) => (
                             <FormControl fullWidth>
                               <InputLabel>Belt Rank</InputLabel>
-                              <Select {...field} label='Belt Rank'>
-                                <MenuItem value='White'>White</MenuItem>
-                                <MenuItem value='Orange'>Orange</MenuItem>
-                                <MenuItem value='Yellow'>Yellow</MenuItem>
-                                <MenuItem value='Purple'>Purple</MenuItem>
-                                <MenuItem value='Blue'>Blue</MenuItem>
-                                <MenuItem value='Blue Senior'>Blue Senior</MenuItem>
-                                <MenuItem value='Green'>Green</MenuItem>
-                                <MenuItem value='Green Senior'>Green Senior</MenuItem>
-                                <MenuItem value='Brown'>Brown</MenuItem>
-                                <MenuItem value='Brown Senior'>Brown Senior</MenuItem>
-                                <MenuItem value='Black'>Black</MenuItem>
+                              <Select {...field} label='Belt Rank' value={field.value || ''}>
+                                {BELT_RANKS.map((belt) => (
+                                  <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                                    {belt.beltRank}
+                                  </MenuItem>
+                                ))}
                               </Select>
                             </FormControl>
                           )}
                         </Field>
                       </Grid>
-                      <Grid size={{ xs: 12, sm: 6 }}>
+                      <Grid size={{ xs: 12, sm: 4 }}>
                         <Field name='followUpBeltColor'>
                           {({ field }: any) => (
-                            <FormControl fullWidth>
-                              <InputLabel>Belt Color</InputLabel>
-                              <Select {...field} label='Belt Color'>
-                                <MenuItem value='white'>White</MenuItem>
-                                <MenuItem value='orange'>Orange</MenuItem>
-                                <MenuItem value='yellow'>Yellow</MenuItem>
-                                <MenuItem value='purple'>Purple</MenuItem>
-                                <MenuItem value='blue'>Blue</MenuItem>
-                                <MenuItem value='green'>Green</MenuItem>
-                                <MenuItem value='brown'>Brown</MenuItem>
-                                <MenuItem value='black'>Black</MenuItem>
-                              </Select>
-                            </FormControl>
+                            <TextField
+                              {...field}
+                              fullWidth
+                              label='Belt Color'
+                              placeholder='e.g., Yellow'
+                              error={Boolean(errors.beltColor && touched.beltColor)}
+                              helperText={
+                                errors.beltColor && touched.beltColor ? errors.beltColor : ''
+                              }
+                              required
+                            />
                           )}
                         </Field>
                       </Grid>
@@ -429,39 +405,31 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
                           {({ field }: any) => (
                             <FormControl fullWidth>
                               <InputLabel>Belt Rank</InputLabel>
-                              <Select {...field} label='Belt Rank'>
-                                <MenuItem value='White'>White</MenuItem>
-                                <MenuItem value='Orange'>Orange</MenuItem>
-                                <MenuItem value='Yellow'>Yellow</MenuItem>
-                                <MenuItem value='Purple'>Purple</MenuItem>
-                                <MenuItem value='Blue'>Blue</MenuItem>
-                                <MenuItem value='Blue Senior'>Blue Senior</MenuItem>
-                                <MenuItem value='Green'>Green</MenuItem>
-                                <MenuItem value='Green Senior'>Green Senior</MenuItem>
-                                <MenuItem value='Brown'>Brown</MenuItem>
-                                <MenuItem value='Brown Senior'>Brown Senior</MenuItem>
-                                <MenuItem value='Black'>Black</MenuItem>
+                              <Select {...field} label='Belt Rank' value={field.value || ''}>
+                                {BELT_RANKS.map((belt) => (
+                                  <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                                    {belt.beltRank}
+                                  </MenuItem>
+                                ))}
                               </Select>
                             </FormControl>
                           )}
                         </Field>
                       </Grid>
-                      <Grid size={{ xs: 12, sm: 6 }}>
+                      <Grid size={{ xs: 12, sm: 4 }}>
                         <Field name='secondFollowUpBeltColor'>
                           {({ field }: any) => (
-                            <FormControl fullWidth>
-                              <InputLabel>Belt Color</InputLabel>
-                              <Select {...field} label='Belt Color'>
-                                <MenuItem value='white'>White</MenuItem>
-                                <MenuItem value='orange'>Orange</MenuItem>
-                                <MenuItem value='yellow'>Yellow</MenuItem>
-                                <MenuItem value='purple'>Purple</MenuItem>
-                                <MenuItem value='blue'>Blue</MenuItem>
-                                <MenuItem value='green'>Green</MenuItem>
-                                <MenuItem value='brown'>Brown</MenuItem>
-                                <MenuItem value='black'>Black</MenuItem>
-                              </Select>
-                            </FormControl>
+                            <TextField
+                              {...field}
+                              fullWidth
+                              label='Belt Color'
+                              placeholder='e.g., Yellow'
+                              error={Boolean(errors.beltColor && touched.beltColor)}
+                              helperText={
+                                errors.beltColor && touched.beltColor ? errors.beltColor : ''
+                              }
+                              required
+                            />
                           )}
                         </Field>
                       </Grid>

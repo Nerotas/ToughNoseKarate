@@ -1,5 +1,5 @@
 import Joi from 'joi';
-
+import * as Yup from 'yup';
 // =============================================
 // STUDENT VALIDATION SCHEMAS
 // =============================================
@@ -134,6 +134,40 @@ export const stanceDefinitionSchema = techniqueDefinitionSchema.keys({
       'any.required': 'Stance type is required',
       'any.only': 'Please select a valid stance type',
     }),
+});
+
+export const oneStepUpdateValidationSchema = Yup.object({
+  name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
+  description: Yup.string().trim().max(2000, 'Too long').optional(),
+  beltRank: Yup.string().trim().required('Required'),
+  beltColor: Yup.string().trim().required('Required'),
+  followUpBeltRank: Yup.string().trim().optional(),
+  followUpBeltColor: Yup.string().trim().optional(),
+  secondFollowUpBeltRank: Yup.string().trim().optional(),
+  secondFollowUpBeltColor: Yup.string().trim().optional(),
+  defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  firstFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  secondFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  comment: Yup.string().trim().max(1000, 'Too long').optional(),
+});
+
+export const oneStepCreationValidationSchema = Yup.object({
+  name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
+  description: Yup.string().trim().max(2000, 'Too long').optional(),
+  beltRank: Yup.string().trim().required('Required'),
+  beltColor: Yup.string().trim().required('Required'),
+  followUpBeltRank: Yup.string().trim().optional(),
+  followUpBeltColor: Yup.string().trim().optional(),
+  secondFollowUpBeltRank: Yup.string().trim().optional(),
+  secondFollowUpBeltColor: Yup.string().trim().optional(),
+  defense: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  commonMistakes: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  firstFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  secondFollowUp: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
+  comment: Yup.string().trim().max(1000, 'Too long').optional(),
 });
 
 // =============================================
