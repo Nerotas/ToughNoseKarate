@@ -21,13 +21,10 @@ describe('OneStepsDefinitionsController', () => {
     id: 1,
     name: 'First One Step',
     beltRank: 'Purple White',
-    beltColor: '#800080',
     description:
       'First basic one-step sequence for Purple White belt students.',
     followUpBeltRank: 'Blue White',
-    followUpBeltColor: '#ADD8E6',
     secondFollowUpBeltRank: 'Blue',
-    secondFollowUpBeltColor: '#0000FF',
     defense: [
       'Left outside block',
       'Right reverse punch counter',
@@ -86,13 +83,10 @@ describe('OneStepsDefinitionsController', () => {
       const createDto: oneStepsDefinitionsAttributes = {
         name: 'First One Step',
         beltRank: 'Purple White',
-        beltColor: '#800080',
         description:
           'First basic one-step sequence for Purple White belt students.',
         followUpBeltRank: 'Blue White',
-        followUpBeltColor: '#ADD8E6',
         secondFollowUpBeltRank: 'Blue',
-        secondFollowUpBeltColor: '#0000FF',
         defense: ['Left outside block', 'Right reverse punch counter'],
         keyPoints: [
           'Proper outside block technique',
@@ -143,12 +137,9 @@ describe('OneStepsDefinitionsController', () => {
       const updateDto: oneStepsDefinitionsAttributes = {
         name: 'Updated One Step',
         beltRank: 'Purple White',
-        beltColor: '#800080',
         description: 'Updated description for one-step sequence.',
         followUpBeltRank: 'Blue White',
-        followUpBeltColor: '#ADD8E6',
         secondFollowUpBeltRank: 'Blue',
-        secondFollowUpBeltColor: '#0000FF',
         defense: ['Left outside block', 'Right reverse punch counter'],
         keyPoints: [
           'Proper outside block technique',

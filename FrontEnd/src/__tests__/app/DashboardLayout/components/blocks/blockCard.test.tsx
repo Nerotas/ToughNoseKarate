@@ -281,23 +281,6 @@ describe('BlockCard Component', () => {
     expect(screen.getByTestId('delete-modal')).toBeInTheDocument();
   });
 
-  it('calls getBeltTextColor function', () => {
-    mockUseAuth.mockReturnValue({
-      isAuthenticated: false,
-      instructor: null,
-      isAuthLoading: false,
-      login: jest.fn(),
-      logout: jest.fn(),
-      refreshToken: jest.fn(),
-      ensureProfile: jest.fn(),
-      loginError: null,
-      profileError: null,
-    });
-
-    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
-
-    expect(mockGetBeltTextColor).toHaveBeenCalledWith('White Belt');
-  });
 
   it('applies correct styling for white beltRank', () => {
     mockUseAuth.mockReturnValue({

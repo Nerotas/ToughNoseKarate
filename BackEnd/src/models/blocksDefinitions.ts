@@ -16,7 +16,6 @@ export interface BlocksDefinitionsAttributes {
   technique: string;
   stance: string;
   beltRank: string;
-  beltColor: string;
   execution: string[];
   keyPoints: string[];
   commonMistakes: string[];
@@ -63,12 +62,6 @@ export class blocksDefinitions extends Model<BlocksDefinitionsAttributes> {
   })
   declare beltRank: string;
 
-  @Column({
-    field: 'belt_color',
-    type: DataType.STRING(7),
-    allowNull: false,
-  })
-  declare beltColor: string;
 
   // FIXED: PostgreSQL _text array
   @Column({

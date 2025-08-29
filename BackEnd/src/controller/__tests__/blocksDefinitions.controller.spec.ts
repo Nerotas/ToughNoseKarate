@@ -22,7 +22,6 @@ describe('BlocksDefinitionsController', () => {
     technique: 'Defensive movement to block high attacks',
     stance: 'ready stance',
     beltRank: 'white',
-    beltColor: 'white',
     execution: ['step 1', 'step 2'],
     created_at: new Date(),
     updated_at: new Date(),
@@ -65,7 +64,6 @@ describe('BlocksDefinitionsController', () => {
         technique: 'Defensive movement',
         stance: 'ready stance',
         beltRank: 'white',
-        beltColor: 'white',
         execution: ['step 1'],
       };
 
@@ -110,7 +108,6 @@ describe('BlocksDefinitionsController', () => {
         technique: 'Updated technique',
         stance: 'ready stance',
         beltRank: 'white',
-        beltColor: 'white',
         execution: ['updated step'],
         keyPoints: ['key point 1'],
         commonMistakes: ['mistake 1'],

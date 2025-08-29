@@ -5,7 +5,6 @@ export interface PunchesDefinitionsAttributes {
   name: string;
   korean: string;
   beltRank: string;
-  beltColor: string;
   description: string;
   target: string | null;
   execution: string[]; // PostgreSQL _text array
@@ -33,8 +32,6 @@ export class punchesDefinitions
   @Column({ field: 'belt_rank', type: DataType.STRING(45) })
   declare beltRank: string;
 
-  @Column({ field: 'belt_color', type: DataType.STRING(7) })
-  declare beltColor: string;
 
   @Column({ type: DataType.STRING })
   declare description: string;

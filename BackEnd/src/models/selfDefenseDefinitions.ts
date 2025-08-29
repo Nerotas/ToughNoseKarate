@@ -13,7 +13,6 @@ export interface selfDefenseDefinitionsAttributes {
   name: string;
   korean: string;
   beltRank: string;
-  beltColor: string;
   description: string;
   category: string;
   difficulty: string;
@@ -48,8 +47,6 @@ export class selfDefenseDefinitions
   @Column({ field: 'belt_rank', type: DataType.STRING(45) })
   declare beltRank: string;
 
-  @Column({ field: 'belt_color', type: DataType.STRING(7) })
-  declare beltColor: string;
 
   @Column({ type: DataType.STRING })
   declare description: string;
