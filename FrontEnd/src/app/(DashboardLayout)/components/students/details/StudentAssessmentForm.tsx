@@ -14,8 +14,8 @@ import {
 import { IconClipboardData, IconPlus, IconEdit, IconCheck, IconX } from '@tabler/icons-react';
 import { StudentAssessment } from '../../../../../models/Assessments/Assessments';
 import { BeltRequirements } from '../../../../../models/BeltRequirements/BeltRequirements';
-import { getBeltColor, getBeltTextColor } from 'helpers/BeltColors';
 import AssessmentDialog from './AssessmentDialog';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 
 interface StudentAssessmentFormProps {
   currentAssessment: StudentAssessment | null;
@@ -124,14 +124,8 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                           label={currentAssessment.target_belt_rank}
                           size='small'
                           sx={{
-                            backgroundColor: getBeltColor(
-                              currentAssessment.target_belt_rank,
-                              beltRequirements || []
-                            ),
-                            color: getBeltTextColor(
-                              currentAssessment.target_belt_rank,
-                              beltRequirements || []
-                            ),
+                            backgroundColor: getBeltColor(currentAssessment.target_belt_rank),
+                            color: getBeltTextColor(currentAssessment.target_belt_rank),
                             fontWeight: 'bold',
                             mt: 0.5,
                           }}

@@ -18,7 +18,7 @@ import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 // Student interface for API data
 import { Student } from 'models/Students/Students';
 import axiosInstance from 'utils/helpers/AxiosInstance';
-import { getBeltColor, getBeltTextColor, getNextBeltRank } from 'helpers/Student';
+import { getBeltColor, getBeltTextColor, getNextBeltRank } from 'utils/helpers/Student';
 
 interface PromoteStudentDialogProps {
   open: boolean;

@@ -20,7 +20,7 @@ import {
   assessmentValidationSchema,
   getInitialValues,
   getTargetBeltRequirements,
-} from 'helpers/Student';
+} from 'utils/helpers/Student';
 import { studentAssessmentsService } from 'services/studentAssessmentsService';
 
 interface AssessmentDialogProps {

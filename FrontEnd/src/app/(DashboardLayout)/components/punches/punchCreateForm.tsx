@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { PunchDefinition, PunchCreate } from 'models/Punches/Punches';
-import { validationSchema } from 'helpers/Punches';
+import { validationSchema } from 'utils/helpers/Punches';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { TextField, Button, Box, Typography, Grid, IconButton, Stack } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
@@ -119,7 +119,9 @@ const PunchCreateForm = ({ refetchPunches, handleCloseCreate }: PunchCreateFormP
                       label='Belt'
                       placeholder='e.g., 8th Gup'
                       error={Boolean(errors.beltRank && touched.beltRank)}
-                      helperText={errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''}
+                      helperText={
+                        errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''
+                      }
                       required
                     />
                   )}

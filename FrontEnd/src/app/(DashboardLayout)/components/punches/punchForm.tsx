@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 import { PunchDefinition } from 'models/Punches/Punches';
-import { validationSchema } from 'helpers/Punches';
+import { validationSchema } from 'utils/helpers/Punches';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { TextField, Button, Box, Typography, Grid, IconButton, Stack, Chip } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';

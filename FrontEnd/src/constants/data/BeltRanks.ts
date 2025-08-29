@@ -129,7 +129,8 @@ export const BELT_RANKS: Partial<BeltRequirements>[] = [
     textColor: '#FFFFFF',
   },
 ];
-// Build lookup map from beltNormalized beltRank -> order number
+
+// Build lookup map from normalized beltRank -> order number
 const beltNormalizer = (s: string | undefined | null) =>
   (s || '')
     .toString()
@@ -144,3 +145,4 @@ BELT_RANKS.forEach((br) => {
     typeof (br as any).beltOrder === 'number' ? (br as any).beltOrder : Number.MAX_SAFE_INTEGER;
   rankToOrder.set(key, order);
 });
+

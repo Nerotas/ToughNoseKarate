@@ -1,5 +1,5 @@
 import { hasRequiredRole } from '../RoleChecker';
-import { InstructorProfile } from '../../models/Auth/Auth';
+import { InstructorProfile } from '../../../models/Auth/Auth';
 
 describe('RoleChecker helper', () => {
   const createMockInstructor = (role: 'instructor' | 'admin'): InstructorProfile => ({

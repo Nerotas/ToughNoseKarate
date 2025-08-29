@@ -21,7 +21,7 @@ import { Formik } from 'formik';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { Student, StudentFormData } from 'models/Students/Students';
-import { editValidationSchema, getEditStudentInitialValues } from 'helpers/Student';
+import { editValidationSchema, getEditStudentInitialValues } from 'utils/helpers/Student';
 
 interface EditStudentModuleProps {
   open: boolean;

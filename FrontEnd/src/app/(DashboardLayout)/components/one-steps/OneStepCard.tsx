@@ -19,7 +19,7 @@ import {
   IconX,
   IconArrowRight,
 } from '@tabler/icons-react';
-import { getBeltTextColor } from 'helpers/BeltColors';
+import { getBeltTextColor } from 'utils/helpers/BeltColors';
 import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
 import OneStepEditModule from './oneStepEditModule';

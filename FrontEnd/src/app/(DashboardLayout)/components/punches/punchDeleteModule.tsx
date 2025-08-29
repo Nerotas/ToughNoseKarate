@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
-import axiosInstance from 'helpers/AxiosInstance';
+import axiosInstance from 'utils/helpers/AxiosInstance';
 import { PunchDefinition } from 'models/Punches/Punches';
 
 interface PunchDeleteModuleProps {

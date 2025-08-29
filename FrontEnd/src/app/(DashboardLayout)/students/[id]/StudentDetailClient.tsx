@@ -12,7 +12,7 @@ import useGet from '../../../../hooks/useGet';
 import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import { StudentDetailClientProps, Family, Student } from 'models/Students/Students';
 import StudentInformation from 'app/(DashboardLayout)/components/students/details/StudentInformation';
-import { getBeltColor, getBeltTextColor } from 'helpers/BeltColors';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import PersonalInformation from 'app/(DashboardLayout)/components/students/details/PersonalInformation';
 import TrainingInformation from 'app/(DashboardLayout)/components/students/details/TrainingInformation';
 import ParentGuardianInformation from 'app/(DashboardLayout)/components/students/details/ParentGuardianInformation';
@@ -199,8 +199,8 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     );
   }
 
-  const beltColor = getBeltColor(student.beltRank, beltRequirements || []);
-  const beltTextColor = getBeltTextColor(student.beltRank, beltRequirements || []);
+  const beltColor = getBeltColor(student.beltRank);
+  const beltTextColor = getBeltTextColor(student.beltRank);
 
   return (
     <PageContainer title='Student Details' description='View student information and progress'>

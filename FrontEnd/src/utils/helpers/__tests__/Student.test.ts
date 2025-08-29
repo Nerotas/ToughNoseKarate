@@ -6,7 +6,7 @@ import {
   getNextBeltRank,
   getEditStudentInitialValues,
 } from '../Student';
-import { StudentAssessment } from '../../models/Assessments/Assessments';
+import { StudentAssessment } from '../../../models/Assessments/Assessments';
 import { mockBeltRequirements } from 'testingUtils/MockData/mockBeltRequirements';
 import { mockStudents } from 'testingUtils/MockData/mockStudents';
 

@@ -25,7 +25,7 @@ import AddStudentModule from '../components/students/AddStudentModule';
 import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
 import { Student } from 'models/Students/Students';
-import { getBeltColor, getBeltTextColor } from 'helpers/Student';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/Student';
 import SummaryCard from '../components/students/SummaryCard';
 
 const StudentsClient = () => {

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import StudentDetailClient from 'app/(DashboardLayout)/students/[id]/StudentDetailClient';
-import { getBeltColor, getBeltTextColor } from 'helpers/BeltColors';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import { studentAssessmentsService } from 'services/studentAssessmentsService';
 
 // Mock Next.js router
