@@ -16,6 +16,8 @@ export interface oneStepsDefinitionsAttributes {
   description: string;
   followUpBeltRank: string;
   followUpBeltColor: string;
+  secondFollowUpBeltRank: string;
+  secondFollowUpBeltColor: string;
   defense: string[];
   keyPoints: string[];
   commonMistakes: string[];
@@ -51,6 +53,12 @@ export class oneStepsDefinitions
 
   @Column({ field: 'follow_up_belt_color', type: DataType.STRING(7) })
   declare followUpBeltColor: string;
+
+  @Column({ field: 'second_follow_up_belt_rank', type: DataType.STRING(45) })
+  declare secondFollowUpBeltRank: string;
+
+  @Column({ field: 'second_follow_up_belt_color', type: DataType.STRING(7) })
+  declare secondFollowUpBeltColor: string;
 
   @Column({ type: DataType.ARRAY(DataType.TEXT) })
   declare defense: string[];

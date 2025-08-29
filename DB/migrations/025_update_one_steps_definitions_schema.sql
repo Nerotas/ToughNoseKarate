@@ -12,6 +12,10 @@ ADD
 ADD
   COLUMN follow_up_belt_color VARCHAR(7),
 ADD
+  COLUMN second_follow_up_belt_rank VARCHAR(45),
+ADD
+  COLUMN second_follow_up_belt_color VARCHAR(7),
+ADD
   COLUMN first_follow_up _text DEFAULT '{}',
 ADD
   COLUMN second_follow_up _text DEFAULT '{}',
@@ -43,6 +47,8 @@ COMMIT;
  description TEXT NOT NULL,
  follow_up_belt_rank VARCHAR(45),
  follow_up_belt_color VARCHAR(7),
+ second_follow_up_belt_rank VARCHAR(45),
+ second_follow_up_belt_color VARCHAR(7),
  defense _text NOT NULL DEFAULT '{}',
  key_points _text NOT NULL DEFAULT '{}',
  common_mistakes _text NOT NULL DEFAULT '{}',

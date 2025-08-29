@@ -6,10 +6,12 @@ export interface OneStepDefinition {
   beltColor: string;
   followUpBeltRank: string;
   followUpBeltColor: string;
+  secondFollowUpBeltRank: string;
+  secondFollowUpBeltColor: string;
   defense: string[];
   keyPoints: string[];
   commonMistakes: string[];
-  FirstFollowUp: string[];
-  SecondFollowUp: string[];
+  firstFollowUp: string[];
+  secondFollowUp: string[];
   comment: string;
 }
