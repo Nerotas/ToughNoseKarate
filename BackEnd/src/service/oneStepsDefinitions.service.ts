@@ -27,13 +27,24 @@ export class OneStepsDefinitionsService {
         if (!Array.isArray(normalized[field])) {
           normalized[field] = [normalized[field]];
         }
-        // Use Sequelize literal to properly format PostgreSQL arrays with single quotes
-        const arrayString = normalized[field]
-          .map((item: any) => `'${String(item).replace(/'/g, "''")}'`)
-          .join(',');
-        normalized[field] = this.sequelize.literal(`ARRAY[${arrayString}]`);
+
+        // Filter out empty strings
+        const filteredArray = normalized[field].filter(
+          (item: any) => item && String(item).trim(),
+        );
+
+        if (filteredArray.length > 0) {
+          // Use Sequelize literal to properly format PostgreSQL arrays with single quotes
+          const arrayString = filteredArray
+            .map((item: any) => `'${String(item).replace(/'/g, "''")}'`)
+            .join(',');
+          normalized[field] = this.sequelize.literal(`ARRAY[${arrayString}]`);
+        } else {
+          // Set empty array with explicit type cast for PostgreSQL
+          normalized[field] = this.sequelize.literal('ARRAY[]::text[]');
+        }
       } else {
-        // Set empty array as default for null/undefined values
+        // Set empty array as default for null/undefined values with explicit type cast
         normalized[field] = this.sequelize.literal('ARRAY[]::text[]');
       }
     });
