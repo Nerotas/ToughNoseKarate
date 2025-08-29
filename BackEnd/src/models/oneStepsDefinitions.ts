@@ -21,8 +21,8 @@ export interface oneStepsDefinitionsAttributes {
   defense: string[];
   keyPoints: string[];
   commonMistakes: string[];
-  FirstFollowUp: string[];
-  SecondFollowUp: string[];
+  firstFollowUp: string[];
+  secondFollowUp: string[];
   comment: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -60,20 +60,36 @@ export class oneStepsDefinitions
   @Column({ field: 'second_follow_up_belt_color', type: DataType.STRING(7) })
   declare secondFollowUpBeltColor: string;
 
-  @Column({ type: DataType.ARRAY(DataType.TEXT) })
+  @Column({ type: DataType.ARRAY(DataType.TEXT), defaultValue: [] })
   declare defense: string[];
 
-  @Column({ field: 'key_points', type: DataType.ARRAY(DataType.TEXT) })
+  @Column({
+    field: 'key_points',
+    type: DataType.ARRAY(DataType.TEXT),
+    defaultValue: [],
+  })
   declare keyPoints: string[];
 
-  @Column({ field: 'common_mistakes', type: DataType.ARRAY(DataType.TEXT) })
+  @Column({
+    field: 'common_mistakes',
+    type: DataType.ARRAY(DataType.TEXT),
+    defaultValue: [],
+  })
   declare commonMistakes: string[];
 
-  @Column({ field: 'first_follow_up', type: DataType.ARRAY(DataType.TEXT) })
-  declare FirstFollowUp: string[];
+  @Column({
+    field: 'first_follow_up',
+    type: DataType.ARRAY(DataType.TEXT),
+    defaultValue: [],
+  })
+  declare firstFollowUp: string[];
 
-  @Column({ field: 'second_follow_up', type: DataType.ARRAY(DataType.TEXT) })
-  declare SecondFollowUp: string[];
+  @Column({
+    field: 'second_follow_up',
+    type: DataType.ARRAY(DataType.TEXT),
+    defaultValue: [],
+  })
+  declare secondFollowUp: string[];
 
   @Column({ type: DataType.TEXT, allowNull: true })
   declare comment: string;
