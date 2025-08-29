@@ -106,7 +106,6 @@ export default function KicksClient() {
               kick={kick}
               refetchKicks={refetchKicks}
               getDifficultyColor={getDifficultyColor}
-              getBeltTextColor={getBeltTextColor}
             />
           ))}
         </Grid>

@@ -100,12 +100,7 @@ export default function PunchesClient() {
 
           {punchDefinitions &&
             punchDefinitions.map((punch) => (
-              <PunchCard
-                key={punch.id}
-                punch={punch}
-                getBeltTextColor={getBeltTextColor}
-                refetchPunches={refetchPunches}
-              />
+              <PunchCard key={punch.id} punch={punch} refetchPunches={refetchPunches} />
             ))}
         </Grid>
 

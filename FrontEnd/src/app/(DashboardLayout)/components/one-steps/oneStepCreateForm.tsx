@@ -20,6 +20,7 @@ import { IconSwords, IconArrowRight, IconMessage2 } from '@tabler/icons-react';
 import * as Yup from 'yup';
 import { BELT_RANKS } from 'constants/data/BeltRanks';
 import { oneStepCreationValidationSchema } from 'utils/validation/schemas';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 
 type OneStepCreate = Omit<OneStepDefinition, 'id'> & { id?: string };
 
@@ -28,11 +29,8 @@ const defaultValues: OneStepCreate = {
   name: '',
   description: '',
   beltRank: '',
-  beltColor: '',
   followUpBeltRank: '',
-  followUpBeltColor: '',
   secondFollowUpBeltRank: '',
-  secondFollowUpBeltColor: '',
   defense: [],
   keyPoints: [],
   commonMistakes: [],
@@ -53,6 +51,12 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
     // Normalize array fields to ensure empty arrays are properly handled
     const normalizedPayload = {
       ...payload,
+      beltColor: getBeltColor(payload.beltRank),
+      beltTextColor: getBeltTextColor(payload.beltRank),
+      followUpBeltColor: getBeltColor(payload.followUpBeltRank),
+      followUpBeltTextColor: getBeltTextColor(payload.followUpBeltRank),
+      secondFollowUpBeltColor: getBeltColor(payload.secondFollowUpBeltRank),
+      secondFollowUpBeltTextColor: getBeltTextColor(payload.secondFollowUpBeltRank),
       defense: Array.isArray(payload.defense)
         ? payload.defense.filter((item) => item && item.trim())
         : [],
@@ -149,24 +153,6 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
                       error={Boolean(errors.beltRank && touched.beltRank)}
                       helperText={
                         errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''
-                      }
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      required
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={
-                        errors.beltColor && touched.beltColor ? (errors as any).beltColor : ''
                       }
                     />
                   )}
@@ -326,23 +312,6 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
                           )}
                         </Field>
                       </Grid>
-                      <Grid size={{ xs: 12, sm: 4 }}>
-                        <Field name='followUpBeltColor'>
-                          {({ field }: any) => (
-                            <TextField
-                              {...field}
-                              fullWidth
-                              label='Belt Color'
-                              placeholder='e.g., Yellow'
-                              error={Boolean(errors.beltColor && touched.beltColor)}
-                              helperText={
-                                errors.beltColor && touched.beltColor ? errors.beltColor : ''
-                              }
-                              required
-                            />
-                          )}
-                        </Field>
-                      </Grid>
                       <Grid size={12}>
                         <FieldArray name='firstFollowUp'>
                           {({ push, remove }) => (
@@ -413,23 +382,6 @@ const OneStepCreateForm = ({ refetchOneSteps, handleCloseCreate }: OneStepCreate
                                 ))}
                               </Select>
                             </FormControl>
-                          )}
-                        </Field>
-                      </Grid>
-                      <Grid size={{ xs: 12, sm: 4 }}>
-                        <Field name='secondFollowUpBeltColor'>
-                          {({ field }: any) => (
-                            <TextField
-                              {...field}
-                              fullWidth
-                              label='Belt Color'
-                              placeholder='e.g., Yellow'
-                              error={Boolean(errors.beltColor && touched.beltColor)}
-                              helperText={
-                                errors.beltColor && touched.beltColor ? errors.beltColor : ''
-                              }
-                              required
-                            />
                           )}
                         </Field>
                       </Grid>

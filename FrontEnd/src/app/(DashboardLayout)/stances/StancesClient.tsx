@@ -37,9 +37,7 @@ export default function StancesClient() {
   // Use API data only
   const displayStances = orderByBeltRank(stancesDefinitions || [], (item) => item.beltRank);
 
-  const getBeltTextColor = (beltColor: string) => {
-    return beltColor === '#FFFFFF' || beltColor === '#FFD700' ? '#000000' : '#FFFFFF';
-  };
+
   const refetchStances = async () => {
     await refetch();
   };
@@ -86,7 +84,6 @@ export default function StancesClient() {
               key={stance.id}
               stance={stance}
               refetchStances={refetchStances}
-              getBeltTextColor={getBeltTextColor}
             />
           ))}
         </Grid>

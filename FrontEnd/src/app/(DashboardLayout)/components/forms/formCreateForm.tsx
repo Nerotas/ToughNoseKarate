@@ -1,6 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { FormDefinitions } from 'models/Forms/FormDefinitions';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { TextField, Button, Box, Typography, Grid, IconButton, Stack } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
@@ -12,26 +13,23 @@ const validationSchema = Yup.object({
   meaning: Yup.string().trim().max(500, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
-  beltTextColor: Yup.string().trim().required('Required'),
   difficultyLevel: Yup.number().min(1).max(10).required('Required'),
   keyPoints: Yup.array().of(Yup.string().trim().max(500, 'Too long')).default([]),
   videoLink: Yup.string().trim().url('Must be a valid URL').optional(),
 });
 
-const defaultValues: Omit<FormDefinitions, 'id'> & { id?: number } = {
-  id: undefined,
-  formName: '',
-  koreanName: '',
-  meaning: '',
-  beltRank: '',
-  beltColor: '',
-  beltTextColor: '',
-  difficultyLevel: 1,
-  description: '',
-  keyPoints: [],
-  videoLink: '',
-};
+const defaultValues: Omit<FormDefinitions, 'id' | 'beltColor' | 'beltTextColor'> & { id?: number } =
+  {
+    id: undefined,
+    formName: '',
+    koreanName: '',
+    meaning: '',
+    beltRank: '',
+    difficultyLevel: 1,
+    description: '',
+    keyPoints: [],
+    videoLink: '',
+  };
 
 interface FormCreateFormProps {
   refetchForms: () => Promise<void>;
@@ -40,7 +38,11 @@ interface FormCreateFormProps {
 
 const FormCreateForm = ({ refetchForms, handleCloseCreate }: FormCreateFormProps) => {
   const onSubmit = async (values: typeof defaultValues) => {
-    const payload: Partial<FormDefinitions> = { ...values } as any;
+    const payload: FormDefinitions = {
+      ...values,
+      beltColor: getBeltColor(values.beltRank),
+      beltTextColor: getBeltTextColor(values.beltRank),
+    } as FormDefinitions;
     await axiosInstance.post(`/form-definitions`, payload);
     await refetchForms();
     handleCloseCreate();
@@ -154,44 +156,6 @@ const FormCreateForm = ({ refetchForms, handleCloseCreate }: FormCreateFormProps
                       error={Boolean(errors.beltRank && touched.beltRank)}
                       helperText={
                         errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''
-                      }
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      required
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={
-                        errors.beltColor && touched.beltColor ? (errors as any).beltColor : ''
-                      }
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Field name='beltTextColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Text Color'
-                      placeholder='e.g., #000000'
-                      required
-                      error={Boolean(errors.beltTextColor && touched.beltTextColor)}
-                      helperText={
-                        errors.beltTextColor && touched.beltTextColor
-                          ? (errors as any).beltTextColor
-                          : ''
                       }
                     />
                   )}

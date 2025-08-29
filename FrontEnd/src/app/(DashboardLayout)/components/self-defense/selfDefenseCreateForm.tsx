@@ -17,6 +17,7 @@ import {
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { SelfDefenseDefinition } from 'models/SelfDefense/SelfDefense';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 
 const validationSchema = Yup.object({
   name: Yup.string().trim().min(2, 'Too short').max(100, 'Too long').required('Required'),
@@ -43,7 +44,6 @@ const defaultValues: Omit<SelfDefenseDefinition, 'id'> & { id?: string } = {
   korean: '',
   description: '',
   beltRank: '',
-  beltColor: '',
   category: 'Standing',
   difficulty: 'Beginner',
   scenario: '',
@@ -163,21 +163,7 @@ const SelfDefenseCreateForm = ({
                 </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
+
 
               <Grid size={{ xs: 12, sm: 3 }}>
                 <Field name='category'>

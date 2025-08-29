@@ -31,13 +31,7 @@ describe('BlockCard', () => {
 
   it('renders full block data', () => {
     mockUseAuth.mockReturnValue({ isAuthenticated: true, instructor: { role: 'admin' } });
-    render(
-      <BlockCard
-        block={baseBlock as any}
-        getBeltTextColor={getBeltTextColor}
-        refetchBlocks={refetchBlocks}
-      />
-    );
+    render(<BlockCard block={baseBlock as any} refetchBlocks={refetchBlocks} />);
 
     expect(screen.getByText('High Block')).toBeInTheDocument();
     expect(screen.getByText('Upper Defense')).toBeInTheDocument();
@@ -52,39 +46,21 @@ describe('BlockCard', () => {
 
   it('shows edit and delete chips for authenticated instructor', () => {
     mockUseAuth.mockReturnValue({ isAuthenticated: true, instructor: { role: 'admin' } });
-    render(
-      <BlockCard
-        block={baseBlock as any}
-        getBeltTextColor={getBeltTextColor}
-        refetchBlocks={refetchBlocks}
-      />
-    );
+    render(<BlockCard block={baseBlock as any} refetchBlocks={refetchBlocks} />);
     expect(screen.getByText('Edit')).toBeInTheDocument();
     expect(screen.getByText('Delete')).toBeInTheDocument();
   });
 
   it('hides edit/delete when not authenticated', () => {
     mockUseAuth.mockReturnValue({ isAuthenticated: false, instructor: null });
-    render(
-      <BlockCard
-        block={baseBlock as any}
-        getBeltTextColor={getBeltTextColor}
-        refetchBlocks={refetchBlocks}
-      />
-    );
+    render(<BlockCard block={baseBlock as any} refetchBlocks={refetchBlocks} />);
     expect(screen.queryByText('Edit')).not.toBeInTheDocument();
     expect(screen.queryByText('Delete')).not.toBeInTheDocument();
   });
 
   it('opens edit dialog when Edit is clicked', () => {
     mockUseAuth.mockReturnValue({ isAuthenticated: true, instructor: { role: 'admin' } });
-    render(
-      <BlockCard
-        block={baseBlock as any}
-        getBeltTextColor={getBeltTextColor}
-        refetchBlocks={refetchBlocks}
-      />
-    );
+    render(<BlockCard block={baseBlock as any} refetchBlocks={refetchBlocks} />);
     fireEvent.click(screen.getByText('Edit'));
     // Dialog title from BlockEditModule
     expect(screen.getByText('Edit Block')).toBeInTheDocument();

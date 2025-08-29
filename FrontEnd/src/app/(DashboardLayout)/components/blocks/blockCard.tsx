@@ -14,16 +14,15 @@ import { IconShield, IconCheckbox, IconX, IconTarget, IconEdit } from '@tabler/i
 import { BlockDefinition } from 'models/Blocks/Blocks';
 import { useState } from 'react';
 import { useAuth } from '../../../../hooks/useAuth';
+import { getBeltColor, getBeltTextColor } from '../../../../utils/helpers/BeltColors';
 import BlockDeleteModule from './blockDeleteModule';
 import BlockEditModule from './blockEditModule';
 
 const BlockCard = ({
   block,
-  getBeltTextColor,
   refetchBlocks,
 }: {
   block: BlockDefinition;
-  getBeltTextColor: (color: string) => string;
   refetchBlocks: () => Promise<void>;
 }) => {
   const { isAuthenticated, instructor } = useAuth();
@@ -72,10 +71,10 @@ const BlockCard = ({
                 icon={<IconShield />}
                 label={block.beltRank}
                 sx={{
-                  backgroundColor: block.beltColor,
-                  color: getBeltTextColor(block.beltColor as string),
+                  backgroundColor: getBeltColor(block.beltRank),
+                  color: getBeltTextColor(block.beltRank),
                   fontWeight: 'bold',
-                  border: block.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                  border: getBeltColor(block.beltRank) === '#FFFFFF' ? '1px solid #ccc' : 'none',
                 }}
               />
               {isAuthenticated && instructor && (

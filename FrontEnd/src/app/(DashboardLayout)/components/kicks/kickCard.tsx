@@ -17,15 +17,15 @@ import { useState } from 'react';
 import KickEditModule from './kickEditModule';
 import KickDeleteModule from './kickDeleteModule';
 import { KickDefinition } from 'models/Kicks/Kicks';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 
 interface KickCardProps {
   kick: KickDefinition;
   refetchKicks: () => Promise<void>;
   getDifficultyColor: (difficulty: string) => 'success' | 'warning' | 'error' | 'default';
-  getBeltTextColor: (beltColor: string) => string;
 }
 
-const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: KickCardProps) => {
+const KickCard = ({ kick, refetchKicks, getDifficultyColor }: KickCardProps) => {
   const { isAuthenticated, instructor } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -72,10 +72,10 @@ const KickCard = ({ kick, refetchKicks, getDifficultyColor, getBeltTextColor }: 
                   icon={<IconRun />}
                   label={kick.beltRank}
                   sx={{
-                    backgroundColor: kick.beltColor,
-                    color: getBeltTextColor(kick.beltColor),
+                    backgroundColor: getBeltColor(kick.beltRank),
+                    color: getBeltTextColor(kick.beltRank),
                     fontWeight: 'bold',
-                    border: kick.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                    border: getBeltColor(kick.beltRank) === '#FFFFFF' ? '1px solid #ccc' : 'none',
                   }}
                 />
               </Box>

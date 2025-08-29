@@ -14,7 +14,6 @@ const defaultValues: StanceCreate = {
   korean: '',
   description: '',
   beltRank: '',
-  beltColor: '',
   position: '',
   bodyPosition: '',
   keyPoints: [],
@@ -27,7 +26,6 @@ const validationSchema = Yup.object({
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
   position: Yup.string().trim().max(500, 'Too long').optional(),
   bodyPosition: Yup.string().trim().max(500, 'Too long').optional(),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
@@ -134,24 +132,8 @@ const StanceCreateForm = ({ refetchStances, handleCloseCreate }: StanceCreateFor
                       placeholder='e.g., 8th Gup'
                       required
                       error={Boolean(errors.beltRank && touched.beltRank)}
-                      helperText={errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''}
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      required
-                      error={Boolean(errors.beltColor && touched.beltColor)}
                       helperText={
-                        errors.beltColor && touched.beltColor ? (errors as any).beltColor : ''
+                        errors.beltRank && touched.beltRank ? (errors as any).beltRank : ''
                       }
                     />
                   )}

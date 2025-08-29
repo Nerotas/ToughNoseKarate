@@ -4,7 +4,6 @@ export interface SelfDefenseDefinition {
   korean: string;
   description: string;
   beltRank: string;
-  beltColor: string;
   category: string;
   difficulty: string;
   scenario: string;

@@ -26,8 +26,6 @@ describe('FormsCard Component', () => {
     meaning: 'Heaven and Earth',
     description: 'Fundamental techniques',
     beltRank: 'White Belt',
-    beltColor: '#FFFFFF',
-    beltTextColor: '#000000',
     difficultyLevel: 1,
     keyPoints: ['Proper stance', 'Hand placement', 'Breathing'],
     videoLink: 'https://example.com/video',

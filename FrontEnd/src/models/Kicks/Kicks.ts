@@ -4,7 +4,6 @@ export interface KickDefinition {
   korean: string;
   description: string;
   beltRank: string;
-  beltColor: string;
   target: string;
   execution: string[];
   keyPoints: string[];

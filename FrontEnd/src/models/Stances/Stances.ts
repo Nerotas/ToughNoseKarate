@@ -3,7 +3,6 @@ export interface StanceDefinition {
   name: string;
   korean: string;
   beltRank: string;
-  beltColor: string;
   description: string;
   position: string;
   bodyPosition: string;

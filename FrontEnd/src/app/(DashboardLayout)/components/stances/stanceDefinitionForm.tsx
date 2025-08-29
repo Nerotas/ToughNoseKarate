@@ -11,7 +11,6 @@ const validationSchema = Yup.object({
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
   position: Yup.string().trim().max(500, 'Too long').optional(),
   bodyPosition: Yup.string().trim().max(500, 'Too long').optional(),
   keyPoints: Yup.array(Yup.string().trim().max(500, 'Too long')).default([]),
@@ -36,7 +35,6 @@ const StanceDefinitionForm = ({
     korean: stance.korean || '',
     description: stance.description || '',
     beltRank: stance.beltRank || '',
-    beltColor: stance.beltColor || '',
     position: stance.position || '',
     bodyPosition: stance.bodyPosition || '',
     keyPoints: stance.keyPoints || [],
@@ -138,22 +136,6 @@ const StanceDefinitionForm = ({
                       placeholder='e.g., 8th Gup'
                       error={Boolean(errors.beltRank && touched.beltRank)}
                       helperText={errors.beltRank && touched.beltRank ? errors.beltRank : ''}
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={errors.beltColor && touched.beltColor ? errors.beltColor : ''}
                       required
                     />
                   )}

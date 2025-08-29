@@ -24,7 +24,6 @@ describe('BlockCard Component', () => {
     blockName: 'High Block',
     technique: 'Defensive Block',
     beltRank: 'White Belt',
-    beltColor: '#FFFFFF',
     stance: 'Front stance',
     execution: ['Step 1: Prepare position', 'Step 2: Execute block', 'Step 3: Return to ready'],
     keyPoints: ['Keep elbow up', 'Use forearm', 'Maintain balance'],
@@ -54,13 +53,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     expect(screen.getByText('High Block')).toBeInTheDocument();
     expect(screen.getByText('Defensive Block')).toBeInTheDocument();
@@ -80,13 +73,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     expect(screen.getByText('Stance:')).toBeInTheDocument();
     expect(screen.getByText('Front stance')).toBeInTheDocument();
@@ -106,13 +93,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={blockWithoutStance}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={blockWithoutStance} refetchBlocks={mockRefetch} />);
 
     expect(screen.queryByText('Stance:')).not.toBeInTheDocument();
   });
@@ -130,13 +111,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     expect(screen.getByText('Execution Steps:')).toBeInTheDocument();
     expect(screen.getByText('1. Step 1: Prepare position')).toBeInTheDocument();
@@ -158,13 +133,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={blockWithoutExecution}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={blockWithoutExecution} refetchBlocks={mockRefetch} />);
 
     expect(screen.queryByText('Execution Steps:')).not.toBeInTheDocument();
   });
@@ -182,13 +151,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     expect(screen.getByText('Key Points:')).toBeInTheDocument();
     expect(screen.getByText('• Keep elbow up')).toBeInTheDocument();
@@ -209,13 +172,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     expect(screen.getByText('Common Mistakes:')).toBeInTheDocument();
     expect(screen.getByText('• Dropping elbow')).toBeInTheDocument();
@@ -236,13 +193,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     expect(screen.getByText('Applications:')).toBeInTheDocument();
     expect(screen.getByText('Against overhead attacks')).toBeInTheDocument();
@@ -263,13 +214,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     expect(screen.getByText('Edit')).toBeInTheDocument();
     expect(screen.getByText('Delete')).toBeInTheDocument();
@@ -288,13 +233,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     expect(screen.queryByText('Edit')).not.toBeInTheDocument();
     expect(screen.queryByText('Delete')).not.toBeInTheDocument();
@@ -313,13 +252,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     const editButton = screen.getByText('Edit');
     fireEvent.click(editButton);
@@ -340,13 +273,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     const deleteButton = screen.getByText('Delete');
     fireEvent.click(deleteButton);
@@ -367,15 +294,9 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
-    expect(mockGetBeltTextColor).toHaveBeenCalledWith('#FFFFFF');
+    expect(mockGetBeltTextColor).toHaveBeenCalledWith('White Belt');
   });
 
   it('applies correct styling for white beltRank', () => {
@@ -391,13 +312,7 @@ describe('BlockCard Component', () => {
       profileError: null,
     });
 
-    const { container } = render(
-      <BlockCard
-        block={mockBlock}
-        getBeltTextColor={mockGetBeltTextColor}
-        refetchBlocks={mockRefetch}
-      />
-    );
+    const { container } = render(<BlockCard block={mockBlock} refetchBlocks={mockRefetch} />);
 
     // Check that the chip component is rendered
     const chip = container.querySelector('.MuiChip-root');

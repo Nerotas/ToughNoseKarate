@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { IconMan, IconPlayerPlay, IconChevronDown } from '@tabler/icons-react';
 import { FormDefinitions } from 'models/Forms/FormDefinitions';
+import { getBeltColor, getBeltTextColor } from 'utils/helpers/BeltColors';
 import FormEditModule from './formEditModule';
 import FormDeleteModule from './formDeleteModule';
 import { useAuth } from 'hooks/useAuth';
@@ -90,10 +91,10 @@ const FormsCard = ({ form, refetchForms }: FormsCardProps) => {
                 icon={<IconMan />}
                 label={form.beltRank}
                 sx={{
-                  backgroundColor: form.beltColor,
-                  color: form.beltTextColor,
+                  backgroundColor: getBeltColor(form.beltRank),
+                  color: getBeltTextColor(form.beltRank),
                   fontWeight: 'bold',
-                  border: form.beltColor === '#FFFFFF' ? '1px solid #ccc' : 'none',
+                  border: getBeltColor(form.beltRank) === '#FFFFFF' ? '1px solid #ccc' : 'none',
                 }}
               />
             </Box>

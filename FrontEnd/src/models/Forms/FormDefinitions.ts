@@ -4,8 +4,6 @@ export class FormDefinitions {
   koreanName?: string = '';
   meaning?: string = '';
   beltRank: string = '';
-  beltColor: string = '';
-  beltTextColor: string = '';
   difficultyLevel: number = 0;
   description?: string = '';
   keyPoints?: string[] = [];

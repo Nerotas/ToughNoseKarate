@@ -11,7 +11,6 @@ const defaultValues: PunchCreate = {
   korean: '',
   description: '',
   beltRank: '',
-  beltColor: '',
   target: '',
   execution: [],
   keyPoints: [],
@@ -128,23 +127,6 @@ const PunchCreateForm = ({ refetchPunches, handleCloseCreate }: PunchCreateFormP
                 </Field>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Field name='beltColor'>
-                  {({ field }: any) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label='Belt Color'
-                      placeholder='e.g., Yellow'
-                      error={Boolean(errors.beltColor && touched.beltColor)}
-                      helperText={
-                        errors.beltColor && touched.beltColor ? (errors as any).beltColor : ''
-                      }
-                      required
-                    />
-                  )}
-                </Field>
-              </Grid>
 
               {/* Technical Details */}
               <Grid size={12}>
