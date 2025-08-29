@@ -24,7 +24,6 @@ const validationSchema = Yup.object({
   korean: Yup.string().trim().max(100, 'Too long').optional(),
   description: Yup.string().trim().max(2000, 'Too long').optional(),
   beltRank: Yup.string().trim().required('Required'),
-  beltColor: Yup.string().trim().required('Required'),
   category: Yup.string()
     .oneOf(['Releases', 'Escapes', 'Submissions', 'Ground Control', 'Standing'])
     .required('Required'),
@@ -66,7 +65,12 @@ const SelfDefenseCreateForm = ({
 }: SelfDefenseCreateFormProps) => {
   const onSubmit = async (values: typeof defaultValues) => {
     const { id, ...payload } = values;
-    await axiosInstance.post(`/self-defense-definitions`, payload);
+    const payloadWithColors = {
+      ...payload,
+      beltColor: getBeltColor(payload.beltRank),
+      beltTextColor: getBeltTextColor(payload.beltRank),
+    };
+    await axiosInstance.post(`/self-defense-definitions`, payloadWithColors);
     await refetchSelfDefense();
     handleCloseCreate();
   };
