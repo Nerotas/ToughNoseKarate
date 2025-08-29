@@ -268,7 +268,6 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
         open={editStudentDialogOpen}
         onClose={() => setEditStudentDialogOpen(false)}
         student={student}
-        beltRequirements={beltRequirements || []}
         onStudentUpdated={handleStudentUpdate}
       />
     </PageContainer>

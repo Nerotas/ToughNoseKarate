@@ -13,20 +13,17 @@ import {
 } from '@mui/material';
 import { IconArrowRight, IconAward } from '@tabler/icons-react';
 import { useState } from 'react';
-import { BeltRequirements } from 'models/BeltRequirements/BeltRequirements';
 
 // Student interface for API data
 import { Student } from 'models/Students/Students';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { getBeltColor, getBeltTextColor } from '../../../../utils/helpers/BeltColors';
 import { getNextBeltRank } from '../../../../utils/helpers/Student';
-import { BELT_RANKS } from '../../../../constants/data/BeltRanks';
 
 interface PromoteStudentDialogProps {
   open: boolean;
   onClose: () => void;
   student: Student | null;
-  beltRequirements: BeltRequirements[];
   refetchStudents: () => Promise<void>;
 }
 

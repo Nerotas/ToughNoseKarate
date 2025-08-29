@@ -18,16 +18,15 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Formik } from 'formik';
-import { BeltRequirements } from '../../../../models/BeltRequirements/BeltRequirements';
 import axiosInstance from 'utils/helpers/AxiosInstance';
 import { Student, StudentFormData } from 'models/Students/Students';
 import { editValidationSchema, getEditStudentInitialValues } from 'utils/helpers/Student';
+import { BELT_RANKS } from 'constants/data/BeltRanks';
 
 interface EditStudentModuleProps {
   open: boolean;
   onClose: () => void;
   student: Student | null;
-  beltRequirements: BeltRequirements[];
   onStudentUpdated?: () => void;
 }
 
@@ -35,7 +34,6 @@ const EditStudentModule = ({
   open,
   onClose,
   student,
-  beltRequirements,
   onStudentUpdated,
 }: EditStudentModuleProps) => {
   const [error, setError] = useState<string | null>(null);
@@ -256,13 +254,11 @@ const EditStudentModule = ({
                           onBlur={handleBlur}
                           label='Current Belt Rank'
                         >
-                          {beltRequirements
-                            .sort((a, b) => a.beltOrder - b.beltOrder)
-                            .map((belt) => (
-                              <MenuItem key={belt.beltRank} value={belt.beltRank}>
-                                {belt.beltRank} Belt
-                              </MenuItem>
-                            ))}
+                          {BELT_RANKS.map((belt) => (
+                            <MenuItem key={belt.beltRank} value={belt.beltRank}>
+                              {belt.beltRank} Belt
+                            </MenuItem>
+                          ))}
                         </Select>
                         {touched.beltRank && errors.beltRank && (
                           <Typography variant='caption' color='error' sx={{ mt: 0.5, ml: 2 }}>

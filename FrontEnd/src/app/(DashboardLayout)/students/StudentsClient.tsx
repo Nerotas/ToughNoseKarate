@@ -18,7 +18,6 @@ import { useRouter } from 'next/navigation';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import useGet from '../../../hooks/useGet';
-import { BeltRequirements } from '../../../models/BeltRequirements/BeltRequirements';
 import { useState } from 'react';
 import Loading from 'app/loading';
 import AddStudentModule from '../components/students/AddStudentModule';
@@ -43,23 +42,6 @@ const StudentsClient = () => {
 
   // State for Promote Student dialog
   const [promoteStudentOpen, setPromoteStudentOpen] = useState(false);
-
-  // Fetch belt requirements for colors and progression
-  const {
-    data: beltRequirements,
-    isLoading: beltRequirementsLoading,
-    isFetching: beltRequirementsFetching,
-    error: beltRequirementsError,
-  } = useGet<BeltRequirements[]>({
-    apiLabel: 'belt-requirements',
-    url: '/belt-Requirements',
-    id: 'getAll',
-    fallbackData: [],
-    options: {
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  });
 
   // Use the new useGet hook to fetch students from API
   const {
@@ -261,7 +243,7 @@ const StudentsClient = () => {
   return (
     <PageContainer title='Students' description='Student Management and Progress Tracking'>
       <Box>
-        {(isError || beltRequirementsError) && (
+        {(isError) && (
           <Alert severity='warning' sx={{ mb: 3 }}>
             Unable to connect to the backend. Displaying sample data.
           </Alert>
@@ -311,7 +293,7 @@ const StudentsClient = () => {
         />
 
         {/* Loader */}
-        {(isLoading || beltRequirementsLoading || isFetching || beltRequirementsFetching) && (
+        {(isLoading ||  isFetching) && (
           <Loading />
         )}
 
@@ -359,7 +341,6 @@ const StudentsClient = () => {
         <AddStudentModule
           open={addStudentOpen}
           onClose={() => setAddStudentOpen(false)}
-          beltRequirements={beltRequirements || []}
           onStudentAdded={handleStudentAdded}
         />
 
@@ -368,7 +349,6 @@ const StudentsClient = () => {
           open={editStudentOpen}
           onClose={handleEditStudentClose}
           student={selectedStudent}
-          beltRequirements={beltRequirements || []}
           onStudentUpdated={handleStudentUpdated}
         />
 
@@ -377,7 +357,6 @@ const StudentsClient = () => {
           open={promoteStudentOpen}
           onClose={handlePromoteStudentClose}
           student={selectedStudent as Student | null}
-          beltRequirements={beltRequirements || []}
           refetchStudents={refetchStudents}
         />
       </Box>
