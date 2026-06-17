@@ -28,7 +28,18 @@ async function runMigrations() {
     await sequelize.authenticate();
     console.log('✅ Database connection successful');
 
-    const migrationsDir = path.resolve(process.cwd(), 'DB', 'migrations');
+    // Probe multiple possible locations for migrations directory
+    const migrationsDirCandidates = [
+      path.resolve(process.cwd(), 'DB', 'migrations'),
+      path.resolve(process.cwd(), '..', 'DB', 'migrations'),
+    ];
+    const migrationsDir = migrationsDirCandidates.find((dir) => fs.existsSync(dir));
+    if (!migrationsDir) {
+      throw new Error(
+        `❌ Migrations directory not found. Tried:\n${migrationsDirCandidates.map((d) => `  - ${d}`).join('\n')}`
+      );
+    }
+
     const migrationFiles = fs
       .readdirSync(migrationsDir)
       .filter((file) => file.endsWith('.sql'))
