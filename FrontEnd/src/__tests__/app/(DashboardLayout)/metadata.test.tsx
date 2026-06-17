@@ -14,7 +14,7 @@ describe('Metadata Configuration', () => {
   it('has correct Open Graph configuration', () => {
     expect(metadata.openGraph).toBeDefined();
     expect(metadata.openGraph.title).toBe('Tough Nose Karate');
-    expect(metadata.openGraph.url).toBe('https://toughnosekarate.netlify.app/');
+    expect(metadata.openGraph.url).toBe('https://www.toughnosekarate.com/');
     expect(metadata.openGraph.description).toBe(
       'Empowering Tang Soo Do students with modern martial arts management.'
     );
