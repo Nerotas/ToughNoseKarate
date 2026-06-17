@@ -7,7 +7,12 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
   webpack: (config, { dev, isServer }) => {
@@ -65,6 +70,16 @@ const nextConfig = {
     };
 
     return config;
+  },
+  turbopack: {
+    resolveAlias: {
+      '@': './src',
+      '@components': './src/components',
+      '@models': './src/models',
+      '@services': './src/services',
+      '@hooks': './src/hooks',
+      '@helpers': './src/helpers',
+    },
   },
   // Compiler options for better performance
   compiler: {

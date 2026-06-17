@@ -15,11 +15,17 @@ async function bootstrap() {
   expressApp.set('trust proxy', 1);
 
   // CORS config
+  const corsOriginsFromEnv = (process.env.CORS_ORIGINS ?? '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
   const whitelist = new Set(
     [
       !isProd && 'http://localhost:3000', // Only allow localhost in development
-      'https://toughnosekarate.netlify.app',
+      'https://www.toughnosekarate.com',
+      'https://toughnosekarate.com',
       process.env.FRONTEND_URL || '',
+      ...corsOriginsFromEnv,
     ].filter(Boolean) as string[],
   );
 
@@ -35,10 +41,7 @@ async function bootstrap() {
   app.enableCors(<CorsOptions>{
     origin: (origin: string | undefined, cb: CorsOriginCallback) => {
       if (!origin) return cb(null, true); // allow Postman/curl
-      if (
-        whitelist.has(origin) ||
-        (isProd && origin.endsWith('.netlify.app'))
-      ) {
+      if (whitelist.has(origin)) {
         return cb(null, true);
       }
       return cb(new Error(`CORS blocked: ${origin}`), false);
