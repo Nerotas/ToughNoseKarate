@@ -4,7 +4,7 @@ export const metadata = {
     'Tough Nose Karate provides essential resources and management tools for Tang Soo Do students and instructors.',
   openGraph: {
     title: 'Tough Nose Karate',
-    url: 'https://toughnosekarate.netlify.app/',
+    url: 'https://www.toughnosekarate.com/',
     description: 'Empowering Tang Soo Do students with modern martial arts management.',
     images: [
       {

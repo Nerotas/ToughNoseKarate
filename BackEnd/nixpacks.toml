@@ -5,7 +5,7 @@ nixPkgs = ["nodejs"]
 cmds = ["npm install"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["npm run build", "npm run migrate:prod"]
 
 [start]
 cmd = "node dist/src/main.js"

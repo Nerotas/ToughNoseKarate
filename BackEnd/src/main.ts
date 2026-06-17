@@ -18,7 +18,8 @@ async function bootstrap() {
   const whitelist = new Set(
     [
       !isProd && 'http://localhost:3000', // Only allow localhost in development
-      'https://toughnosekarate.netlify.app',
+      'https://www.toughnosekarate.com',
+      'https://toughnosekarate.com',
       process.env.FRONTEND_URL || '',
     ].filter(Boolean) as string[],
   );
