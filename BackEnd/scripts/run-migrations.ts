@@ -28,7 +28,7 @@ async function runMigrations() {
     await sequelize.authenticate();
     console.log('✅ Database connection successful');
 
-    const migrationsDir = path.join(__dirname, '../..', 'DB', 'migrations');
+    const migrationsDir = path.resolve(process.cwd(), 'DB', 'migrations');
     const migrationFiles = fs
       .readdirSync(migrationsDir)
       .filter((file) => file.endsWith('.sql'))
