@@ -12,7 +12,7 @@
     "start:debug": "set PORT=3001 && nest start --debug --watch",
     "start:prod": "node dist/main",
     "migrate": "ts-node -P tsconfig.json scripts/run-migrations.ts",
-    "migrate:prod": "node -r ts-node/register -P tsconfig.json scripts/run-migrations.ts",
+    "migrate:prod": "ts-node -P tsconfig.json scripts/run-migrations.ts"
     "deploy": "railway up",
     "lint": "eslint . --ext .js,.ts,.jsx,.tsx --fix",
     "format": "prettier --write .",
