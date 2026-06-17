@@ -207,7 +207,7 @@ curl https://www.toughnosekarate.com/
 
 ## 🔐 Security Checklist
 
-- [ ] Never commit `.env` files to git
+- [ ] Never commit real secrets to git (keep tracked `.env` files as templates/placeholders only; use `.env.local` for local secrets)
 - [ ] Rotate `JWT_SECRET` after migration
 - [ ] Enable database backups in Supabase
 - [ ] Review database access logs
