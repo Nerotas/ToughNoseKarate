@@ -143,7 +143,7 @@ Access to XMLHttpRequest from origin 'https://www.toughnosekarate.com' has been 
 ```
 Error: unable to verify the first certificate
 ```
-**Fix:** Ensure `DB_SSL=true` and `rejectUnauthorized: false` in [app.module.ts](../BackEnd/src/app.module.ts)
+**Fix:** Ensure `DB_SSL=true` and that the correct CA/certificate chain is configured for the database connection; avoid disabling TLS verification (`rejectUnauthorized: false`) in production.
 
 ### Issue: 404 on New Domain
 **Fix:** Wait for DNS propagation (24-48 hours) and clear browser cache
