@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import BlocksClient from '../../../app/(DashboardLayout)/blocks/BlocksClient';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -17,7 +17,6 @@ jest.mock('../../../hooks/useGet', () => ({
   default: jest.fn(),
 }));
 
-jest.mock('../../../app/loading', () => () => <div data-testid='loading'>Loading...</div>);
 // Mock the heavy create form to avoid unrelated complexity
 jest.mock('../../../app/(DashboardLayout)/components/blocks/blockCreateForm', () => () => (
   <div data-testid='mock-create-form'>Create Form</div>
@@ -39,9 +38,10 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => {
 describe('BlocksClient error + create modal', () => {
   beforeEach(() => jest.clearAllMocks());
 
-  it('shows error demo alert and opens create dialog', async () => {
+  it('shows the load error, retries the request, and opens the create dialog', async () => {
+    const refetch = jest.fn().mockResolvedValue(undefined);
     mockUseAuth.mockReturnValue({ isAuthenticated: true, instructor: { role: 'admin' } });
-    mockUseGet.mockReturnValue({ data: [], isPending: false, isError: true, refetch: jest.fn() });
+    mockUseGet.mockReturnValue({ data: [], isPending: false, isError: true, refetch });
 
     render(
       <TestWrapper>
@@ -49,8 +49,9 @@ describe('BlocksClient error + create modal', () => {
       </TestWrapper>
     );
 
-    // Error (demo) alert present
-    expect(screen.getByText(/Unable to connect to the backend server/)).toBeInTheDocument();
+    expect(screen.getByText('Unable to load blocks. Please try again.')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+    await waitFor(() => expect(refetch).toHaveBeenCalledTimes(1));
 
     // Dialog should not be open initially
     expect(screen.queryByRole('dialog', { name: /Add Block/i })).not.toBeInTheDocument();
@@ -63,5 +64,34 @@ describe('BlocksClient error + create modal', () => {
     expect(await screen.findByRole('dialog', { name: /Add Block/i })).toBeInTheDocument();
     // And our mocked form renders
     expect(screen.getByTestId('mock-create-form')).toBeInTheDocument();
+  });
+
+  it('clears the error after recovery without granting anonymous users create access', () => {
+    mockUseAuth.mockReturnValue({ isAuthenticated: false, instructor: null });
+    mockUseGet.mockReturnValue({
+      data: undefined,
+      isPending: false,
+      isError: true,
+      refetch: jest.fn(),
+    });
+    const { rerender } = render(<BlocksClient />, { wrapper: TestWrapper });
+
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Add Block' })).not.toBeInTheDocument();
+
+    mockUseGet.mockReturnValue({
+      data: [],
+      isPending: false,
+      isError: false,
+      refetch: jest.fn(),
+    });
+    rerender(<BlocksClient />);
+
+    expect(screen.queryByText('Unable to load blocks. Please try again.')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Tang Soo Do Blocking Techniques'
+    );
+    expect(screen.queryByRole('button', { name: 'Add Block' })).not.toBeInTheDocument();
   });
 });

@@ -78,6 +78,27 @@ After deployment, submit `/sitemap.xml` in Google Search Console and inspect the
 public technique URLs. These changes improve crawlability and search signals, not guaranteed
 rankings or local-pack eligibility.
 
+## Google Analytics
+
+The [root layout](./src/app/layout.tsx) loads the Google tag for measurement ID
+`G-2HLMNVXJJ1` across all routes using Next.js `Script` with `afterInteractive`,
+so analytics does not block initial rendering. The tag initializes `window.dataLayer`
+and configures Google Analytics once per app load.
+
+## Tests and coverage
+
+Run `npm run test:ci` for the Jest suite and coverage reports, including
+`coverage/coverage-summary.json`. Generate the same aggregate Markdown report and
+enforce the same threshold as CI with:
+
+```bash
+node scripts/coverage-to-md.js coverage/coverage-summary.json 30
+```
+
+CI requires at least 30% statements, functions, and lines; branch coverage is
+reported but does not gate the build. Jest's existing global thresholds remain
+unchanged. The coverage workflow uses Node.js 22.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
