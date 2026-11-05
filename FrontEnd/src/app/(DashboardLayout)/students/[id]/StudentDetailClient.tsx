@@ -176,7 +176,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     (student?.child && (familyLoading || familyFetching))
   ) {
     return (
-      <PageContainer title='Student Details' description='View student information and progress'>
+      <PageContainer>
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
           <Loading />
         </Box>
@@ -186,7 +186,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
 
   if (studentIsError || !student) {
     return (
-      <PageContainer title='Student Details' description='View student information and progress'>
+      <PageContainer>
         <Box>
           <Alert severity='error' sx={{ mb: 3 }}>
             {studentError ? 'Error loading student data.' : 'Student not found.'}
@@ -203,7 +203,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
   const beltTextColor = getBeltTextColor(student.beltRank);
 
   return (
-    <PageContainer title='Student Details' description='View student information and progress'>
+    <PageContainer>
       <Box>
         {beltRequirementsError && (
           <Alert severity='warning' sx={{ mb: 3 }}>

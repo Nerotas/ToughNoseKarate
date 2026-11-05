@@ -2,20 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { validateRuntimeConfig, shouldEnableDebug } from '../utils/config/frontend.config';
-import Loading from 'app/loading';
 
 interface ConfigValidatorProps {
   children: React.ReactNode;
 }
 
 export default function ConfigValidator({ children }: ConfigValidatorProps) {
-  const [isValid, setIsValid] = useState(false);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
     try {
       validateRuntimeConfig();
-      setIsValid(true);
 
       if (shouldEnableDebug()) {
         console.log('🔧 Configuration validation completed successfully');
@@ -23,17 +20,13 @@ export default function ConfigValidator({ children }: ConfigValidatorProps) {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Configuration validation failed';
       setError(errorMessage);
-      setIsValid(false);
 
       // Log error for debugging
       console.error('❌ Configuration validation failed:', err);
     }
   }, []);
 
-  // Cycle loading snippets while validating
-
-
-  if (!isValid && error) {
+  if (error) {
     return (
       <div
         style={{
@@ -134,30 +127,6 @@ export default function ConfigValidator({ children }: ConfigValidatorProps) {
           >
             Retry
           </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isValid) {
-    // Loading state while validating
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          backgroundColor: '#f5f5f5',
-        }}
-      >
-        <div
-          style={{
-            textAlign: 'center',
-            color: '#666',
-          }}
-        >
-          <Loading />
         </div>
       </div>
     );

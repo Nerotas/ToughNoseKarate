@@ -1,5 +1,9 @@
 import SSRWrapper from '../../../wrappers/SSRWrapper';
 import BeltsClient from './BeltsClient';
+import { getPageMetadata } from '../metadata';
+
+export const metadata = getPageMetadata('/belt-requirements');
+export const revalidate = 60;
 
 /**
  * Server-side rendered Stances page with pre-fetched data

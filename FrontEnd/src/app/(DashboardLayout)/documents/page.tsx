@@ -1,5 +1,12 @@
 import ProtectedRoute from 'components/ProtectedRoute';
 import DocumentsClient from './DocsClient';
+import { getPrivatePageMetadata } from '../metadata';
+
+export const metadata = getPrivatePageMetadata(
+  '/documents',
+  'Documents',
+  'Document management for authorized Tough Nose Karate instructors.'
+);
 
 /**
  * Server-side rendered Students page with pre-fetched data
@@ -12,9 +19,8 @@ import DocumentsClient from './DocsClient';
 
 export default async function StudentsPage() {
   return (
-
-      <ProtectedRoute requiredRole='instructor'>
-        <DocumentsClient />
-      </ProtectedRoute>
+    <ProtectedRoute requiredRole='instructor'>
+      <DocumentsClient />
+    </ProtectedRoute>
   );
 }

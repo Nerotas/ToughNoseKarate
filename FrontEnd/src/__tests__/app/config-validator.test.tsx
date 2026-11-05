@@ -1,6 +1,7 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import ConfigValidator from 'app/config-validator';
 import { validateRuntimeConfig, shouldEnableDebug } from 'utils/config/frontend.config';
+import { renderToString } from 'react-dom/server';
 
 // Mock the config validation functions
 jest.mock('utils/config/frontend.config', () => ({
@@ -31,6 +32,18 @@ describe('ConfigValidator', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+  });
+
+  it('includes page content in server HTML before client effects run', () => {
+    const html = renderToString(
+      <ConfigValidator>
+        <h1>Karate in Plano, TX</h1>
+      </ConfigValidator>
+    );
+
+    expect(html).toContain('<h1>Karate in Plano, TX</h1>');
+    expect(html).not.toContain('Loading...');
+    expect(mockValidateRuntimeConfig).not.toHaveBeenCalled();
   });
 
   it('renders children when validation succeeds', async () => {

@@ -58,13 +58,14 @@ export default function OneStepsClient() {
   };
 
   return (
-    <PageContainer title='One-Step Sparring' description='Tang Soo Do One-Step Sparring Techniques'>
+    <PageContainer>
       {isPending && <Loading />}
 
       <Box>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography
             variant='h2'
+            component='h1'
             gutterBottom
             sx={{
               mb: 3,

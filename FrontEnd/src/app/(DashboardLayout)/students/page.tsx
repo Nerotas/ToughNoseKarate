@@ -1,30 +1,17 @@
-import SSRWrapper from '../../../wrappers/SSRWrapper';
 import StudentsClient from './StudentsClient';
 import ProtectedRoute from '../../../components/ProtectedRoute';
+import { getPrivatePageMetadata } from '../metadata';
 
-/**
- * Server-side rendered Students page with pre-fetched data
- * Uses the reusable SSRWrapper to handle data fetching and hydration
- */
+export const metadata = getPrivatePageMetadata(
+  '/students',
+  'Students',
+  'Student management and progress tracking for authorized instructors.'
+);
 
-//NOTE: This could a static page, but we are using SSR to ensure data is always fresh
-// and to handle any potential dynamic content in the future.
-// This is also for consitency with other pages that require SSR and to all @nerotas to practice SSR patterns
-
-export default async function StudentsPage() {
+export default function StudentsPage() {
   return (
-    <SSRWrapper
-      queries={[
-        {
-          queryKey: ['students', 'getAll'],
-          url: '/students',
-        },
-      ]}
-      fallbackOnError={true}
-    >
-      <ProtectedRoute requiredRole='instructor'>
-        <StudentsClient />
-      </ProtectedRoute>
-    </SSRWrapper>
+    <ProtectedRoute requiredRole='instructor'>
+      <StudentsClient />
+    </ProtectedRoute>
   );
 }

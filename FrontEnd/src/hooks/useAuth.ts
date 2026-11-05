@@ -26,6 +26,7 @@ export const useAuth = () => {
   } = useQuery({
     queryKey: authKeys.profile(),
     queryFn: authService.getProfile,
+    placeholderData: undefined,
     enabled: false,
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes

@@ -37,17 +37,16 @@ export default function StancesClient() {
   // Use API data only
   const displayStances = orderByBeltRank(stancesDefinitions || [], (item) => item.beltRank);
 
-
   const refetchStances = async () => {
     await refetch();
   };
 
   return (
-    <PageContainer title='Stances' description='Tang Soo Do Basic Stances and Positions'>
+    <PageContainer>
       {isPending && <Loading />}
       <Box>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='h2' gutterBottom sx={{ mb: 3 }}>
+          <Typography variant='h2' component='h1' gutterBottom sx={{ mb: 3 }}>
             Stances
           </Typography>
           {canCreate && (
@@ -80,11 +79,7 @@ export default function StancesClient() {
 
         <Grid container spacing={3}>
           {displayStances.map((stance) => (
-            <StancesCard
-              key={stance.id}
-              stance={stance}
-              refetchStances={refetchStances}
-            />
+            <StancesCard key={stance.id} stance={stance} refetchStances={refetchStances} />
           ))}
         </Grid>
 

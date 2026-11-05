@@ -20,7 +20,7 @@ interface SSRWrapperProps {
  *
  * @param children - The client component to wrap
  * @param queries - Array of queries to prefetch on the server
- * @param fallbackOnError - Whether to silently fail and let client handle errors (default: true)
+ * @param fallbackOnError - Whether to log failures and let the client retry (default: true)
  *
  * @example
  * ```tsx
@@ -47,7 +47,8 @@ export default async function SSRWrapper({
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000, // 60 seconds
-        gcTime: 5 * 60 * 1000, // 5 minutes
+        gcTime: Infinity,
+        retry: false,
       },
     },
   });
@@ -61,23 +62,14 @@ export default async function SSRWrapper({
         const queryKey =
           query.queryKey.length === 1 ? [...query.queryKey, query.id ?? 'getAll'] : query.queryKey;
 
-        if (fallbackOnError) {
-          await queryClient.prefetchQuery({
-            queryKey,
-            queryFn: () => serverFetch(query.url),
-          });
-        } else {
-          // fetchQuery rejects on error, allowing us to propagate it
-          await queryClient.fetchQuery({
-            queryKey,
-            queryFn: () => serverFetch(query.url),
-          });
-        }
+        await queryClient.fetchQuery({
+          queryKey,
+          queryFn: () => serverFetch(query.url),
+        });
       } catch (error) {
         if (!fallbackOnError) {
           throw error;
         }
-        // Silently fail and let client handle with fallback data
         console.warn(`Failed to prefetch query ${query.queryKey.join(',')}:`, error);
       }
     });

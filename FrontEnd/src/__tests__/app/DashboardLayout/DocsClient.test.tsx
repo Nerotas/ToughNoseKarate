@@ -4,12 +4,8 @@ import DocumentsClient from '../../../app/(DashboardLayout)/documents/DocsClient
 
 // Mock PageContainer
 jest.mock('../../../app/(DashboardLayout)/components/container/PageContainer', () => {
-  return function MockPageContainer({ children, title, description }: any) {
-    return (
-      <div data-testid='page-container' data-title={title} data-description={description}>
-        {children}
-      </div>
-    );
+  return function MockPageContainer({ children }: { children: React.ReactNode }) {
+    return <div data-testid='page-container'>{children}</div>;
   };
 });
 
@@ -28,12 +24,11 @@ describe('DocumentsClient Component', () => {
     expect(screen.getByText('Document Management')).toBeInTheDocument();
   });
 
-  it('displays the correct page title and description', () => {
+  it('displays the document-management heading without client-owned metadata', () => {
     render(<DocumentsClient />);
 
-    const pageContainer = screen.getByTestId('page-container');
-    expect(pageContainer).toHaveAttribute('data-title', 'Documents');
-    expect(pageContainer).toHaveAttribute('data-description', 'Useful TNK Documents');
+    expect(screen.getByRole('heading', { name: 'Document Management' })).toBeInTheDocument();
+    expect(screen.getByTestId('page-container')).not.toHaveAttribute('data-title');
   });
 
   it('renders the testing application card', () => {

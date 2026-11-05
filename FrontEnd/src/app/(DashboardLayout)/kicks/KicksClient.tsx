@@ -55,11 +55,12 @@ export default function KicksClient() {
   };
 
   return (
-    <PageContainer title='Kicks' description='Tang Soo Do Kicking Techniques'>
+    <PageContainer>
       <Box>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography
             variant='h2'
+            component='h1'
             gutterBottom
             sx={{
               mb: 3,

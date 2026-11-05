@@ -3,6 +3,13 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import SSRWrapper from '../SSRWrapper';
+import ConfigValidator from '../../app/config-validator';
+import { renderToString } from 'react-dom/server';
+
+jest.mock('../../utils/config/frontend.config', () => ({
+  validateRuntimeConfig: jest.fn(),
+  shouldEnableDebug: () => false,
+}));
 
 // Mock only serverFetch from useGet
 const mockServerFetch = jest.fn();
@@ -70,8 +77,10 @@ describe('SSRWrapper', () => {
     expect(consumer).toHaveTextContent('Prefetched Item');
   });
 
-  it('silently swallows errors when fallbackOnError=true (default)', async () => {
-    mockServerFetch.mockRejectedValueOnce(new Error('network fail'));
+  it('logs failed server fetches and leaves the client able to retry', async () => {
+    const error = new Error('network fail');
+    const warning = jest.spyOn(console, 'warn').mockImplementation();
+    mockServerFetch.mockRejectedValueOnce(error);
 
     const element = await SSRWrapper({
       children: <Consumer queryKey={['error-query', 'getAll']} enabled={false} />,
@@ -89,6 +98,39 @@ describe('SSRWrapper', () => {
 
     const consumer = await screen.findByTestId('consumer');
     expect(consumer).toHaveTextContent('no-data');
+    expect(mockServerFetch).toHaveBeenCalledTimes(1);
+    expect(warning).toHaveBeenCalledWith('Failed to prefetch query error-query:', error);
+    warning.mockRestore();
+  });
+
+  it('server-renders prefetched content and hydrates it without losing the cache', async () => {
+    const data = [{ id: 1, name: 'Server-rendered requirement' }];
+    mockServerFetch.mockResolvedValueOnce(data);
+    const element = await SSRWrapper({
+      children: <Consumer queryKey={['requirements', 'getAll']} />,
+      queries: [{ queryKey: ['requirements'], url: '/requirements' }],
+    });
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(
+      <QueryClientProvider client={createClient()}>
+        <ConfigValidator>{element}</ConfigValidator>
+      </QueryClientProvider>
+    );
+    expect(container.textContent).toContain('Server-rendered requirement');
+
+    const client = createClient();
+    const recoverableError = jest.fn();
+    render(
+      <QueryClientProvider client={client}>
+        <ConfigValidator>{element}</ConfigValidator>
+      </QueryClientProvider>,
+      { container, hydrate: true, onRecoverableError: recoverableError }
+    );
+
+    expect(container.textContent).toContain('Server-rendered requirement');
+    expect(client.getQueryData(['requirements', 'getAll'])).toEqual(data);
+    expect(mockServerFetch).toHaveBeenCalledTimes(1);
+    expect(recoverableError).not.toHaveBeenCalled();
   });
 
   it('propagates error when fallbackOnError=false', async () => {

@@ -5,7 +5,7 @@ import PageContainer from '../components/container/PageContainer';
 import BuildCertificateButton from '../components/documents/BuildCertificateButton';
 
 const DocumentsClient = () => (
-  <PageContainer title='Documents' description='Useful TNK Documents'>
+  <PageContainer>
     <Box>
       <Typography variant='h2' sx={{ mb: 3 }}>
         Document Management

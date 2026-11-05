@@ -37,11 +37,12 @@ export default function BlocksClient() {
   const blockDefinitions = orderByBeltRank(data || [], (item) => item.beltRank);
 
   return (
-    <PageContainer title='Blocks' description='Tang Soo Do Blocking Techniques'>
+    <PageContainer>
       <Box>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography
             variant='h2'
+            component='h1'
             gutterBottom
             sx={{
               mb: 3,
