@@ -4,6 +4,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import './global.css';
 import ConfigValidator from './config-validator';
 import { getConfig } from '../utils/config/frontend.config';
+import BackgroundRefreshIndicator from '../components/loading/BackgroundRefreshIndicator';
 
 export { metadata } from './(DashboardLayout)/metadata';
 
@@ -19,7 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ConfigValidator>
           <ErrorBoundary>
             <Providers>
-              <ClientThemeProvider>{children}</ClientThemeProvider>
+              <ClientThemeProvider>
+                {children}
+                <BackgroundRefreshIndicator />
+              </ClientThemeProvider>
             </Providers>
           </ErrorBoundary>
         </ConfigValidator>

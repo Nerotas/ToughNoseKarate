@@ -19,7 +19,6 @@ import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import useGet from '../../../hooks/useGet';
 import { useState } from 'react';
-import Loading from 'app/loading';
 import AddStudentModule from '../components/students/AddStudentModule';
 import EditStudentModule from '../components/students/EditStudentModule';
 import PromoteStudentDialog from '../components/students/PromoteStudentDialog';
@@ -46,16 +45,15 @@ const StudentsClient = () => {
   // Use the new useGet hook to fetch students from API
   const {
     data: apiStudents,
-    isLoading,
-    isFetching,
+    isPending,
     isError,
     refetch,
   } = useGet<Student[]>({
     apiLabel: 'students',
     url: '/students',
     id: 'getAll',
-    fallbackData: [],
     options: {
+      placeholderData: undefined,
       retry: 2,
       refetchOnWindowFocus: false,
     },
@@ -292,15 +290,13 @@ const StudentsClient = () => {
           allStudents={allStudents.length || 0}
         />
 
-        {/* Loader */}
-        {(isLoading || isFetching) && <Loading />}
-
         {/* Student DataGrid */}
         <DashboardCard
           title={`Student Roster - ${showActiveOnly ? 'Active' : 'Inactive'} Students`}
         >
           <Box sx={{ height: 800, width: '100%' }}>
             <DataGrid
+              loading={isPending}
               rows={students}
               columns={columns}
               getRowId={(row) => row.studentid}

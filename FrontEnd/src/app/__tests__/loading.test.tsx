@@ -1,15 +1,15 @@
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import Loading from '../loading';
 
-// Mock the randomSnippet to make test deterministic
-jest.mock('constants/data/LoadingSnippets', () => ({
-  randomSnippet: () => 'Loading snippet',
-}));
+describe('Root loading fallback', () => {
+  it('renders static card skeletons instead of a rotating icon or random message', () => {
+    const { container } = render(<Loading />);
+    const loading = screen.getByRole('status', { name: 'Loading page' });
 
-describe('Loading component', () => {
-  it('renders icon and snippet', () => {
-    render(<Loading />);
-    expect(screen.getByText('Loading snippet')).toBeInTheDocument();
+    expect(loading).toHaveAttribute('aria-busy', 'true');
+    expect(loading).toHaveStyle({ minHeight: '100vh' });
+    expect(loading.children).toHaveLength(6);
+    expect(container.querySelector('.MuiSkeleton-wave, .MuiSkeleton-pulse')).toBeNull();
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
 });

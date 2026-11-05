@@ -25,13 +25,6 @@ jest.mock('../../../hooks/useGet', () => ({
   default: jest.fn(),
 }));
 
-// Mock loading component
-jest.mock('../../../app/loading', () => {
-  return function Loading() {
-    return <div data-testid='loading'>Loading...</div>;
-  };
-});
-
 const TestWrapper = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -131,7 +124,7 @@ describe('StancesClient', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByTestId('loading')).toBeInTheDocument();
+    expect(screen.getByRole('status', { name: 'Loading stances' })).toBeInTheDocument();
   });
 
   it('renders stances data when loaded', async () => {

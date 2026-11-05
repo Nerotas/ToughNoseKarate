@@ -67,7 +67,7 @@ jest.mock('utils/helpers/BeltColors', () => ({
 }));
 
 // Mock child components
-jest.mock('../../../../../app/loading', () => {
+jest.mock('components/loading/PageLoadingSkeleton', () => {
   return function MockLoading() {
     return <div data-testid='loading-component'>Loading...</div>;
   };
@@ -613,7 +613,7 @@ describe('StudentDetailClient', () => {
     expect(mockGetBeltTextColor).toHaveBeenCalledWith('White');
   });
 
-  it('shows loading when family data is being fetched for child student', () => {
+  it('keeps the student page visible while family data loads independently', () => {
     mockUseGet.mockImplementation(({ apiLabel }: { apiLabel: string }) => {
       if (apiLabel === 'students') {
         return {
@@ -643,6 +643,38 @@ describe('StudentDetailClient', () => {
 
     render(<StudentDetailClient studentId='1' />);
 
-    expect(screen.getByTestId('loading-component')).toBeInTheDocument();
+    expect(screen.queryByTestId('loading-component')).not.toBeInTheDocument();
+    expect(screen.getByTestId('student-information')).toHaveTextContent('Jane');
+    expect(screen.getByTestId('parent-guardian-information')).toHaveTextContent('Family: 0');
   });
+
+  it.each([false, true])(
+    'keeps student details mounted during a background refresh (failed: %s)',
+    (failed) => {
+      mockUseGet.mockImplementation(({ apiLabel }: { apiLabel: string }) => ({
+        data:
+          apiLabel === 'students'
+            ? mockStudent
+            : apiLabel === 'belt-requirements'
+              ? mockBeltRequirements
+              : null,
+        isPending: false,
+        isLoading: false,
+        isFetching: true,
+        isError: failed,
+        error: failed ? new Error('Refresh failed') : null,
+        refetch: mockRefetch,
+      }));
+
+      render(<StudentDetailClient studentId='1' />);
+
+      expect(screen.getByTestId('student-information')).toHaveTextContent('John');
+      expect(screen.getByRole('button', { name: /Edit Student/ })).toBeInTheDocument();
+      expect(screen.queryByTestId('loading-component')).not.toBeInTheDocument();
+      if (failed) {
+        expect(screen.getByText(/Unable to refresh student data/)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+      }
+    }
+  );
 });

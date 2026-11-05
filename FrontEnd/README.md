@@ -28,6 +28,28 @@ during background refreshes. This query explicitly disables the provider's empty
 React Query treats placeholder data as a successful result, which bypasses the pending skeleton
 layout. Do not add fallback data or another placeholder to this query.
 
+## Loading and background refreshes
+
+Public training routes share their actual headings, introductions, and training panels with
+their route-loading views. Initial requests show static, responsive card skeletons with the
+same column breakpoints as the real cards; the grid reserves at least a viewport so training
+panels do not jump into view before the cards arrive. The shared route fallback also uses
+skeletons, not a rotating icon and random message.
+
+These queries explicitly disable the provider's empty-array placeholder, as the belt query
+does. Cached and hydrated results render immediately and remain visible during refetches,
+including failed refreshes. Errors are shown explicitly with retry actions.
+
+One accessible, non-interactive indicator in the bottom-right corner reports React Query
+requests that already have cached data. Its visual appearance is delayed by 200ms to avoid
+flashing on fast refreshes, and it respects reduced-motion preferences. It does not reserve
+layout space, cover the page, or introduce a minimum request duration.
+
+The student roster uses the DataGrid's initial-loading state instead of inserting a loader
+above existing rows. Student details and parent/guardian information stay visible during
+background requests; independently loading sections handle their own initial state.
+Authentication and authorization checks still gate private content.
+
 ## Server rendering and search metadata
 
 Valid configuration is checked in the root server layout. Runtime validation still reports

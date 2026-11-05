@@ -16,11 +16,64 @@ import {
 
 import { SelfDefenseDefinition } from '../../../models/SelfDefense/SelfDefense';
 import useGet from '../../../hooks/useGet';
-import Loading from '../../../app/loading';
+import { CardGridSkeleton } from 'components/loading/PageLoadingSkeleton';
 import SelfDefenseCard from '../components/self-defense/SelfDefenseCard';
 import SelfDefenseCreateModule from '../components/self-defense/selfDefenseCreateModule';
 import { useAuth } from 'hooks/useAuth';
 import orderByBeltRank from 'utils/helpers/orderByBeltRank';
+
+const SelfDefenseContent = ({
+  children,
+  onCreate,
+}: {
+  children: React.ReactNode;
+  onCreate?: () => void;
+}) => (
+  <Box>
+    <Box display='flex' alignItems='center' justifyContent='space-between' mb={1}>
+      <Typography variant='h4' component='h1'>
+        Self-Defense & Ground Work
+      </Typography>
+      {onCreate && (
+        <Button variant='contained' color='primary' onClick={onCreate}>
+          Add Technique
+        </Button>
+      )}
+    </Box>
+    <Typography variant='body1' paragraph color='text.secondary'>
+      Learn essential self-defense techniques, escapes, and ground work for real-world situations.
+      These techniques are taught progressively through the Tang Soo Do beltRank system.
+    </Typography>
+    <Alert severity='error' sx={{ mb: 3 }}>
+      <Typography variant='body2' fontWeight='bold'>
+        ⚠️ SAFETY WARNING: These techniques can cause serious injury. Practice only under qualified
+        supervision with proper safety equipment. Never attempt advanced techniques without
+        instructor guidance.
+      </Typography>
+    </Alert>
+    {children}
+  </Box>
+);
+
+export const SelfDefenseLoading = () => (
+  <SelfDefenseContent>
+    <Box display='flex' gap={2} mb={3} flexWrap='wrap'>
+      {['Category', 'Belt Level', 'Difficulty'].map((label) => (
+        <FormControl key={label} size='small' sx={{ minWidth: 120 }} disabled>
+          <InputLabel>{label}</InputLabel>
+          <Select value='All' label={label}>
+            <MenuItem value='All'>All</MenuItem>
+          </Select>
+        </FormControl>
+      ))}
+      <TextField size='small' label='Search techniques...' sx={{ minWidth: 200 }} disabled />
+    </Box>
+    <Typography variant='body2' color='text.secondary' mb={2}>
+      Loading techniques...
+    </Typography>
+    <CardGridSkeleton label='Loading self-defense techniques' columns={{ xs: 12, sm: 6, lg: 4 }} />
+  </SelfDefenseContent>
+);
 
 const SelfDefenseClient: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -35,13 +88,14 @@ const SelfDefenseClient: React.FC = () => {
   const {
     data: selfDefenseDefinitions,
     isPending,
+    isError,
     refetch,
   } = useGet<SelfDefenseDefinition[]>({
     apiLabel: 'self-defense-definitions',
     url: '/self-defense-definitions',
     id: 'getAll',
-    fallbackData: [],
     options: {
+      placeholderData: undefined,
       staleTime: 60 * 1000,
       gcTime: 5 * 60 * 1000,
       retry: 2,
@@ -49,7 +103,6 @@ const SelfDefenseClient: React.FC = () => {
     },
   });
 
-  // Use API data if available, otherwise use static data
   const displaySelfDefense = orderByBeltRank(selfDefenseDefinitions || [], (item) => item.beltRank);
   // Get unique values for filters
   const categories = [
@@ -85,33 +138,7 @@ const SelfDefenseClient: React.FC = () => {
   };
 
   return (
-    <Box>
-      {isPending && <Loading />}
-
-      <Box display='flex' alignItems='center' justifyContent='space-between' mb={1}>
-        <Typography variant='h4' component='h1'>
-          Self-Defense & Ground Work
-        </Typography>
-        {canCreate && (
-          <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
-            Add Technique
-          </Button>
-        )}
-      </Box>
-
-      <Typography variant='body1' paragraph color='text.secondary'>
-        Learn essential self-defense techniques, escapes, and ground work for real-world situations.
-        These techniques are taught progressively through the Tang Soo Do beltRank system.
-      </Typography>
-
-      <Alert severity='error' sx={{ mb: 3 }}>
-        <Typography variant='body2' fontWeight='bold'>
-          ⚠️ SAFETY WARNING: These techniques can cause serious injury. Practice only under
-          qualified supervision with proper safety equipment. Never attempt advanced techniques
-          without instructor guidance.
-        </Typography>
-      </Alert>
-
+    <SelfDefenseContent onCreate={canCreate ? () => setIsCreateOpen(true) : undefined}>
       {/* Filters */}
       <Box display='flex' gap={2} mb={3} flexWrap='wrap'>
         <FormControl size='small' sx={{ minWidth: 120 }}>
@@ -170,21 +197,38 @@ const SelfDefenseClient: React.FC = () => {
 
       {/* Results Summary */}
       <Typography variant='body2' color='text.secondary' mb={2}>
-        Showing {filteredTechniques?.length} of {displaySelfDefense?.length} techniques
+        {isPending
+          ? 'Loading techniques...'
+          : `Showing ${filteredTechniques.length} of ${displaySelfDefense.length} techniques`}
       </Typography>
 
+      {isError && (
+        <Alert severity='error' sx={{ mb: 3 }}>
+          Unable to load self-defense techniques. Please try again.
+          <Button color='inherit' onClick={refetchSelfDefense}>
+            Retry
+          </Button>
+        </Alert>
+      )}
       {/* Techniques Grid */}
-      <Grid container spacing={3}>
-        {filteredTechniques.map((technique) => (
-          <SelfDefenseCard
-            key={technique.id}
-            selfDefense={technique}
-            refetchSelfDefense={refetchSelfDefense}
-          />
-        ))}
-      </Grid>
+      {isPending ? (
+        <CardGridSkeleton
+          label='Loading self-defense techniques'
+          columns={{ xs: 12, sm: 6, lg: 4 }}
+        />
+      ) : (
+        <Grid container spacing={3}>
+          {filteredTechniques.map((technique) => (
+            <SelfDefenseCard
+              key={technique.id}
+              selfDefense={technique}
+              refetchSelfDefense={refetchSelfDefense}
+            />
+          ))}
+        </Grid>
+      )}
 
-      {filteredTechniques?.length === 0 && (
+      {!isPending && !isError && filteredTechniques.length === 0 && (
         <Box textAlign='center' py={4}>
           <Typography variant='h6' color='text.secondary'>
             No techniques found matching your criteria
@@ -203,7 +247,7 @@ const SelfDefenseClient: React.FC = () => {
           refetchSelfDefense={refetchSelfDefense}
         />
       )}
-    </Box>
+    </SelfDefenseContent>
   );
 };
 

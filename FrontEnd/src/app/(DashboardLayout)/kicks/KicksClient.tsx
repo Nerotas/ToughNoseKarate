@@ -4,7 +4,7 @@ import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import { KickDefinition } from '../../../models/Kicks/Kicks';
 import useGet from '../../../hooks/useGet';
-import Loading from '../../../app/loading';
+import { CardGridSkeleton } from 'components/loading/PageLoadingSkeleton';
 import { useAuth } from '../../../hooks/useAuth';
 import React, { useState } from 'react';
 import KickCreateModule from '../components/kicks/kickCreateModule';
@@ -25,35 +25,13 @@ const getDifficultyColor = (difficulty: string) => {
   }
 };
 
-export default function KicksClient() {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const { isAuthenticated, instructor } = useAuth();
-  const canCreate = isAuthenticated && instructor?.role === 'admin';
-  const {
-    data: kickDefinitions,
-    isPending,
-    isError,
-    refetch,
-  } = useGet<KickDefinition[]>({
-    apiLabel: 'kicks-definitions',
-    url: '/kicks-definitions',
-    id: 'getAll',
-    fallbackData: [],
-    options: {
-      staleTime: 60 * 1000,
-      gcTime: 5 * 60 * 1000,
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  });
-
-  // Use API data only
-  const displayKicks = orderByBeltRank(kickDefinitions || [], (item) => item.beltRank);
-
-  const refetchKicks = async () => {
-    await refetch();
-  };
-
+const KicksContent = ({
+  children,
+  onCreate,
+}: {
+  children: React.ReactNode;
+  onCreate?: () => void;
+}) => {
   return (
     <PageContainer>
       <Box>
@@ -71,8 +49,8 @@ export default function KicksClient() {
           >
             Tang Soo Do Kicking Techniques
           </Typography>
-          {canCreate && (
-            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+          {onCreate && (
+            <Button variant='contained' color='primary' onClick={onCreate}>
               Add Kick
             </Button>
           )}
@@ -90,26 +68,7 @@ export default function KicksClient() {
           </Typography>
         </Alert>
 
-        {isError && (
-          <Alert severity='info' sx={{ mb: 4 }}>
-            <Typography variant='body2'>
-              <strong>Demo Mode:</strong> Unable to connect to the backend server.
-            </Typography>
-          </Alert>
-        )}
-
-        {isPending && <Loading />}
-
-        <Grid container spacing={3}>
-          {displayKicks.map((kick) => (
-            <KickCard
-              key={kick.id}
-              kick={kick}
-              refetchKicks={refetchKicks}
-              getDifficultyColor={getDifficultyColor}
-            />
-          ))}
-        </Grid>
+        {children}
 
         <Box sx={{ mt: 4 }}>
           <DashboardCard title='Kicking Training Guidelines'>
@@ -176,15 +135,74 @@ export default function KicksClient() {
             </Grid>
           </DashboardCard>
         </Box>
-
-        {canCreate && (
-          <KickCreateModule
-            open={isCreateOpen}
-            handleCloseCreate={() => setIsCreateOpen(false)}
-            refetchKicks={refetchKicks}
-          />
-        )}
       </Box>
     </PageContainer>
+  );
+};
+
+export const KicksLoading = () => (
+  <KicksContent>
+    <CardGridSkeleton label='Loading kicks' />
+  </KicksContent>
+);
+
+export default function KicksClient() {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
+  const {
+    data: kickDefinitions,
+    isPending,
+    isError,
+    refetch,
+  } = useGet<KickDefinition[]>({
+    apiLabel: 'kicks-definitions',
+    url: '/kicks-definitions',
+    id: 'getAll',
+    options: {
+      placeholderData: undefined,
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  });
+  const displayKicks = orderByBeltRank(kickDefinitions || [], (item) => item.beltRank);
+  const refetchKicks = async () => {
+    await refetch();
+  };
+
+  return (
+    <KicksContent onCreate={canCreate ? () => setIsCreateOpen(true) : undefined}>
+      {isError && (
+        <Alert severity='error' sx={{ mb: 4 }}>
+          Unable to load kicks. Please try again.
+          <Button color='inherit' onClick={refetchKicks}>
+            Retry
+          </Button>
+        </Alert>
+      )}
+      {isPending ? (
+        <CardGridSkeleton label='Loading kicks' />
+      ) : (
+        <Grid container spacing={3}>
+          {displayKicks.map((kick) => (
+            <KickCard
+              key={kick.id}
+              kick={kick}
+              refetchKicks={refetchKicks}
+              getDifficultyColor={getDifficultyColor}
+            />
+          ))}
+        </Grid>
+      )}
+      {canCreate && (
+        <KickCreateModule
+          open={isCreateOpen}
+          handleCloseCreate={() => setIsCreateOpen(false)}
+          refetchKicks={refetchKicks}
+        />
+      )}
+    </KicksContent>
   );
 }

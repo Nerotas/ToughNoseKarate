@@ -34,6 +34,7 @@ jest.mock('@tanstack/react-query', () => ({
     clear: jest.fn(),
   })),
   QueryClientProvider: ({ children }: { children: React.ReactNode }) => children,
+  useIsFetching: () => 0,
   useQuery: () => ({
     data: undefined,
     isLoading: false,

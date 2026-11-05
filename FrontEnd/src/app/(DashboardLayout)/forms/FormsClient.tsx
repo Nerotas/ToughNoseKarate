@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import useGet from '../../../hooks/useGet';
-import Loading from 'app/loading';
+import { CardGridSkeleton } from 'components/loading/PageLoadingSkeleton';
 import { FormDefinitions } from 'models/Forms/FormDefinitions';
 import FormsCard from '../components/forms/formsCard';
 import { useAuth } from '../../../hooks/useAuth';
@@ -21,30 +21,13 @@ import React, { useState } from 'react';
 import FormCreateModule from '../components/forms/formCreateModule';
 import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 
-const FormsClient = () => {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const { isAuthenticated, instructor } = useAuth();
-  const canCreate = isAuthenticated && instructor?.role === 'admin';
-
-  const { data, isPending, isError, refetch } = useGet<FormDefinitions[]>({
-    url: '/form-definitions',
-    apiLabel: 'form-definitions',
-    id: 'getAll',
-    fallbackData: [],
-    options: {
-      staleTime: 60 * 1000,
-      gcTime: 5 * 60 * 1000,
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  });
-
-  const refetchForms = async () => {
-    await refetch();
-  };
-
-  const forms = orderByBeltRank(data || [], (item) => item.beltRank);
-
+const FormsContent = ({
+  children,
+  onCreate,
+}: {
+  children: React.ReactNode;
+  onCreate?: () => void;
+}) => {
   return (
     <PageContainer>
       <Box>
@@ -52,8 +35,8 @@ const FormsClient = () => {
           <Typography variant='h2' component='h1' gutterBottom sx={{ mb: 3 }}>
             Tang Soo Do Forms (Hyung)
           </Typography>
-          {canCreate && (
-            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+          {onCreate && (
+            <Button variant='contained' color='primary' onClick={onCreate}>
               Add Form
             </Button>
           )}
@@ -67,20 +50,7 @@ const FormsClient = () => {
           put their own personality into the movements, making each performance unique and telling
           an individual story.
         </Typography>
-        {isError && (
-          <Alert severity='info' sx={{ mb: 4 }}>
-            <Typography variant='body2'>
-              <strong>Demo Mode:</strong> Unable to connect to the backend server.
-            </Typography>
-          </Alert>
-        )}
-        {isPending && <Loading />}
-        <Grid container spacing={3}>
-          {forms &&
-            forms.map((form) => (
-              <FormsCard key={form.id} form={form} refetchForms={refetchForms} />
-            ))}
-        </Grid>
+        {children}
 
         <Box sx={{ mt: 4 }}>
           <Card>
@@ -131,16 +101,65 @@ const FormsClient = () => {
             </CardContent>
           </Card>
         </Box>
-
-        {canCreate && (
-          <FormCreateModule
-            open={isCreateOpen}
-            handleCloseCreate={() => setIsCreateOpen(false)}
-            refetchForms={refetchForms}
-          />
-        )}
       </Box>
     </PageContainer>
+  );
+};
+
+export const FormsLoading = () => (
+  <FormsContent>
+    <CardGridSkeleton label='Loading forms' />
+  </FormsContent>
+);
+
+const FormsClient = () => {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
+  const { data, isPending, isError, refetch } = useGet<FormDefinitions[]>({
+    url: '/form-definitions',
+    apiLabel: 'form-definitions',
+    id: 'getAll',
+    options: {
+      placeholderData: undefined,
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  });
+  const refetchForms = async () => {
+    await refetch();
+  };
+  const forms = orderByBeltRank(data || [], (item) => item.beltRank);
+
+  return (
+    <FormsContent onCreate={canCreate ? () => setIsCreateOpen(true) : undefined}>
+      {isError && (
+        <Alert severity='error' sx={{ mb: 4 }}>
+          Unable to load forms. Please try again.
+          <Button color='inherit' onClick={refetchForms}>
+            Retry
+          </Button>
+        </Alert>
+      )}
+      {isPending ? (
+        <CardGridSkeleton label='Loading forms' />
+      ) : (
+        <Grid container spacing={3}>
+          {forms.map((form) => (
+            <FormsCard key={form.id} form={form} refetchForms={refetchForms} />
+          ))}
+        </Grid>
+      )}
+      {canCreate && (
+        <FormCreateModule
+          open={isCreateOpen}
+          handleCloseCreate={() => setIsCreateOpen(false)}
+          refetchForms={refetchForms}
+        />
+      )}
+    </FormsContent>
   );
 };
 
