@@ -2,6 +2,7 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { useAuth, authKeys } from '../useAuth';
+import { renderToString } from 'react-dom/server';
 
 // Mock authService
 jest.mock('../../services/authService', () => ({
@@ -23,13 +24,13 @@ jest.spyOn(console, 'log').mockImplementation(() => {});
 const createWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
-      queries: { retry: false },
+      queries: { retry: false, placeholderData: [] },
       mutations: { retry: false },
     },
   });
-  return ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  return function AuthTestWrapper({ children }: { children: React.ReactNode }) {
+    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  };
 };
 
 describe('useAuth hook', () => {
@@ -59,6 +60,22 @@ describe('useAuth hook', () => {
     expect(typeof result.current.logout).toBe('function');
     expect(typeof result.current.refreshToken).toBe('function');
     expect(typeof result.current.ensureProfile).toBe('function');
+  });
+
+  it('does not treat the provider placeholder as an authenticated server session', () => {
+    const client = new QueryClient({ defaultOptions: { queries: { placeholderData: [] } } });
+    const Session = () => {
+      const { isAuthenticated } = useAuth();
+      return <div>{isAuthenticated ? 'Signed in' : 'Signed out'}</div>;
+    };
+
+    const html = renderToString(
+      <QueryClientProvider client={client}>
+        <Session />
+      </QueryClientProvider>
+    );
+    expect(html).toContain('Signed out');
+    expect(mockAuthService.getProfile).not.toHaveBeenCalled();
   });
 
   it('handles successful login', async () => {

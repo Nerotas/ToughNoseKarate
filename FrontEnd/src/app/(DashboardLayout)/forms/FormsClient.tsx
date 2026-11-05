@@ -46,10 +46,10 @@ const FormsClient = () => {
   const forms = orderByBeltRank(data || [], (item) => item.beltRank);
 
   return (
-    <PageContainer title='Forms (Kata)' description='Tang Soo Do Forms and Patterns'>
+    <PageContainer>
       <Box>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='h2' gutterBottom sx={{ mb: 3 }}>
+          <Typography variant='h2' component='h1' gutterBottom sx={{ mb: 3 }}>
             Tang Soo Do Forms (Hyung)
           </Typography>
           {canCreate && (

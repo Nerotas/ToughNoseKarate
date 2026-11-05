@@ -1,5 +1,9 @@
 import SSRWrapper from '../../../wrappers/SSRWrapper';
 import StancesClient from './StancesClient';
+import { getPageMetadata } from '../metadata';
+
+export const metadata = getPageMetadata('/stances');
+export const revalidate = 60;
 
 /**
  * Server-side rendered Stances page with pre-fetched data

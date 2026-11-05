@@ -1,23 +1,15 @@
-import { Metadata } from 'next';
 import Providers from './providers';
 import ClientThemeProvider from './theme-provider';
 import ErrorBoundary from '../components/ErrorBoundary';
 import './global.css';
 import ConfigValidator from './config-validator';
+import { getConfig } from '../utils/config/frontend.config';
 
-export const metadata: Metadata = {
-  title: 'Tough Nose Karate',
-  description: 'Tang Soo Do martial arts training and belt requirements',
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
-    ],
-    apple: '/icon-192.png',
-  },
-};
+export { metadata } from './(DashboardLayout)/metadata';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  getConfig();
+
   return (
     <html lang='en'>
       <head>

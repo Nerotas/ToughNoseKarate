@@ -1,5 +1,9 @@
 import SSRWrapper from '../../../wrappers/SSRWrapper';
 import PunchesClient from './PunchesClient';
+import { getPageMetadata } from '../metadata';
+
+export const metadata = getPageMetadata('/punches');
+export const revalidate = 60;
 
 export default async function PunchesPage() {
   return (

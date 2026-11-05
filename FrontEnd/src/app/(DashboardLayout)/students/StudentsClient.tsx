@@ -241,9 +241,9 @@ const StudentsClient = () => {
   ];
 
   return (
-    <PageContainer title='Students' description='Student Management and Progress Tracking'>
+    <PageContainer>
       <Box>
-        {(isError) && (
+        {isError && (
           <Alert severity='warning' sx={{ mb: 3 }}>
             Unable to connect to the backend. Displaying sample data.
           </Alert>
@@ -293,9 +293,7 @@ const StudentsClient = () => {
         />
 
         {/* Loader */}
-        {(isLoading ||  isFetching) && (
-          <Loading />
-        )}
+        {(isLoading || isFetching) && <Loading />}
 
         {/* Student DataGrid */}
         <DashboardCard

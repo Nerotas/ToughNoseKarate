@@ -1,13 +1,22 @@
-import { Metadata } from 'next';
 import SelfDefenseClient from './SelfDefenseClient';
+import SSRWrapper from '../../../wrappers/SSRWrapper';
+import { getPageMetadata } from '../metadata';
 
-export const metadata: Metadata = {
-  title: 'Self-Defense & Ground Work - Tough Nose Karate',
-  description:
-    'Learn essential self-defense techniques, escapes, and ground work for real-world situations through the Tang Soo Do curriculum.',
-  keywords: 'self-defense, ground work, martial arts, Tang Soo Do, escapes, submissions, grappling',
-};
+export const metadata = getPageMetadata('/self-defense');
+export const revalidate = 60;
 
-export default function SelfDefensePage() {
-  return <SelfDefenseClient />;
+export default async function SelfDefensePage() {
+  return (
+    <SSRWrapper
+      queries={[
+        {
+          queryKey: ['self-defense-definitions', 'getAll'],
+          url: '/self-defense-definitions',
+        },
+      ]}
+      fallbackOnError={true}
+    >
+      <SelfDefenseClient />
+    </SSRWrapper>
+  );
 }
