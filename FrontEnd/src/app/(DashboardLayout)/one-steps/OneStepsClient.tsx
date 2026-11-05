@@ -4,7 +4,7 @@ import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import { OneStepDefinition } from '../../../models/OneSteps/OneSteps';
 import useGet from '../../../hooks/useGet';
-import Loading from '../../../app/loading';
+import { CardGridSkeleton } from 'components/loading/PageLoadingSkeleton';
 import OneStepCard from '../components/one-steps/OneStepCard';
 import { useAuth } from '../../../hooks/useAuth';
 import React, { useState } from 'react';
@@ -28,39 +28,15 @@ const getDifficultyColor = (difficulty: string) => {
   }
 };
 
-export default function OneStepsClient() {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const { isAuthenticated, instructor } = useAuth();
-  const canCreate = isAuthenticated && instructor?.role === 'admin';
-  const {
-    data: oneStepDefinitions,
-    isPending,
-    isError,
-    refetch,
-  } = useGet<OneStepDefinition[]>({
-    apiLabel: 'onestep-definitions',
-    url: '/onestep-definitions',
-    id: 'getAll',
-    fallbackData: [],
-    options: {
-      staleTime: 60 * 1000,
-      gcTime: 5 * 60 * 1000,
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  });
-
-  // Use API data only
-  const displayOneSteps = orderByBeltRank(oneStepDefinitions || [], (item) => item.beltRank);
-
-  const refetchOneSteps = async () => {
-    await refetch();
-  };
-
+const OneStepsContent = ({
+  children,
+  onCreate,
+}: {
+  children: React.ReactNode;
+  onCreate?: () => void;
+}) => {
   return (
     <PageContainer>
-      {isPending && <Loading />}
-
       <Box>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography
@@ -76,8 +52,8 @@ export default function OneStepsClient() {
           >
             Tang Soo Do One-Step Sparring
           </Typography>
-          {canCreate && (
-            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+          {onCreate && (
+            <Button variant='contained' color='primary' onClick={onCreate}>
               Add One-Step
             </Button>
           )}
@@ -96,25 +72,7 @@ export default function OneStepsClient() {
           </Typography>
         </Alert>
 
-        {isError && (
-          <Alert severity='info' sx={{ mb: 4 }}>
-            <Typography variant='body2'>
-              <strong>Demo Mode:</strong> Unable to connect to the backend server. Displaying static
-              one-step sparring data for demonstration.
-            </Typography>
-          </Alert>
-        )}
-
-        <Grid container spacing={3}>
-          {displayOneSteps?.map((oneStep) => (
-            <OneStepCard
-              key={oneStep.id}
-              oneStep={oneStep}
-              refetchOneSteps={refetchOneSteps}
-              getDifficultyColor={getDifficultyColor}
-            />
-          ))}
-        </Grid>
+        {children}
 
         <Box sx={{ mt: 4 }}>
           <DashboardCard title='One-Step Sparring Training Guidelines'>
@@ -181,15 +139,74 @@ export default function OneStepsClient() {
             </Grid>
           </DashboardCard>
         </Box>
-
-        {canCreate && (
-          <OneStepCreateModule
-            open={isCreateOpen}
-            handleCloseCreate={() => setIsCreateOpen(false)}
-            refetchOneSteps={refetchOneSteps}
-          />
-        )}
       </Box>
     </PageContainer>
+  );
+};
+
+export const OneStepsLoading = () => (
+  <OneStepsContent>
+    <CardGridSkeleton label='Loading one-step sparring' columns={{ xs: 12, lg: 6 }} />
+  </OneStepsContent>
+);
+
+export default function OneStepsClient() {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
+  const {
+    data: oneStepDefinitions,
+    isPending,
+    isError,
+    refetch,
+  } = useGet<OneStepDefinition[]>({
+    apiLabel: 'onestep-definitions',
+    url: '/onestep-definitions',
+    id: 'getAll',
+    options: {
+      placeholderData: undefined,
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  });
+  const displayOneSteps = orderByBeltRank(oneStepDefinitions || [], (item) => item.beltRank);
+  const refetchOneSteps = async () => {
+    await refetch();
+  };
+
+  return (
+    <OneStepsContent onCreate={canCreate ? () => setIsCreateOpen(true) : undefined}>
+      {isError && (
+        <Alert severity='error' sx={{ mb: 4 }}>
+          Unable to load one-step sparring. Please try again.
+          <Button color='inherit' onClick={refetchOneSteps}>
+            Retry
+          </Button>
+        </Alert>
+      )}
+      {isPending ? (
+        <CardGridSkeleton label='Loading one-step sparring' columns={{ xs: 12, lg: 6 }} />
+      ) : (
+        <Grid container spacing={3}>
+          {displayOneSteps.map((oneStep) => (
+            <OneStepCard
+              key={oneStep.id}
+              oneStep={oneStep}
+              refetchOneSteps={refetchOneSteps}
+              getDifficultyColor={getDifficultyColor}
+            />
+          ))}
+        </Grid>
+      )}
+      {canCreate && (
+        <OneStepCreateModule
+          open={isCreateOpen}
+          handleCloseCreate={() => setIsCreateOpen(false)}
+          refetchOneSteps={refetchOneSteps}
+        />
+      )}
+    </OneStepsContent>
   );
 }

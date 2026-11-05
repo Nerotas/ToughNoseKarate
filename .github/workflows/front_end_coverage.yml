@@ -15,7 +15,7 @@ permissions:
   pull-requests: write
 
 env:
-  NODE_VERSION: "18"
+  NODE_VERSION: "22"
 
 jobs:
   test-coverage:
@@ -61,41 +61,10 @@ jobs:
           name: front-end-coverage-summary
           path: FrontEnd/coverage/**
 
-      - name: Check coverage threshold
-        working-directory: ./FrontEnd
-        run: |
-          THRESHOLD=30
-          SUMMARY_JSON=coverage/coverage-summary.json
-          FINAL_JSON=coverage/coverage-final.json
-          if [ -f "$SUMMARY_JSON" ]; then
-            # Only enforce statements/functions/lines - skip branches
-            node -e "const fs=require('fs');const t=${THRESHOLD};const s=JSON.parse(fs.readFileSync('$SUMMARY_JSON'));const total=s.total||s;const metrics=['statements','functions','lines'];let ok=true;metrics.forEach(m=>{const pct=total[m]&&total[m].pct?total[m].pct:0; if(pct < t){console.error(m+' coverage '+pct+'% < '+t+'%'); ok=false}}); if(!ok){process.exit(1);} else {console.log('Coverage threshold met');}"
-          elif [ -f "$FINAL_JSON" ]; then
-            node -e "const fs=require('fs');const t=${THRESHOLD};const s=JSON.parse(fs.readFileSync('$FINAL_JSON'));let totals={statements:{total:0,covered:0},functions:{total:0,covered:0},lines:{total:0,covered:0}};Object.values(s).forEach(f=>{if(f.statements){totals.statements.total+=f.statements.total||0;totals.statements.covered+=f.statements.covered||0;} if(f.functions){totals.functions.total+=f.functions.total||0;totals.functions.covered+=f.functions.covered||0;} if(f.lines){totals.lines.total+=f.lines.total||0;totals.lines.covered+=f.lines.covered||0;}});let ok=true;['statements','functions','lines'].forEach(m=>{const tot=totals[m].total;const cov=totals[m].covered;const pct=tot>0?Math.round((cov/tot)*100*100)/100:100; if(pct < t){console.error(m+' coverage '+pct+'% < '+t+'%'); ok=false}}); if(!ok){process.exit(1);} else {console.log('Coverage threshold met');}"
-          else
-            echo "No coverage JSON found (coverage-summary.json or coverage-final.json)" >&2
-            exit 1
-          fi
-
-      - name: Create coverage markdown
+      - name: Create coverage report and check threshold
         if: always()
         working-directory: ./FrontEnd
-        run: |
-          SUMMARY_JSON=coverage/coverage-summary.json
-          FINAL_JSON=coverage/coverage-final.json
-          if [ -f "$SUMMARY_JSON" ]; then
-            node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('$SUMMARY_JSON'));const rows=Object.entries(s).map(([k,v])=>`| ${k} | ${v.statements.pct}% | ${v.branches.pct}% | ${v.functions.pct}% | ${v.lines.pct}% |`);const header='| File | Stmts | Branch | Funcs | Lines |\n|---|---:|---:|---:|---:';fs.writeFileSync('coverage_report.md', '# Frontend Coverage Report\n\n'+header+'\n'+rows.join('\n'));"
-          elif [ -f "$FINAL_JSON" ]; then
-            # Prefer the repository script which produces a nicer table and totals
-            node ./scripts/coverage-to-md.js "$FINAL_JSON" > coverage_table.md || true
-            cat coverage_table.md >> coverage_report.md || true
-          elif [ -f coverage/coverage-summary.txt ]; then
-            echo "\n\n<details><summary>Coverage summary</summary>" >> coverage_report.md || true
-            cat coverage/coverage-summary.txt >> coverage_report.md || true
-            echo "</details>" >> coverage_report.md || true
-          else
-            echo "No coverage summary found" >> coverage_report.md || true
-          fi
+        run: node ./scripts/coverage-to-md.js coverage/coverage-summary.json 30 > coverage_report.md
 
       - name: Read coverage report
         id: read_coverage

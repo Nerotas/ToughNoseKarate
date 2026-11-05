@@ -28,6 +28,28 @@ during background refreshes. This query explicitly disables the provider's empty
 React Query treats placeholder data as a successful result, which bypasses the pending skeleton
 layout. Do not add fallback data or another placeholder to this query.
 
+## Loading and background refreshes
+
+Public training routes share their actual headings, introductions, and training panels with
+their route-loading views. Initial requests show static, responsive card skeletons with the
+same column breakpoints as the real cards; the grid reserves at least a viewport so training
+panels do not jump into view before the cards arrive. The shared route fallback also uses
+skeletons, not a rotating icon and random message.
+
+These queries explicitly disable the provider's empty-array placeholder, as the belt query
+does. Cached and hydrated results render immediately and remain visible during refetches,
+including failed refreshes. Errors are shown explicitly with retry actions.
+
+One accessible, non-interactive indicator in the bottom-right corner reports React Query
+requests that already have cached data. Its visual appearance is delayed by 200ms to avoid
+flashing on fast refreshes, and it respects reduced-motion preferences. It does not reserve
+layout space, cover the page, or introduce a minimum request duration.
+
+The student roster uses the DataGrid's initial-loading state instead of inserting a loader
+above existing rows. Student details and parent/guardian information stay visible during
+background requests; independently loading sections handle their own initial state.
+Authentication and authorization checks still gate private content.
+
 ## Server rendering and search metadata
 
 Valid configuration is checked in the root server layout. Runtime validation still reports
@@ -55,6 +77,27 @@ empty-array placeholder so anonymous server renders are not mistaken for signed-
 After deployment, submit `/sitemap.xml` in Google Search Console and inspect the homepage and
 public technique URLs. These changes improve crawlability and search signals, not guaranteed
 rankings or local-pack eligibility.
+
+## Google Analytics
+
+The [root layout](./src/app/layout.tsx) loads the Google tag for measurement ID
+`G-2HLMNVXJJ1` across all routes using Next.js `Script` with `afterInteractive`,
+so analytics does not block initial rendering. The tag initializes `window.dataLayer`
+and configures Google Analytics once per app load.
+
+## Tests and coverage
+
+Run `npm run test:ci` for the Jest suite and coverage reports, including
+`coverage/coverage-summary.json`. Generate the same aggregate Markdown report and
+enforce the same threshold as CI with:
+
+```bash
+node scripts/coverage-to-md.js coverage/coverage-summary.json 30
+```
+
+CI requires at least 30% statements, functions, and lines; branch coverage is
+reported but does not gate the build. Jest's existing global thresholds remain
+unchanged. The coverage workflow uses Node.js 22.
 
 ## Learn More
 

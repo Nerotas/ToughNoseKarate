@@ -75,7 +75,7 @@ const StudentAssessmentForm: React.FC<StudentAssessmentFormProps> = ({
                 size='small'
                 startIcon={<IconPlus />}
                 onClick={handleCreateAssessment}
-                disabled={savingAssessment}
+                disabled={savingAssessment || assessmentLoading}
               >
                 Start New Assessment
               </Button>

@@ -3,7 +3,7 @@ import { Grid, Box, Typography, Alert } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import { BlockDefinition } from '../../../models/Blocks/Blocks';
 import useGet from '../../../hooks/useGet';
-import Loading from '../../../app/loading';
+import { CardGridSkeleton } from 'components/loading/PageLoadingSkeleton';
 
 import { Button } from '@mui/material';
 import { useAuth } from 'hooks/useAuth';
@@ -13,29 +13,13 @@ import BlockCreateModule from '../components/blocks/blockCreateModule';
 import BlockGuideLines from '../components/blocks/guidelines';
 import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 
-export default function BlocksClient() {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const { isAuthenticated, instructor } = useAuth();
-  const canCreate = isAuthenticated && instructor?.role === 'admin';
-  const { data, isPending, isError, refetch } = useGet<BlockDefinition[]>({
-    apiLabel: 'blocks-definitions',
-    url: '/blocks-definitions',
-    id: 'getAll',
-    fallbackData: [],
-    options: {
-      staleTime: 60 * 1000,
-      gcTime: 5 * 60 * 1000,
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  });
-
-  const refetchBlocks = async () => {
-    await refetch();
-  };
-
-  const blockDefinitions = orderByBeltRank(data || [], (item) => item.beltRank);
-
+const BlocksContent = ({
+  children,
+  onCreate,
+}: {
+  children: React.ReactNode;
+  onCreate?: () => void;
+}) => {
   return (
     <PageContainer>
       <Box>
@@ -53,8 +37,8 @@ export default function BlocksClient() {
           >
             Tang Soo Do Blocking Techniques
           </Typography>
-          {canCreate && (
-            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+          {onCreate && (
+            <Button variant='contained' color='primary' onClick={onCreate}>
               Add Block
             </Button>
           )}
@@ -74,36 +58,69 @@ export default function BlocksClient() {
           </Typography>
         </Alert>
 
-        {isError && (
-          <Alert severity='info' sx={{ mb: 4 }}>
-            <Typography variant='body2'>
-              <strong>Demo Mode:</strong> Unable to connect to the backend server. Displaying static
-              block data for demonstration.
-            </Typography>
-          </Alert>
-        )}
-
-        <Grid container spacing={3}>
-          {isPending && <Loading />}
-
-          {blockDefinitions &&
-            blockDefinitions.map((block) => (
-              <BlockCard key={block.id} block={block} refetchBlocks={refetchBlocks} />
-            ))}
-        </Grid>
+        {children}
 
         <Box sx={{ mt: 4 }}>
           <BlockGuideLines />
         </Box>
-
-        {canCreate && (
-          <BlockCreateModule
-            open={isCreateOpen}
-            handleCloseCreate={() => setIsCreateOpen(false)}
-            refetchBlocks={refetchBlocks}
-          />
-        )}
       </Box>
     </PageContainer>
+  );
+};
+
+export const BlocksLoading = () => (
+  <BlocksContent>
+    <CardGridSkeleton label='Loading blocks' />
+  </BlocksContent>
+);
+
+export default function BlocksClient() {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
+  const { data, isPending, isError, refetch } = useGet<BlockDefinition[]>({
+    apiLabel: 'blocks-definitions',
+    url: '/blocks-definitions',
+    id: 'getAll',
+    options: {
+      placeholderData: undefined,
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  });
+  const refetchBlocks = async () => {
+    await refetch();
+  };
+  const blockDefinitions = orderByBeltRank(data || [], (item) => item.beltRank);
+
+  return (
+    <BlocksContent onCreate={canCreate ? () => setIsCreateOpen(true) : undefined}>
+      {isError && (
+        <Alert severity='error' sx={{ mb: 4 }}>
+          Unable to load blocks. Please try again.
+          <Button color='inherit' onClick={refetchBlocks}>
+            Retry
+          </Button>
+        </Alert>
+      )}
+      {isPending ? (
+        <CardGridSkeleton label='Loading blocks' />
+      ) : (
+        <Grid container spacing={3}>
+          {blockDefinitions.map((block) => (
+            <BlockCard key={block.id} block={block} refetchBlocks={refetchBlocks} />
+          ))}
+        </Grid>
+      )}
+      {canCreate && (
+        <BlockCreateModule
+          open={isCreateOpen}
+          handleCloseCreate={() => setIsCreateOpen(false)}
+          refetchBlocks={refetchBlocks}
+        />
+      )}
+    </BlocksContent>
   );
 }

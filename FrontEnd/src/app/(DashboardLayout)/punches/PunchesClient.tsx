@@ -17,7 +17,7 @@ import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import { PunchDefinition } from '../../../models/Punches/Punches';
 import useGet from '../../../hooks/useGet';
-import Loading from '../../../app/loading';
+import { CardGridSkeleton } from 'components/loading/PageLoadingSkeleton';
 import PunchCard from '../components/punches/punchCard';
 import PunchGuideLines from '../components/punches/guidelines';
 import { Button } from '@mui/material';
@@ -27,29 +27,13 @@ import React, { useState } from 'react';
 import orderByBeltRank from 'utils/helpers/orderByBeltRank';
 import { getBeltTextColor } from '../../../utils/helpers/BeltColors';
 
-export default function PunchesClient() {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const { isAuthenticated, instructor } = useAuth();
-  const canCreate = isAuthenticated && instructor?.role === 'admin';
-  const { data, isPending, isError, refetch } = useGet<PunchDefinition[]>({
-    apiLabel: 'punches-definitions',
-    url: '/punches-definitions',
-    id: 'getAll',
-    fallbackData: [],
-    options: {
-      staleTime: 60 * 1000,
-      gcTime: 5 * 60 * 1000,
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  });
-
-  const refetchPunches = async () => {
-    await refetch();
-  };
-
-  const punchDefinitions = orderByBeltRank(data || [], (item) => item.beltRank);
-
+const PunchesContent = ({
+  children,
+  onCreate,
+}: {
+  children: React.ReactNode;
+  onCreate?: () => void;
+}) => {
   return (
     <PageContainer>
       <Box>
@@ -67,8 +51,8 @@ export default function PunchesClient() {
           >
             Tang Soo Do Punching Techniques
           </Typography>
-          {canCreate && (
-            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+          {onCreate && (
+            <Button variant='contained' color='primary' onClick={onCreate}>
               Add Punch
             </Button>
           )}
@@ -87,36 +71,69 @@ export default function PunchesClient() {
           </Typography>
         </Alert>
 
-        {isError && (
-          <Alert severity='info' sx={{ mb: 4 }}>
-            <Typography variant='body2'>
-              <strong>Demo Mode:</strong> Unable to connect to the backend server. Displaying static
-              punch data for demonstration.
-            </Typography>
-          </Alert>
-        )}
-
-        <Grid container spacing={3}>
-          {isPending && <Loading />}
-
-          {punchDefinitions &&
-            punchDefinitions.map((punch) => (
-              <PunchCard key={punch.id} punch={punch} refetchPunches={refetchPunches} />
-            ))}
-        </Grid>
+        {children}
 
         <Box sx={{ mt: 4 }}>
           <PunchGuideLines />
         </Box>
-
-        {canCreate && (
-          <PunchCreateModule
-            open={isCreateOpen}
-            handleCloseCreate={() => setIsCreateOpen(false)}
-            refetchPunches={refetchPunches}
-          />
-        )}
       </Box>
     </PageContainer>
+  );
+};
+
+export const PunchesLoading = () => (
+  <PunchesContent>
+    <CardGridSkeleton label='Loading punches' />
+  </PunchesContent>
+);
+
+export default function PunchesClient() {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
+  const { data, isPending, isError, refetch } = useGet<PunchDefinition[]>({
+    apiLabel: 'punches-definitions',
+    url: '/punches-definitions',
+    id: 'getAll',
+    options: {
+      placeholderData: undefined,
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  });
+  const refetchPunches = async () => {
+    await refetch();
+  };
+  const punchDefinitions = orderByBeltRank(data || [], (item) => item.beltRank);
+
+  return (
+    <PunchesContent onCreate={canCreate ? () => setIsCreateOpen(true) : undefined}>
+      {isError && (
+        <Alert severity='error' sx={{ mb: 4 }}>
+          Unable to load punches. Please try again.
+          <Button color='inherit' onClick={refetchPunches}>
+            Retry
+          </Button>
+        </Alert>
+      )}
+      {isPending ? (
+        <CardGridSkeleton label='Loading punches' />
+      ) : (
+        <Grid container spacing={3}>
+          {punchDefinitions.map((punch) => (
+            <PunchCard key={punch.id} punch={punch} refetchPunches={refetchPunches} />
+          ))}
+        </Grid>
+      )}
+      {canCreate && (
+        <PunchCreateModule
+          open={isCreateOpen}
+          handleCloseCreate={() => setIsCreateOpen(false)}
+          refetchPunches={refetchPunches}
+        />
+      )}
+    </PunchesContent>
   );
 }

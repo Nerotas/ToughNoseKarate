@@ -25,13 +25,6 @@ jest.mock('../../../hooks/useGet', () => ({
   default: jest.fn(),
 }));
 
-// Mock loading component
-jest.mock('../../../app/loading', () => {
-  return function Loading() {
-    return <div data-testid='loading'>Loading...</div>;
-  };
-});
-
 const TestWrapper = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -194,7 +187,9 @@ describe('SelfDefenseClient', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByTestId('loading')).toBeInTheDocument();
+    expect(
+      screen.getByRole('status', { name: 'Loading self-defense techniques' })
+    ).toBeInTheDocument();
   });
 
   it('renders self defense data when loaded', async () => {

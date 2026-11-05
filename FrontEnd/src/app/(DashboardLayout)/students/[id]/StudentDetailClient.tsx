@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { StudentAssessment } from '../../../../models/Assessments/Assessments';
 import { studentAssessmentsService } from '../../../../services/studentAssessmentsService';
 import StudentAssessmentForm from '../../components/students/details/StudentAssessmentForm';
-import Loading from 'app/loading';
+import PageLoadingSkeleton from 'components/loading/PageLoadingSkeleton';
 import { Box, Button, Alert, Grid } from '@mui/material';
 import { IconArrowLeft, IconEdit } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
@@ -22,11 +22,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
   const router = useRouter();
 
   // Fetch belt requirements for colors
-  const {
-    data: beltRequirements,
-    isLoading: beltRequirementsLoading,
-    error: beltRequirementsError,
-  } = useGet<BeltRequirements[]>({
+  const { data: beltRequirements, error: beltRequirementsError } = useGet<BeltRequirements[]>({
     apiLabel: 'belt-requirements',
     url: '/belt-Requirements',
     id: 'getAll',
@@ -40,8 +36,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
   // Fetch specific student data
   const {
     data: student,
-    isLoading: studentLoading,
-    isFetching: studentFetching,
+    isPending: studentLoading,
     error: studentError,
     isError: studentIsError,
     refetch: studentRefetch,
@@ -49,8 +44,8 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     apiLabel: 'students',
     url: `/students/${studentId}`,
     id: `student-${studentId}`,
-    fallbackData: undefined,
     options: {
+      placeholderData: undefined,
       retry: 2,
       refetchOnWindowFocus: false,
     },
@@ -66,7 +61,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     apiLabel: 'families',
     url: `/families/student/${studentId}`,
     id: `family-${studentId}`,
-    fallbackData: [],
+    options: { placeholderData: undefined },
   });
 
   // Fetch current assessment (single assessment)
@@ -79,7 +74,7 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     apiLabel: 'current-assessment',
     url: `/student-assessments/student/${studentId}/current`,
     id: `current-assessment-${studentId}`,
-    fallbackData: null,
+    options: { placeholderData: undefined },
   });
 
   // Edit student state
@@ -168,23 +163,15 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
     router.push('/students'); // or whatever your students route is
   };
 
-  if (
-    studentLoading ||
-    beltRequirementsLoading ||
-    studentFetching ||
-    assessmentLoading ||
-    (student?.child && (familyLoading || familyFetching))
-  ) {
+  if (studentLoading) {
     return (
       <PageContainer>
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <Loading />
-        </Box>
+        <PageLoadingSkeleton />
       </PageContainer>
     );
   }
 
-  if (studentIsError || !student) {
+  if (!student) {
     return (
       <PageContainer>
         <Box>
@@ -205,6 +192,14 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
   return (
     <PageContainer>
       <Box>
+        {studentIsError && (
+          <Alert severity='error' sx={{ mb: 3 }}>
+            Unable to refresh student data. Showing the previously loaded information.
+            <Button color='inherit' onClick={() => studentRefetch()}>
+              Retry
+            </Button>
+          </Alert>
+        )}
         {beltRequirementsError && (
           <Alert severity='warning' sx={{ mb: 3 }}>
             Unable to load belt requirements. Some features may not work correctly.
@@ -238,11 +233,11 @@ const StudentDetailClient: React.FC<StudentDetailClientProps> = ({ studentId }) 
           {/* Training Information */}
           <TrainingInformation student={student} />
           {/* Parent/Guardian Information - Only show for child students */}
-          {student.child && family && (
+          {student.child && (
             <ParentGuardianInformation
               student={student}
               studentId={studentId}
-              family={family}
+              family={family ?? []}
               familyLoading={familyLoading}
               familyFetching={familyFetching}
               familyError={familyError}

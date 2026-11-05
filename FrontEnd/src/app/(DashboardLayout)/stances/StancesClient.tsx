@@ -1,56 +1,26 @@
 'use client';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Grid, Box, Typography, List, ListItem, ListItemText, Alert, Button } from '@mui/material';
 import PageContainer from '../components/container/PageContainer';
 import DashboardCard from '../components/shared/DashboardCard';
 import { StanceDefinition } from 'models/Stances/Stances';
 import useGet from '../../../hooks/useGet';
-import Loading from 'app/loading';
+import { CardGridSkeleton } from 'components/loading/PageLoadingSkeleton';
 import { useAuth } from '../../../hooks/useAuth';
 import StanceCreateModule from '../components/stances/stanceCreateModule';
 import StancesCard from '../components/stances/stancesCard';
 import { orderByBeltRank } from 'utils/helpers/orderByBeltRank';
 
-export default function StancesClient() {
-  // Use the custom useGet hook - will use SSR data if available, fallback if not
-  const {
-    data: stancesDefinitions,
-    isPending,
-    isError,
-    refetch,
-  } = useGet<StanceDefinition[]>({
-    apiLabel: 'stance-definitions',
-    url: '/stance-Definitions',
-    id: 'getAll',
-    fallbackData: [], // Empty array as fallback, will use static data instead
-    options: {
-      staleTime: 60 * 1000, // 60 seconds
-      gcTime: 5 * 60 * 1000, // 5 minutes
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  });
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const { isAuthenticated, instructor } = useAuth();
-  const canCreate = isAuthenticated && instructor?.role === 'admin';
-
-  // Use API data only
-  const displayStances = orderByBeltRank(stancesDefinitions || [], (item) => item.beltRank);
-
-  const refetchStances = async () => {
-    await refetch();
-  };
-
+const StancesContent = ({ children, onCreate }: { children: ReactNode; onCreate?: () => void }) => {
   return (
     <PageContainer>
-      {isPending && <Loading />}
       <Box>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography variant='h2' component='h1' gutterBottom sx={{ mb: 3 }}>
             Stances
           </Typography>
-          {canCreate && (
-            <Button variant='contained' color='primary' onClick={() => setIsCreateOpen(true)}>
+          {onCreate && (
+            <Button variant='contained' color='primary' onClick={onCreate}>
               Add Stance
             </Button>
           )}
@@ -68,20 +38,7 @@ export default function StancesClient() {
           </Typography>
         </Alert>
 
-        {isError && (
-          <Alert severity='info' sx={{ mb: 4 }}>
-            <Typography variant='body2'>
-              <strong>Demo Mode:</strong> Unable to connect to the backend server. Displaying static
-              stance data for demonstration.
-            </Typography>
-          </Alert>
-        )}
-
-        <Grid container spacing={3}>
-          {displayStances.map((stance) => (
-            <StancesCard key={stance.id} stance={stance} refetchStances={refetchStances} />
-          ))}
-        </Grid>
+        {children}
 
         <Box sx={{ mt: 4 }}>
           <DashboardCard title='Stance Training Guidelines'>
@@ -148,14 +105,69 @@ export default function StancesClient() {
             </Grid>
           </DashboardCard>
         </Box>
-        {canCreate && (
-          <StanceCreateModule
-            open={isCreateOpen}
-            handleCloseCreate={() => setIsCreateOpen(false)}
-            refetchStances={refetchStances}
-          />
-        )}
       </Box>
     </PageContainer>
+  );
+};
+
+export const StancesLoading = () => (
+  <StancesContent>
+    <CardGridSkeleton label='Loading stances' />
+  </StancesContent>
+);
+
+export default function StancesClient() {
+  const {
+    data: stancesDefinitions,
+    isPending,
+    isError,
+    refetch,
+  } = useGet<StanceDefinition[]>({
+    apiLabel: 'stance-definitions',
+    url: '/stance-Definitions',
+    id: 'getAll',
+    options: {
+      placeholderData: undefined,
+      staleTime: 60 * 1000,
+      gcTime: 5 * 60 * 1000,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  });
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isAuthenticated, instructor } = useAuth();
+  const canCreate = isAuthenticated && instructor?.role === 'admin';
+  const displayStances = orderByBeltRank(stancesDefinitions || [], (item) => item.beltRank);
+  const refetchStances = async () => {
+    await refetch();
+  };
+
+  return (
+    <StancesContent onCreate={canCreate ? () => setIsCreateOpen(true) : undefined}>
+      {isError && (
+        <Alert severity='error' sx={{ mb: 4 }}>
+          Unable to load stances. Please try again.
+          <Button color='inherit' onClick={refetchStances}>
+            Retry
+          </Button>
+        </Alert>
+      )}
+      {isPending ? (
+        <CardGridSkeleton label='Loading stances' />
+      ) : (
+        <Grid container spacing={3}>
+          {displayStances.map((stance) => (
+            <StancesCard key={stance.id} stance={stance} refetchStances={refetchStances} />
+          ))}
+        </Grid>
+      )}
+      {canCreate && (
+        <StanceCreateModule
+          open={isCreateOpen}
+          handleCloseCreate={() => setIsCreateOpen(false)}
+          refetchStances={refetchStances}
+        />
+      )}
+    </StancesContent>
   );
 }

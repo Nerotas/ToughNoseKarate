@@ -1,6 +1,5 @@
-import { Grid, Card, CardContent, Typography, Box, Divider, Alert } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Box, Divider, Alert, Skeleton } from '@mui/material';
 import { IconUsers } from '@tabler/icons-react';
-import Loading from 'app/loading';
 import { Family, Student } from 'models/Students/Students';
 
 interface ParentGuardianInformationProps {
@@ -17,7 +16,6 @@ const ParentGuardianInformation: React.FC<ParentGuardianInformationProps> = ({
   studentId,
   family,
   familyLoading,
-  familyFetching,
   familyError,
 }) => {
   return (
@@ -37,13 +35,13 @@ const ParentGuardianInformation: React.FC<ParentGuardianInformationProps> = ({
             </Alert>
           )}
 
-          {(familyLoading || familyFetching) && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
-              <Loading />
+          {familyLoading && (
+            <Box role='status' aria-label='Loading parent/guardian information'>
+              <Skeleton variant='rounded' height={120} animation={false} />
             </Box>
           )}
 
-          {!familyLoading && !familyFetching && family && family.length > 0 ? (
+          {family && family.length > 0 ? (
             <Grid container spacing={2}>
               {family
                 .filter((f: Family) => f.studentid === parseInt(studentId)) // Filter by current student ID
@@ -80,7 +78,7 @@ const ParentGuardianInformation: React.FC<ParentGuardianInformationProps> = ({
                   </Grid>
                 ))}
             </Grid>
-          ) : student.child && !familyLoading && !familyFetching ? (
+          ) : student.child && !familyLoading && !familyError ? (
             <Alert severity='info'>No parent/guardian information found for this student.</Alert>
           ) : null}
         </CardContent>

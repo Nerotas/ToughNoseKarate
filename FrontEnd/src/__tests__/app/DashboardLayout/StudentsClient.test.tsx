@@ -27,13 +27,6 @@ jest.mock('../../../hooks/useGet', () => ({
   default: jest.fn(),
 }));
 
-// Mock loading component
-jest.mock('../../../app/loading', () => {
-  return function Loading() {
-    return <div data-testid='loading'>Loading...</div>;
-  };
-});
-
 const TestWrapper = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -66,18 +59,40 @@ describe('StudentsClient', () => {
 
     mockUseGet.mockReturnValue({
       data: undefined,
+      isPending: true,
       isLoading: true,
       isFetching: false,
       refetch: jest.fn(),
     });
 
-    render(
+    const { container } = render(
       <TestWrapper>
         <StudentsClient />
       </TestWrapper>
     );
 
-    expect(screen.getByTestId('loading')).toBeInTheDocument();
+    expect(container.querySelector('.MuiDataGrid-skeletonLoadingOverlay')).not.toBeNull();
+    expect(screen.getByRole('grid')).toBeInTheDocument();
+  });
+
+  it('keeps roster rows visible without adding a loader during background refreshes', () => {
+    mockUseGet.mockReturnValue({
+      data: mockStudents,
+      isPending: false,
+      isLoading: false,
+      isFetching: true,
+      refetch: jest.fn(),
+    });
+
+    const { container } = render(
+      <TestWrapper>
+        <StudentsClient />
+      </TestWrapper>
+    );
+
+    expect(screen.getByText('Jake Smith')).toBeInTheDocument();
+    expect(container.querySelector('.MuiDataGrid-skeletonLoadingOverlay')).toBeNull();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
   it('renders students data when loaded', async () => {

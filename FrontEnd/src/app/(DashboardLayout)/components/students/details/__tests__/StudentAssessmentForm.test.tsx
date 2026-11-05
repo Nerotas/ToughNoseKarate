@@ -91,6 +91,14 @@ describe('StudentAssessmentForm', () => {
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
+  it('prevents creating an assessment until the initial assessment request completes', () => {
+    render(
+      <StudentAssessmentForm {...defaultProps} currentAssessment={null} assessmentLoading={true} />
+    );
+
+    expect(screen.getByRole('button', { name: 'Start New Assessment' })).toBeDisabled();
+  });
+
   it('should show error state', () => {
     const error = { message: 'Failed to load assessment' };
 

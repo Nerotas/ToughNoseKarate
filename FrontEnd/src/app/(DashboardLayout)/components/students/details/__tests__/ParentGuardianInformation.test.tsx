@@ -3,13 +3,6 @@ import { render, screen } from '@testing-library/react';
 import ParentGuardianInformation from '../ParentGuardianInformation';
 import { Student, Family } from '../../../../../../models/Students/Students';
 
-// Mock the loading component
-jest.mock('../../../../../../app/loading', () => {
-  return function MockLoading() {
-    return <div data-testid='loading'>Loading...</div>;
-  };
-});
-
 describe('ParentGuardianInformation', () => {
   const mockStudent: Student = {
     studentid: 1,
@@ -75,13 +68,17 @@ describe('ParentGuardianInformation', () => {
   it('should show loading state when familyLoading is true', () => {
     render(<ParentGuardianInformation {...defaultProps} familyLoading={true} />);
 
-    expect(screen.getByTestId('loading')).toBeInTheDocument();
+    expect(
+      screen.getByRole('status', { name: 'Loading parent/guardian information' })
+    ).toBeInTheDocument();
   });
 
-  it('should show loading state when familyFetching is true', () => {
+  it('keeps parent information visible when familyFetching is true', () => {
     render(<ParentGuardianInformation {...defaultProps} familyFetching={true} />);
 
-    expect(screen.getByTestId('loading')).toBeInTheDocument();
+    expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+    expect(screen.getByText('Bob Smith')).toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
   it('should display error message when familyError is present', () => {
