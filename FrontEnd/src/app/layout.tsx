@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import Providers from './providers';
 import ClientThemeProvider from './theme-provider';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -17,6 +18,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name='emotion-insertion-point' content='' />
       </head>
       <body>
+        <Script
+          src='https://www.googletagmanager.com/gtag/js?id=G-2HLMNVXJJ1'
+          strategy='afterInteractive'
+        />
+        <Script id='google-analytics' strategy='afterInteractive'>
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-2HLMNVXJJ1');
+          `}
+        </Script>
         <ConfigValidator>
           <ErrorBoundary>
             <Providers>
