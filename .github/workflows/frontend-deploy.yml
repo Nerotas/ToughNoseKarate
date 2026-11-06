@@ -3,10 +3,10 @@ name: Deploy Frontend to Netlify
 on:
   push:
     branches: [main, staging]
-    paths: ["FrontEnd/**"]
+    paths: ["FrontEnd/**", "netlify.toml", ".github/workflows/frontend-deploy.yml"]
   pull_request:
     branches: [main]
-    paths: ["FrontEnd/**"]
+    paths: ["FrontEnd/**", "netlify.toml", ".github/workflows/frontend-deploy.yml"]
 
 env:
   NODE_VERSION: "20"
@@ -38,35 +38,17 @@ jobs:
 
       - name: Build application
         working-directory: ./FrontEnd
-        run: npm run build
+        run: npx netlify build --offline --context production
         env:
+          NEXT_PUBLIC_API_PATH: https://api.toughnosekarate.com
+          NEXT_PUBLIC_APP_ENV: production
           NEXT_PUBLIC_API_VERSION: v1
-          NEXT_PUBLIC_DEBUG: false
-
-      # - name: Deploy to Netlify (Staging)
-      #   if: github.ref == 'refs/heads/staging'
-      #   uses: nwtgck/actions-netlify@v3.0
-      #   with:
-      #     publish-dir: "./FrontEnd/.next"
-      #     production-branch: main
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     deploy-message: "Deploy from GitHub Actions (Staging)"
-      #     enable-pull-request-comment: true
-      #     enable-commit-comment: true
-      #   env:
-      #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_STAGING_SITE_ID }}
+          NEXT_PUBLIC_ENABLE_DEBUG: false
 
       - name: Deploy to Netlify (Production)
         if: github.ref == 'refs/heads/main'
-        uses: nwtgck/actions-netlify@v3.0
-        with:
-          publish-dir: "./FrontEnd/.next"
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions (Production)"
-          enable-pull-request-comment: true
-          enable-commit-comment: true
+        working-directory: ./FrontEnd
+        run: npx netlify deploy --prod --context production
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_PRODUCTION_SITE_ID }}

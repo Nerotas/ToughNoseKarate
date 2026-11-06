@@ -83,7 +83,7 @@ const nextConfig = {
   },
   // Compiler options for better performance
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
   // Output configuration
   output: 'standalone',

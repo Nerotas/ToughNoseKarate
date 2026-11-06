@@ -55,6 +55,7 @@ jest.mock('next/navigation', () => ({
   usePathname() {
     return '/';
   },
+  useServerInsertedHTML: jest.fn(),
 }));
 
 // Mock window.matchMedia
