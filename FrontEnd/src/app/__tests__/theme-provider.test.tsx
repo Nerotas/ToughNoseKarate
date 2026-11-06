@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useTheme } from '@mui/material/styles';
 import ClientThemeProvider from '../theme-provider';
+import { useServerInsertedHTML } from 'next/navigation';
 
 // Test component to access theme
 const ThemeTestComponent = () => {
@@ -25,6 +26,25 @@ describe('ClientThemeProvider', () => {
       </ClientThemeProvider>
     );
     expect(screen.getByText('Inside Theme')).toBeInTheDocument();
+  });
+
+  it('registers a separate streamed style flush for each provider tree', () => {
+    const flushHook = jest.mocked(useServerInsertedHTML);
+    flushHook.mockClear();
+
+    render(
+      <>
+        <ClientThemeProvider>
+          <div>First page</div>
+        </ClientThemeProvider>
+        <ClientThemeProvider>
+          <div>Second page</div>
+        </ClientThemeProvider>
+      </>
+    );
+
+    expect(flushHook).toHaveBeenCalledTimes(2);
+    expect(flushHook.mock.calls[0][0]).not.toBe(flushHook.mock.calls[1][0]);
   });
 
   it('provides theme to child components', () => {

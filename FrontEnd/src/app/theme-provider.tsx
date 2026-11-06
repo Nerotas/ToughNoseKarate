@@ -3,12 +3,8 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { CacheProvider } from '@emotion/react';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { Plus_Jakarta_Sans } from 'next/font/google';
-import createEmotionCache from '../lib/emotion-cache';
-
-// Client-side cache, shared for the whole session of the user in the browser.
-const clientSideEmotionCache = createEmotionCache();
 
 const plus = Plus_Jakarta_Sans({
   weight: ['300', '400', '500', '600', '700'],
@@ -153,12 +149,12 @@ const baselightTheme = createTheme({
 
 export default function ClientThemeProvider({ children }: { children: React.ReactNode }) {
   return (
-    <CacheProvider value={clientSideEmotionCache}>
+    <AppRouterCacheProvider options={{ key: 'mui-style', prepend: true }}>
       <ThemeProvider theme={baselightTheme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         {children}
       </ThemeProvider>
-    </CacheProvider>
+    </AppRouterCacheProvider>
   );
 }

@@ -248,6 +248,8 @@ const Dashboard = () => {
                         alt='Erotas performing a legendary Kick'
                         width={400}
                         height={500}
+                        loading='eager'
+                        fetchPriority='high'
                         style={{
                           width: '100%',
                           height: 'auto',

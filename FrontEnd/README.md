@@ -52,11 +52,26 @@ Authentication and authorization checks still gate private content.
 
 ## Server rendering and search metadata
 
+The [theme provider](./src/app/theme-provider.tsx) uses MUI's App Router cache provider
+to keep each server render's Emotion cache isolated and flush component CSS into the
+streamed document head. Do not replace it with a module-scoped cache: that can omit
+styles on later requests and render unstyled icons and skeletons until hydration.
+Keep the `mui-style` cache key and CSS override ordering consistent across server and client.
+
 Valid configuration is checked in the root server layout. Runtime validation still reports
 client configuration failures, but must not hide the initial page behind a mount-only loader:
 that prevents useful server-rendered content from reaching crawlers and delays first paint.
 Public technique pages prefetch and hydrate their query data and revalidate every 60 seconds.
-Server fetch failures are logged; existing client retry/error behavior remains available.
+Server fetch failures are logged; production compilation preserves warnings and errors.
+Existing client retry/error behavior remains available.
+
+Verify production cold loads before deployment, not only client-side loading transitions:
+headings, normal-sized icons, and skeleton layout reservation must be correct with application
+JavaScript blocked. Repeated requests to different routes must retain component styles, and
+successful public prefetches must include actual card data in the initial HTML.
+After a production build, `npm run check:ssr` verifies that all twelve public/utility
+routes include nonempty component CSS in their document heads. Netlify's build command runs
+this check before packaging or deployment.
 
 The [shared metadata](./src/app/(DashboardLayout)/metadata.tsx) targets **Plano, TX**, without
 publishing a street address. Server routes own page titles, descriptions, canonical URLs, and
@@ -77,6 +92,22 @@ empty-array placeholder so anonymous server renders are not mistaken for signed-
 After deployment, submit `/sitemap.xml` in Google Search Console and inspect the homepage and
 public technique URLs. These changes improve crawlability and search signals, not guaranteed
 rankings or local-pack eligibility.
+
+## Netlify deployment
+
+[Netlify configuration](../netlify.toml) uses the Next.js adapter for routing, streamed
+responses, server functions, and ISR. Do not add an SPA redirect to `index.html`.
+
+The [frontend workflow](../.github/workflows/frontend-deploy.yml) runs
+`npx netlify build --offline --context production` to validate Next.js and the adapter's
+deployment artifacts. On `main`, `npx netlify deploy --prod --context production` performs
+the production build and deployment in one adapter lifecycle. Do not skip that build:
+the adapter temporarily swaps its static publish directory during deployment. Uploading
+raw `.next` output is not a complete SSR/ISR deployment. Netlify credentials remain
+confined to the production deploy step; pull-request builds run offline.
+
+The homepage's above-the-fold kick photograph loads eagerly with high fetch priority
+while retaining its intrinsic width and height. Keep below-the-fold images lazy-loaded.
 
 ## Google Analytics
 
